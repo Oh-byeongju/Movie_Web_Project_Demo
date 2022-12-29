@@ -25,7 +25,6 @@ const TopButtons = () => {
 					<a href="./">
 					</a>
 				</h2>
-
 				<div className="LeftIcon">
 					<MenuOutlined style={{ fontSize: "25px", marginRight: "15px" }} />
 					<SearchOutlined style={{ fontSize: "25px" }} />
@@ -33,70 +32,109 @@ const TopButtons = () => {
 				<div className="Menu">
 					<ul className="MenuList">
 						<li className="topMenuLi">
-							<a href="./">영화</a>
-								<ul class="submenu">
-									<li>
-										<a href="./" className="submenuLink longLink">
-											전체영화
-										</a>
-									</li>
-									<li>
-										<a href="./" className="submenuLink longLink">
-											큐레이션
-										</a>
-									</li>
-									<li>
-										<a href="./" className="submenuLink longLink">
-											포스터
-										</a>
-									</li>
-								</ul>
-							</li>
-							<li className="topMenuLi">
-								<a href="./">
-									예매
-								</a>
-								<ul class="submenu">
-									<li>
-										<a href="./" className="submenuLink longLink">
-											영화예매
-										</a>
-									</li>
-									<li>
-										<a href="./" className="submenuLink longLink">
-											상영시간
-										</a>
-									</li>
-									<li>
-										<a href="./" className="submenuLink longLink">
-											3
-										</a>
-									</li>
-								</ul>
-							</li>
-							<li className="topMenuLi">
-								<a href="./">극장</a>
-							</li>
-							<li className="topMenuLi">
-								<a href="./">이벤트</a>
-							</li>
-							<li className="topMenuLi">
-								<a href="./">스토어</a>
-							</li>
-							<li className="topMenuLi">
-								<a href="./">혜택</a>
-							</li>
-						</ul>
-					</div>
-					<div className="RightIcon">
-						<CalendarOutlined
-							style={{ fontSize: "25px", marginRight: "15px" }}
-						/>
-						<UserOutlined style={{ fontSize: "25px" }} />
-					</div>
+							<a href="./">
+								영화
+							</a>
+							<ul class="submenu">
+								<li>
+									<a href="./" className="submenuLink longLink">
+										전체영화
+									</a>
+								</li>
+								<li>
+									<a href="./" className="submenuLink longLink">
+										큐레이션
+									</a>
+								</li>
+								<li>
+									<a href="./" className="submenuLink longLink">
+										포스터
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li className="topMenuLi">
+							<a href="./">
+								예매
+							</a>
+							<ul class="submenu">
+								<li>
+									<a href="./" className="submenuLink longLink">
+										영화예매
+									</a>
+								</li>
+								<li>
+									<a href="./" className="submenuLink longLink">
+										상영시간
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li className="topMenuLi">
+							<a href="./">
+								극장
+							</a>
+							<ul class="submenu">
+								<li>
+									<a href="./" className="submenuLink longLink">
+										극장검색
+									</a>
+								</li>
+								<li>
+									<a href="./" className="submenuLink longLink">
+										특별관
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li className="topMenuLi">
+							<a href="./">
+								이벤트
+							</a>
+							<ul class="submenu">
+								<li className='long_text'>
+									<a href="./" className="submenuLink longLink">
+										진행중 이벤트
+									</a>
+								</li>
+								<li className='long_text2'>
+									<a href="./" className="submenuLink longLink">
+										당첨자 발표
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li className="topMenuLi">
+							<a href="./">
+								혜택
+							</a>
+							<ul class="submenu">
+								<li>
+									<a href="./" className="submenuLink longLink">
+										멤버쉽
+									</a>
+								</li>
+								<li>
+									<a href="./" className="submenuLink longLink">
+										할인정보
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li className="topMenuLi">
+							<a href="./">
+								개발진
+							</a>
+						</li>
+					</ul>
 				</div>
-			</NavBar>
-    </>
+				<div className="RightIcon">
+					<CalendarOutlined	style={{ fontSize: "25px", marginRight: "15px" }}/>
+					<UserOutlined style={{ fontSize: "25px" }} />
+				</div>
+			</div>
+		</NavBar>
+	</>
 	)
 };
 
@@ -142,6 +180,7 @@ border-bottom: 1px solid rgba(255,255,255, .2);
 	top: 15px;
 	left: 0;
 	font-size: 0.8667em;
+	font-family: NanumBarunGothic,Dotum,'돋움',sans-serif;
 
 	a {
 		color: #888;
@@ -159,6 +198,8 @@ border-bottom: 1px solid rgba(255,255,255, .2);
 	top: 15px;
 	right: 0;
 	font-size: 0.8667em;
+	font-family: NanumBarunGothic,Dotum,'돋움',sans-serif;
+
 	a {
 		color: #888;
 		float: left;
@@ -177,6 +218,7 @@ border-bottom: 1px solid rgba(255,255,255, .2);
 	width: 36px;
 	margin-left: 10px;
 }
+
 .RightIcon {
 	display: flex;
 	position: absolute;
@@ -188,7 +230,14 @@ border-bottom: 1px solid rgba(255,255,255, .2);
 .submenuLink {
 	border: solid 1px black;
 	margin-right: -1px;
-	font-size: 12px;
+	font-size: 14px;
+}
+
+.submenuLink_longtext {
+	border: solid 1px black;
+	margin-right: -1px;
+	font-size: 14px;
+	width: 555px;
 }
 
 .submenu {
@@ -197,7 +246,7 @@ border-bottom: 1px solid rgba(255,255,255, .2);
 	height: 0px;
 	overflow: hidden;
 	right: -305px;
-	top: 48px;
+	top: 50px;
 	transition: height 0.2s;
 	-webkit-transition: height 0.2s;
 	-moz-transition: height 0.2s;
@@ -212,17 +261,25 @@ border-bottom: 1px solid rgba(255,255,255, .2);
 	/* [변경] 가로로 펼쳐지도록 설정 */
 }
 
+.topMenuLi {
+	font-size: 18px;
+}
+
+.topMenuLi:hover {
+	color: #FFF;
+  border-bottom: 3px solid #FFF;
+}
+
 .topMenuLi:hover .submenu {
 	/* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
-
 	height: 32px;
 	/* [변경] 높이를 32px로 설정 */
 }
 
 .submenuLink:hover {
 	/* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
-	color: red;
-	background-color: #dddddd;
+	color: #FFF;
+  border-bottom: 1px solid #FFF;
 }
 .Menu {
 	position: relative;
@@ -261,6 +318,21 @@ border-bottom: 1px solid rgba(255,255,255, .2);
 		}
 	}
 }
+.long_text {
+	list-style-type: none;
+	width: 90px !important;
+	position: absolute;
+	height: 38px;
+}
+.long_text2 {
+	list-style-type: none;
+	width: 90px !important;
+	position: absolute;
+	height: 38px;
+	margin-left: 20px !important;
+}
+// 서브 메뉴가 길경우 사용하면 됨 
+// ex) 이벤트의 하위 메뉴는 6글자, 5글자라서 이 클래스이름 사용
 `;
 
 export default TopButtons;
