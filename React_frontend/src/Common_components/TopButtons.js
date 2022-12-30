@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import {
   MenuOutlined,
@@ -6,10 +6,20 @@ import {
   CalendarOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import LoginModal from '../Login_components/LoginModal';
 
 const TopButtons = () => {
+
+	// 로그인 시 뜨는 모달창 on/off용 변수 및 함수
+	const [login, setlogin] = useState(false);
+	const toggle_login = () => setlogin(true);
+
 	return (
   <>
+		<div>
+			{/* login변수와 Login모달창을 앤드로 묶어서 상태관리 */}
+			{login && <LoginModal setlogin = {setlogin}/>}
+		</div>
 		<NavBar>
 			<div className="nav">
 				<div className="Top_left">
@@ -18,7 +28,9 @@ const TopButtons = () => {
 					<a href="./">고객센터</a>
 				</div>
 				<div className="Top_right">
-					<a href="./">로그인</a>
+					<button onClick={toggle_login}>
+						로그인
+					</button>
 					<a href="./">회원가입</a>
 				</div>
 				<h2 className="logo">
@@ -26,8 +38,12 @@ const TopButtons = () => {
 					</a>
 				</h2>
 				<div className="LeftIcon">
-					<MenuOutlined style={{ fontSize: "25px", marginRight: "15px" }} />
-					<SearchOutlined style={{ fontSize: "25px" }} />
+					<Button style ={{marginRight: "5px"}}>
+						<MenuOutlined style={{ fontSize: "25px", marginRight: "15px", color: 'white' }} />
+					</Button>
+					<Button>
+						<SearchOutlined style={{ fontSize: "25px", color: 'white' }} />
+					</Button>
 				</div>
 				<div className="Menu">
 					<ul className="MenuList">
@@ -35,7 +51,7 @@ const TopButtons = () => {
 							<a href="./">
 								영화
 							</a>
-							<ul class="submenu">
+							<ul className="submenu">
 								<li>
 									<a href="./" className="submenuLink longLink">
 										전체영화
@@ -57,7 +73,7 @@ const TopButtons = () => {
 							<a href="./">
 								예매
 							</a>
-							<ul class="submenu">
+							<ul className="submenu">
 								<li>
 									<a href="./" className="submenuLink longLink">
 										영화예매
@@ -74,7 +90,7 @@ const TopButtons = () => {
 							<a href="./">
 								극장
 							</a>
-							<ul class="submenu">
+							<ul className="submenu">
 								<li>
 									<a href="./" className="submenuLink longLink">
 										극장검색
@@ -91,7 +107,7 @@ const TopButtons = () => {
 							<a href="./">
 								이벤트
 							</a>
-							<ul class="submenu">
+							<ul className="submenu">
 								<li className='long_text'>
 									<a href="./" className="submenuLink longLink">
 										진행중 이벤트
@@ -108,7 +124,7 @@ const TopButtons = () => {
 							<a href="./">
 								혜택
 							</a>
-							<ul class="submenu">
+							<ul className="submenu">
 								<li>
 									<a href="./" className="submenuLink longLink">
 										멤버쉽
@@ -129,8 +145,12 @@ const TopButtons = () => {
 					</ul>
 				</div>
 				<div className="RightIcon">
-					<CalendarOutlined	style={{ fontSize: "25px", marginRight: "15px" }}/>
-					<UserOutlined style={{ fontSize: "25px" }} />
+					<Button style = {{marginRight: "5px"}}>
+						<CalendarOutlined	style={{ fontSize: "25px", marginRight: "15px", color: "white" }}/>
+					</Button>
+					<Button>
+						<UserOutlined style={{ fontSize: "25px", color: "white" }} />
+					</Button>
 				</div>
 			</div>
 		</NavBar>
@@ -197,14 +217,29 @@ border-bottom: 1px solid rgba(255,255,255, .2);
 	position: absolute;
 	top: 15px;
 	right: 0;
-	font-size: 0.8667em;
-	font-family: NanumBarunGothic,Dotum,'돋움',sans-serif;
+	font-size: 0.8667em !important;
+	font-family: NanumBarunGothic,Dotum,'돋움',sans-serif !important;
 
 	a {
+		margin-top: 1.3px;
 		color: #888;
 		float: left;
 		margin-right: 20px;
 		text-decoration : none;
+		:hover{
+ 			text-decoration : underline;
+		}
+	}
+
+	button {
+		color: #888;
+		float: left;
+		margin-right: 20px;
+		text-decoration : none;
+		background-color: black;
+		padding: 0;
+		border: 0;
+		cursor: pointer;
 		:hover{
  			text-decoration : underline;
 		}
@@ -333,6 +368,15 @@ border-bottom: 1px solid rgba(255,255,255, .2);
 }
 // 서브 메뉴가 길경우 사용하면 됨 
 // ex) 이벤트의 하위 메뉴는 6글자, 5글자라서 이 클래스이름 사용
+`;
+
+const Button = styled.button`
+	content: "";
+	cursor: pointer;
+	background-color: black;
+	padding: 0;
+	margin: 0;
+	border: 0;
 `;
 
 export default TopButtons;
