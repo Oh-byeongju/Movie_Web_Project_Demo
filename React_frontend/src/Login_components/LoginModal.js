@@ -14,7 +14,7 @@ const LoginModal = ({setlogin}) => {
 	const [inputs, setInputs] = useState({
     id: '',
     pw: ''
-  });	//input창 두개 관리를 위해 만듬
+  });	//input창 두개 관리를 위해 만든것
 
   const { id, pw } = inputs; // 비구조화 할당을 통해 값 추출
 

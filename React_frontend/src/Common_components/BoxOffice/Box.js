@@ -32,8 +32,6 @@ const LI = styled.li`
   width: 250px;
   .Image {
     position: relative;
-
-   
     .banner_img:hover:after,
     .banner_img:hover > .hover_text{
       display:block;
@@ -41,10 +39,6 @@ const LI = styled.li`
     .banner_img:after, .hover_text{
       display:none;
     }
-    
-
-  }
-
   }
 `; //하나의 div
 const Img = styled.img`
