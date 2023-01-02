@@ -5,19 +5,18 @@ const Footer = () => {
     <div>
       <Foot id="footer">
         <div id="footer_info">
-          <div class="container">
-            <div class="row">
-              <div class="footer_info">
+          <div className="container">
+            <div className="row">
+              <div className="footer_info">
                 <h2>Movie</h2>
-
                 <div>
                   <p>
                     강경목
                     <br />
-                    <span class="bar2">~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span className="bar2">~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
                     <br />
-                    <p>오병주</p>
-                    <span class="bar2">~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span>오병주</span>
+                    <span className="bar2">~~~~~~~~~~~~~~~~~~~~~~</span>
                   </p>
                   <p>2023-01-01</p>
                 </div>

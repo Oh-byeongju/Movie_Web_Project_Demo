@@ -28,10 +28,14 @@ const TopButtons = () => {
           </div>
           <div className="Top_right">
             <button onClick={toggle_login}>로그인</button>
-            <a href="./">회원가입</a>
+            <a href="http://localhost:3000/UserJoin">
+              회원가입
+            </a>
           </div>
           <h2 className="logo">
-            <a href="./"></a>
+            <a href="./" style={{content: ""}}>
+              홈버튼
+            </a>
           </h2>
           <div className="LeftIcon">
             <Button style={{ marginRight: "5px" }}>
@@ -104,7 +108,6 @@ const TopButtons = () => {
               </div>
             </ul>
           </div>
-
           <div className="RightIcon">
             <Button style={{ marginRight: "5px" }}>
               <CalendarOutlined
@@ -138,7 +141,7 @@ const NavBar = styled.div`
   z-index: 2;
   .logo {
     position: absolute;
-    left: 51.5%;
+    left: 53.5%;
     width: 75px;
     height: 90px;
     margin: 0 0 0 -70px;

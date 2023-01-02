@@ -1,6 +1,5 @@
 import React from "react";
 import { Carousel } from "antd";
-import styled from "styled-components";
 
 const contentStyle = {
   height: "650px",
@@ -14,10 +13,10 @@ const HomeBanner = () => {
     <div style={{ zIndex: "0" }}>
       <Carousel autoplay>
         <div>
-          <img src={"img/carousel/a1.jpg"} style={contentStyle} />
+          <img alt ='carousel1' src={"img/carousel/a1.jpg"} style={contentStyle} />
         </div>
         <div>
-          <img src={"img/carousel/a2.jpg"} style={contentStyle} />
+          <img alt ='carousel1' src={"img/carousel/a2.jpg"} style={contentStyle} />
         </div>
       </Carousel>
     </div>
