@@ -15,7 +15,7 @@ const Box = ({ src, id, description }) => {
           </Like>
           <Ticket
             onClick={() => {
-              console.log("hello");
+              console.log(src);
             }}
           >
             예매
