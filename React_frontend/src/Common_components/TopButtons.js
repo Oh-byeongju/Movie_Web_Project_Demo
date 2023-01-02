@@ -51,89 +51,60 @@ const TopButtons = () => {
             <ul className="MenuList">
               <li className="topMenuLi">
                 <a href="./">영화</a>
-                <ul className="submenu">
-                  <li>
-                    <a href="./" className="submenuLink longLink">
-                      전체영화
-                    </a>
-                  </li>
-                  <li>
-                    <a href="./" className="submenuLink longLink">
-                      큐레이션
-                    </a>
-                  </li>
-                  <li>
-                    <a href="./" className="submenuLink longLink">
-                      포스터
-                    </a>
-                  </li>
-                </ul>
               </li>
               <li className="topMenuLi">
                 <a href="./">예매</a>
-                <ul className="submenu">
-                  <li>
-                    <a href="./" className="submenuLink longLink">
-                      영화예매
-                    </a>
-                  </li>
-                  <li>
-                    <a href="./" className="submenuLink longLink">
-                      상영시간
-                    </a>
-                  </li>
-                </ul>
               </li>
               <li className="topMenuLi">
                 <a href="./">극장</a>
-                <ul className="submenu">
-                  <li>
-                    <a href="./" className="submenuLink longLink">
-                      극장검색
-                    </a>
-                  </li>
-                  <li>
-                    <a href="./" className="submenuLink longLink">
-                      특별관
-                    </a>
-                  </li>
-                </ul>
               </li>
               <li className="topMenuLi">
                 <a href="./">이벤트</a>
-                <ul className="submenu">
-                  <li className="long_text">
-                    <a href="./" className="submenuLink longLink">
-                      진행중 이벤트
-                    </a>
-                  </li>
-                  <li className="long_text2">
-                    <a href="./" className="submenuLink longLink">
-                      당첨자 발표
-                    </a>
-                  </li>
-                </ul>
               </li>
               <li className="topMenuLi">
                 <a href="./">혜택</a>
-                <ul className="submenu">
-                  <li>
-                    <a href="./" className="submenuLink longLink">
-                      멤버쉽
-                    </a>
-                  </li>
-                  <li>
-                    <a href="./" className="submenuLink longLink">
-                      할인정보
-                    </a>
-                  </li>
-                </ul>
+                <div className="Black_SubMenu"></div>
               </li>
               <li className="topMenuLi">
                 <a href="./">개발진</a>
               </li>
+              <div className="menu_pan">
+                <div className="w_1350">
+                  <div className="menu_category">
+                    <div className="category">영화</div>
+                    <div className="category">전체영화</div>
+                    <div className="category">큐레이션</div>
+                    <div className="category">무비포스트</div>
+                  </div>
+                  <div className="menu_category">
+                    <div className="category">예매</div>
+                    <div className="category">빠른예매</div>
+                    <div className="category">상영시간표</div>
+                  </div>
+                  <div className="menu_category">
+                    <div className="category">극장</div>
+                    <div className="category">전체극장</div>
+                    <div className="category">특별관</div>
+                  </div>
+                  <div className="menu_category">
+                    <div className="category">이벤트</div>
+                    <div className="category">전체극장</div>
+                    <div className="category">특별관</div>
+                  </div>
+                  <div className="menu_category">
+                    <div className="category">혜택</div>
+                    <div className="category">맴버쉽</div>
+                    <div className="category">제휴할인</div>
+                  </div>
+                  <div className="menu_category">
+                    <div className="category">개발진</div>
+                    <div className="category">개발진</div>
+                  </div>
+                </div>
+              </div>
             </ul>
           </div>
+
           <div className="RightIcon">
             <Button style={{ marginRight: "5px" }}>
               <CalendarOutlined
@@ -163,7 +134,8 @@ const NavBar = styled.div`
   justify-content: center;
   height: 92px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-
+  background-color: black;
+  z-index: 2;
   .logo {
     position: absolute;
     left: 51.5%;
@@ -258,73 +230,92 @@ const NavBar = styled.div`
     right: 50px;
   }
 
-  .submenuLink {
-    border: solid 1px black;
-    margin-right: -1px;
-    font-size: 14px;
-  }
-
-  .submenuLink_longtext {
-    border: solid 1px black;
-    margin-right: -1px;
-    font-size: 14px;
-    width: 555px;
-  }
-
-  .submenu {
-    /* 하위 메뉴 스타일 설정 */
-    position: absolute;
-    height: 0px;
-    overflow: hidden;
-    right: -305px;
-    top: 50px;
-    transition: height 0.2s;
-    -webkit-transition: height 0.2s;
-    -moz-transition: height 0.2s;
-    -o-transition: height 0.2s;
-    width: 550px;
-    /* [변경] 가로 드랍다운 메뉴의 넓이 */
-  }
-
-  .submenu li {
-    display: inline-block;
-    margin-right: 1px;
-    /* [변경] 가로로 펼쳐지도록 설정 */
-  }
-
-  .topMenuLi {
-    font-size: 18px;
-  }
-
-  .topMenuLi:hover {
-    color: #fff;
-    border-bottom: 3px solid #fff;
-  }
-
-  .topMenuLi:hover .submenu {
-    /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
-    height: 32px;
-    /* [변경] 높이를 32px로 설정 */
-  }
-
-  .submenuLink:hover {
-    /* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
-    color: #fff;
-    border-bottom: 1px solid #fff;
-  }
   .Menu {
     position: relative;
     width: 100%;
     margin: 90px auto 0 auto;
-
     .MenuList {
-      position: absolute;
-      top: -53px;
+      position: relative;
+      top: -40px;
+      .topMenuLi:hover ~ .menu_pan {
+        display: block;
+      }
+
+      .menu_pan {
+        width: 1485px;
+        position: absolute;
+        left: -260px;
+        top: 40px;
+        z-index: 1000;
+
+        padding-left: 180px;
+        font-size: 15px;
+        display: none;
+        background-color: black;
+
+        &:hover {
+          display: block;
+        }
+      }
+
+      .menu_category {
+        float: left;
+        margin: 30px 0;
+
+        transition: 0.2s ease-in-out;
+        transform: translateY (-20px);
+      }
+
+      .menu_category .category {
+        transition: 0.2s ease-in-out;
+        transform: translateY (-20px);
+      }
+      .menu_category:nth-child(1) {
+        position: relative;
+        left: 150px;
+      }
+
+      .menu_category:nth-child(2) {
+        position: relative;
+        left: 170px;
+      }
+
+      .menu_category:nth-child(3) {
+        position: relative;
+        left: 190px;
+      }
+
+      .menu_category:nth-child(4) {
+        position: relative;
+        left: 210px;
+      }
+
+      .menu_category:nth-child(5) {
+        position: relative;
+        left: 230px;
+      }
+
+      .menu_category:nth-child(6) {
+        position: relative;
+        left: 250px;
+      }
+      .caterogy:nth-child(1) {
+        font-weight: bold;
+      }
+
+      .category {
+        padding: 9px 0px;
+        margin-right: 100px;
+      }
+
+      .category:hover {
+        text-decoration: underline;
+      }
       li {
         list-style-type: none;
-        width: 60px;
+        width: 110px;
         position: absolute;
-        height: 38px;
+        height: 45px;
       }
       li:nth-child(1) {
         left: 176px;
@@ -350,19 +341,7 @@ const NavBar = styled.div`
       }
     }
   }
-  .long_text {
-    list-style-type: none;
-    width: 90px !important;
-    position: absolute;
-    height: 38px;
-  }
-  .long_text2 {
-    list-style-type: none;
-    width: 90px !important;
-    position: absolute;
-    height: 38px;
-    margin-left: 20px !important;
-  }
+
   // 서브 메뉴가 길경우 사용하면 됨
   // ex) 이벤트의 하위 메뉴는 6글자, 5글자라서 이 클래스이름 사용
 `;

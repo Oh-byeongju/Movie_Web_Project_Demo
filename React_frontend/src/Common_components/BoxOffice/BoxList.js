@@ -37,12 +37,12 @@ const BoxList = () => {
         </More>
       </div>
       <UL>
-        {MovieList.map((mv) => (
+        {MovieList.map((movie) => (
           <Box
-            key={mv.id}
-            src={mv.src}
-            description={mv.description}
-            id={mv.id}
+            key={movie.id}
+            src={movie.src}
+            id={movie.id}
+            description={movie.description}
           />
         ))}
       </UL>
@@ -52,27 +52,28 @@ const BoxList = () => {
 
 const CardList = styled.div`
   color: #fff;
-  position: absolute;
+  position: relative;
   margin-top: 30px;
 `;
 const Title = styled.div`
   position: absolute;
   top: 0;
-  left: 700px;
+  left: 800px;
+  width: 80px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 `;
 const More = styled.div`
   position: absolute;
   font-size: 13px;
   top: 10px;
-  right: 0px;
+  right: 50px;
   color: #808080;
   cursor: pointer;
 `;
 const UL = styled.ul`
   align-items: center;
   list-style-type: none;
-  padding-left: 150px;
+  padding-left: 240px;
 `;
 
 export default BoxList;
