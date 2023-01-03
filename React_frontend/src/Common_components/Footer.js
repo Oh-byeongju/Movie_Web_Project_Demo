@@ -47,8 +47,9 @@ const Foot = styled.div`
   .footer_info ul {
     padding: 15px 0;
   }
-  .footer_info li {
-    position: relative;
+  .footer_info {
+    position: absolute;
+    left: 0;
     display: inline;
     padding-right: 16px;
     white-space: nowrap;
