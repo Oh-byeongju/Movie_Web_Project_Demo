@@ -58,7 +58,7 @@ const CardList = styled.div`
 const Title = styled.div`
   position: absolute;
   top: 0;
-  left: 800px;
+  left: 720px;
   width: 80px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 `;
@@ -73,7 +73,7 @@ const More = styled.div`
 const UL = styled.ul`
   align-items: center;
   list-style-type: none;
-  padding-left: 240px;
+  padding-left: 160px;
 `;
 
 export default BoxList;

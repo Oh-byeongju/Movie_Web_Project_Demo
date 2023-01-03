@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import {
   MenuOutlined,
@@ -12,6 +12,15 @@ const TopButtons = () => {
   // 로그인 시 뜨는 모달창 on/off용 변수 및 함수
   const [login, setlogin] = useState(false);
   const toggle_login = () => setlogin(true);
+  const [search, setSearch] = useState("");
+
+  const onChange = useCallback((e) => {
+    setSearch(e.target.value);
+  }, []);
+
+  const onClick = useCallback(() => {
+    console.log(search);
+  }, [search]);
 
   return (
     <>
@@ -28,26 +37,24 @@ const TopButtons = () => {
           </div>
           <div className="Top_right">
             <button onClick={toggle_login}>로그인</button>
-            <a href="http://localhost:3000/UserJoin">
-              회원가입
-            </a>
+            <a href="http://localhost:3000/UserJoin">회원가입</a>
           </div>
           <h2 className="logo">
-            <a href="./" style={{content: ""}}>
+            <a href="./" style={{ content: "" }}>
               홈버튼
             </a>
           </h2>
           <div className="LeftIcon">
-            <Button style={{ marginRight: "5px" }}>
-              <MenuOutlined
-                style={{
-                  fontSize: "25px",
-                  marginRight: "15px",
-                  color: "white",
-                }}
-              />
-            </Button>
-            <Button>
+            {/*} <input
+              type="text"
+              name="search"
+              onChange={onChange}
+              value={search}
+              placeholder="검색"
+              style={{ outline: "none", border: "none", height: "30px" }}
+            /> Input 다시 해야댐 일단 주석처리 
+  */}
+            <Button onClick={onClick}>
               <SearchOutlined style={{ fontSize: "25px", color: "white" }} />
             </Button>
           </div>
@@ -75,33 +82,33 @@ const TopButtons = () => {
               <div className="menu_pan">
                 <div className="w_1350">
                   <div className="menu_category">
-                    <div className="category">영화</div>
+                    <div className="title_category">영화</div>
                     <div className="category">전체영화</div>
                     <div className="category">큐레이션</div>
                     <div className="category">무비포스트</div>
                   </div>
                   <div className="menu_category">
-                    <div className="category">예매</div>
+                    <div className="title_category">예매</div>
                     <div className="category">빠른예매</div>
                     <div className="category">상영시간표</div>
                   </div>
                   <div className="menu_category">
-                    <div className="category">극장</div>
+                    <div className="title_category">극장</div>
                     <div className="category">전체극장</div>
                     <div className="category">특별관</div>
                   </div>
                   <div className="menu_category">
-                    <div className="category">이벤트</div>
+                    <div className="title_category">이벤트</div>
                     <div className="category">전체극장</div>
                     <div className="category">특별관</div>
                   </div>
                   <div className="menu_category">
-                    <div className="category">혜택</div>
+                    <div className="title_category">혜택</div>
                     <div className="category">맴버쉽</div>
                     <div className="category">제휴할인</div>
                   </div>
                   <div className="menu_category">
-                    <div className="category">개발진</div>
+                    <div className="title_category">개발진</div>
                     <div className="category">개발진</div>
                   </div>
                 </div>
@@ -136,7 +143,7 @@ const NavBar = styled.div`
   text-align: center;
   justify-content: center;
   height: 92px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid #fff;
   background-color: black;
   z-index: 2;
   .logo {
@@ -221,6 +228,7 @@ const NavBar = styled.div`
     display: flex;
     position: absolute;
     top: 50px;
+    left: -40px;
     width: 36px;
     margin-left: 10px;
   }
@@ -237,18 +245,20 @@ const NavBar = styled.div`
     position: relative;
     width: 100%;
     margin: 90px auto 0 auto;
+
     .MenuList {
       position: relative;
+
       top: -40px;
       .topMenuLi:hover ~ .menu_pan {
         display: block;
       }
 
       .menu_pan {
-        width: 1485px;
+        width: 1414px;
         position: absolute;
         left: -260px;
-        top: 40px;
+        top: 43px;
         z-index: 1000;
 
         padding-left: 180px;
@@ -305,10 +315,15 @@ const NavBar = styled.div`
       .caterogy:nth-child(1) {
         font-weight: bold;
       }
-
       .category {
         padding: 9px 0px;
         margin-right: 100px;
+        cursor: pointer;
+      }
+      .title_category {
+        padding-right: 100px;
+        font-weight: bold;
+        padding-bottom: 10px;
       }
 
       .category:hover {
@@ -354,7 +369,7 @@ const Button = styled.button`
   cursor: pointer;
   background-color: black;
   padding: 0;
-  margin: 0;
+  margin-left: 10px;
   border: 0;
 `;
 

@@ -33,11 +33,12 @@ const LI = styled.li`
   .Image {
     position: relative;
     .banner_img:hover:after,
-    .banner_img:hover > .hover_text{
-      display:block;
+    .banner_img:hover > .hover_text {
+      display: block;
     }
-    .banner_img:after, .hover_text{
-      display:none;
+    .banner_img:after,
+    .hover_text {
+      display: none;
     }
   }
 `; //하나의 div
