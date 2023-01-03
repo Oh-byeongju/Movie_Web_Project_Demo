@@ -4,6 +4,7 @@ import { createGlobalStyle } from "styled-components";
 import BoxList from "../Common_components/BoxOffice/BoxList";
 import HomeBanner from "../Common_components/HomeBanner";
 import Footer from "../Common_components/Footer";
+
 const Home = () => {
   return (
     <>
@@ -11,7 +12,7 @@ const Home = () => {
       <TopButtons />
       <HomeBanner />
       <BoxList />
-      <Footer />
+      <Footer/>
     </>
   );
 };
