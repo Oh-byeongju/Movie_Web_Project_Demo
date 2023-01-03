@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import styled from 'styled-components';
 import Post from './Post';
 import TermofService from './TermofService';
@@ -17,15 +17,6 @@ const JoinForm = () => {
 	const InsertAddress = (value) => {
 		setM_address(value);
 	}
-
-	useEffect(() => {
-		if (M_address ==='') {
-			console.log('비었슈');
-		}
-		else {
-			console.log('주소가있슈');
-		}
-  },[M_address]);
 
 	return (
 		<div>

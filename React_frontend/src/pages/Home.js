@@ -17,8 +17,6 @@ const Home = () => {
   );
 };
 
-// BoxList 컴포넌트랑 Footer 컴포넌트 사이에 뭐가 있어야 오류가 안생김
-
 const GlobalStyle = createGlobalStyle`
   body {
     background-color: black;
