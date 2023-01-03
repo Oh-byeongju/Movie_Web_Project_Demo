@@ -74,6 +74,12 @@ const UL = styled.ul`
   align-items: center;
   list-style-type: none;
   padding-left: 160px;
+  
+  &:after {
+    content: '';
+    clear: both;
+    display: block;
+  }
 `;
 
 export default BoxList;

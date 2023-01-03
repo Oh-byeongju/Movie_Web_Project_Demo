@@ -4,6 +4,7 @@ import { createGlobalStyle } from "styled-components";
 import BoxList from "../Common_components/BoxOffice/BoxList";
 import HomeBanner from "../Common_components/HomeBanner";
 import Footer from "../Common_components/Footer";
+
 const Home = () => {
   return (
     <>
@@ -11,10 +12,12 @@ const Home = () => {
       <TopButtons />
       <HomeBanner />
       <BoxList />
-      <Footer />
+      <Footer/>
     </>
   );
 };
+
+// BoxList 컴포넌트랑 Footer 컴포넌트 사이에 뭐가 있어야 오류가 안생김
 
 const GlobalStyle = createGlobalStyle`
   body {

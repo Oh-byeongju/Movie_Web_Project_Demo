@@ -30,6 +30,7 @@ const LI = styled.li`
   float: left;
   padding-right: 65px;
   width: 250px;
+  height: 420px;
   .Image {
     position: relative;
     .banner_img:hover:after,
