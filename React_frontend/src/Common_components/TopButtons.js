@@ -198,7 +198,7 @@ const NavBar = styled.div`
     font-family: NanumBarunGothic, Dotum, "돋움", sans-serif !important;
 
     a {
-      margin-top: 1.3px;
+      margin-top: 1.2px;
       color: #888;
       float: left;
       margin-right: 20px;
