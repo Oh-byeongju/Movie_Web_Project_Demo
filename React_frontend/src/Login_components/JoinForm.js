@@ -159,7 +159,7 @@ const JoinForm = () => {
 				}
 			}
 
-			// 비밀번호 확인이랑 비밀번호랑 다르면서 비밀번호 확인이 빈칸이 아닌경우
+			// 비밀번호 확인이랑 비밀번호랑 다르면서 비밀번호 확인이 빈칸이 아닌 경우
 			if (value !== pwConfirm && pwConfirm !== '') {
 				if (!pwRegExp.test(value)) {
 					setMessages({
