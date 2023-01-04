@@ -131,7 +131,8 @@ const JoinForm = () => {
 		if (name === 'pw') {
 			const pwRegExp = /^(?=.*[a-zA-z])(?=.*[0-9]).{8,99}$/;
 
-			if (value === pwConfirm) {
+			// 비밀번호 확인이랑 비밀번호랑 같으면서 비밀번호 확인이 빈칸이 아닌경우
+			if (value === pwConfirm && pwConfirm !== '') {
 				if (!pwRegExp.test(value)) {
 					setMessages({
 						...messages, // 기존의 message 객체를 복사한 뒤
@@ -158,7 +159,8 @@ const JoinForm = () => {
 				}
 			}
 
-			if (value !== pwConfirm) {
+			// 비밀번호 확인이랑 비밀번호랑 다르면서 비밀번호 확인이 빈칸이 아닌경우
+			if (value !== pwConfirm && pwConfirm !== '') {
 				if (!pwRegExp.test(value)) {
 					setMessages({
 						...messages, // 기존의 message 객체를 복사한 뒤
@@ -181,6 +183,30 @@ const JoinForm = () => {
 						...checks,	// 기존의 check 객체를 복사한 뒤
 						isPw: true, 	// isPw 상태 변경
 						isPwConfirm: false 	// isConfirmPw 상태 변경
+					});
+				}
+			}
+
+			// 비밀번호 확인이 빈칸인 경우
+			if (pwConfirm === '') {
+				if (!pwRegExp.test(value)) {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						pwMessage: '영어와 숫자의 조합으로 8글자 이상 입력해주세요', // pwMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isPw: false,	 // isPw 상태 변경
+					});
+				}
+				else {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						pwMessage: '', // pwMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isPw: true, 	// isPw 상태 변경
 					});
 				}
 			}
@@ -535,7 +561,7 @@ const JoinForm = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="text" placeholder='이름을 입력해 주세요' name="name" onChange={ChangeInput} value={name}>
+									<InputText type="pass" placeholder='이름을 입력해 주세요' name="name" onChange={ChangeInput} value={name}>
 									</InputText>	
 								</InfoCenter>
 								<ErrorField>
