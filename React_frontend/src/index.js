@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
@@ -11,15 +10,18 @@ import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./reducer";
 import rootSaga from "./saga";
+
 const sagaMiddleware = createSagaMiddleware();
 const enhancer =
   process.env.NODE_ENV === "production"
     ? compose(applyMiddleware(sagaMiddleware))
     : composeWithDevTools(applyMiddleware(sagaMiddleware));
+    
 const store = createStore(rootReducer, enhancer);
 sagaMiddleware.run(rootSaga);
 const container = document.getElementById("root");
 const root = createRoot(container);
+
 root.render(
   <Provider store={store}>
     <BrowserRouter>
