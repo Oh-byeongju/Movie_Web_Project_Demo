@@ -9,11 +9,12 @@ const initalState = {
   login_error: null,
 };
 
-export const Login_reduecer = (data) => ({
+export const Login_reducer = (data) => ({
   //컴포넌트나 페이지에서 사용하려고 만든 함수
   type: USER_LOGIN_REQUEST,
   data,
 });
+
 const user = (state = initalState, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
