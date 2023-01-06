@@ -9,6 +9,8 @@ import PrivacyofService from './PrivacyofService';
 
 const JoinForm = () => {
 
+	const baseUrl = "http://localhost:8080"; // axios 쉽게 쓰려고 만듬
+
 	// 주소검색 팝업창 관리
 	const [popup, setpopup] = useState(false);
 
