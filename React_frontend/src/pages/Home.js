@@ -1,9 +1,9 @@
 import React from "react";
-import TopButtons from "../Common_components/TopButtons";
+import TopButtons from "../components/TopButtons";
 import { createGlobalStyle } from "styled-components";
-import BoxList from "../Common_components/BoxOffice/BoxList";
-import HomeBanner from "../Common_components/HomeBanner";
-import Footer from "../Common_components/Footer";
+import BoxList from "../components/BoxOffice/BoxList";
+import HomeBanner from "../components/HomeBanner";
+import Footer from "../components/Footer";
 const Home = () => {
   return (
     <>
