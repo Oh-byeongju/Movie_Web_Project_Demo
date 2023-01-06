@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { CloseOutlined } from "@ant-design/icons";
-import { Login_reduecer } from "../reducer/user";
+import { Login_reduecer } from "../../reducer/user";
 import { useDispatch } from "react-redux";
 
 const LoginModal = ({ setlogin }) => {

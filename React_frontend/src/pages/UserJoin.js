@@ -1,3 +1,18 @@
+<<<<<<< HEAD
+import React from "react";
+import TopButtons from "../components/TopButtons";
+import JoinForm from "../components/Login_components/JoinForm";
+import { createGlobalStyle } from "styled-components";
+
+const UserJoin = () => {
+  return (
+    <>
+      <GlobalStyle />
+      <TopButtons />
+      <JoinForm />
+    </>
+  );
+=======
 import React from 'react';
 import TopButtons from '../Common_components/TopButtons';
 import JoinForm from '../Login_components/JoinForm';
@@ -13,6 +28,7 @@ const UserJoin = () => {
 			<Footer/>
 		</>
 	);
+>>>>>>> 18fb35950aca706e977db49650fa745abc0e31fd
 };
 
 const GlobalStyle = createGlobalStyle`
