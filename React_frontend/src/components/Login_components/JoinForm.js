@@ -1,5 +1,6 @@
 /* 
 	23-01-02 ~ 23-01-04 회원가입 ui 수정 및 기능 추가(오병주)
+	23-01-06 ~ 23-01-06 mysql 연동(오병주)
 */
 import React, {useState} from 'react';
 import styled from 'styled-components';
@@ -8,6 +9,8 @@ import TermofService from './TermofService';
 import PrivacyofService from './PrivacyofService';
 
 const JoinForm = () => {
+
+	const baseUrl = "http://localhost:8080"; // axios 쉽게 쓰려고 만듬
 
 	// 주소검색 팝업창 관리
 	const [popup, setpopup] = useState(false);

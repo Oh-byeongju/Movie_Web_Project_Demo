@@ -1,6 +1,7 @@
 import React from "react";
 import TopButtons from "../components/TopButtons";
 import JoinForm from "../components/Login_components/JoinForm";
+import Footer from "../components/Footer";
 import { createGlobalStyle } from "styled-components";
 
 const UserJoin = () => {
@@ -9,6 +10,7 @@ const UserJoin = () => {
       <GlobalStyle />
       <TopButtons />
       <JoinForm />
+      <Footer />
     </>
   );
 };
