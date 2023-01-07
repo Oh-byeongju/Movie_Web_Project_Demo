@@ -14,7 +14,6 @@ const UserJoin = () => {
     </>
   );
 };
-
 const GlobalStyle = createGlobalStyle`
   body {
     background-color: #fff;

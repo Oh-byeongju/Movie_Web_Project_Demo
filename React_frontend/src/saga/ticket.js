@@ -1,28 +1,43 @@
-import { all, takeLatest, fork, put } from "redux-saga/effects";
+import { all, takeLatest, fork, put, call } from "redux-saga/effects";
 import {
-  ADD_TICKET_FAILURE,
-  ADD_TICKET_SUCCESS,
-  ADD_TICKET_REQUEST,
+  ALLMOVIE_REQUSET,
+  ALLMOVIE_SUCCESS,
+  ALLMOVIE_FAILURE,
 } from "../reducer/ticket";
-function* ticketing(action) {
+import axios from "axios";
+
+function loadAllMovie() {
+  return axios.get("http://localhost:8080/v1/products", {
+    "Access-Control-Allow-Credentials": true,
+  });
+}
+function* allMovieLoad() {
+  const result = yield call(loadAllMovie);
+
+  const allmoviedata = result.data.map((mv) => ({
+    id: mv.m_id,
+    title: mv.m_title,
+    rating: mv.m_rating,
+  }));
   try {
+    console.log(result.data);
+    console.log(allmoviedata);
     yield put({
-      type: ADD_TICKET_SUCCESS,
-      data: action.data,
+      type: ALLMOVIE_SUCCESS,
+      data: allmoviedata,
     });
-    console.log(action.data);
   } catch (err) {
+    console.log(err);
     yield put({
-      type: ADD_TICKET_FAILURE,
-      data: action.err.data,
+      type: ALLMOVIE_FAILURE,
     });
   }
 }
 
-function* ticket() {
-  yield takeLatest(ADD_TICKET_REQUEST, ticketing);
+function* allMovie() {
+  yield takeLatest(ALLMOVIE_REQUSET, allMovieLoad);
 }
 
-export default function* userSaga() {
-  yield all([fork(ticket)]);
+export default function* ticketSaga() {
+  yield all([fork(allMovie)]);
 }
