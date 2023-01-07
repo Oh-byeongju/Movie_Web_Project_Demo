@@ -1,63 +1,38 @@
 export const initalState = {
-  add_ticket_loading: false,
-  add_ticket_done: false,
-  add_ticket_error: null,
-  MovieTicket: [
-    //내가 쓰려고 만든 더미 데이터
-    {
-      id: 1,
-      title: "아바타",
-      movie: {
-        area: "부산",
-        cinema: "화명",
-        time: "2023-01-04",
-      },
-    },
-    {
-      id: 2,
-      title: "슬램덩크",
-      movie: {
-        area: "부산",
-        cinema: "서면",
-        time: "2023-01-04",
-      },
-    },
-    {
-      id: 3,
-      title: "젠틀맨",
-      movie: {
-        area: "부산",
-        cinema: "남포",
-        time: "2023-01-04",
-      },
-    },
-  ],
+  allmovie_loading: false,
+  allmovie_done: false,
+  allmovie_error: false,
+  allMovie: [],
+  //내가 쓰려고 만든 더미 데이터
 };
 
-export const ADD_TICKET_REQUSET = "ADD_TICKET_REQUSET"; //액션
-export const ADD_TICKET_SUCCESS = "ADD_TICKET_SUCCESS";
-export const ADD_TICKET_FAILURE = "ADD_TICKET_FAILURE";
+export const ALLMOVIE_REQUSET = "ALLMOVIE_REQUSET";
+export const ALLMOVIE_SUCCESS = "ALLMOVIE_SUCCESS";
+export const ALLMOVIE_FAILURE = "ALLMOVIE_FAILURE";
 
 const ticket = (state = initalState, action) => {
   switch (action.type) {
-    case ADD_TICKET_REQUSET:
+    case ALLMOVIE_REQUSET:
       return {
         ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨
-        add_ticket_loading: true,
-        add_ticket_done: false,
-        add_ticket_error: null,
+        allmovie_loading: true,
+        allmovie_done: false,
+        allmovie_error: null,
       };
 
-    case ADD_TICKET_SUCCESS:
+    case ALLMOVIE_SUCCESS:
+      console.log(action.data);
+      console.log("heello");
+
       return {
         ...state,
-        add_ticket_loading: false,
-        add_ticket_done: true,
-        MovieTicket: [...state, action.data],
-        add_ticket_error: null,
+        allmovie_loading: false,
+        allmovie_done: true,
+        allmovie_error: null,
+        allMovie: action.data,
       };
 
-    case ADD_TICKET_FAILURE:
+    case ALLMOVIE_FAILURE:
       return {
         ...state,
         add_ticket_loading: false,
