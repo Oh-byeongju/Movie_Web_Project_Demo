@@ -4,14 +4,14 @@ import axios from "axios";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { ALLMOVIE_REQUSET } from "../../reducer/ticket";
+import { ALLMOVIE_REQUEST } from "../../reducer/ticket";
 
 const AllMovieList = () => {
   const dispatch = useDispatch();
   const { allMovie } = useSelector((state) => state.ticket);
   useEffect(() => {
     dispatch({
-      type: ALLMOVIE_REQUSET,
+      type: ALLMOVIE_REQUEST,
     });
   }, []);
   const onClick = useCallback(() => {

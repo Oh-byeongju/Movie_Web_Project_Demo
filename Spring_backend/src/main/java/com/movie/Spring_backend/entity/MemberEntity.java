@@ -40,6 +40,7 @@ public class MemberEntity {
 
 //    public void setPassword(String password) { this.password = password; }
 
+
     @Builder
     public MemberEntity(String u_id, String u_pw, String u_name, String u_email, String u_tel, String u_addr, Date u_birth, Authority u_authority) {
         this.u_id = u_id;
@@ -50,5 +51,6 @@ public class MemberEntity {
         this.u_addr = u_addr;
         this.u_birth = u_birth;
         this.u_authority = u_authority;
+
     }
 }
