@@ -45,6 +45,7 @@ public class MemberEntity {
 
 
     public MemberEntity(String m_title, String m_dir, String m_actor, String m_sup_actor, String m_genre, int m_time, Date m_date, String m_rating, String m_story) {
+
         this.m_title = m_title;
         this.m_dir = m_dir;
         this.m_actor=m_actor;
