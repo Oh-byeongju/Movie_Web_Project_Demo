@@ -1,7 +1,7 @@
 package com.movie.Spring_backend.controller;
 
 import com.movie.Spring_backend.entity.TheaterEntity;
-import com.movie.Spring_backend.repo.TheaterRepository;
+import com.movie.Spring_backend.repository.TheaterRepository;
 import com.movie.Spring_backend.service.TheaterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

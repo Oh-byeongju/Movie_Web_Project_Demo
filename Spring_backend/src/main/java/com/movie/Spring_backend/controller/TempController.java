@@ -1,8 +1,7 @@
 package com.movie.Spring_backend.controller;
 
-import com.movie.Spring_backend.entity.CinemaEntity;
-import com.movie.Spring_backend.repository.CinemaRepository;
-import com.movie.Spring_backend.service.CinemaService;
+import com.movie.Spring_backend.entity.TempEntity;
+import com.movie.Spring_backend.service.TempService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,18 +10,18 @@ import java.util.List;
 @RequiredArgsConstructor // final 객체를 Constructor Injection 해줌. (Autowired 역할)
 @RequestMapping("/v1")
 @CrossOrigin(origins = "http://localhost:3000")
-public class CinemaController {
+public class TempController {
 
-    private CinemaService cinemaService;
+    private TempService tempService;
     @Autowired
-    CinemaController(CinemaService cinemaService){
-        this.cinemaService=cinemaService;
+    TempController(TempService tempService){
+        this.tempService = tempService;
     }
 
-    @GetMapping(value="/cinema")
+    @GetMapping(value="/products")
     @ResponseBody
-    public List<CinemaEntity> getProduct(){
-        return cinemaService.readAllService();
+    public List<TempEntity> getProduct(){
+        return tempService.readAllService();
     }
 
 

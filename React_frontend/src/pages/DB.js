@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 // import axios from 'axios';
-import { Info_reducer } from '../reducer/temp';
-import { useDispatch } from "react-redux";
+import { USER_INFO_REQUEST } from '../reducer/temp';
+import { useDispatch, useSelector } from "react-redux";
 
 const DB = () => {
 
@@ -10,10 +10,18 @@ const DB = () => {
 	const baseUrl = "http://localhost:8080";
 	const dispatch = useDispatch(); //useDispatch를 dispatch로 선언
 
-	const [datas, setdata] = useState([{
-		ID: '',
-		MEMO_TEXT: '',
-	}]);
+	// const [datas, setdata] = useState([{
+	// 	ID: '',
+	// 	MEMO_TEXT: '',
+	// }]);
+
+	const { Infos } = useSelector((state) => state.temp);
+
+	useEffect(() => {
+    dispatch({
+      type: USER_INFO_REQUEST,
+    });
+  }, []);
 
 	// async function getData() {
 	// 	await axios.get(baseUrl + "/Search/select")
@@ -31,9 +39,10 @@ const DB = () => {
 	// 		})
 	// 	};
 
-	const getData = () => {
-		dispatch(Info_reducer());
-	}
+	const getData = useCallback(() => {
+    console.log(Infos);
+  }, []);
+	
 
 
 	return (

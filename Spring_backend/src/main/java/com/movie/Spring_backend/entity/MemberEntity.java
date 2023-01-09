@@ -1,60 +1,56 @@
 package com.movie.Spring_backend.entity;
-import javax.persistence.*;
-import lombok.*;
 
-import java.util.Date;
+import lombok.*;
+import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
-
-@Table(name="movie")
-@Data
-@Builder
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-
+@Table(name = "Member")     // 디비의 테이블명과 클래스 명이 다를 경우
 public class MemberEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long m_id;
+    private String u_id;
 
-    @Column(nullable = false, unique = true, length = 30)
-    private String m_title;
+    @Column(nullable = false)
+    private String u_pw;
 
-    @Column(nullable = false, length = 30)
-    private String m_dir;
+    @Column(nullable = false)
+    private String u_name;
 
-    @Column(nullable = false, length = 30)
-    private String m_actor;
+    @Column(nullable = false)
+    private String u_email;
 
-    @Column(nullable = false, length = 30)
-    private String m_sup_actor;
+    @Column(nullable = false)
+    private String u_tel;
 
-    @Column(nullable = false, length = 30)
-    private String m_genre;
+    @Column(nullable = false)
+    private String u_addr;
 
-    @Column(nullable = false, length = 30)
-    private int m_time;
+    @Column(nullable = false)
+    private Date u_birth;
 
-    @Column(nullable = false, length = 30)
-    private Date m_date;
-    @Column(nullable = false, length = 30)
-    private String m_rating;
+    @Enumerated(EnumType.STRING)
+    private Authority u_authority;
 
-    @Column(nullable = false, length = 30)
-    private String m_story;
+//    public void setNickname(String nickname) {
+//        this.nickname = nickname;
+//    }
+
+//    public void setPassword(String password) { this.password = password; }
 
 
-    public MemberEntity(String m_title, String m_dir, String m_actor, String m_sup_actor, String m_genre, int m_time, Date m_date, String m_rating, String m_story) {
+    @Builder
+    public MemberEntity(String u_id, String u_pw, String u_name, String u_email, String u_tel, String u_addr, Date u_birth, Authority u_authority) {
+        this.u_id = u_id;
+        this.u_pw = u_pw;
+        this.u_name = u_name;
+        this.u_email = u_email;
+        this.u_tel = u_tel;
+        this.u_addr = u_addr;
+        this.u_birth = u_birth;
+        this.u_authority = u_authority;
 
-        this.m_title = m_title;
-        this.m_dir = m_dir;
-        this.m_actor=m_actor;
-        this.m_sup_actor=m_sup_actor;
-        this.m_genre=m_genre;
-        this.m_time=m_time;
-        this.m_date=m_date;
-        this.m_rating=m_rating;
-        this.m_story=m_story;
     }
-
 }

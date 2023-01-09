@@ -5,7 +5,7 @@ import {
   CalendarOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import LoginModal from "../components/Login_components/LoginModal";
+import LoginModal from "../Login_components/LoginModal";
 
 const TopButtons = () => {
   // 로그인 시 뜨는 모달창 on/off용 변수 및 함수

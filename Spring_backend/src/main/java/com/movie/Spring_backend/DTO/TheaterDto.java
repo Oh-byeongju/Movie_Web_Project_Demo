@@ -1,4 +1,4 @@
-package com.movie.Spring_backend.DTO;
+package com.movie.Spring_backend.dto;
 import com.movie.Spring_backend.entity.TheaterEntity;
 import lombok.*;
 

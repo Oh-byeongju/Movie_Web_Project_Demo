@@ -1,9 +1,14 @@
 import { all, fork } from "redux-saga/effects";
+import S_user_joinSaga from "./S_user_join";
 import tempSaga from "./temp";
-import userSaga from "./user";
-import ticketSaga from "./ticket";
+import ticketSaga from "./ticket"
+
 export default function* rootSaga() {
-  yield all([fork(userSaga), fork(ticketSaga)]);
+  yield all([
+    fork(S_user_joinSaga),
+    fork(tempSaga),
+    fork(ticketSaga)]
+    );
 }
 
-//사가 파알 추가 시 rootSaga 안에 fork해주면 됨
+//사가 파일 추가 시 rootSaga 안에 fork해주면 됨

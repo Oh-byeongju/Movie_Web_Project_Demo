@@ -1,7 +1,7 @@
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.entity.CinemaEntity;
-import com.movie.Spring_backend.repo.CinemaRepository;
+import com.movie.Spring_backend.repository.CinemaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

@@ -1,16 +1,17 @@
 /* 
 	23-01-02 ~ 23-01-04 회원가입 ui 수정 및 기능 추가(오병주)
 	23-01-06 ~ 23-01-06 mysql 연동(오병주)
+	23-01-08 ~ 23-01-08 중복확인 기능 추가(오병주)
 */
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import Post from './Post';
 import TermofService from './TermofService';
 import PrivacyofService from './PrivacyofService';
+import { USER_ID_REQUEST } from '../../reducer/R_user_join';
+import { useDispatch, useSelector } from "react-redux";
 
 const JoinForm = () => {
-
-	const baseUrl = "http://localhost:8080"; // axios 쉽게 쓰려고 만듬
 
 	// 주소검색 팝업창 관리
 	const [popup, setpopup] = useState(false);
@@ -466,9 +467,19 @@ const JoinForm = () => {
 				}
 			}
 		}
-
 		console.log(checks);
 	};
+
+
+	// DB 접속에 관한 함수들
+	const dispatch = useDispatch();
+	
+	const IDcheck = () => {
+		dispatch({
+      type: USER_ID_REQUEST,
+    });
+
+	}
 
 	return (
 		<div>
