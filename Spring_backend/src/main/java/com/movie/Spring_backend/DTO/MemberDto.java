@@ -17,7 +17,6 @@ public class MemberDto {
     private String u_addr;
     private Date u_birth;
     private Authority u_authority;
-
     @Builder
     public MemberDto(String u_id, String u_pw, String u_name, String u_email, String u_tel, String u_addr, Date u_birth, Authority u_authority) {
         this.u_id = u_id;
@@ -28,6 +27,18 @@ public class MemberDto {
         this.u_addr = u_addr;
         this.u_birth = u_birth;
         this.u_authority = u_authority;
+    }
+
+    @Builder
+    public MemberDto(String ID) {
+        this.u_id = ID;
+        this.u_pw = null;
+        this.u_name = null;
+        this.u_email = null;
+        this.u_tel = null;
+        this.u_addr = null;
+        this.u_birth = null;
+        this.u_authority = null;
     }
 }
 
