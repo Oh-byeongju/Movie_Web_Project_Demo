@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { CloseOutlined } from "@ant-design/icons";
-import { Login_reducer } from "../../reducer/user";
 import { useDispatch } from "react-redux";
 
 const LoginModal = ({ setlogin }) => {
@@ -30,7 +29,6 @@ const LoginModal = ({ setlogin }) => {
   // 로그인 버튼 누를 때 적용되는 함수
   const submit = () => {
     console.log(id, pw);
-    dispatch(Login_reducer({ id, pw })); // 로그인 버튼 눌리면 리듀서에서 만든 Login_reducer 함수 실행 { } 안에 넣는 이유는 두개 이상의 데이터일 때
   };
 
   // id, pw 입력에 따른 로그인 버튼 활성화 함수
@@ -85,6 +83,7 @@ const LoginModal = ({ setlogin }) => {
             <SocialBox>
               <button className="kakao">
                 <img
+                  style={{marginLeft: "5px"}}
                   alt="kakao"
                   className="kakaoLogo"
                   src="/img/login/kakao.jpg"

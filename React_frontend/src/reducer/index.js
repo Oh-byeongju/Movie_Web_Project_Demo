@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import ticket from "./ticket";
-import user from "./user";
+import R_user_join from "./R_user_join";
 import temp from "./temp";
 
 const rootReducer = combineReducers({
-  user,
+  R_user_join,
   ticket,
   temp
 });

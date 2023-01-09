@@ -1,32 +1,33 @@
-package com.movie.Spring_backend.DTO;
-import com.movie.Spring_backend.entity.MemberEntity;
-import lombok.*;
+package com.movie.Spring_backend.dto;
 
-import javax.persistence.Column;
-import java.util.Date;
-
-@ToString
-@Builder
+import com.movie.Spring_backend.entity.Authority;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import java.sql.Date;
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class MemberDto {
-    private long m_id;
-    private String m_title;
-    private String m_dir;
-    private String m_actor;
-    private String m_sup_actor;
-    private String m_genre;
-    private int m_time;
-    private Date m_date;
-    private String m_rating;
-    private String m_story;
-    public MemberEntity toEntity(){
-        return MemberEntity.builder().m_id(this.m_id).m_title(this.m_title).m_dir(this.m_dir).m_actor(this.m_actor).m_sup_actor(this.m_sup_actor).m_genre(this.m_genre)
-                        .m_time(this.m_time).m_date(this.m_date).m_rating(this.m_rating).m_story(this.m_story).build();
+    private String u_id;
+    private String u_pw;
+    private String u_name;
+    private String u_email;
+    private String u_tel;
+    private String u_addr;
+    private Date u_birth;
+    private Authority u_authority;
 
+    @Builder
+    public MemberDto(String u_id, String u_pw, String u_name, String u_email, String u_tel, String u_addr, Date u_birth, Authority u_authority) {
+        this.u_id = u_id;
+        this.u_pw = u_pw;
+        this.u_name = u_name;
+        this.u_email = u_email;
+        this.u_tel = u_tel;
+        this.u_addr = u_addr;
+        this.u_birth = u_birth;
+        this.u_authority = u_authority;
     }
-
-
 }
+

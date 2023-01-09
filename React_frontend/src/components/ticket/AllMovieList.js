@@ -91,7 +91,7 @@ const MovieChoice = styled.div`
 const UL = styled.div`
   list-style-type: none;
   margin: 0;
-  align-item: center;
+  align-items: center;
   padding: 0;
   display: block;
   width: 100%;

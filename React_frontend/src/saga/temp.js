@@ -4,26 +4,35 @@ import {
   USER_INFO_SUCCESS,
   USER_INFO_REQUEST,
 } from "../reducer/temp";
-import InfoDB from "../connectDB/InfoDB";
+import axios from "axios";
+
+
+const baseUrl = "http://localhost:8080";
+
+// 디비에서 데이터 select 하고 바로 리턴해줌
+async function getData() {
+	return await axios.get(baseUrl + "/Search/select")
+};
 
 
 // 이 파일 지금 수정 중 
 function* Info() {
-	console.log("ehsek")
   try {
-		const result = yield call()
+		const result = yield call(getData);
 
-		console.log("성공")
+    const allInfo = result.data.map((Info) => ({
+      id: Info.id,
+      memo_text: Info.memo_text,
+    }));
 
     yield put({
       type: USER_INFO_SUCCESS,
-			data: "ss"
+			data: allInfo
     });
-  } catch (err) {
-		console.log("error")
+  } 
+  catch (err) {
     yield put({
-      type: USER_INFO_FAILURE,
-      data: "ss"
+      type: USER_INFO_FAILURE
     });
   }
 }
