@@ -28,7 +28,12 @@ const AllMovieList = () => {
             <UL>
               {allMovie.map((m) => (
                 <li>
-                  <AllMovie key={m.id} title={m.title} rating={m.rating} />
+                  <AllMovie
+                    key={m.id}
+                    title={m.title}
+                    rating={m.rating}
+                    id={m.id}
+                  />
                 </li>
               ))}
             </UL>

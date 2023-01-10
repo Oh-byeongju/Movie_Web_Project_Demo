@@ -1,37 +1,34 @@
 package com.movie.Spring_backend.entity;
 import javax.persistence.*;
 import lombok.*;
-import com.movie.Spring_backend.entity.CinemaEntity;
-import java.util.ArrayList;
-import java.util.Date;
+
 
 @Entity
-
 @Table(name="movie_theater")
-@Data
-@Builder
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-
 public class TheaterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long t_id;
+    private Long tId;
 
     @Column(nullable = false, length = 30)
-    private String t_name;
+    private String tName;
 
     @Column(nullable = false, length = 30)
-    private String t_area;
+    private String tArea;
     @Column(nullable = false, length = 30)
-    private String t_addr;
+    private String tAddr;
 
-    public TheaterEntity( String t_name, String t_area, String t_addr) {
 
-        this.t_name=t_name;
-        this.t_area=t_area;
-        this.t_addr=t_addr;
-
+    @Builder
+    public TheaterEntity(Long tId ,String tName, String tArea, String tAddr) {
+        this.tId=tId;
+        this.tName=tName;
+        this.tArea=tArea;
+        this.tAddr=tAddr;
     }
+
+
 
 }
