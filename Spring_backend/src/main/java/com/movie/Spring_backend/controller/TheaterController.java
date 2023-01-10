@@ -19,7 +19,7 @@ public class TheaterController {
 
 
     @GetMapping("/selected")
-    public TheaterEntity<List<TheaterDto>> getData() {
+    public ResponseEntity<List<TheaterDto>> getData() {
         return ResponseEntity.ok().body(theaterService.getInfo());
     }
 

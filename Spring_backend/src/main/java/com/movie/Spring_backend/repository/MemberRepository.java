@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
-    Optional<MemberEntity> findByuId(String id);
+    // 아이디 중복 검사를 위한 select
+    Optional<MemberEntity> findByUid(String id);
 }

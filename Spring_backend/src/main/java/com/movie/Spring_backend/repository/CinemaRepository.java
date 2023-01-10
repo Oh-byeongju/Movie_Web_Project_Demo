@@ -8,3 +8,4 @@ public interface CinemaRepository extends JpaRepository<CinemaEntity,Long>  {
     //JpaRepository<Entity클래스, PK값>
 }
 //디비접근
+

@@ -1,22 +1,40 @@
 /* 
-	23-01-08 ~ 23-01-08 회원가입 시 필요한 사가 파일 작성(오병주)
+	23-01-08 회원가입 시 필요한 사가 파일 작성(오병주)
+  23-01-10 아이디 중복확인 함수 생성(오병주)
 */
-
-import { all, takeLatest, fork, put } from "redux-saga/effects";
+import { call, all, takeLatest, fork, put } from "redux-saga/effects";
 import {
   USER_ID_FAILURE,
   USER_ID_SUCCESS,
   USER_ID_REQUEST,
 } from "../reducer/R_user_join";
+import axios from "axios";
+
+const baseUrl = "http://localhost:8080";
+
+// 디비에서 데이터 select 하고 바로 리턴해줌
+async function idexsits(data) {
+	return await axios.get(baseUrl + "/auth/id",{
+    params: {
+      uid: data
+    }
+  })
+};
 
 function* IDcheck(action) {
   try {
+    const result = yield call(idexsits, action.data);
+    //                   idexsits(action.data); 이런 것!
+    
+    console.log(result);
+
+
     yield put({
-      type: USER_ID_SUCCESS, //로그인 하는데 이상이 없으면 USER_LOGIN_SUCCESS 실행 , data 반환 reducer 폴더의 USER_LOGIN_SUCCESS로 이동
-      data: action.data,
+      type: USER_ID_SUCCESS,
+      data: result.data.uid,
     });
-    console.log(action.data);
-  } catch (err) {
+  } 
+  catch (err) {
     yield put({
       type: USER_ID_FAILURE,
       data: action.err.data,

@@ -1,10 +1,8 @@
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.CinemaDto;
-import com.movie.Spring_backend.dto.Testdto;
 import com.movie.Spring_backend.dto.TheaterDto;
 import com.movie.Spring_backend.entity.CinemaEntity;
-import com.movie.Spring_backend.entity.TestEntity;
 import com.movie.Spring_backend.entity.TheaterEntity;
 import com.movie.Spring_backend.repository.TheaterRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,3 +26,4 @@ public class TheaterService {
                 .collect(Collectors.toList());
     }
 }
+

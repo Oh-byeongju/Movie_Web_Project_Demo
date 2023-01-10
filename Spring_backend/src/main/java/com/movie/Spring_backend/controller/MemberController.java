@@ -6,21 +6,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// 나중에 cros localhost 3000번만 열고 닫기
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class MemberController {
-
-    // ResponseEntity가 뭔지도 읽어봐야함
     private final MemberService memberService;
 
+    // 아이디 중복 검사를 위한 것
     @GetMapping("/id")
-    public ResponseEntity<MemberDto> getData(@RequestParam("uId") String id) {
-        MemberDto responseDto = MemberDto.builder().u_id(id).build();
-        return ResponseEntity.ok().body(memberService.getID(responseDto));
+    public ResponseEntity<MemberDto> existsId(@RequestParam("uid") String id) {
+      return ResponseEntity.ok().body(memberService.existsId(id));
     }
-
-    // 아이디 중복 검사하고 그거 어디에 집어 넣어놔야함
-    // 아직 불안한 컨트롤러임 (파라미터를 dto로 받는걸 생각해야함)
 }

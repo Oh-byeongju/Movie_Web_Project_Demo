@@ -26,9 +26,6 @@ public class CinemaController {
         return cinemaService.getList();
     }
 
-
-
-
 }
 /*
 
@@ -44,3 +41,4 @@ public class CinemaController {
     }
 }
     }*/
+

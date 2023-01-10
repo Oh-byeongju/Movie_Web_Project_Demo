@@ -34,3 +34,4 @@ public class CinemaService {
     public List<TempEntity> readAllService(){
         return repository.findAll();
     }*/
+

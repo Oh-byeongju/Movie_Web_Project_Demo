@@ -6,21 +6,18 @@ import com.movie.Spring_backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberDto getID(MemberDto responseDto) {
-
-        MemberEntity Data = memberRepository.findByuId(responseDto.getU_id()).orElseThrow(() -> new RuntimeException("유저가 없습니다."));
-        String name = Data.getUId();
+    public MemberDto existsId(String id) {
+        // 아이디를 임시저장해야 하는지 생각해보기
+        MemberEntity Data = memberRepository.findByUid(id).orElseThrow(() -> new RuntimeException("이미 사용중인 아이디입니다."));
+        String name = Data.getUid();
         System.out.println(name);
 
-        return MemberDto.builder().u_id(name).build();
+        return MemberDto.builder().uid(name).build();
     }
 }
