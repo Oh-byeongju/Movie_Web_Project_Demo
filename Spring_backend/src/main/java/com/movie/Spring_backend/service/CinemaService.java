@@ -7,18 +7,30 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Transactional
 @Service
-
-
+@Transactional
 public class CinemaService {
 
     private CinemaRepository repository;
-
     CinemaService(CinemaRepository repository){this.repository=repository;}
 
     @Transactional
-    public List<CinemaEntity> readAllService(){
+    public List<CinemaEntity> getList(){
         return repository.findAll();
     }
+
+
+
 }
+
+
+
+/*
+    private TempRepository repository;
+
+    TempService(TempRepository repository){this.repository=repository;}
+
+    @Transactional
+    public List<TempEntity> readAllService(){
+        return repository.findAll();
+    }*/

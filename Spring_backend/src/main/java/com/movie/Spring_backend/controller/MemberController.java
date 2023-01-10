@@ -16,7 +16,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/id")
-    public ResponseEntity<MemberDto> getData(@RequestParam("u_id") String id) {
+    public ResponseEntity<MemberDto> getData(@RequestParam("uId") String id) {
         MemberDto responseDto = MemberDto.builder().u_id(id).build();
         return ResponseEntity.ok().body(memberService.getID(responseDto));
     }

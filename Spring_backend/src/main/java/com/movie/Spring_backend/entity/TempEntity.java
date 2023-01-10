@@ -4,56 +4,55 @@ import lombok.*;
 
 import java.util.Date;
 
-@Entity
 
 @Table(name="movie")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Entity
 public class TempEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long m_id;
+    private long mId;
 
-    @Column(nullable = false, unique = true, length = 30)
-    private String m_title;
-
-    @Column(nullable = false, length = 30)
-    private String m_dir;
+    @Column(nullable = false,length = 30)
+    private String mTitle;
 
     @Column(nullable = false, length = 30)
-    private String m_actor;
+    private String mDir;
 
     @Column(nullable = false, length = 30)
-    private String m_sup_actor;
+    private String mActor;
 
     @Column(nullable = false, length = 30)
-    private String m_genre;
+    private String mSupactor;
 
     @Column(nullable = false, length = 30)
-    private int m_time;
+    private String mGenre;
 
     @Column(nullable = false, length = 30)
-    private Date m_date;
-    @Column(nullable = false, length = 30)
-    private String m_rating;
+    private int mTime;
 
     @Column(nullable = false, length = 30)
-    private String m_story;
+    private Date mDate;
+    @Column(nullable = false, length = 30)
+    private String mRating;
+
+    @Column(nullable = false, length = 30)
+    private String mStory;
 
 
-    public TempEntity(String m_title, String m_dir, String m_actor, String m_sup_actor, String m_genre, int m_time, Date m_date, String m_rating, String m_story) {
-        this.m_title = m_title;
-        this.m_dir = m_dir;
-        this.m_actor=m_actor;
-        this.m_sup_actor=m_sup_actor;
-        this.m_genre=m_genre;
-        this.m_time=m_time;
-        this.m_date=m_date;
-        this.m_rating=m_rating;
-        this.m_story=m_story;
+    public TempEntity(String mTitle, String mdir, String mActor, String mSupactor, String mGenre, int mTime, Date mDate, String mRating, String mStory) {
+        this.mTitle = mTitle;
+        this.mDir = mDir;
+        this.mActor=mActor;
+        this.mSupactor=mSupactor;
+        this.mGenre=mGenre;
+        this.mTime=mTime;
+        this.mDate=mDate;
+        this.mRating=mRating;
+        this.mStory=mStory;
     }
 
 }
