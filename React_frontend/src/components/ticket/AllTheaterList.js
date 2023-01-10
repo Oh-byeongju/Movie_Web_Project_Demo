@@ -4,6 +4,7 @@ import { ALLTHEATER_REQUEST } from "../../reducer/ticket";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import AllTheater from "./AllTheater";
+import { all } from "axios";
 const AllTheaterList = () => {
   const dispatch = useDispatch();
   const onClick = useCallback((e) => {
@@ -11,49 +12,12 @@ const AllTheaterList = () => {
   });
   const { alltheater } = useSelector((state) => state.ticket);
 
-  const resultTheater = [];
+  const theaterList = alltheater.reduce((theater, { name, area, id }) => {
+    if (!theater[area]) theater[area] = [];
+    theater[area].push(name);
+    return theater;
+  }, {});
 
-  alltheater.map((item) => {
-    //극장나누기
-    if (
-      resultTheater.find((object) => {
-        if (
-          object.theater.t_area === item.theater.t_area &&
-          object.theater.t_id === item.theater.t_id
-        ) {
-          object.cnt++;
-          return true;
-        } else {
-          return false;
-        }
-      })
-    ) {
-    } else {
-      item.cnt = 1;
-      resultTheater.push(item);
-    }
-    console.log(resultTheater);
-  });
-
-  const resultArea = [];
-  resultTheater.map((item) => {
-    //지역나누기
-    if (
-      resultArea.find((object) => {
-        if (object.theater.t_area === item.theater.t_area) {
-          object.cnt++;
-          return true;
-        } else {
-          return false;
-        }
-      })
-    ) {
-    } else {
-      item.cnt = 1;
-      resultArea.push(item);
-      console.log(resultArea);
-    }
-  });
   useEffect(() => {
     dispatch({
       type: ALLTHEATER_REQUEST,
@@ -65,14 +29,25 @@ const AllTheaterList = () => {
         <TheaterList>
           <TheaterArea>
             <ul className="area">
-              {resultArea.map((c) => (
+              {Object.entries(theaterList).map(([key, value]) => (
                 <li className="area-name">
-                  {c.theater.t_area}({c.cnt})
+                  <p
+                    onClick={() => {
+                      console.log(key);
+                    }}
+                  >
+                    {" "}
+                    {key}
+                  </p>
                   <div>
                     <ul className="theater">
-                      {resultTheater.map((t) => (
-                        <li>
-                          <AllTheater key={t.id} name={t.theater.t_name} />
+                      {value.map((c) => (
+                        <li
+                          onClick={() => {
+                            console.log(c);
+                          }}
+                        >
+                          {c}
                         </li>
                       ))}
                     </ul>

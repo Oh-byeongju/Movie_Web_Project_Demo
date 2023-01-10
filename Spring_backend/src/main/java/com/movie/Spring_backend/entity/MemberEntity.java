@@ -5,7 +5,6 @@ package com.movie.Spring_backend.entity;
 import lombok.*;
 import javax.persistence.*;
 import java.sql.Date;
-
 @Entity
 @Getter
 @NoArgsConstructor

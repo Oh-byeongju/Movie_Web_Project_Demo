@@ -1,9 +1,16 @@
 import React, { useCallback } from "react";
-
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
-const AllMovie = ({ title, rating }) => {
+import { MOVIE_SELECT_REQUEST } from "../../reducer/ticket";
+const AllMovie = ({ title, rating, id }) => {
+  const dispatch = useDispatch();
+
   const onClick = useCallback(() => {
-    console.log(title);
+    dispatch({
+      type: MOVIE_SELECT_REQUEST,
+      data: id,
+    });
+    console.log(id);
   }, []);
   return (
     <MovieText onClick={onClick}>

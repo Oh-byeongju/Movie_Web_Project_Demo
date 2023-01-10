@@ -6,8 +6,12 @@ import {
   ALLTHEATER_FAILURE,
   ALLTHEATER_REQUEST,
   ALLTHEATER_SUCCESS,
+  MOVIE_SELECT_REQUEST,
+  MOVIE_SELECT_SUCCESS,
+  MOVIE_SELECT_FAILURE,
 } from "../reducer/ticket";
 import axios from "axios";
+import { RestOutlined } from "@ant-design/icons";
 
 function loadAllMovie() {
   return axios.get("http://localhost:8080/v1/products", {
@@ -39,7 +43,7 @@ function* allMovieLoad() {
 }
 
 function loadAllTheater() {
-  return axios.get("http://localhost:8080/v1/cinema", {
+  return axios.get("http://localhost:8080/v1/theater", {
     "Access-Control-Allow-Credentials": true,
   });
 } //극장 불러오기
@@ -47,17 +51,12 @@ function loadAllTheater() {
 function* allTheaterLoad() {
   const result = yield call(loadAllTheater);
 
+  console.log(result);
   const alltheaterdata = result.data.map((mv) => ({
-    id: mv.c_id,
-    name: mv.c_name,
-    type: mv.c_type,
-    seat: mv.c_seat,
-    theater: {
-      t_id: mv.theater.t_id,
-      t_name: mv.theater.t_name,
-      t_area: mv.theater.t_area,
-      t_addr: mv.theater.t_addr,
-    },
+    id: mv.t_id,
+    name: mv.t_name,
+    area: mv.t_area,
+    addr: mv.t_addr,
   }));
   try {
     yield put({
@@ -72,6 +71,31 @@ function* allTheaterLoad() {
   }
 }
 
+function selectMovie(data) {
+  return axios.post(
+    "http://localhost:8080/v1/selected",
+    {
+      "Access-Control-Allow-Credentials": true,
+    },
+    data
+  );
+} //영화 불러오기
+
+function* selectMovieLoad(action) {
+  const result = yield call(selectMovie(action.data));
+  try {
+    yield put({
+      type: MOVIE_SELECT_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.log(err);
+    yield put({
+      type: MOVIE_SELECT_FAILURE,
+    });
+  }
+}
+
 function* allMovie() {
   yield takeLatest(ALLMOVIE_REQUEST, allMovieLoad);
 }
@@ -80,6 +104,10 @@ function* allTheater() {
   yield takeLatest(ALLTHEATER_REQUEST, allTheaterLoad);
 }
 
+function* selectedMovie() {
+  yield takeLatest(MOVIE_SELECT_REQUEST, selectMovieLoad);
+}
+
 export default function* ticketSaga() {
-  yield all([fork(allMovie), fork(allTheater)]);
+  yield all([fork(allMovie), fork(allTheater), fork(selectedMovie)]);
 }
