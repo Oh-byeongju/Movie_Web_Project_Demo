@@ -471,14 +471,26 @@ const JoinForm = () => {
 	};
 
 
-	// DB 접속에 관한 함수들
-	const dispatch = useDispatch();
+	// DB 접속에 관한 변수들
+	const [idexsits, setIdexists] = useState('');
 	
+	// dispatch 선언
+	const dispatch = useDispatch();
+
+	// 로그인 중복확인 누르면 실행되는 함수
 	const IDcheck = () => {
 		dispatch({
       type: USER_ID_REQUEST,
+			data: id
     });
+		IDexsits();
 
+		console.log(idexsits);
+	}
+
+	const IDexsits = () => {
+		// const temp = useSelector((state) => state.R_user_join.uid);
+		setIdexists('abd');
 	}
 
 	return (
@@ -515,7 +527,7 @@ const JoinForm = () => {
 									</ErrorText>
 								</ErrorField>
 							</CenterField>
-							<InfoCheck style={{marginRight: "22px"}}>
+							<InfoCheck style={{marginRight: "22px"}} onClick={IDcheck}>
 								중복확인
 							</InfoCheck>
 						</InfoTextForm>

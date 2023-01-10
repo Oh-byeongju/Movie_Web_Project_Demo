@@ -7,38 +7,29 @@ import lombok.NoArgsConstructor;
 import java.sql.Date;
 @Getter
 @NoArgsConstructor
-@Builder
 public class MemberDto {
-    private String u_id;
-    private String u_pw;
-    private String u_name;
-    private String u_email;
-    private String u_tel;
-    private String u_addr;
-    private Date u_birth;
-    private Authority u_authority;
+    private String uid;
+    private String upw;
+    private String uname;
+    private String uemail;
+    private String utel;
+    private String uaddr;
+    private Date ubirth;
+    private Authority uauthority;
     @Builder
-    public MemberDto(String u_id, String u_pw, String u_name, String u_email, String u_tel, String u_addr, Date u_birth, Authority u_authority) {
-        this.u_id = u_id;
-        this.u_pw = u_pw;
-        this.u_name = u_name;
-        this.u_email = u_email;
-        this.u_tel = u_tel;
-        this.u_addr = u_addr;
-        this.u_birth = u_birth;
-        this.u_authority = u_authority;
+    public MemberDto(String uid, String upw, String uname, String uemail, String utel, String uaddr, Date ubirth, Authority uauthority) {
+        this.uid = uid;
+        this.upw = upw;
+        this.uname = uname;
+        this.uemail = uemail;
+        this.utel = utel;
+        this.uaddr = uaddr;
+        this.ubirth = ubirth;
+        this.uauthority = uauthority;
     }
-
     @Builder
-    public MemberDto(String ID) {
-        this.u_id = ID;
-        this.u_pw = null;
-        this.u_name = null;
-        this.u_email = null;
-        this.u_tel = null;
-        this.u_addr = null;
-        this.u_birth = null;
-        this.u_authority = null;
+    public MemberDto(String id) {
+        this.uid = id;
     }
 }
 
