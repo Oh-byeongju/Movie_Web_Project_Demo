@@ -3,12 +3,12 @@
 	23-01-06 ~ 23-01-06 mysql 연동(오병주)
 	23-01-08 ~ 23-01-08 중복확인 기능 추가(오병주)
 */
-import React, {useState} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import styled from 'styled-components';
 import Post from './Post';
 import TermofService from './TermofService';
 import PrivacyofService from './PrivacyofService';
-import { USER_ID_REQUEST } from '../../reducer/R_user_join';
+import { USER_ID_REQUEST, USER_ID_RESET } from '../../reducer/R_user_join';
 import { useDispatch, useSelector } from "react-redux";
 
 const JoinForm = () => {
@@ -470,28 +470,35 @@ const JoinForm = () => {
 		console.log(checks);
 	};
 
-
-	// DB 접속에 관한 변수들
-	const [idexsits, setIdexists] = useState('');
-	
-	// dispatch 선언
+	// ID 중복을 확인하기 위한 리덕스 미들웨어 상태
+	const { ID_status } = useSelector((state) => state.R_user_join);
 	const dispatch = useDispatch();
-
+	
 	// 로그인 중복확인 누르면 실행되는 함수
-	const IDcheck = () => {
+	const IDcheck = useCallback(() => {
 		dispatch({
       type: USER_ID_REQUEST,
 			data: id
     });
-		IDexsits();
+	}, [dispatch, id, ID_status]);
 
-		console.log(idexsits);
-	}
-
-	const IDexsits = () => {
-		// const temp = useSelector((state) => state.R_user_join.uid);
-		setIdexists('abd');
-	}
+	// IDcheck를 호출해서 ID_status의 상태가 변경이 됐을 때 유효성 검사를 해주는 useEffect
+	useEffect(() => {
+		if (ID_status == 204) {
+			alert("성공했음.");
+			dispatch({
+				type: USER_ID_RESET
+			});
+			
+		}
+		
+		if (ID_status == 400) {
+			alert("이미 사용중");
+			dispatch({
+				type: USER_ID_RESET
+			});
+		}
+	}, [dispatch, ID_status])
 
 	return (
 		<div>

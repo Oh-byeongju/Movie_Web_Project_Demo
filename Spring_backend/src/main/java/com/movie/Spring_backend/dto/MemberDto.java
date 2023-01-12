@@ -27,8 +27,4 @@ public class MemberDto {
         this.ubirth = ubirth;
         this.uauthority = uauthority;
     }
-    @Builder
-    public MemberDto(String id) {
-        this.uid = id;
-    }
 }
