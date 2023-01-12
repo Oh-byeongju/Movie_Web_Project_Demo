@@ -16,7 +16,8 @@ public class MemberController {
 
     // 아이디 중복 검사를 위한 것
     @GetMapping("/id")
-    public ResponseEntity<MemberDto> existsId(@RequestParam("uid") String id) {
-      return ResponseEntity.ok().body(memberService.existsId(id));
+    public ResponseEntity<String> existsId(@RequestParam("uid") String id) {
+        memberService.existsId(id);
+        return ResponseEntity.noContent().build();
     }
 }
