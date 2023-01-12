@@ -14,7 +14,7 @@ import axios from "axios";
 import { RestOutlined } from "@ant-design/icons";
 
 function loadAllMovie() {
-  return axios.get("http://localhost:8080/v1/products", {
+  return axios.get("http://localhost:8080/v1/showlist", {
     "Access-Control-Allow-Credentials": true,
   });
 } //영화 불러오기

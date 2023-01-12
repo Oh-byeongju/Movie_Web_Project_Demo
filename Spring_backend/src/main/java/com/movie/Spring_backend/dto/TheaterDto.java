@@ -1,4 +1,10 @@
 package com.movie.Spring_backend.dto;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
 import com.movie.Spring_backend.entity.TheaterEntity;
 import lombok.*;
 
@@ -7,33 +13,24 @@ import java.util.Date;
 
 @Getter
 @NoArgsConstructor
-
 public class TheaterDto {
 
-    private Long tId;
 
+    private Long tid;
 
-    private String tName;
+    private String tname;
 
+    private String tarea;
 
-    private String tArea;
+    private String taddr;
 
-    private String tAddr;
 
     @Builder
-    public TheaterDto(Long tId, String tName, String tArea, String tAddr){
-        this.tId=tId;
-        this.tName=tName;
-        this.tArea=tArea;
-        this.tAddr=tAddr;
+    public TheaterDto(Long tid, String tname, String tarea, String taddr) {
+        this.tid = tid;
+        this.tname = tname;
+        this.tarea = tarea;
+        this.taddr = taddr;
+
     }
-    //dtd 선언
-    public TheaterEntity toEntity(){
-        return TheaterEntity.builder().tId(tId).tName(tName).tArea(tArea).tAddr(tAddr).build();
-    }
-
-
-
-
-
 }

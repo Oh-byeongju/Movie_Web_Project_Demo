@@ -10,23 +10,23 @@ import lombok.*;
 public class TheaterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tId;
+    private Long tid;
 
     @Column(nullable = false, length = 30)
-    private String tName;
+    private String tname;
 
     @Column(nullable = false, length = 30)
-    private String tArea;
+    private String tarea;
     @Column(nullable = false, length = 30)
-    private String tAddr;
+    private String taddr;
 
 
     @Builder
-    public TheaterEntity(Long tId ,String tName, String tArea, String tAddr) {
-        this.tId=tId;
-        this.tName=tName;
-        this.tArea=tArea;
-        this.tAddr=tAddr;
+    public TheaterEntity(Long tid ,String tname, String tarea, String taddr) {
+        this.tid=tid;
+        this.tname=tname;
+        this.tarea=tarea;
+        this.taddr=taddr;
     }
 
 

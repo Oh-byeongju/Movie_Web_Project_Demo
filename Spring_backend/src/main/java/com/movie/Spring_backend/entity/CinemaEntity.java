@@ -11,31 +11,31 @@ import java.sql.Date;
 @Getter
 @NoArgsConstructor
 @Table(name = "movie_cinema")
-public class CinemaEntity {
+public class CinemaEntity { // 소문자 수정본
 
     @Id
-    private Long cId;
+    private Long cid;
 
     @Column(nullable = false)
-    private String cName;
+    private String cname;
 
     @Column(nullable = false)
-    private String cType;
+    private String ctype;
 
     @Column(nullable = false)
-    private String cSeat;
+    private String cseat;
 
     @ManyToOne  //다 대 일 여러개의 관들은 하나의 극장을 가진다
-    @JoinColumn(name="tId") //조인할 컬럼 이름
+    @JoinColumn(name="tid") //조인할 컬럼 이름
     private TheaterEntity theater;
 
 
-    @Builder
-    public CinemaEntity(Long cId, String cName, String cType, String cSeat ,TheaterEntity theater) {
-        this.cId = cId;
-        this.cName = cName;
-        this.cType = cType;
-        this.cSeat = cSeat;
+    @Builder //클래스 레벨에 붙이거나 생성자에 붙여주면 파라미터를 활용하여 빌더 패턴을 자동으로 생성해준다
+    public void CinemaEntity(Long cid, String cname, String ctype, String cseat ,TheaterEntity theater) {
+        this.cid = cid;
+        this.cname = cname;
+        this.ctype = ctype;
+        this.cseat = cseat;
         this.theater=theater;
     }
 }
