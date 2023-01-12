@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface TempRepository extends JpaRepository<TempEntity,Long>  {
   //JpaRepository<Entity클래스, PK값>
-  public List<TempEntity> findAll();
 }
