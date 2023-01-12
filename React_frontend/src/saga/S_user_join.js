@@ -29,7 +29,7 @@ async function idexsits(data) {
 
 function* IDcheck(action) {
   const result = yield call(idexsits, action.data);
-  //  idexsits(action.data); 이런 것!
+  //  idexsits(action.data); 이런 것
 
   if (result.status === 204) {
     yield put({
