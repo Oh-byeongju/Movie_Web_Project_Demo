@@ -19,19 +19,23 @@ async function idexsits(data) {
       uid: data
     }
   })
+  .then((response) => {
+    alert('사용가능 합니다.');
+    return response;
+  })
+  .catch((error)=>{
+    return error;
+  })
 };
 
 function* IDcheck(action) {
   try {
     const result = yield call(idexsits, action.data);
     //                   idexsits(action.data); 이런 것!
-    
+
     console.log(result);
-
-
     yield put({
-      type: USER_ID_SUCCESS,
-      data: result.data.uid,
+      type: USER_ID_SUCCESS
     });
   } 
   catch (err) {
