@@ -19,6 +19,8 @@ public class TheaterController {
 
 
     @GetMapping("/selected")
+    @CrossOrigin(origins = "http://localhost:3000")
+
     public ResponseEntity<List<TheaterDto>> getData() {
         return ResponseEntity.ok().body(theaterService.getInfo());
     }

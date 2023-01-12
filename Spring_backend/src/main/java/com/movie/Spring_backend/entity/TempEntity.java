@@ -6,53 +6,55 @@ import java.util.Date;
 
 
 @Table(name="movie")
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Getter
+@NoArgsConstructor
+
 public class TempEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long mId;
+    private Long mid;
 
     @Column(nullable = false,length = 30)
-    private String mTitle;
+    private String mtitle;
 
     @Column(nullable = false, length = 30)
-    private String mDir;
+    private String mdir;
 
     @Column(nullable = false, length = 30)
-    private String mActor;
+    private String mactor;
 
     @Column(nullable = false, length = 30)
-    private String mSupactor;
+    private String msupactor;
 
     @Column(nullable = false, length = 30)
-    private String mGenre;
+    private String mgenre;
 
     @Column(nullable = false, length = 30)
-    private int mTime;
+    private int mtime;
 
     @Column(nullable = false, length = 30)
-    private Date mDate;
+    private Date mdate;
     @Column(nullable = false, length = 30)
-    private String mRating;
+    private String mrating;
 
     @Column(nullable = false, length = 30)
-    private String mStory;
+    private String mstory;
 
 
-    public TempEntity(String mTitle, String mdir, String mActor, String mSupactor, String mGenre, int mTime, Date mDate, String mRating, String mStory) {
-        this.mTitle = mTitle;
-        this.mDir = mDir;
-        this.mActor=mActor;
-        this.mSupactor=mSupactor;
-        this.mGenre=mGenre;
-        this.mTime=mTime;
-        this.mDate=mDate;
-        this.mRating=mRating;
-        this.mStory=mStory;
+    @Builder
+    public TempEntity(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
+                      int mtime, Date mdate, String mrating, String mstory) {
+        this.mid = mid;
+        this.mtitle = mtitle;
+        this.mdir=mdir;
+        this.mactor=mactor;
+        this.msupactor=msupactor;
+        this.mgenre=mgenre;
+        this.mtime=mtime;
+        this.mdate=mdate;
+        this.mrating=mrating;
+        this.mstory=mstory;
     }
 
 }
