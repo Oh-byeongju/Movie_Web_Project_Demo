@@ -1,7 +1,6 @@
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.TempDto;
-import com.movie.Spring_backend.entity.TempEntity;
 import com.movie.Spring_backend.repository.TempRepository;
 import org.springframework.stereotype.Service;
 
