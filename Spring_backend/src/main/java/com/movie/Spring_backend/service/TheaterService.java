@@ -22,8 +22,8 @@ public class TheaterService {
         List<TheaterEntity> Datas = repository.findAll();
 
         return Datas.stream()
-                .map(data -> new TheaterDto(data.getTId(), data.getTName(),data.getTAddr(),data.getTArea()))
+                .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTarea(),data.getTarea()))
                 .collect(Collectors.toList());
-    }
+    }// 매핑해주는거
 }
 
