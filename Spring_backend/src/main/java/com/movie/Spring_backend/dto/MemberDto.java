@@ -1,3 +1,4 @@
+//23-01-09 ~ 23-01-10 id 중복 확인 및 mysql 점검
 package com.movie.Spring_backend.dto;
 
 import com.movie.Spring_backend.entity.Authority;
@@ -18,6 +19,7 @@ public class MemberDto {
     private String uaddr;
     private Date ubirth;
     private Authority uauthority;
+
     @Builder
     public MemberDto(String uid, String upw, String uname, String uemail, String utel, String uaddr, Date ubirth, Authority uauthority) {
         this.uid = uid;
