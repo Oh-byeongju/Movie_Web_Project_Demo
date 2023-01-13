@@ -1,4 +1,4 @@
-// 23-01-02 에러처리 구현(오병주)
+// 23-01-12 에러처리 구현(오병주)
 package com.movie.Spring_backend.error.exception;
 
 public class BusinessException extends RuntimeException {

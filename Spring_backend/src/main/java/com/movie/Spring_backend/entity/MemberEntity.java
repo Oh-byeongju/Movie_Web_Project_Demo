@@ -1,10 +1,11 @@
 //23-01-09 ~ 23-01-10 id 중복 확인 및 mysql 점검
-
 package com.movie.Spring_backend.entity;
 
 import lombok.*;
 import javax.persistence.*;
 import java.sql.Date;
+
+// 빌더패턴을 사용한 entity 파일
 @Entity
 @Getter
 @NoArgsConstructor

@@ -470,7 +470,7 @@ const JoinForm = () => {
 		console.log(checks);
 	};
 
-	// ID 중복을 확인하기 위한 리덕스 미들웨어 상태
+	// ID 중복을 확인하기 위한 리덕스 상태
 	const { ID_status } = useSelector((state) => state.R_user_join);
 	const dispatch = useDispatch();
 	
