@@ -1,7 +1,7 @@
 /* 
 	23-01-02 ~ 23-01-04 회원가입 ui 수정 및 기능 추가(오병주)
-	23-01-06 ~ 23-01-06 mysql 연동(오병주)
-	23-01-08 ~ 23-01-08 중복확인 기능 추가(오병주)
+	23-01-08 ~ 23-01-10 mysql 연동(오병주)
+	23-01-13 ~ 23-01-13 중복확인 기능 추가(오병주)
 */
 import React, {useState, useCallback, useEffect} from 'react';
 import styled from 'styled-components';
