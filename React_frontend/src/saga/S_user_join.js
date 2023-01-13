@@ -1,6 +1,6 @@
 /* 
 	23-01-08 회원가입 시 필요한 사가 파일 작성(오병주)
-  23-01-10 아이디 중복확인 함수 생성(오병주)
+  23-01-13 아이디 중복확인 함수 생성(오병주)
 */
 import { call, all, takeLatest, fork, put } from "redux-saga/effects";
 import {

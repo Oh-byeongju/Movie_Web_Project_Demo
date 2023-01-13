@@ -1,4 +1,4 @@
-//23-01-09 ~ 23-01-10 id 중복 확인 및 mysql 점검
+//23-01-09 ~ 23-01-10 id 중복 확인 및 mysql 점검(오병주)
 package com.movie.Spring_backend.entity;
 
 import lombok.*;

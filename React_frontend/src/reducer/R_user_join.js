@@ -1,6 +1,6 @@
 /* 
 	23-01-08 회원가입 시 필요한 리듀서 작성(오병주)
-  23-01-10 아이디 중복확인 함수 생성(오병주)
+  23-01-13 아이디 중복확인 함수 생성(오병주)
 */
 export const USER_ID_REQUEST = "USER_ID_REQUEST";
 export const USER_ID_SUCCESS = "USER_ID_SUCCESS";
