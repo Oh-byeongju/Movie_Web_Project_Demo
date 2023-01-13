@@ -5,12 +5,13 @@
 export const USER_ID_REQUEST = "USER_ID_REQUEST";
 export const USER_ID_SUCCESS = "USER_ID_SUCCESS";
 export const USER_ID_FAILURE = "USER_ID_FAILURE";
+export const USER_ID_RESET = "USER_ID_RESET";
 
 const initalState = {
   ID_loading: false,
   ID_done: false,
   ID_error: null,
-  uid: ''
+  ID_status: ''
 };
 
 const R_user_join = (state = initalState, action) => {
@@ -28,7 +29,7 @@ const R_user_join = (state = initalState, action) => {
         ID_loading: false,
         ID_done: true,
         ID_error: null,
-        uid: action.data
+        ID_status: action.data
       };
     case USER_ID_FAILURE:
       return {
@@ -36,7 +37,15 @@ const R_user_join = (state = initalState, action) => {
         ID_loading: false,
         ID_done: false,
         ID_error: action.error,
-        uid: action.error
+        ID_status: action.data
+      };
+    case USER_ID_RESET:
+      return {
+        ...state,
+        ID_loading: false,
+        ID_done: false,
+        ID_error: null,
+        ID_status: ''
       };
     default:
       return state;

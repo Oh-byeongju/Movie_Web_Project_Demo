@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.sql.Date;
+
+// 빌더패턴을 사용한 Dto 파일
 @Getter
 @NoArgsConstructor
 public class MemberDto {
@@ -26,9 +28,5 @@ public class MemberDto {
         this.uaddr = uaddr;
         this.ubirth = ubirth;
         this.uauthority = uauthority;
-    }
-    @Builder
-    public MemberDto(String id) {
-        this.uid = id;
     }
 }

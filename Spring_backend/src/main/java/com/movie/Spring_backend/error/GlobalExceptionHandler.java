@@ -1,4 +1,4 @@
-// 23-01-02 에러처리 구현(오병주)
+// 23-01-12 에러처리 구현(오병주)
 package com.movie.Spring_backend.error;
 
 import java.nio.file.AccessDeniedException;
@@ -33,7 +33,6 @@ public class GlobalExceptionHandler {
 
     /**
      * @ModelAttribut 으로 binding error 발생시 BindException 발생한다.
-     * ref https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-ann-modelattrib-method-args
      */
     @ExceptionHandler(BindException.class)
     protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
@@ -73,6 +72,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ErrorCode.HANDLE_ACCESS_DENIED.getStatus()));
     }
 
+    /**
+    결제, 예약등 비지니스적인 이슈가 발생했을때 사용하는 예외
+    */
     @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<ErrorResponse> handleBusinessException(final BusinessException e) {
         log.error("handleEntityNotFoundException", e);
@@ -81,7 +83,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
-
+    /**
+     위의 사항 이외에 사용되는 예외
+     */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error("handleEntityNotFoundException", e);

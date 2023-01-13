@@ -1,6 +1,5 @@
 package com.movie.Spring_backend.controller;
 
-import com.movie.Spring_backend.dto.MemberDto;
 import com.movie.Spring_backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

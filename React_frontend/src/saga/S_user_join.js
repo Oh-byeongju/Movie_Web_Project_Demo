@@ -20,28 +20,28 @@ async function idexsits(data) {
     }
   })
   .then((response) => {
-    alert('사용가능 합니다.');
     return response;
   })
   .catch((error)=>{
-    return error;
+    return error.response;
   })
 };
 
 function* IDcheck(action) {
-  try {
-    const result = yield call(idexsits, action.data);
-    //                   idexsits(action.data); 이런 것!
+  const result = yield call(idexsits, action.data);
+  //  idexsits(action.data); 이런 것
 
-    console.log(result);
+  if (result.status === 204) {
     yield put({
-      type: USER_ID_SUCCESS
+      type: USER_ID_SUCCESS,
+      data: result.status
     });
-  } 
-  catch (err) {
+    console.log(result);
+  }
+  else {
     yield put({
       type: USER_ID_FAILURE,
-      data: action.err.data,
+      data: result.status
     });
   }
 }

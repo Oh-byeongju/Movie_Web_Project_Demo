@@ -1,10 +1,7 @@
 package com.movie.Spring_backend.controller;
 
-import com.movie.Spring_backend.entity.CinemaEntity;
-import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.service.CinemaService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +22,5 @@ public class CinemaController extends HttpServlet {
     public ResponseEntity<List<CinemaDto.CinemaSelect>> showList() {
         List<CinemaDto.CinemaSelect> cinemas= cinemaservice.showList();
         return new ResponseEntity<>(cinemas, HttpStatus.OK);
-
-
-
     }
-
 }
-/*
-2
-
-    */
-
