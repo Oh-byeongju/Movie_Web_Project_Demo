@@ -3,6 +3,8 @@ package com.movie.Spring_backend.service;
 import com.movie.Spring_backend.dto.TempDto;
 import com.movie.Spring_backend.entity.TempEntity;
 import com.movie.Spring_backend.repository.TempRepository;
+import lombok.Data;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class TempService {
 
     private final TempRepository tempRepository;
+
 
     public List<TempDto> getMovie() {
         // Repository에 있는 함수, Entity형으로 디비에 있는 값을 불러옴
@@ -35,7 +38,10 @@ public class TempService {
                         .mrating(data.getMrating())
                         .mstory(data.getMstory()).build()).collect(Collectors.toList());
     }
-}
+    } //findAll의 결과의 스트림을 맵을 통해 dto변환 -> list로 별환
+//ong mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
+//                      int mtime, Date mdate, String mrating, String mstory)
+
 
 /*
 * @Service
