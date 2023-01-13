@@ -23,14 +23,14 @@ public class MovieInfoDto {
 
     private TempEntity temp;
 
-    private CinemaEntity cid;
+    private CinemaEntity cinema;
 
     @Builder
-    public MovieInfoDto(Long miid, String mistarttime, String miendtime, TempEntity temp, CinemaEntity cid) {
+    public MovieInfoDto(Long miid, String mistarttime, String miendtime, TempEntity temp, CinemaEntity cinema) {
         this.miid= miid;
         this.mistarttime=mistarttime;
         this.miendtime=miendtime;
         this.temp=temp;
-        this.cid=cid;
+        this.cinema=cinema;
     }
 }

@@ -29,9 +29,9 @@ public class MovieInfoController {
     }
 
     @GetMapping("/movieselect")
-    public ResponseEntity<MovieInfoEntity> getInfo(@RequestParam Long id){
-        Optional<MovieInfoEntity> info= movieInfoService.findById(id);
-        return new ResponseEntity<MovieInfoEntity>(info.get(), HttpStatus.OK);
+    public ResponseEntity<MovieInfoDto> getInfo(@RequestParam Long id){
+
+        return ResponseEntity.ok().body(movieInfoService.findById(id));
     }
 
 

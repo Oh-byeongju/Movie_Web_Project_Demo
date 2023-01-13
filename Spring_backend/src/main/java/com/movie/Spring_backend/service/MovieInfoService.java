@@ -22,11 +22,15 @@ public class MovieInfoService {
     }
     public List<MovieInfoDto> findAll() {
         List<MovieInfoEntity> datas = movieInfoRepository.findAll();
-        return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cid(data.getCid()).build()).collect(Collectors.toList());
+        return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build()).collect(Collectors.toList());
     }
-    public Optional<MovieInfoEntity> findById(Long id) {
-        Optional<MovieInfoEntity> info = movieInfoRepository.findById(id);
-        return info;
+    public MovieInfoDto findById(Long id) {
+        MovieInfoEntity data = movieInfoRepository.findById(id).orElseThrow(()->new RuntimeException("오류"));
+        Long ids= data.getMiid();
+        System.out.println(ids);
+
+        return MovieInfoDto.builder().miid(ids).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build();
+
 
         }
 
