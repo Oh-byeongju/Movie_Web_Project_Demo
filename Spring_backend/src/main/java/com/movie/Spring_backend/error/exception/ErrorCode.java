@@ -1,4 +1,4 @@
-// 23-01-12 에러처리 구현(오병주)
+// 23-01-12 공통 예외처리 구현(오병주)
 package com.movie.Spring_backend.error.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,7 +15,7 @@ public enum ErrorCode {
     HANDLE_ACCESS_DENIED(403, "C006", "Access is Denied"),
 
     // Member
-    ID_DUPLICATION(400, "M001", "ID is Duplication"),
+    ID_DUPLICATION(400, "M001", "ID is212121 Duplication"),
     LOGIN_INPUT_INVALID(400, "M002", "Login input is invalid"),
 
     ;

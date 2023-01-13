@@ -1,4 +1,4 @@
-// 23-01-12 에러처리 구현(오병주)
+// 23-01-12 공통 예외처리 구현(오병주)
 package com.movie.Spring_backend.error;
 
 import java.nio.file.AccessDeniedException;
@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생합
+     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생(시큐리티)
      */
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {

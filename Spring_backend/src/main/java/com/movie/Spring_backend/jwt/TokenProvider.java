@@ -1,16 +1,24 @@
 //package com.movie.Spring_backend.jwt;
 //
 //import com.movie.Spring_backend.dto.TokenDto;
+//import io.jsonwebtoken.*;
 //import io.jsonwebtoken.io.Decoders;
 //import io.jsonwebtoken.security.Keys;
 //
 //import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.userdetails.User;
+//import org.springframework.security.core.userdetails.UserDetails;
 //import org.springframework.stereotype.Component;
 //
+//import java.nio.file.AccessDeniedException;
+//import java.security.AccessControlException;
 //import java.security.Key;
-//import java.time.OffsetDateTime;
+//import java.util.Arrays;
+//import java.util.Collection;
 //import java.util.Date;
 //import java.util.stream.Collectors;
 //
@@ -34,6 +42,8 @@
 //    }
 //
 //    // 토큰을 생성하는 메서드
+//    // Authentication 인터페이스를 확장한 매개변수를 받아서 그 값을 string으로 변환한 뒤
+//    // 현재시각과 만료시각을 만든 후 Jwts의 builder를 이용하여 Token을 생성 이후 TokenDto에 생성한 token의 정보를 넣음
 //    public TokenDto generateTokenDto(Authentication authentication) {
 //
 //        String authorities = authentication.getAuthorities().stream()
@@ -42,11 +52,7 @@
 //
 //        long now = (new Date()).getTime();
 //
-//
 //        Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-//
-//        System.out.println(tokenExpiresIn);
-//
 //        String accessToken = Jwts.builder()
 //                .setSubject(authentication.getName())
 //                .claim(AUTHORITIES_KEY, authorities)
@@ -61,11 +67,12 @@
 //                .build();
 //    }
 //
-//    public Authentication getAuthentication(String accessToken) {
+//    // 토큰을 받았을 때 토큰의 인증을 꺼내는 메소드
+//    public Authentication getAuthentication(String accessToken) throws AccessDeniedException {
 //        Claims claims = parseClaims(accessToken);
 //
 //        if (claims.get(AUTHORITIES_KEY) == null) {
-//            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+//            throw new AccessDeniedException("권한 정보가 없는 토큰입니다.");
 //        }
 //
 //        Collection<? extends GrantedAuthority> authorities =

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+// 이용약관 동의 내용
 const TermofService = () => {
 	return (
 		<div style={{whiteSpace:"pre-wrap"}}>

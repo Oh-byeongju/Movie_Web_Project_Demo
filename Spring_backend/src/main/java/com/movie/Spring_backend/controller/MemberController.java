@@ -1,3 +1,4 @@
+// 23-01-13 아이디 중복 검사 기능구현(오병주)
 package com.movie.Spring_backend.controller;
 
 import com.movie.Spring_backend.service.MemberService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
 
-    // 아이디 중복 검사를 위한 것
+    // 아이디 중복 검사를 위한 메소드
     @GetMapping("/id")
     public ResponseEntity<String> existsId(@RequestParam("uid") String id) {
         memberService.existsId(id);

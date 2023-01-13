@@ -1,3 +1,4 @@
+// 23-01-13 아이디 중복 검사 기능구현(오병주)
 package com.movie.Spring_backend.repository;
 
 import com.movie.Spring_backend.entity.MemberEntity;
