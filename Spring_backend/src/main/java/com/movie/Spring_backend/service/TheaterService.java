@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TheaterService {
 
-    private final TheaterRepository repository;
+    private final TheaterRepository r;
 
     public List<TheaterDto> getInfo() {
-        List<TheaterEntity> Datas = repository.findAll();
+        List<TheaterEntity> Datas = r.findAll();
 
         return Datas.stream()
                 .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTarea(),data.getTarea()))

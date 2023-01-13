@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { ALLTHEATER_REQUEST } from "../../reducer/ticket";
 import { useDispatch } from "react-redux";
@@ -7,10 +7,13 @@ import AllTheater from "./AllTheater";
 import { all } from "axios";
 const AllTheaterList = () => {
   const dispatch = useDispatch();
+  const [movie, setMovie] = useState(false);
+  const [theater, setTheater] = useState([]);
   const onClick = useCallback((e) => {
     console.log(e.target.value);
   });
   const { alltheater } = useSelector((state) => state.ticket);
+  var obj_value = new Array();
 
   const theaterList = alltheater.reduce((theater, { name, area, id }) => {
     if (!theater[area]) theater[area] = [];
@@ -18,6 +21,7 @@ const AllTheaterList = () => {
     return theater;
   }, {});
 
+  console.log(theaterList); //지역명이 key 지점이 value
   useEffect(() => {
     dispatch({
       type: ALLTHEATER_REQUEST,
@@ -33,15 +37,34 @@ const AllTheaterList = () => {
                 <li className="area-name">
                   <p
                     onClick={() => {
-                      console.log(key);
+                      obj_value = [];
+                      for (var key in value) {
+                        obj_value.push(value[key]);
+                        setMovie(true);
+                      }
+                      setTheater(obj_value);
                     }}
                   >
-                    {" "}
                     {key}
                   </p>
-                  <div>
-                    <ul className="theater">
-                      {value.map((c) => (
+                </li>
+              ))}
+            </ul>
+
+            <div>
+              <TheaterEnties>
+                {movie
+                  ? theater.map((c) => (
+                      <li
+                        onClick={() => {
+                          console.log(c);
+                        }}
+                      >
+                        {c}
+                      </li>
+                    ))
+                  : Object.entries(theaterList).map(([key, value]) =>
+                      value.map((c) => (
                         <li
                           onClick={() => {
                             console.log(c);
@@ -49,12 +72,10 @@ const AllTheaterList = () => {
                         >
                           {c}
                         </li>
-                      ))}
-                    </ul>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                      ))
+                    )}
+              </TheaterEnties>
+            </div>
           </TheaterArea>
         </TheaterList>
       </TheaterSelect>
@@ -91,7 +112,6 @@ const TheaterArea = styled.div`
     list-style-type: none;
     display: flex;
     cursor: pointer;
-
     a {
       width: 110px;
       height: 30px;
@@ -100,21 +120,16 @@ const TheaterArea = styled.div`
         float: right;
       }
     }
-
-    .theater {
-      display: block;
-      float: left;
-      text-align: center;
-      li {
-        width: 114px;
-        height: 30px;
-        cursor: pointer;
-      }
-    }
   }
   li {
     list-style-type: none;
   }
+`;
+
+const TheaterEnties = styled.ul`
+  position: absolute;
+  top: 15px;
+  left: 100px;
 `;
 
 export default AllTheaterList;

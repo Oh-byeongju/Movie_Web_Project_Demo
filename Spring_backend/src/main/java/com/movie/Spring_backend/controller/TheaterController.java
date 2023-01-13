@@ -8,16 +8,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v2")
 public class TheaterController {
 
-    private TheaterService theaterService;
+    private final TheaterService theaterService;
 
 
-    @GetMapping("/selected")
+    @GetMapping("/theater")
     @CrossOrigin(origins = "http://localhost:3000")
 
     public ResponseEntity<List<TheaterDto>> getData() {

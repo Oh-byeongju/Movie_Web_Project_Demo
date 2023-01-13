@@ -3,6 +3,10 @@ package com.movie.Spring_backend.service;
 import com.movie.Spring_backend.dto.TempDto;
 import com.movie.Spring_backend.entity.TempEntity;
 import com.movie.Spring_backend.repository.TempRepository;
+<<<<<<< HEAD
+import lombok.Data;
+=======
+>>>>>>> ce854d1c082d44035124abd918dea63a45a14863
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +14,28 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+<<<<<<< HEAD
+=======
 @Transactional
+>>>>>>> ce854d1c082d44035124abd918dea63a45a14863
 @RequiredArgsConstructor
 @Service
 public class TempService {
 
     private final TempRepository tempRepository;
 
+<<<<<<< HEAD
+    public List<TempDto> findAll(){
+        List<TempEntity> datas = tempRepository.findAll();
+        return datas.stream()
+=======
     public List<TempDto> getMovie() {
         // Repository에 있는 함수, Entity형으로 디비에 있는 값을 불러옴
         List<TempEntity> Datas = tempRepository.findAll();
 
         // 리턴을 해줄때는 entity형인 Datas를 dto형으로 바꿔줘야 해서 빌더패턴을 사용해서 매핑
         return Datas.stream()
+>>>>>>> ce854d1c082d44035124abd918dea63a45a14863
                 .map(data -> TempDto.builder()
                         .mid(data.getMid())
                         .mtitle(data.getMtitle())
@@ -35,7 +48,13 @@ public class TempService {
                         .mrating(data.getMrating())
                         .mstory(data.getMstory()).build()).collect(Collectors.toList());
     }
+<<<<<<< HEAD
+    } //findAll의 결과의 스트림을 맵을 통해 dto변환 -> list로 별환
+//ong mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
+//                      int mtime, Date mdate, String mrating, String mstory)
+=======
 }
+>>>>>>> ce854d1c082d44035124abd918dea63a45a14863
 
 /*
 * @Service
