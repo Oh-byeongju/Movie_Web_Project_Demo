@@ -1,69 +1,40 @@
 package com.movie.Spring_backend.dto;
 
-
-import com.movie.Spring_backend.entity.TempEntity;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.Date;
 
-@Data
+@Getter
 @NoArgsConstructor
-
 public class TempDto {
-
-    @NoArgsConstructor
-    @Data
-
-    public static class movieList{
     private Long mid;
-
-
     private String mtitle;
-
-
     private String mdir;
-
-
     private String mactor;
-
-
     private String msupactor;
-
-
     private String mgenre;
-
     private int mtime;
-
-
     private Date mdate;
-
     private String mrating;
-
-
     private String mstory;
 
-
     @Builder
-    public movieList(TempEntity t) {
-        this.mid = t.getMid();
-        this.mtitle = t.getMtitle();
-        this.mdir = t.getMdir();
-        this.mactor = t.getMactor();
-        this.msupactor = t.getMsupactor();
-        this.mgenre=t.getMgenre();
-        this.mtime=t.getMtime();
-        this.mdate=t.getMdate();
-        this.mrating=t.getMrating();
-        this.mstory=t.getMstory();
+    public TempDto(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
+                      int mtime, Date mdate, String mrating, String mstory) {
+        this.mid = mid;
+        this.mtitle = mtitle;
+        this.mdir=mdir;
+        this.mactor=mactor;
+        this.msupactor=msupactor;
+        this.mgenre=mgenre;
+        this.mtime=mtime;
+        this.mdate=mdate;
+        this.mrating=mrating;
+        this.mstory=mstory;
     }
-}}
+}
 
 
 /*

@@ -3,7 +3,6 @@ package com.movie.Spring_backend.controller;
 import com.movie.Spring_backend.dto.TempDto;
 import com.movie.Spring_backend.service.TempService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -11,15 +10,14 @@ import java.util.List;
 @RequiredArgsConstructor // final 객체를 Constructor Injection 해줌. (Autowired 역할)
 @RequestMapping(value = "/res",method = RequestMethod.POST)
 @CrossOrigin(origins = "http://localhost:3000")
+
 public class TempController {
+    private final TempService t;
 
-    TempService t;
     @GetMapping(value = "/movie")
-    public ResponseEntity<List<TempDto.movieList>> showMovie(){
-        List<TempDto.movieList> movie= t.showMovie();
-        return new ResponseEntity<>(movie, HttpStatus.OK);
+    public ResponseEntity<List<TempDto>> showMovie() {
+        return ResponseEntity.ok().body(t.getMovie());
     }
-
 }
 
 

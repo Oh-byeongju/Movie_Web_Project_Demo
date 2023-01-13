@@ -2,7 +2,6 @@ package com.movie.Spring_backend.controller;
 
 import com.movie.Spring_backend.dto.TheaterDto;
 
-import com.movie.Spring_backend.entity.TheaterEntity;
 import com.movie.Spring_backend.service.TheaterService;
 import lombok.RequiredArgsConstructor;
 

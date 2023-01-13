@@ -4,12 +4,10 @@ import lombok.*;
 
 import java.util.Date;
 
-
 @Table(name="movie")
 @Entity
 @Getter
 @NoArgsConstructor
-
 public class TempEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +39,6 @@ public class TempEntity {
     @Column(nullable = false, length = 30)
     private String mstory;
 
-
     @Builder
     public TempEntity(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
                       int mtime, Date mdate, String mrating, String mstory) {
@@ -56,6 +53,5 @@ public class TempEntity {
         this.mrating=mrating;
         this.mstory=mstory;
     }
-
 }
 
