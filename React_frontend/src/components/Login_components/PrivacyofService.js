@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+// 개인정보 수집 및 이용 동의 내용
 const PrivacyofService = () => {
 	return (
 		<div style={{whiteSpace:"pre-wrap"}}>

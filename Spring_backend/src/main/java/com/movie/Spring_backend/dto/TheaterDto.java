@@ -1,11 +1,7 @@
 package com.movie.Spring_backend.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import com.movie.Spring_backend.entity.TheaterEntity;
 import lombok.*;
 
 import javax.persistence.*;

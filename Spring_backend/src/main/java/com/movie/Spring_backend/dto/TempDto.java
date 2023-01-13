@@ -1,17 +1,10 @@
 package com.movie.Spring_backend.dto;
 
-
-
-import lombok.AllArgsConstructor;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
 import java.sql.Date;
-
-
 
 @Getter
 @NoArgsConstructor
@@ -41,7 +34,6 @@ public class TempDto {
         this.mrating=mrating;
         this.mstory=mstory;
     }
-
 }
 
 
