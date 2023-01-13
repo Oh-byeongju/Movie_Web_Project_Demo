@@ -1,20 +1,17 @@
 package com.movie.Spring_backend.dto;
 
-<<<<<<< HEAD
+
 
 import lombok.AllArgsConstructor;
-=======
->>>>>>> ce854d1c082d44035124abd918dea63a45a14863
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-<<<<<<< HEAD
 import javax.persistence.Entity;
 import java.sql.Date;
-=======
-import java.util.Date;
->>>>>>> ce854d1c082d44035124abd918dea63a45a14863
+
+
 
 @Getter
 @NoArgsConstructor
@@ -32,11 +29,7 @@ public class TempDto {
 
     @Builder
     public TempDto(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
-<<<<<<< HEAD
                    int mtime, Date mdate, String mrating, String mstory) {
-=======
-                      int mtime, Date mdate, String mrating, String mstory) {
->>>>>>> ce854d1c082d44035124abd918dea63a45a14863
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;
@@ -48,11 +41,7 @@ public class TempDto {
         this.mrating=mrating;
         this.mstory=mstory;
     }
-<<<<<<< HEAD
 
-
-=======
->>>>>>> ce854d1c082d44035124abd918dea63a45a14863
 }
 
 

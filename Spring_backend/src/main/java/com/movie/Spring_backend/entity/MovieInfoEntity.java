@@ -31,14 +31,14 @@ public class MovieInfoEntity {
 
     @ManyToOne//다 대 일 여러개의 관들은 하나의 극장을 가진다
     @JoinColumn(name="cid")
-    private CinemaEntity cid;
+    private CinemaEntity cinema;
 
     @Builder
-    public MovieInfoEntity(Long miid, String mistarttime, String miendtime, TempEntity temp, CinemaEntity cid) {
+    public MovieInfoEntity(Long miid, String mistarttime, String miendtime, TempEntity temp, CinemaEntity cinema) {
        this.miid= miid;
        this.mistarttime=mistarttime;
        this.miendtime=miendtime;
        this.temp=temp;
-       this.cid=cid;
+       this.cinema=cinema;
     }
 }
