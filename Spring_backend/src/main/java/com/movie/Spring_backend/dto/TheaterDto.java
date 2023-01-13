@@ -13,6 +13,8 @@ import java.util.Date;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+
 public class TheaterDto {
 
 
@@ -25,12 +27,4 @@ public class TheaterDto {
     private String taddr;
 
 
-    @Builder
-    public TheaterDto(Long tid, String tname, String tarea, String taddr) {
-        this.tid = tid;
-        this.tname = tname;
-        this.tarea = tarea;
-        this.taddr = taddr;
-
-    }
 }

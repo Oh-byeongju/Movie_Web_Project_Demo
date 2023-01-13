@@ -14,7 +14,7 @@ import axios from "axios";
 import { RestOutlined } from "@ant-design/icons";
 
 function loadAllMovie() {
-  return axios.get("http://localhost:8080/v1/showlist", {
+  return axios.get("http://localhost:8080/v2/movie", {
     "Access-Control-Allow-Credentials": true,
   });
 } //영화 불러오기
@@ -22,14 +22,13 @@ function loadAllMovie() {
 function* allMovieLoad() {
   const result = yield call(loadAllMovie);
 
+  console.log(result.data);
   const allmoviedata = result.data.map((mv) => ({
-    id: mv.m_id,
-    title: mv.m_title,
-    rating: mv.m_rating,
+    id: mv.mid,
+    title: mv.mtitle,
+    mrating: mv.mrating,
   }));
   try {
-    console.log(result.data);
-    console.log(allmoviedata);
     yield put({
       type: ALLMOVIE_SUCCESS,
       data: allmoviedata,
@@ -43,7 +42,7 @@ function* allMovieLoad() {
 }
 
 function loadAllTheater() {
-  return axios.get("http://localhost:8080/v1/theater", {
+  return axios.get("http://localhost:8080/v2/theater", {
     "Access-Control-Allow-Credentials": true,
   });
 } //극장 불러오기
@@ -53,10 +52,10 @@ function* allTheaterLoad() {
 
   console.log(result);
   const alltheaterdata = result.data.map((mv) => ({
-    id: mv.t_id,
-    name: mv.t_name,
-    area: mv.t_area,
-    addr: mv.t_addr,
+    id: mv.tid,
+    name: mv.tname,
+    area: mv.tarea,
+    addr: mv.taddr,
   }));
   try {
     yield put({
