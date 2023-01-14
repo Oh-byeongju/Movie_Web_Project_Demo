@@ -1,12 +1,11 @@
 package com.movie.Spring_backend.controller;
+import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.dto.TempDto;
 import com.movie.Spring_backend.service.TempService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -22,11 +21,20 @@ public class TempController {
 
     @GetMapping("/movie")
     @CrossOrigin(origins = "http://localhost:3000")
-
     public ResponseEntity<List<TempDto>> getData() {
         return ResponseEntity.ok().body(tempService.getMovie());
     }
 
+    @GetMapping("/selectmovie")
+    @CrossOrigin(origins = "http://localhost:3000")
+
+    public ResponseEntity<TempDto> getInfo(@RequestParam Long id){
+
+        return ResponseEntity.ok().body(tempService.findById(id));
+
+
+
+    }
 
 
 }

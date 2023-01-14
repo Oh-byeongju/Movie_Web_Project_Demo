@@ -24,7 +24,7 @@ public class MovieInfoService {
         List<MovieInfoEntity> datas = movieInfoRepository.findAll();
         return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build()).collect(Collectors.toList());
     }
-    public MovieInfoDto findById(Long id) {
+    public MovieInfoDto findByMid(Long id) {
         MovieInfoEntity data = movieInfoRepository.findById(id).orElseThrow(()->new RuntimeException("오류"));
         Long ids= data.getMiid();
         System.out.println(ids);

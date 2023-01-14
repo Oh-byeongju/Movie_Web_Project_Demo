@@ -22,7 +22,6 @@ function loadAllMovie() {
 function* allMovieLoad() {
   const result = yield call(loadAllMovie);
 
-  console.log(result.data);
   const allmoviedata = result.data.map((mv) => ({
     id: mv.mid,
     title: mv.mtitle,
@@ -50,7 +49,6 @@ function loadAllTheater() {
 function* allTheaterLoad() {
   const result = yield call(loadAllTheater);
 
-  console.log(result);
   const alltheaterdata = result.data.map((mv) => ({
     id: mv.tid,
     name: mv.tname,
@@ -71,17 +69,14 @@ function* allTheaterLoad() {
 }
 
 function selectMovie(data) {
-  return axios.post(
-    "http://localhost:8080/v1/selected",
-    {
-      "Access-Control-Allow-Credentials": true,
-    },
-    data
-  );
+  return axios.post(`"http://localhost:8080/v2/selectmovie/?id=${data}`, {
+    "Access-Control-Allow-Credentials": true,
+  });
 } //영화 불러오기
 
 function* selectMovieLoad(action) {
   const result = yield call(selectMovie(action.data));
+  console.log(result.data);
   try {
     yield put({
       type: MOVIE_SELECT_SUCCESS,

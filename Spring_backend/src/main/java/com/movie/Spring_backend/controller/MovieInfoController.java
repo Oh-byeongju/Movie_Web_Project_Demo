@@ -31,7 +31,10 @@ public class MovieInfoController {
     @GetMapping("/movieselect")
     public ResponseEntity<MovieInfoDto> getInfo(@RequestParam Long id){
 
-        return ResponseEntity.ok().body(movieInfoService.findById(id));
+        return ResponseEntity.ok().body(movieInfoService.findByMid(id));
+
+
+
     }
 
 
