@@ -1,10 +1,12 @@
 package com.movie.Spring_backend.dto;
 
+import com.movie.Spring_backend.entity.MovieInfoEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -20,9 +22,12 @@ public class TempDto {
     private String mrating;
     private String mstory;
 
+    //private List<MovieInfoEntity> members;
+
+
     @Builder
     public TempDto(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
-                   int mtime, Date mdate, String mrating, String mstory) {
+                   int mtime, Date mdate, String mrating, String mstory /*List<MovieInfoEntity> members*/) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;
@@ -33,6 +38,7 @@ public class TempDto {
         this.mdate=mdate;
         this.mrating=mrating;
         this.mstory=mstory;
+//        this.members=members;
     }
 }
 
