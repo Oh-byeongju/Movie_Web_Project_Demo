@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/signup")
 public class MemberController {
     private final MemberService memberService;
 
-    // 아이디 중복 검사를 위한 메소드
+    // 아이디 중복 검사를 위한 메소드, 중복된 아이디가 없을경우 noContent 리턴
     @GetMapping("/id")
     public ResponseEntity<String> existsId(@RequestParam("uid") String id) {
         memberService.existsId(id);
