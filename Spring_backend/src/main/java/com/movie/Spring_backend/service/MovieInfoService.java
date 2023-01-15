@@ -2,6 +2,7 @@ package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.entity.MovieInfoEntity;
+import com.movie.Spring_backend.entity.TempEntity;
 import com.movie.Spring_backend.repository.MemberRepository;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +31,15 @@ public class MovieInfoService {
         System.out.println(ids);
 
         return MovieInfoDto.builder().miid(ids).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build();
+        }
 
+        public List<MovieInfoDto> findAllByTempMid(Long id){
+        List<MovieInfoEntity> datas = movieInfoRepository.findAllByTempMid(id);
+
+            return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build()).collect(Collectors.toList());
 
         }
+
 
 
 

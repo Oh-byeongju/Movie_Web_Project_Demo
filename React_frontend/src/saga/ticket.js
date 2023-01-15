@@ -69,13 +69,14 @@ function* allTheaterLoad() {
 }
 
 function selectMovie(data) {
-  return axios.post(`"http://localhost:8080/v2/selectmovie/?id=${data}`, {
+  return axios.post(`http://localhost:8080/infomovie/selectmovie?id=${data}`, {
     "Access-Control-Allow-Credentials": true,
   });
 } //영화 불러오기
 
 function* selectMovieLoad(action) {
-  const result = yield call(selectMovie(action.data));
+  const result = yield call(selectMovie, action.data);
+
   console.log(result.data);
   try {
     yield put({

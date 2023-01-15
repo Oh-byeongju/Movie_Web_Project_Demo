@@ -17,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 public class TempEntity {
     @Id
-    @Column(name="MID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mid;
 

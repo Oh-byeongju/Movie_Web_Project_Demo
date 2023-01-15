@@ -24,17 +24,24 @@ public class MovieInfoController {
     private final MovieInfoRepository movieInfoRepository;
 
     @GetMapping("/movieinfo")
+    @CrossOrigin(origins = "http://localhost:3000")
+
     public ResponseEntity<List<MovieInfoDto>> getData() {
         return ResponseEntity.ok().body(movieInfoService.findAll());
     }
 
+    @PostMapping("/selectmovie")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<List<MovieInfoDto>> findMid(@RequestParam Long id){
+        return ResponseEntity.ok().body(movieInfoService.findAllByTempMid(id)); //findAllby + 외래키를 가진 Entity명 + 외래키 컬럼명
+    }
+
+
     @GetMapping("/movieselect")
+    @CrossOrigin(origins = "http://localhost:3000")
+
     public ResponseEntity<MovieInfoDto> getInfo(@RequestParam Long id){
-
         return ResponseEntity.ok().body(movieInfoService.findByMid(id));
-
-
-
     }
 
 
