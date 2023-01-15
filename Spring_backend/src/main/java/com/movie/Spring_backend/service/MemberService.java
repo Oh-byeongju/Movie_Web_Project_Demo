@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 public class MemberService {
     private final MemberRepository memberRepository;
 
+    // 아이디 중복을 확인하기 위한 메소드
     @Transactional
     public void existsId(String id) {
         // 아이디 중복을 확인하고 중복일 경우 예외를 던져줌

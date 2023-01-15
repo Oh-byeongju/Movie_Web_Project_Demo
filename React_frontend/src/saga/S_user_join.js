@@ -1,4 +1,4 @@
-/* 
+/*
 	23-01-08 회원가입 시 필요한 사가 파일 작성(오병주)
   23-01-13 아이디 중복확인 함수 생성(오병주)
 */
@@ -14,7 +14,7 @@ const baseUrl = "http://localhost:8080";
 
 // 디비에서 데이터 select 하고 바로 리턴해줌
 async function idexsits(data) {
-	return await axios.get(baseUrl + "/auth/id",{
+	return await axios.get(baseUrl + "/signup/id",{
     params: {
       uid: data
     }
