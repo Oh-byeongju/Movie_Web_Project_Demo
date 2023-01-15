@@ -1,5 +1,5 @@
 // 23-01-16 회원가입 성공시 전달할 ResponseDto 생성(오병주)
-// 회원가입 시 일단 임의로 보내주는 Dto 추후 삭제 할수도?
+// 회원가입 시 일단 임의로 보내주는 Dto 추후 삭제 할수도??
 package com.movie.Spring_backend.dto;
 
 import lombok.Builder;
