@@ -18,7 +18,6 @@ import java.sql.Date;
 public class MovieInfoEntity {
 
     @Id
-    @Column(name="MOVIEINFO_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long miid;
 
@@ -28,11 +27,9 @@ public class MovieInfoEntity {
     @Column(nullable = false, length = 30)
     private String miendtime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    // @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
-
+    @ManyToOne
     @JoinColumn(name="MID")
-    private TempEntity temp; //주인
+    private TempEntity temp; //주인 N
 
 
 

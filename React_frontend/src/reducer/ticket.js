@@ -9,6 +9,8 @@ export const initalState = {
 
   allMovie: [],
   alltheater: [],
+  selectmovie: [],
+
   //내가 쓰려고 만든 더미 데이터
 };
 
@@ -91,7 +93,7 @@ const ticket = (state = initalState, action) => {
         movie_select_loading: false,
         movie_select_done: true,
         movie_select_error: null,
-        alltheater: action.data,
+        selectmovie: action.data,
       };
 
     case MOVIE_SELECT_FAILURE:

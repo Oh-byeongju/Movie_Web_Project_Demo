@@ -26,7 +26,7 @@ public class TempService {
     public List<TempDto> getMovie() {
         // Repository에 있는 함수, Entity형으로 디비에 있는 값을 불러옴
         List<TempEntity> Datas = tempRepository.findAll();
-       
+
         // 리턴을 해줄때는 entity형인 Datas를 dto형으로 바꿔줘야 해서 빌더패턴을 사용해서 매핑
         return Datas.stream()
                 .map(data -> TempDto.builder()
