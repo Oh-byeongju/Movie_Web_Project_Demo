@@ -12,7 +12,7 @@ const AllTheaterList = () => {
   const onClick = useCallback((e) => {
     console.log(e.target.value);
   });
-  const { alltheater } = useSelector((state) => state.ticket);
+  const { alltheater, selectmovie } = useSelector((state) => state.ticket);
   var obj_value = new Array();
 
   const theaterList = alltheater.reduce((theater, { name, area, id }) => {
@@ -21,7 +21,7 @@ const AllTheaterList = () => {
     return theater;
   }, {});
 
-  console.log(theaterList); //지역명이 key 지점이 value
+  console.log(selectmovie.cinema);
   useEffect(() => {
     dispatch({
       type: ALLTHEATER_REQUEST,
