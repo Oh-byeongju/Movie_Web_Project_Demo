@@ -26,6 +26,7 @@ export const MOVIE_SELECT_REQUEST = "MOVIE_SELECT_REQUEST";
 export const MOVIE_SELECT_SUCCESS = "MOVIE_SELECT_SUCCESS";
 export const MOVIE_SELECT_FAILURE = "MOVIE_SELECT_FAILURE";
 
+export const MOVIE_SELECT_CANCEL = "MOVIE_SELECT_CANCEL";
 const ticket = (state = initalState, action) => {
   switch (action.type) {
     case ALLMOVIE_REQUEST:
@@ -102,6 +103,13 @@ const ticket = (state = initalState, action) => {
         movie_select_loading: false,
         movie_select_done: false,
         movie_select_error: action.error,
+      };
+
+    case MOVIE_SELECT_CANCEL:
+      return {
+        ...state,
+        movie_select_loading: false,
+        movie_select_done: false,
       };
     default:
       return state;
