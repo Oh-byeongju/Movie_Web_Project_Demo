@@ -13,10 +13,16 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(500, "C004", "Server Error"),
     INVALID_TYPE_VALUE(400, "C005", " Invalid Type Value"),
     HANDLE_ACCESS_DENIED(403, "C006", "Access is Denied"),
+    AUTHENTICATION_ERROR(401, "C007", "Authentication Error"),
 
     // Member
-    ID_DUPLICATION(400, "M001", "ID is212121 Duplication"),
+    ID_DUPLICATION(400, "M001", "ID is Duplication"),
     LOGIN_INPUT_INVALID(400, "M002", "Login input is invalid"),
+
+    // Security
+    LOGIN_IS_NONE(401, "S001", "Login is none"),
+    EXPIRED_TOKEN(401, "S002", "Token is expired"),
+    INVALID_TOKEN(401, "S003", "Token is Invalid"),
 
     ;
     private final String code;

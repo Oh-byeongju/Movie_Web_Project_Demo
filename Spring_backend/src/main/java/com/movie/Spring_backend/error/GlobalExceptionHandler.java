@@ -1,4 +1,5 @@
 // 23-01-12 공통 예외처리 구현(오병주)
+// 23-01-15 AuthenticationException 예외 추가(오병주)
 package com.movie.Spring_backend.error;
 
 import java.nio.file.AccessDeniedException;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import javax.naming.AuthenticationException;
 
 @ControllerAdvice
 @Slf4j
@@ -63,7 +66,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생(시큐리티)
+     * 유효한 자격증명을 제공하지 않고 접근하려 할때 발생(401)
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    protected ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
+        log.error("handleAuthenticationException", e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.AUTHENTICATION_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ErrorCode.AUTHENTICATION_ERROR.getStatus()));
+    }
+
+    /**
+     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생(403)
      */
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
