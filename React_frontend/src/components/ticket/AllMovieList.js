@@ -4,35 +4,65 @@ import axios from "axios";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { ALLMOVIE_REQUEST } from "../../reducer/ticket";
+import {
+  ALLMOVIE_REQUEST,
+  MOVIE_SELECT_REQUEST,
+  MOVIE_SELECT_CANCEL,
+} from "../../reducer/ticket";
 
 const AllMovieList = () => {
   const dispatch = useDispatch();
-  const { allMovie } = useSelector((state) => state.ticket);
+  const { allMovie, movie_select_done } = useSelector((state) => state.ticket);
   useEffect(() => {
     dispatch({
       type: ALLMOVIE_REQUEST,
     });
   }, []);
-  const onClick = useCallback(() => {
-    console.log(allMovie);
+  const onSelect = useCallback((id) => {
+    dispatch({
+      type: MOVIE_SELECT_REQUEST,
+      data: id,
+    });
   }, []);
+
+  const [select, SetSelect] = useState(false);
+  var c;
+  const handleClick = (id) => {
+    //영화 제목 클릭 시 토글 함수
+    if (c === id) {
+      const newArr = Array(allMovie.length).fill(false);
+      SetSelect(newArr);
+      c = 99999;
+      dispatch({
+        type: MOVIE_SELECT_CANCEL,
+      });
+    } else if (c !== id) {
+      //id번호로 영화 제목클릭시 하나만 가능하게 하는
+      const newArr = Array(allMovie.length).fill(false);
+      newArr[id] = true;
+      SetSelect(newArr);
+      onSelect(id + 1);
+      c = id;
+    }
+  };
+
   return (
     <MovieReverse>
-      <div className="title" onClick={onClick}>
-        전체영화
-      </div>
+      <div className="title">전체영화</div>
       <ListView>
         <MovieChoice>
           <List>
             <UL>
-              {allMovie.map((m) => (
+              {allMovie.map((m, index) => (
                 <li>
                   <AllMovie
                     key={m.id}
                     title={m.title}
                     rating={m.rating}
                     id={m.id}
+                    handleClick={handleClick}
+                    isSelected={select[index]}
+                    index={index}
                   />
                 </li>
               ))}

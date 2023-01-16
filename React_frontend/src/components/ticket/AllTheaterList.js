@@ -5,78 +5,126 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import AllTheater from "./AllTheater";
 import { all } from "axios";
+import { select } from "redux-saga/effects";
 const AllTheaterList = () => {
   const dispatch = useDispatch();
-  const [movie, setMovie] = useState(false);
-  const [theater, setTheater] = useState([]);
+  const [movie, setMovie] = useState(false); // Movie를 선택했는지 bollean으로 확인
+  const [theater, setTheater] = useState([]); // theater 담기
+
   const onClick = useCallback((e) => {
     console.log(e.target.value);
   });
-  const { alltheater, selectmovie } = useSelector((state) => state.ticket);
+  const { alltheater, selectmovie, movie_select_done } = useSelector(
+    (state) => state.ticket
+  );
   var obj_value = new Array();
-
   const theaterList = alltheater.reduce((theater, { name, area, id }) => {
     if (!theater[area]) theater[area] = [];
     theater[area].push(name);
     return theater;
-  }, {});
+  }, {}); //지역별로 나눔
 
-  console.log(selectmovie.cinema);
+  const selectList = selectmovie.reduce((theater, { name, area, id }) => {
+    if (!theater[area]) theater[area] = [];
+    theater[area].push(name);
+    return theater;
+  }, {}); //극장 리스트
+
+  var set = new Set(theater);
+  const un = [...set];
+  console.log(un); //위에 3줄 지역명 겹치게 해줌
+
+  // theater.map((item) => {
+  //   //for each item in arrayOfObjects check if the object exists in the resulting array
+  //   if (
+  //     selectArray.find((object) => {
+  //       if (object === item && object.id === item.id) {
+  //         //if the object exists iterate times
+  //         object.cnt++;
+  //         return true;
+  //         //if it does not return false
+  //       } else {
+  //         return false;
+  //       }
+  //     })
+  //   ) {
+  //   } else {
+  //     //if the object does not exists push it to the resulting array and set the times count to 1
+  //     item.cnt = 1;
+  //     selectArray.push(item);
+  //   }
+  // });
+
+  const [select, SetSelect] = useState(false);
+
+  const handleClick = (id) => {
+    //영화 제목 클릭 시 토글 함수
+    //id번호로 영화 제목클릭시 하나만 가능하게 하는
+    const newArr = Array(Object.keys(selectList)).fill(false);
+    newArr[id] = true;
+    SetSelect(newArr);
+    console.log(newArr);
+  };
+  console.log(theater);
+
+  const [areas, setAreas] = useState(false);
+
+  const areaClick = (id) => {
+    //지역 클릭 시 토글 함수
+    //id번호로 지역클릭시 하나만 가능하게 하는
+    const area = Array(un.length).fill(false);
+    area[id] = true;
+    setAreas(area);
+  };
+
   useEffect(() => {
     dispatch({
       type: ALLTHEATER_REQUEST,
     });
-  }, []);
+  }, []); //지역불러오기
+
   return (
     <Theater>
       <TheaterSelect>
         <TheaterList>
-          <TheaterArea>
-            <ul className="area">
-              {Object.entries(theaterList).map(([key, value]) => (
-                <li className="area-name">
-                  <p
+          {movie_select_done ? (
+            <TheaterArea>
+              <ul className="area">
+                {Object.entries(selectList).map(([key, value], index) => (
+                  <li
+                    className={select[index] ? "area-name" : "notchoicename"} // boolean ? click : NotClick
                     onClick={() => {
                       obj_value = [];
                       for (var key in value) {
                         obj_value.push(value[key]);
                         setMovie(true);
                       }
+                      handleClick(index);
                       setTheater(obj_value);
                     }}
                   >
-                    {key}
-                  </p>
-                </li>
-              ))}
-            </ul>
-
-            <div>
+                    <p>{key}</p>
+                  </li>
+                ))}
+              </ul>
               <TheaterEnties>
-                {movie
-                  ? theater.map((c) => (
-                      <li
-                        onClick={() => {
-                          console.log(c);
-                        }}
-                      >
-                        {c}
-                      </li>
-                    ))
-                  : Object.entries(theaterList).map(([key, value]) =>
-                      value.map((c) => (
-                        <li
-                          onClick={() => {
-                            console.log(c);
-                          }}
-                        >
-                          {c}
-                        </li>
-                      ))
-                    )}
+                {un.map((c, id) => (
+                  <li
+                    className={areas[id] ? "choice" : "notchoice"}
+                    key={id}
+                    onClick={() => {
+                      areaClick(id);
+                      console.log(id);
+                    }}
+                  >
+                    <p>{c}</p>
+                  </li>
+                ))}
               </TheaterEnties>
-            </div>
-          </TheaterArea>
+            </TheaterArea>
+          ) : (
+            <div>gh</div>
+          )}
         </TheaterList>
       </TheaterSelect>
     </Theater>
@@ -103,33 +151,85 @@ const TheaterSelect = styled.div`
 const TheaterList = styled.div`
   width: 100%;
   height: 100%;
+  position: relative;
 `;
 const TheaterArea = styled.div`
-  width: 100%;
+  width: 150px;
   height: 100%;
-
-  .area-name {
+  position: absolute;
+  top: -24px;
+  cursor: pointer;
+  .area {
+    width: 150px;
+    position: absolute;
+    left: -40px;
     list-style-type: none;
-    display: flex;
-    cursor: pointer;
-    a {
-      width: 110px;
+    font-size: 12px;
+    z-index: 999;
+
+    .notchoicename {
       height: 30px;
-      cursor: pointer;
-      span {
-        float: right;
+      background-color: #686868;
+      margin-bottom: -10px;
+      color: black;
+      z-index: 999;
+      p {
+        position: relative;
+        width: 30px;
+        left: 110px;
+        top: 5px;
       }
     }
-  }
-  li {
-    list-style-type: none;
+    .area-name {
+      height: 30px;
+      background-color: black;
+      color: white;
+      margin-bottom: -10px;
+      z-index: 999;
+
+      p {
+        position: relative;
+        left: 110px;
+        width: 30px;
+
+        top: 5px;
+        font-color: white;
+      }
+    }
   }
 `;
 
 const TheaterEnties = styled.ul`
   position: absolute;
-  top: 15px;
-  left: 100px;
+  list-style-type: none;
+  width: 150px;
+  top: 0px;
+  left: 110px;
+  font-size: 12px;
+  .choice {
+    width: 150px;
+    height: 30px;
+    background-color: #686868;
+    margin-bottom: -10px;
+    color: black;
+    position:relative;
+    p {
+      position:relative;
+      left:10px;
+      top: 5px;
+    }
+  }
+  .notchoice {
+    height: 30px;
+    background-color: white;
+    color: black;
+    margin-bottom: -10px;
+
+    p {
+      position:relative;
+      left:10px;
+      top: 5px;
+    }
 `;
 
 export default AllTheaterList;
