@@ -48,7 +48,6 @@ function loadAllTheater() {
 
 function* allTheaterLoad() {
   const result = yield call(loadAllTheater);
-
   const alltheaterdata = result.data.map((mv) => ({
     id: mv.tid,
     name: mv.tname,
@@ -76,12 +75,18 @@ function selectMovie(data) {
 
 function* selectMovieLoad(action) {
   const result = yield call(selectMovie, action.data);
-
-  console.log(result.data);
+  console.log(result);
+  const selectMovieList = result.data.map((mv) => ({
+    id: mv.cinema.theater.tid,
+    name: mv.cinema.theater.tname,
+    area: mv.cinema.theater.tarea,
+    addr: mv.cinema.theater.taddr,
+  }));
+  console.log(selectMovieList);
   try {
     yield put({
       type: MOVIE_SELECT_SUCCESS,
-      data: result.data,
+      data: selectMovieList,
     });
   } catch (err) {
     console.log(err);
