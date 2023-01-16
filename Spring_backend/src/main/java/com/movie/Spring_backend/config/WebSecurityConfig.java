@@ -54,7 +54,6 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/normal/**").permitAll()
-//                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
 
                 // 사전에 만든 JwtSecurityConfig 클래스를 통해 tokenProvider를 적용
