@@ -16,8 +16,9 @@ public enum ErrorCode {
     AUTHENTICATION_ERROR(401, "C007", "Authentication Error"),
 
     // Member
-    ID_DUPLICATION(400, "M001", "ID is Duplication"),
-    LOGIN_INPUT_INVALID(400, "M002", "Login input is invalid"),
+    ID_DUPLICATION(400, "M001", "중복된 아이디입니다."),
+    SIGN_UNEXPECTED_ERROR(400, "M002", "예기치 못한 오류가 발생하였습니다. 다시 회원가입 해주십시오."),
+    MEMBER_NOT_FOUND(400, "M003", "회원정보가 존재하지 않습니다."),
 
     // Security
     LOGIN_IS_NONE(401, "S001", "Login is none"),
