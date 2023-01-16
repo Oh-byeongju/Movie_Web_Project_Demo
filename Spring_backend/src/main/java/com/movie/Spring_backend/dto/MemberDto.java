@@ -5,6 +5,7 @@ import com.movie.Spring_backend.entity.Authority;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.sql.Date;
 
