@@ -55,6 +55,7 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/normal/**").permitAll()
                 .anyRequest().authenticated()
+//                .antMatchers("/mypage").hasRole("ADMIN") // ROLE_ADMIN 권한을 가진 사용자만 접근 허용 추후 사용
 
                 // 사전에 만든 JwtSecurityConfig 클래스를 통해 tokenProvider를 적용
                 .and()
