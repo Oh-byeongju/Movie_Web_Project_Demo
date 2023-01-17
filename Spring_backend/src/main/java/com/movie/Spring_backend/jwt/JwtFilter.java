@@ -29,8 +29,6 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-
-        System.out.println("그럼 이론상 이거는 매일돔");
         // Request Header에서 토큰을 꺼내 jwt 변수에 저장
         String jwt = resolveToken(request);
 
