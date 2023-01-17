@@ -1,3 +1,4 @@
+// 23-01-16 로그인 시 전달할 토큰 Dto 구현(오병주)
 package com.movie.Spring_backend.dto;
 
 import lombok.Builder;
