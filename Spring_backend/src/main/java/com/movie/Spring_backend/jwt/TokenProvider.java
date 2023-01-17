@@ -1,4 +1,5 @@
 // 23-01-15 Jwt 토큰 암 복호화 검증 로직 구현(오병주)
+// 23-01-17 리프레시 토큰 구현(오병주)
 package com.movie.Spring_backend.jwt;
 
 import com.movie.Spring_backend.dto.TokenDto;
@@ -30,12 +31,12 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider {
 
-    // 토큰을 생성하고 검증할 때 쓰이는 값
     private static final String AUTHORITIES_KEY = "auth";
-    // 토큰을 생성하고 검증할 때 쓰이는 값
     private static final String BEARER_TYPE = "bearer";
-    // 토큰의 만료 시간 (현재 적용은 30분)
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;
+    // access 토큰의 만료시간(30분) 현재는 테스트를 위해 15초
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 15;
+    // refresh 토큰의 만료시간(7일)
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;
     // jwt를 만들기 위해 사용되는 key 값
     private final Key key;
 
@@ -46,7 +47,7 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // 토큰을 생성하는 메서드
+    // 토큰을 생성하는 메소드
     public TokenDto generateTokenDto(Authentication authentication) {
 
         // Authentication 인터페이스를 확장한 파라미터를 stream을 통한 함수형 프로그래밍으로
@@ -55,8 +56,9 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        // 현재시각과 만료시각을 생성 후 Jwts의 builder를 이용하여 Token을 생성
         long now = (new Date()).getTime();
+
+        // AccessToken 생성
         Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
@@ -65,10 +67,17 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
+        // RefreshToken 생성
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
         // TokenDto에 Token의 필요한 정보를 넣어 build 한 뒤 리턴
         return TokenDto.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .tokenExpiresIn(tokenExpiresIn.getTime())
                 .build();
     }
@@ -100,52 +109,23 @@ public class TokenProvider {
 
     // Jwts 모듈을 통해 토큰을 검증하기 위한 메소드
     public boolean validateToken(String token, HttpServletRequest request) {
-
         // 토큰의 정보가 검증 되었을 경우 true를 리턴
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         }
-
-
-        // d여기 지금 전체적으로 수정 해야함 이제 request.set우째 하는지 알아서 여기 expired토큰 드가있음 수정하삼
-        // 토큰의 서명이 잘못되었을 경우의 예외
-        catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+        // 토큰이 만료되었을 경우의 예외처리
+        catch (ExpiredJwtException e) {
+            System.out.println("아따 거시기 열로 온당께");
             request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN.getCode());
             throw e;
         }
-
-        // d여기 지금 전체적으로 수정 해야함 이제 request.set우째 하는지 알아서
-        // 토큰이 만료되었을 경우의 예외
-        catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
-            e.printStackTrace();
+        // 토큰의 시그니처가 잘못되었을 경우의 예외처리
+        catch (JwtException e) {
+            request.setAttribute("exception", ErrorCode.INVALID_TOKEN.getCode());
             throw e;
         }
-        // 시큐리티가 지원하지 않는 토큰일경우의 예외
-        catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
-        }
-        // 메소드의 Argument로 토큰이 아닌 다른것이 왔을 경우의 예외
-        catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
-        }
-        return false;
     }
-
-
-//    try {
-//        claims = jwtUtil.parseToken(token);
-//    } catch (ExpiredJwtException e) {
-//        e.printStackTrace();
-//        request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN.getCode());
-//    } catch (JwtException e) {
-//        e.printStackTrace();
-//        request.setAttribute("exception", ErrorCode.INVALID_TOKEN.getCode());
-//    }
-
-
 
     // 토큰을 claims 형으로 만드는 메소드, String 형의 토큰을 변환하여 권한을 확인하기 위해 사용되는 메소드
     private Claims parseClaims(String accessToken) {

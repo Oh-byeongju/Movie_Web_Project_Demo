@@ -1,6 +1,7 @@
 // 23-01-15 Security 단에서 발생하는 예외 처리 로직 구현(오병주)
 package com.movie.Spring_backend.jwt;
 
+import com.movie.Spring_backend.error.exception.ErrorCode;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -11,15 +12,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 // Security 단에서 발생하는 예외는 ControllerAdvice을 통해 처리가 불가능 하여 따로 처리 해줘야 함
-// 필요한 권한 없이 접근하려 할때 예외처리
+// 필요한 권한 없이 접근하려 할때 예외처리(403)
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
-    // 유저 정보는 있으나 자원에 접근할 수 있는 권한이 없는 경우 403 응답을 내려줌
-    // 이거도 GlobalException Handler가 적용 되는지 나중에 확인 해봐야함
-    // Global에서 처리 불가하면 만들었던거 없애야함 ~~.class
+    // 한글 출력을 위해 getWriter() 사용, 프론트단으로 보내는 error 가공
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.getWriter().println("{ \"message\" : \"" + ErrorCode.SECURITY_ACCESS_DENIED.getMessage()
+                + "\", \"status\" : " + ErrorCode.SECURITY_ACCESS_DENIED.getStatus()
+                + ", \"errors\" : [ ]"
+                + ", \"code\" : " + "\"" + ErrorCode.SECURITY_ACCESS_DENIED.getCode()
+                + "\"" + "}");
     }
 }

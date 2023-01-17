@@ -5,13 +5,11 @@ package com.movie.Spring_backend.controller;
 import com.movie.Spring_backend.config.SecurityUtil;
 import com.movie.Spring_backend.dto.MemberDto;
 import com.movie.Spring_backend.dto.TokenDto;
+import com.movie.Spring_backend.jwt.TokenProvider;
 import com.movie.Spring_backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.file.AccessDeniedException;
 
 // 나중에 cros localhost 3000번만 열고 닫기
 @CrossOrigin(origins = "*")
@@ -21,6 +19,7 @@ import java.nio.file.AccessDeniedException;
 public class MemberController {
 
     private final MemberService memberService;
+    private final TokenProvider tokenProvider;
 
     // 아이디 중복 검사를 위한 메소드, 중복된 아이디가 없을경우 noContent 리턴
     @GetMapping("/id")
@@ -44,8 +43,11 @@ public class MemberController {
 
     // 로그인 상태를 확인하는 메소드
     @GetMapping("/login_status")
-    public ResponseEntity<MemberDto> getMyInfoBySecurity() throws AuthenticationException {
+    public ResponseEntity<MemberDto> getMyInfoBySecurity() {
+        System.out.println("여기랑");
         System.out.println(SecurityUtil.getCurrentMemberId());
+        System.out.println("여기사이");
+
         return ResponseEntity.ok(memberService.getMyInfoBySecurity(SecurityUtil.getCurrentMemberId()));
     }
 }

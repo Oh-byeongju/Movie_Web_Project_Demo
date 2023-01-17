@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
+public interface MemberRepository extends JpaRepository<MemberEntity, String> {
     // 아이디 중복 검사를 위한 select
     boolean existsByUid(String uid);
     // 아이디를 검색하는 select

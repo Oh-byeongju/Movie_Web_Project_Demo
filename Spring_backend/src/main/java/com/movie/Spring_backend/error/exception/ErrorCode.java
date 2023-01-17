@@ -21,11 +21,12 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(400, "M003", "회원정보가 존재하지 않습니다."),
 
     // Security
-    LOGIN_IS_NONE(401, "S001", "Login is none"),
-    EXPIRED_TOKEN(401, "S002", "Token is expired"),
-    INVALID_TOKEN(401, "S003", "Token is Invalid"),
-
+    LOGIN_IS_NONE(401, "S001", "로그인이 필요한 서비스입니다."),
+    EXPIRED_TOKEN(401, "S002", "로그인이 만료되었습니다."),
+    INVALID_TOKEN(401, "S003", "로그인 정보가 불일치합니다."),
+    SECURITY_ACCESS_DENIED(403, "S004", "권한이 필요합니다.")
     ;
+
     private final String code;
     private final String message;
     private final int status;
