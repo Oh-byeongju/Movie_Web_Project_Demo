@@ -17,27 +17,27 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/infomovie")
+@RequestMapping("/normal")
 public class MovieInfoController {
 
     private final MovieInfoService movieInfoService;
     private final MovieInfoRepository movieInfoRepository;
 
-    @GetMapping("/movieinfo")
+    @GetMapping("/infomovie/movieinfo")
     @CrossOrigin(origins = "http://localhost:3000")
 
     public ResponseEntity<List<MovieInfoDto>> getData() {
         return ResponseEntity.ok().body(movieInfoService.findAll());
     }
 
-    @PostMapping("/selectmovie")
+    @PostMapping("/infomovie/selectmovie")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<MovieInfoDto>> findMid(@RequestParam Long id){
         return ResponseEntity.ok().body(movieInfoService.findAllByTempMid(id)); //findAllby + 외래키를 가진 Entity명 + 외래키 컬럼명
     }
 
 
-    @GetMapping("/movieselect")
+    @GetMapping("/infomovie/movieselect")
     @CrossOrigin(origins = "http://localhost:3000")
 
     public ResponseEntity<MovieInfoDto> getInfo(@RequestParam Long id){

@@ -11,13 +11,13 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v2")
+@RequestMapping("/normal")
 public class TheaterController {
 
     private final TheaterService theaterService;
 
 
-    @GetMapping("/theater")
+    @GetMapping("/v2/theater")
     @CrossOrigin(origins = "http://localhost:3000")
 
     public ResponseEntity<List<TheaterDto>> getData() {
