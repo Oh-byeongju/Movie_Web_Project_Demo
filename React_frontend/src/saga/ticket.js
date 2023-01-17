@@ -14,7 +14,7 @@ import axios from "axios";
 import { RestOutlined } from "@ant-design/icons";
 
 function loadAllMovie() {
-  return axios.get("http://localhost:8080/v2/movie", {
+  return axios.get("http://localhost:8080/normal/v2/movie", {
     "Access-Control-Allow-Credentials": true,
   });
 } //영화 불러오기
@@ -41,7 +41,7 @@ function* allMovieLoad() {
 }
 
 function loadAllTheater() {
-  return axios.get("http://localhost:8080/v2/theater", {
+  return axios.get("http://localhost:8080/normal/v2/theater", {
     "Access-Control-Allow-Credentials": true,
   });
 } //극장 불러오기
@@ -68,9 +68,12 @@ function* allTheaterLoad() {
 }
 
 function selectMovie(data) {
-  return axios.post(`http://localhost:8080/infomovie/selectmovie?id=${data}`, {
-    "Access-Control-Allow-Credentials": true,
-  });
+  return axios.post(
+    `http://localhost:8080/normal/infomovie/selectmovie?id=${data}`,
+    {
+      "Access-Control-Allow-Credentials": true,
+    }
+  );
 } //영화 불러오기
 
 function* selectMovieLoad(action) {

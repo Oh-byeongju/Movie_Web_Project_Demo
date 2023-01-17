@@ -11,7 +11,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v2")
+@RequestMapping("/normal")
 
 
 public class TempController {
@@ -19,13 +19,13 @@ public class TempController {
 
     private final TempService tempService;
 
-    @GetMapping("/movie")
+    @GetMapping("/v2/movie")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<TempDto>> getData() {
         return ResponseEntity.ok().body(tempService.getMovie());
     }
 
-    @GetMapping("/selectmovie")
+    @GetMapping("/v2/selectmovie")
     @CrossOrigin(origins = "http://localhost:3000")
 
     public ResponseEntity<TempDto> getInfo(@RequestParam Long id){
