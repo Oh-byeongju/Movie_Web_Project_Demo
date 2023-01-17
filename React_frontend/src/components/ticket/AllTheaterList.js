@@ -32,8 +32,8 @@ const AllTheaterList = () => {
 
   var set = new Set(theater);
   const un = [...set];
-  console.log(un); //위에 3줄 지역명 겹치게 해줌
 
+  const [reset, setReset] = useState("");
   // theater.map((item) => {
   //   //for each item in arrayOfObjects check if the object exists in the resulting array
   //   if (
@@ -58,24 +58,28 @@ const AllTheaterList = () => {
   const [select, SetSelect] = useState(false);
 
   const handleClick = (id) => {
-    //영화 제목 클릭 시 토글 함수
+    //지역 클릭 시 토글 함수
     //id번호로 영화 제목클릭시 하나만 가능하게 하는
     const newArr = Array(Object.keys(selectList)).fill(false);
     newArr[id] = true;
+    if (newArr !== select) {
+      setAreas(false);
+    } //지역 선택 시 극장 선택 한 버튼 초기화
     SetSelect(newArr);
-    console.log(newArr);
   };
-  console.log(theater);
 
   const [areas, setAreas] = useState(false);
 
   const areaClick = (id) => {
-    //지역 클릭 시 토글 함수
+    //극장 클릭 시 토글 함수
     //id번호로 지역클릭시 하나만 가능하게 하는
+
     const area = Array(un.length).fill(false);
     area[id] = true;
     setAreas(area);
   };
+
+  const [check, setCheck] = useState(true);
 
   useEffect(() => {
     dispatch({
@@ -84,50 +88,84 @@ const AllTheaterList = () => {
   }, []); //지역불러오기
 
   return (
-    <Theater>
-      <TheaterSelect>
-        <TheaterList>
-          {movie_select_done ? (
-            <TheaterArea>
-              <ul className="area">
-                {Object.entries(selectList).map(([key, value], index) => (
-                  <li
-                    className={select[index] ? "area-name" : "notchoicename"} // boolean ? click : NotClick
-                    onClick={() => {
-                      obj_value = [];
-                      for (var key in value) {
-                        obj_value.push(value[key]);
-                        setMovie(true);
-                      }
-                      handleClick(index);
-                      setTheater(obj_value);
-                    }}
-                  >
-                    <p>{key}</p>
-                  </li>
-                ))}
-              </ul>
-              <TheaterEnties>
+    <div>
+      <div className="title"></div>
+      <Theater>
+        <TheaterSelect>
+          <TheaterList>
+            {movie_select_done && selectmovie != 0 ? ( //reducer 체크와 selectmovie에 데이터가 들어왔는지 확인
+              <TheaterArea>
+                <ul className="area">
+                  {Object.entries(selectList).map(([key, value], index) => (
+                    <li
+                      className={select[index] ? "area-name" : "notchoicename"} // boolean ? click : NotClick
+                      onClick={() => {
+                        obj_value = [];
+                        for (var key in value) {
+                          obj_value.push(value[key]);
+                        }
+
+                        handleClick(index);
+
+                        setTheater(obj_value);
+                      }}
+                    >
+                      <p>{key}</p>
+                    </li>
+                  ))}
+                </ul>
+
                 {un.map((c, id) => (
-                  <li
-                    className={areas[id] ? "choice" : "notchoice"}
+                  <AllTheater
+                    isSelected={areas[id]}
                     key={id}
-                    onClick={() => {
-                      areaClick(id);
-                      console.log(id);
-                    }}
-                  >
-                    <p>{c}</p>
-                  </li>
+                    elementIndex={id}
+                    areaClick={areaClick}
+                    c={c}
+                  ></AllTheater>
                 ))}
-              </TheaterEnties>
-            </TheaterArea>
-          ) : (
-            <div>gh</div>
-          )}
-        </TheaterList>
-      </TheaterSelect>
-    </Theater>
+              </TheaterArea>
+            ) : (
+              /*<TheaterArea>
+                <ul className="area">
+                  {Object.entries(theaterList).map(([key, value], index) => (
+                    <li
+                      className={select[index] ? "area-name" : "notchoicename"} // boolean ? click : NotClick
+                      onClick={() => {
+                        obj_value = [];
+                        for (var key in value) {
+                          obj_value.push(value[key]);
+                          setMovie(true);
+                        }
+                        handleClick(index);
+                        setTheater(obj_value);
+                      }}
+                    >
+                      <p>{key}</p>
+                    </li>
+                  ))}
+                </ul>
+                <TheaterEnties>
+                  {un.map((c, id) => (
+                    <li
+                      className={areas[id] ? "choice" : "notchoice"}
+                      key={id}
+                      onClick={() => {
+                        areaClick(id);
+                        console.log(id);
+                      }}
+                    >
+                      <p>{c}</p>
+                    </li>
+                  ))}
+                </TheaterEnties>
+              </TheaterArea>*/
+              <div>영화를 선택하세요</div>
+            )}
+          </TheaterList>
+        </TheaterSelect>
+      </Theater>
+    </div>
   );
 };
 
