@@ -24,7 +24,6 @@ function* IDcheck(action) {
       type: USER_ID_SUCCESS,
       data: result.status
     });
-    console.log(result);
   }
   else {
     yield put({
@@ -51,14 +50,12 @@ async function idexsits(data) {
 
 // 회원가입 함수
 function* UserSignUp(action) {
-  console.log("usersignup")
   const result = yield call(SignUp, action.data);
   if (result.status === 204) {
     yield put({
       type: USER_JOIN_SUCCESS,
       data: result.status
     });
-    console.log(result);
   }
   else {
     yield put({
