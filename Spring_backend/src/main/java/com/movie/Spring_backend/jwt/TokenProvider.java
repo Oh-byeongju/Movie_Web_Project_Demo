@@ -68,6 +68,7 @@ public class TokenProvider {
                 .compact();
 
         // RefreshToken 생성
+        Date tokenExpiresIn2 = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
         String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -77,8 +78,9 @@ public class TokenProvider {
         return TokenDto.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
+                .AtokenExpiresIn(tokenExpiresIn.getTime())
                 .refreshToken(refreshToken)
-                .tokenExpiresIn(tokenExpiresIn.getTime())
+                .RtokenExpiresIn(tokenExpiresIn2.getTime())
                 .build();
     }
 
