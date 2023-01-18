@@ -1,12 +1,10 @@
 import { all, fork } from "redux-saga/effects";
 import S_user_joinSaga from "./S_user_join";
-import tempSaga from "./temp";
 import ticketSaga from "./ticket"
 
 export default function* rootSaga() {
   yield all([
     fork(S_user_joinSaga),
-    fork(tempSaga),
     fork(ticketSaga)]
     );
 }

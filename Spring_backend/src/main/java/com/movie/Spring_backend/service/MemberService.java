@@ -1,5 +1,6 @@
 // 23-01-13 아이디 중복 검사 메소드구현(오병주)
 // 23-01-16 회원가입 및 로그인 메소드구현(오병주)
+// 23-01-18 토큰 재발급 관련 메소드구현(오병주)
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.MemberDto;
@@ -7,11 +8,15 @@ import com.movie.Spring_backend.dto.TokenDto;
 import com.movie.Spring_backend.entity.Authority;
 import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.entity.RefreshTokenEntity;
+import com.movie.Spring_backend.error.exception.ErrorCode;
 import com.movie.Spring_backend.exceptionlist.IdDuplicateException;
 import com.movie.Spring_backend.exceptionlist.MemberNotFoundException;
 import com.movie.Spring_backend.jwt.TokenProvider;
 import com.movie.Spring_backend.repository.MemberRepository;
 import com.movie.Spring_backend.repository.RefreshTokenRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,7 +24,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.nio.file.AccessDeniedException;
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +76,11 @@ public class MemberService {
     @Transactional
     public TokenDto login(MemberDto requestDto) {
 
+        // 로그인 한 유저의 이름 추출
+        MemberEntity Data = memberRepository.findByUid(requestDto.getUid())
+                .orElseThrow(() -> new MemberNotFoundException(requestDto.getUid()));
+        String Name = Data.getUname();
+
         // Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = toAuthentication(requestDto.getUid(), requestDto.getUpw());
 
@@ -77,7 +89,7 @@ public class MemberService {
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
         // 인증 정보를 기반으로 Jwt 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, Name);
 
         // Redis에 RefreshToken 저장
         RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
@@ -90,25 +102,45 @@ public class MemberService {
         return tokenDto;
     }
 
-    // 로그인 상태확인 메소드
-    public MemberDto getMyInfoBySecurity(String currentMemberId) {
-        MemberEntity Data = memberRepository.findByUid(currentMemberId)
-                .orElseThrow(() -> new MemberNotFoundException(currentMemberId));
+    // 토큰 재발급 메소드
+    @Transactional
+    public TokenDto reissue(TokenDto tokenRequestDto, HttpServletRequest request) throws AccessDeniedException {
 
+        // Refresh Token 검증
+        if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken(), request)) {
+            throw new AccessDeniedException("Refresh Token이 유효하지 않습니다.");
+        }
 
-        // 임시로 사용중
-        RefreshTokenEntity temp = refreshTokenRepository.findById(Data.getUid()).orElseThrow(()-> new RuntimeException("오류"));
-        System.out.println(temp.getUid());
-        System.out.println(temp.getRefreshToken());
+        // Access Token 에서 MemberID 가져오기
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
 
+        // Redis에서 MemberID를 기반으로 저장된 값 가져옴
+        RefreshTokenEntity refreshToken = refreshTokenRepository.findById(authentication.getName())
+                .orElseThrow(() -> new MemberNotFoundException(authentication.getName()));
 
+        // Refresh Token 일치하는지 검사
+        if (!refreshToken.getRefreshToken().equals(tokenRequestDto.getRefreshToken())) {
+            request.setAttribute("exception", ErrorCode.INVALID_TOKEN.getCode());
+            throw new AccessDeniedException("토큰의 유저 정보가 일치하지 않습니다.");
+        }
 
+        // 로그인 한 유저의 이름 추출
+        MemberEntity Data = memberRepository.findByUid(refreshToken.getUid())
+                .orElseThrow(() -> new MemberNotFoundException(refreshToken.getUid()));
+        String Name = Data.getUname();
 
+        // 새로운 토큰 생성
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, Name);
 
-        // 로그인 정보가 있을경우 id와 이름을 리턴
-        return MemberDto.builder()
-                .uid(Data.getUid())
-                .uname(Data.getUname()).build();
+        // Redis에 RefreshToken 갱신
+        RefreshTokenEntity newRefreshToken = RefreshTokenEntity.builder()
+                .uid(authentication.getName())
+                .refreshToken(tokenDto.getRefreshToken())
+                .build();
+        refreshTokenRepository.save(newRefreshToken);
+
+        // 토큰 발급
+        return tokenDto;
     }
 
     // id와 pw를 파라미터로 전달 받아 UsernamePasswordAuthenticationToken 으로 반환하여 리턴해주는 메소드
