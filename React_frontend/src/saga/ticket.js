@@ -78,14 +78,19 @@ function selectMovie(data) {
 
 function* selectMovieLoad(action) {
   const result = yield call(selectMovie, action.data);
+
   console.log(result);
+
+  const timeResult = result.data.map((mv) => ({}));
   const selectMovieList = result.data.map((mv) => ({
     id: mv.cinema.theater.tid,
     name: mv.cinema.theater.tname,
     area: mv.cinema.theater.tarea,
     addr: mv.cinema.theater.taddr,
+    miid: mv.miid,
+    starttime: mv.mistarttime,
+    endtime: mv.miendtime,
   }));
-  console.log(selectMovieList);
   try {
     yield put({
       type: MOVIE_SELECT_SUCCESS,

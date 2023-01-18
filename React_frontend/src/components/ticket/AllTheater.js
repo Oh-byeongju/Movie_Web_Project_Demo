@@ -20,14 +20,18 @@ const TheaterEnties = styled.ul`
   list-style-type: none;
   width: 150px;
   top: 12px;
-  left: 110px;
+  left: 150px;
   font-size: 12px;
+  
+  z-index:0;
   .clickButton {
     width: 150px;
     height: 30px;
     background-color: #686868;
     margin-bottom: -10px;
     color: black;
+    position:relative;
+    left:-40px;
     p {
       position:relative;
       left:10px;
@@ -39,7 +43,8 @@ const TheaterEnties = styled.ul`
     background-color: white;
     color: black;
     margin-bottom: -10px;
-
+    position:relative;
+    left:-40px;
     p {
       position:relative;
       left:10px;
