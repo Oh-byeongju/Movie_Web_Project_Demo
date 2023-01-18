@@ -16,6 +16,7 @@ const AllMovie = ({
 
   const onClick = useCallback(() => {
     handleClick(index);
+    console.log(title);
   }, []);
 
   return (

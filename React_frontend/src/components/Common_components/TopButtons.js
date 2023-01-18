@@ -258,7 +258,7 @@ const NavBar = styled.div`
         position: absolute;
         left: -260px;
         top: 43px;
-        z-index: 1000;
+        z-index: 999;
 
         padding-left: 180px;
         font-size: 15px;

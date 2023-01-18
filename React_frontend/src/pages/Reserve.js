@@ -4,6 +4,7 @@ import TopButtons from "../components/Common_components/TopButtons";
 import AllTheaterList from "../components/ticket/AllTheaterList";
 import AllMovieList from "../components/ticket/AllMovieList";
 import Calendar from "../components/ticket/Calendar";
+import MovieInfo from "../components/ticket/MovieInfo";
 const Reserve = () => {
   //데이터를 받으면 컴포넌트에 넘겨줌
   return (
@@ -12,6 +13,8 @@ const Reserve = () => {
       <AllMovieList />
       <AllTheaterList />
       <Calendar />
+      <MovieInfo />
+
       <Footer />
     </div>
   );

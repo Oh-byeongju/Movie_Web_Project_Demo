@@ -82,6 +82,7 @@ const AllTheaterList = () => {
   const [check, setCheck] = useState(true);
 
   useEffect(() => {
+    console.log(new Date());
     dispatch({
       type: ALLTHEATER_REQUEST,
     });
@@ -203,14 +204,13 @@ const TheaterArea = styled.div`
     left: -40px;
     list-style-type: none;
     font-size: 12px;
-    z-index: 999;
 
     .notchoicename {
       height: 30px;
       background-color: #686868;
       margin-bottom: -10px;
       color: black;
-      z-index: 999;
+      z-index: 1;
       p {
         position: relative;
         width: 30px;
@@ -223,7 +223,7 @@ const TheaterArea = styled.div`
       background-color: black;
       color: white;
       margin-bottom: -10px;
-      z-index: 999;
+      z-index: 100;
 
       p {
         position: relative;
