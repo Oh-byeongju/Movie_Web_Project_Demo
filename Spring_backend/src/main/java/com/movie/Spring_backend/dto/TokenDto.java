@@ -1,4 +1,4 @@
-// 23-01-16 로그인 시 전달할 토큰 Dto 구현(오병주)
+// 23-01-16 토큰을 주고받는데 사용되는 Dto 구현(오병주)
 package com.movie.Spring_backend.dto;
 
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class TokenDto {
+    private String uname;
     private String grantType;
     private String accessToken;
     private String refreshToken;
@@ -16,7 +17,8 @@ public class TokenDto {
     private Long RtokenExpiresIn;
 
     @Builder
-    public TokenDto(String grantType, String accessToken, Long AtokenExpiresIn, String refreshToken, Long RtokenExpiresIn) {
+    public TokenDto(String uname, String grantType, String accessToken, Long AtokenExpiresIn, String refreshToken, Long RtokenExpiresIn) {
+        this.uname = uname;
         this.grantType = grantType;
         this.accessToken = accessToken;
         this.AtokenExpiresIn = AtokenExpiresIn;

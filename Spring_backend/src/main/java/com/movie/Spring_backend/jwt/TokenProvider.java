@@ -3,6 +3,7 @@
 package com.movie.Spring_backend.jwt;
 
 import com.movie.Spring_backend.dto.TokenDto;
+import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.error.exception.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -10,6 +11,7 @@ import io.jsonwebtoken.security.Keys;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.file.AccessDeniedException;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,8 +34,8 @@ public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "bearer";
-    // access 토큰의 만료시간(30분) 현재는 테스트를 위해 15초
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 15;
+    // access 토큰의 만료시간(30분)
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;
     // refresh 토큰의 만료시간(7일)
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;
     // jwt를 만들기 위해 사용되는 key 값
@@ -48,7 +49,7 @@ public class TokenProvider {
     }
 
     // 토큰을 생성하는 메소드
-    public TokenDto generateTokenDto(Authentication authentication) {
+    public TokenDto generateTokenDto(Authentication authentication, String Name) {
 
         // Authentication 인터페이스를 확장한 파라미터를 stream을 통한 함수형 프로그래밍으로
         // String 형의 authorities로 변환
@@ -76,6 +77,7 @@ public class TokenProvider {
 
         // TokenDto에 Token의 필요한 정보를 넣어 build 한 뒤 리턴
         return TokenDto.builder()
+                .uname(Name)
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .AtokenExpiresIn(tokenExpiresIn.getTime())
@@ -85,7 +87,7 @@ public class TokenProvider {
     }
 
     // 토큰을 받았을 때 토큰의 인증을 꺼내는 메소드
-    public Authentication getAuthentication(String accessToken) throws AccessDeniedException {
+    public Authentication getAuthentication(String accessToken) {
         // parseClaims 메소드를 통해 string 형의 토큰을 claims 형으로 변경
         Claims claims = parseClaims(accessToken);
 
@@ -118,7 +120,6 @@ public class TokenProvider {
         }
         // 토큰이 만료되었을 경우의 예외처리
         catch (ExpiredJwtException e) {
-            System.out.println("아따 거시기 열로 온당께");
             request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN.getCode());
             throw e;
         }

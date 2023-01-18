@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { CloseOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 
 const LoginModal = ({ setlogin }) => {
   const dispatch = useDispatch(); //useDispatch를 dispatch로 선언
@@ -26,9 +27,25 @@ const LoginModal = ({ setlogin }) => {
     });
   };
 
-  // 로그인 버튼 누를 때 적용되는 함수
+  // 로그인 버튼 누를 때 적용되는 함수 ((현재 임시로 사용중))
   const submit = () => {
-    console.log(id, pw);
+
+    console.log("ehsek");
+    const baseUrl = "http://localhost:8080";
+
+    const datas = {
+      uid: id,
+      upw: pw
+    };
+
+    axios.post(baseUrl + "/normal/login", datas)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
+
   };
 
   // id, pw 입력에 따른 로그인 버튼 활성화 함수

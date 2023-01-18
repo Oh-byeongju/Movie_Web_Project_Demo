@@ -1,14 +1,14 @@
 /* 
 	23-01-02 ~ 23-01-04 회원가입 ui 수정 및 기능 추가(오병주)
-	23-01-08 ~ 23-01-10 mysql 연동(오병주)
 	23-01-13 ~ 23-01-13 중복확인 기능 추가(오병주)
+	23-01-18 회원가입 구현(오병주)
 */
 import React, {useState, useCallback, useEffect} from 'react';
 import styled from 'styled-components';
 import Post from './Post';
 import TermofService from './TermofService';
 import PrivacyofService from './PrivacyofService';
-import { USER_ID_REQUEST, USER_ID_RESET } from '../../reducer/R_user_join';
+import { USER_ID_REQUEST, USER_ID_RESET, USER_JOIN_REQUEST } from '../../reducer/R_user_join';
 import { useDispatch, useSelector } from "react-redux";
 
 const JoinForm = () => {
@@ -16,13 +16,28 @@ const JoinForm = () => {
 	// 주소검색 팝업창 관리
 	const [popup, setpopup] = useState(false);
 
-	// 주소 관리를 위한 변수 (주소 및 상세주소)
-	const [M_address, setM_address] = useState("");
-	const [S_address, setS_address] = useState("");
+	// 주소 관리를 위한 변수
+	const [M_address, setM_address] = useState('');
 	
 	// 팝업창에서 주소 선택시 기본주소 Input에 주소 값 넣어주는 것
 	const InsertAddress = (value) => {
 		setM_address(value);
+		setChecks({
+			...checks,	// 기존의 check 객체를 복사한 뒤
+			isM_Address: true, 	// 기본 주소 상태 변경
+		});
+	}
+
+	// 체크박스 체크 관리(이용약관)
+	const [check1, setCheck1] = useState(false);
+	const [check2, setCheck2] = useState(false);
+
+	// 체크박스 true / false 변경
+	const ClickCheck1 = (check1) => {
+		setCheck1(!check1);
+	}
+	const ClickCheck2 = (check2) => {
+		setCheck2(!check2);
 	}
 
 	// 사용자가 입력하는 input 관리
@@ -34,6 +49,7 @@ const JoinForm = () => {
 		email: '',
 		phone1: '',
 		phone2: '',
+		S_address: '',
 		year: '',
 		month: '',
 		day: '',
@@ -45,7 +61,8 @@ const JoinForm = () => {
 					name, 
 					email, 
 					phone1, 
-					phone2, 
+					phone2,
+					S_address, 
 					year, 
 					month, 
 					day } = inputs;	// 비구조화 할당을 통해 값 추출
@@ -78,6 +95,8 @@ const JoinForm = () => {
 		isEmail: false,
 		isPhone1: false,
 		isPhone2: false,
+		isM_Address: false,
+		isS_Address: false,
 		isYear: false,
 		isMonth: false,
 		isDay: false
@@ -90,6 +109,8 @@ const JoinForm = () => {
 				 isEmail, 
 				 isPhone1, 
 				 isPhone2,
+				 isM_Address,
+				 isS_Address,
 				 isYear,
 				 isMonth,
 				 isDay} = checks; // 비구조화 할당을 통해 값 추출
@@ -118,6 +139,7 @@ const JoinForm = () => {
 					...checks,	// 기존의 check 객체를 복사한 뒤
 					isId: false	 // isId 상태 변경
 				});
+				setIDButton(true);
 			}
 			else {
 				setMessages({
@@ -128,6 +150,7 @@ const JoinForm = () => {
 					...checks,	// 기존의 check 객체를 복사한 뒤
 					isId: true 	// isid 상태 변경
 				});
+				setIDButton(false);
 			}
 		}
 
@@ -362,6 +385,22 @@ const JoinForm = () => {
 			}
 		}
 
+		// 상세주소가 변경될때 실행
+		if (name === 'S_address') {
+			if (value.length < 1) {
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isS_Address: false	 // isS_Address 상태 변경
+				});
+			}
+			else {
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isS_Address: true 	// isS_Address 상태 변경
+				});
+			}
+		}
+
 		// 생일년도를 입력할 경우
 		if (name === 'year') {
 			// 특수문자등이 입력됐을경우 없애주기 위한 변수
@@ -410,7 +449,6 @@ const JoinForm = () => {
 				...inputs, // 기존의 input 객체를 복사한 뒤
 				[name]: result // name 키를 가진 값을 value 로 설정
 			});
-
 			setMessages({
 				...messages, // 기존의 message 객체를 복사한 뒤
 				birthMessage: '생년월일을 확인해주세요' // birthMessage의 값 변경
@@ -473,6 +511,11 @@ const JoinForm = () => {
 	// ID 중복을 확인하기 위한 리덕스 상태
 	const { ID_status } = useSelector((state) => state.R_user_join);
 	const dispatch = useDispatch();
+	const [IDButton, setIDButton] = useState(false);
+	const [IDText, setIDText] = useState(false);
+
+	// 회원가입 확인을 위한 리덕스 상태
+	const { JOIN_status } = useSelector((state) => state.R_user_join);
 	
 	// 로그인 중복확인 누르면 실행되는 함수
 	const IDcheck = useCallback(() => {
@@ -485,20 +528,70 @@ const JoinForm = () => {
 	// IDcheck를 호출해서 ID_status의 상태가 변경이 됐을 때 유효성 검사를 해주는 useEffect
 	useEffect(() => {
 		if (ID_status == 204) {
-			alert("성공했음.");
+			alert("사용 가능한 아이디입니다.");
 			dispatch({
 				type: USER_ID_RESET
 			});
-			
+			setIDButton(true);
+			setIDText(true);
 		}
-		
 		if (ID_status == 400) {
-			alert("이미 사용중");
+			alert("이미 사용중인 아이디입니다.");
 			dispatch({
 				type: USER_ID_RESET
 			});
 		}
 	}, [dispatch, ID_status])
+
+
+	// 회원가입 누를 시 실행되는 함수
+	const SignUp = () => {
+		var res_month = month;
+		var res_day = day;
+
+		// 생일의 달을 한자리로 입력했을경우 바꿔줌
+		if (month.length === 1) {
+			res_month = "0"+res_month;
+		}
+
+		// 생일의 일을 한자리로 입력했을경우 바꿔줌
+		if (day.length === 1) {
+			res_day = "0"+res_day;
+		}
+
+		const datas = {
+			uid: id,
+			upw: pw,
+			uname: name,
+			uemail: email,
+			utel: "010"+phone1+phone2,
+			uaddr: M_address + " " + S_address,
+			ubirth: year+"-"+res_month+"-"+res_day,
+		};
+		
+		if (isId && isPw && isPwConfirm && isName && isEmail && isPhone1 && isPhone2 && isM_Address && isS_Address && isYear && isMonth && isDay && check1 && check2) {
+			dispatch({
+				type: USER_JOIN_REQUEST,
+				data: datas
+			});
+		}
+		else {
+			alert("모든 정보 입력 및 약관에 동의해주세요.");
+		}
+	};
+
+	// JOIN_status의 상태가 변경이 됐을 때 회원가입 성공 여부를 알려주는 useEffect
+	useEffect(() => {
+		if (JOIN_status == 204) {
+			alert('회원가입이 완료 되었습니다.');
+			document.location.assign('http://localhost:3000/');
+		}
+
+		if (JOIN_status == 400 || JOIN_status == 500) {
+			alert('예기치 못한 오류가 발생하였습니다. 다시 회원가입 해주십시오.');
+			document.location.assign('http://localhost:3000/');
+		}
+	}, [dispatch, JOIN_status])
 
 	return (
 		<div>
@@ -525,7 +618,7 @@ const JoinForm = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="text" placeholder='아이디를 입력해주세요' name="id" onChange={ChangeInput} value={id}>
+									<InputText type="text" placeholder='아이디를 입력해주세요' name="id" onChange={ChangeInput} value={id} disabled={IDText}>
 									</InputText>
 								</InfoCenter>
 								<ErrorField>
@@ -534,11 +627,10 @@ const JoinForm = () => {
 									</ErrorText>
 								</ErrorField>
 							</CenterField>
-							<InfoCheck style={{marginRight: "22px"}} onClick={IDcheck}>
+							<InfoCheck style={{marginRight: "22px"}} onClick={IDcheck} disabled={IDButton}>
 								중복확인
 							</InfoCheck>
 						</InfoTextForm>
-
 						<InfoTextForm>
 							<InfoLeft>
 								<label>
@@ -560,7 +652,6 @@ const JoinForm = () => {
 								</ErrorField>
 							</CenterField>
 						</InfoTextForm>
-
 						<InfoTextForm>
 							<InfoLeft>
 								<label>
@@ -582,7 +673,6 @@ const JoinForm = () => {
 								</ErrorField>
 							</CenterField>
 						</InfoTextForm>
-
 						<InfoTextForm>
 							<InfoLeft>
 								<label>
@@ -604,7 +694,6 @@ const JoinForm = () => {
 								</ErrorField>
 							</CenterField>
 						</InfoTextForm>
-
 						<InfoTextForm>
 							<InfoLeft>
 								<label>
@@ -614,7 +703,6 @@ const JoinForm = () => {
 								*
 								</CheckStar>
 							</InfoLeft>
-
 							<CenterField>
 								<InfoCenter>
 									<InputText type="text" placeholder='이메일을 입력해주세요' name="email" onChange={ChangeInput} value={email}>
@@ -627,11 +715,10 @@ const JoinForm = () => {
 								</ErrorField>
 							</CenterField>
 							<InfoCheck style={{marginRight: "22px"}}>
-								메일인증하기
+								메일인증하기(현재미구현)
 								{/* 이미 사용된 메일이면 사용된 메일입니다 출력, 아니면 입력된 메일로 인증메일이 전송되었습니다 출력 */}
 							</InfoCheck>
 						</InfoTextForm>
-
 						<InfoTextForm>
 							<InfoLeft>
 								<label>
@@ -657,7 +744,6 @@ const JoinForm = () => {
 								</ErrorField>
 							</CenterField>
 						</InfoTextForm>
-
 						<InfoTextForm>
 							<InfoLeft>
 								<label>
@@ -676,7 +762,6 @@ const JoinForm = () => {
 							</InfoCheck>
 							{popup && <div><Post setAddress={setpopup} M_address={M_address} InsertAddress={InsertAddress} /></div>}
 						</InfoTextForm>
-						
 						{/* 주소를 선택하면 상세주소 칸이 생김 */}
 						{M_address === '' ? null : 
 						<InfoTextForm>
@@ -689,13 +774,11 @@ const JoinForm = () => {
 								</CheckStar>
 							</InfoLeft>
 							<InfoCenter>
-								<InputText type="text" placeholder='상세주소를 입력해주세요'>
+								<InputText type="text" placeholder='상세주소를 입력해주세요' value={S_address} onChange={ChangeInput} name="S_address">
 								</InputText>
 							</InfoCenter>
 						</InfoTextForm>
 						}
-					
-						
 						<InfoTextForm>
 							<InfoLeft>
 								<label>
@@ -713,7 +796,6 @@ const JoinForm = () => {
 									</InputTextDiv>
 									<InputTextDiv type="text" placeholder='DD' maxLength={2} name='day' value={day} onChange={ChangeInput}>
 									</InputTextDiv>
-									{/* 이거 나중에 01로 넣든 1로 넣든 잘드가는지 봐야할듯 */}
 								</InfoCenter>
 								<ErrorField>
 									<ErrorText>
@@ -725,7 +807,6 @@ const JoinForm = () => {
 					</InfoForm>
 					<Line/>
 				</Form>
-				
 				<Form>
 					<InfoServiceForm style={{paddingBottom:"8px"}}>
 						<ServiceLeft>
@@ -739,7 +820,7 @@ const JoinForm = () => {
 						<ServiceCenter style={{paddingTop:"5px"}}>
 							<ServiceSector>
 								<Checks>
-									<input type="checkbox" name="agree1" value="1" id="agree1"/>
+									<input type="checkbox" name="agree1" id="agree1" value={check1} onClick={() => ClickCheck1(check1)}/>
 									<label htmlFor="agree1">
 										이용약관 동의
 										<TextType>
@@ -751,15 +832,13 @@ const JoinForm = () => {
 							<TermofService/>
 						</ServiceCenter>
 					</InfoServiceForm>			
-
-
 					<InfoServiceForm style={{paddingTop:"0px"}}>
 						<ServiceLeft>
 						</ServiceLeft>
 						<ServiceCenter>
 							<ServiceSector>
 								<Checks>
-									<input type="checkbox" name="agree2" value="2" id="agree2"/>
+									<input type="checkbox" name="agree2" id="agree2" value={check2} onClick={() => ClickCheck2(check2)}/>
 									<label htmlFor="agree2">
 										개인정보 수집 및 이용 동의
 										<TextType>
@@ -772,7 +851,7 @@ const JoinForm = () => {
 						</ServiceCenter>
 					</InfoServiceForm>
 					<ButtonForm>
-						<JoinButton>
+						<JoinButton onClick={SignUp}>
 								<span>
 									가입하기
 								</span>
@@ -902,6 +981,11 @@ const InfoCheck = styled.button`
 	margin-left: 20px;
 	cursor: pointer;
 	font-size: 14px;
+
+	:disabled {
+  	border-color: rgb(221, 221, 221);
+    color: rgb(221, 221, 221);
+	}
 `;
 
 const Line = styled.div`
