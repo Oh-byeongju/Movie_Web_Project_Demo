@@ -1,11 +1,15 @@
+/*
+ 23-01-19 로그인 구현(오병주)
+*/
 import React, { useState } from "react";
 import styled from "styled-components";
 import { CloseOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { USER_LOGIN_REQUEST } from '../../reducer/R_user_login';
 
 const LoginModal = ({ setlogin }) => {
   const dispatch = useDispatch(); //useDispatch를 dispatch로 선언
+  const { LOGIN_status } = useSelector((state) => state.R_user_login);
 
   // x버튼 클릭시 setlogin을 false로 해서 모달창을 닫음
   const closeLogin = () => {
@@ -27,32 +31,28 @@ const LoginModal = ({ setlogin }) => {
     });
   };
 
-  // 로그인 버튼 누를 때 적용되는 함수 ((현재 임시로 사용중))
-  const submit = () => {
-
-    console.log("ehsek");
-    const baseUrl = "http://localhost:8080";
-
+  // 로그인 버튼 누를 때 적용되는 함수
+  const submit = ()=> {
     const datas = {
       uid: id,
       upw: pw
     };
 
-    axios.post(baseUrl + "/normal/login", datas)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error)=>{
-        console.log(error);
-      })
+    dispatch({
+      type: USER_LOGIN_REQUEST,
+			data: datas
+    });
 
+    // LOGIN_status에 토큰이 담겨져 옴 이제 이걸 어떻게 쓰냐를 생각
   };
+ 
 
   // id, pw 입력에 따른 로그인 버튼 활성화 함수
   const [isActive, setActive] = useState(true);
 
   // id, pw 입력마다 실행되는 함수 (id, pw 둘다 빈칸이 아닌경우 로그인 버튼이 활성화됨)
   const ActiveIsPassedLogin = () => {
+    console.log(LOGIN_status);
     return id !== "" && pw !== "" ? setActive(false) : setActive(true);
   };
 

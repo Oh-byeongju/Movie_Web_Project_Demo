@@ -505,7 +505,6 @@ const JoinForm = () => {
 				}
 			}
 		}
-		console.log(checks);
 	};
 
 	// ID 중복을 확인하기 위한 리덕스 상태
