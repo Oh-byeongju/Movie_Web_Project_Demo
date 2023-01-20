@@ -76,8 +76,8 @@ const AllMovieList = () => {
 
 const MovieReverse = styled.div`
   position: relative;
-
   width: 300px;
+  left: 150px;
   height: 500px;
   background-color: white;
 
@@ -90,7 +90,7 @@ const MovieReverse = styled.div`
     height: 30px;
     background-color: black;
     color: white;
-    top: 45px;
+    top: 49px;
 
     left: 100px;
   }
@@ -98,7 +98,7 @@ const MovieReverse = styled.div`
 const ListView = styled.div`
   border: 1px solid black;
   margin: 0;
-  position: relative;
+  position: absolute;
   box-sizing: border-box;
   font-size: 14px;
   font-weight: 400;
@@ -107,6 +107,7 @@ const ListView = styled.div`
   top: 80px;
   left: 100px;
   overflow: scroll;
+  background-color: #f2f0e5;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -118,6 +119,7 @@ const ListView = styled.div`
   }
 `;
 const MovieChoice = styled.div`
+  position: absolute;
   width: 100%;
   box-sizing: border-box;
   height: 400px;
@@ -125,6 +127,7 @@ const MovieChoice = styled.div`
 
 const UL = styled.div`
   list-style-type: none;
+  position: absolute;
   margin: 0;
   align-items: center;
   padding: 0;

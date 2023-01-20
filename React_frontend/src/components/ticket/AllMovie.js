@@ -34,6 +34,8 @@ const AllMovie = ({
 
 const MovieText = styled.div`
   display: flex;
+  background-color: #f2f0e5;
+
   align-items: center;
   font-weight: 40px;
   width: 100%;
@@ -43,11 +45,13 @@ const MovieText = styled.div`
 
   div {
     line-height: 40px;
-    position: absolute;
+    position: relative;
+
     top: 0;
   }
   p {
     position: relative;
+    width: 210px;
     top: -13px;
     left: 45px;
   }
@@ -66,6 +70,7 @@ const MovieText = styled.div`
     background-color: white;
     width: 100%;
     height: 100%;
+    background-color: #f2f0e5;
   }
 `;
 
