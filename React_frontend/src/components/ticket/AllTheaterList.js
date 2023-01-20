@@ -57,11 +57,15 @@ const AllTheaterList = () => {
 
   const [select, SetSelect] = useState(false);
 
+  const [sel, setSel] = useState("");
+
   const handleClick = (id) => {
     //지역 클릭 시 토글 함수
     //id번호로 영화 제목클릭시 하나만 가능하게 하는
     const newArr = Array(Object.keys(selectList)).fill(false);
+
     newArr[id] = true;
+
     if (newArr !== select) {
       setAreas(false);
     } //지역 선택 시 극장 선택 한 버튼 초기화
@@ -82,15 +86,22 @@ const AllTheaterList = () => {
   const [check, setCheck] = useState(true);
 
   useEffect(() => {
-    console.log(new Date());
+    // 영화 선택 초기화 해줌
+
+    if (selectmovie != 0) {
+      setSel(selectmovie);
+      console.log(sel);
+      SetSelect(false);
+      setTheater("");
+    }
     dispatch({
       type: ALLTHEATER_REQUEST,
     });
-  }, []); //지역불러오기
+  }, [selectmovie]); //지역불러오기
 
   return (
-    <div>
-      <div className="title"></div>
+    <Center>
+      <div className="title">극장</div>
       <Theater>
         <TheaterSelect>
           <TheaterList>
@@ -166,9 +177,31 @@ const AllTheaterList = () => {
           </TheaterList>
         </TheaterSelect>
       </Theater>
-    </div>
+    </Center>
   );
 };
+
+const Center = styled.div`
+  display: block;
+  position: relative;
+  background-color: #f2f0e5;
+
+  left: 72px;
+  top: -592px;
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 302px;
+    height: 30px;
+    background-color: black;
+    color: white;
+    top: 141px;
+
+    left: 450px;
+  }
+`;
 
 const Theater = styled.div`
   position: absolute;
@@ -191,6 +224,7 @@ const TheaterList = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+  background-color: #f2f0e5;
 `;
 const TheaterArea = styled.div`
   width: 150px;

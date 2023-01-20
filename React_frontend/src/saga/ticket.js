@@ -81,7 +81,6 @@ function* selectMovieLoad(action) {
 
   console.log(result);
 
-  const timeResult = result.data.map((mv) => ({}));
   const selectMovieList = result.data.map((mv) => ({
     id: mv.cinema.theater.tid,
     name: mv.cinema.theater.tname,
