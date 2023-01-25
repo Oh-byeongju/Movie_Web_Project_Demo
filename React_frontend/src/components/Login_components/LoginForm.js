@@ -1,5 +1,6 @@
 /*
  23-01-19 로그인 구현(오병주)
+ 23-01-25 페이지 이동 구현(오병주)
 */
 import React, {useState} from "react";
 import styled from "styled-components";

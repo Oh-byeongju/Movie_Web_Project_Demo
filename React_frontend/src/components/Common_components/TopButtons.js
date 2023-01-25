@@ -1,6 +1,7 @@
 /*
  23-01-24 로그인 상태확인 구현(오병주)
- */
+ 23-01-25 페이지 이동 구현(오병주)
+*/
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import {
@@ -25,6 +26,7 @@ const TopButtons = () => {
   // 로그인 상태를 확인하는 useEffect
   // 이제 내가 할거는 토큰이 있을때 uname을 한박자 늦게 사용하는거랑,
   // 리프레시 인터셉터 해버리면 로그인은 끝날듯??
+  // 로그인 하고 뒤로 가는거도 예외로 적어줘야함 몇가지
   useEffect(() => {
     dispatch({
       type: USER_LOGIN_STATUS_REQUEST,
