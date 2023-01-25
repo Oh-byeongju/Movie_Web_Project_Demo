@@ -5,6 +5,7 @@ import {
 	HomeOutlined,
 	UserAddOutlined,
 } from "@ant-design/icons";
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
 
@@ -18,19 +19,19 @@ const Footer = () => {
 							<a href="https://github.com/Oh-byeongju/Movie_Project" target="_blank" rel = "noreferrer">프로젝트 소개</a>
 						</FooterLinkListItemHide>
 						<FooterLinkListItem>
-							<a href="/">공지사항</a>
+							<Link to="/">공지사항</Link>
 						</FooterLinkListItem>
 						<FooterLinkListItem>
-							<a href="/">영화예매</a>
+							<Link to="/">영화예매</Link>
 						</FooterLinkListItem>
 						<FooterLinkListItem>
-							<a href="/">극장조회</a>
+							<Link to="/">극장조회</Link>
 						</FooterLinkListItem>
 						<FooterLinkListItem>
-							<a href="/">이벤트</a>
+							<Link to="/">이벤트</Link>
 						</FooterLinkListItem>
 						<FooterLinkListItemHide>
-							<a href="/">개발진</a>
+							<Link to="/">개발진</Link>
 						</FooterLinkListItemHide>
 					</FooterLinkList>
 				</FooterLink>
@@ -54,14 +55,14 @@ const Footer = () => {
 					<CorpSns>
 						<CorpSnsList>
 							<CorpSnsListItem>
-								<a href="/">
+								<Link to ="/">
 									<HomeOutlined style={{fontSize: "25px", color: "#97a0a7"}}/>
-								</a>
+								</Link>
 							</CorpSnsListItem>
 							<CorpSnsListItem>
-								<a href="http://localhost:3000/UserJoin">
+								<Link to="/UserJoin">
 									<UserAddOutlined style={{fontSize: "25px", color: "#97a0a7"}}/>
-								</a>
+								</Link>
 							</CorpSnsListItem>
 							<CorpSnsListItem>
 								<a href="https://github.com/Oh-byeongju/Movie_Project" target="_blank" rel = "noreferrer">

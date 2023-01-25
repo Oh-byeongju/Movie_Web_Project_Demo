@@ -10,6 +10,7 @@ import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./reducer";
 import rootSaga from "./saga";
+import ScrollTop from "./components/Common_components/ScrollTop";
 
 const sagaMiddleware = createSagaMiddleware();
 const enhancer =
@@ -25,6 +26,7 @@ const root = createRoot(container);
 root.render(
   <Provider store={store}>
     <BrowserRouter>
+      <ScrollTop/>
       <App />
     </BrowserRouter>
   </Provider>

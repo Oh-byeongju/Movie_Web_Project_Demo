@@ -24,7 +24,6 @@ public class AuthService {
 
         // 로그인 정보가 있을경우 id와 이름을 리턴
         return MemberDto.builder()
-                .uid(Data.getUid())
                 .uname(Data.getUname()).build();
     }
 }

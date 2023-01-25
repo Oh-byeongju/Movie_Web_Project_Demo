@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+import UserLogin from "./pages/UserLogin";
 import UserJoin from "./pages/UserJoin";
 import Reserve from "./pages/Reserve";
 
@@ -8,6 +9,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} exact={true}></Route>
+      <Route path="/UserLogin" element={<UserLogin />}></Route>
       <Route path="/UserJoin" element={<UserJoin />}></Route>
       <Route path="/Reserve" element={<Reserve />}></Route>
     </Routes>

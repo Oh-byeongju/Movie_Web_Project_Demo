@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// 나중에 cros localhost 3000번만 열고 닫기
-@CrossOrigin(origins = "*")
+import javax.servlet.http.HttpServletRequest;
+
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController  // JSON 형태 결과값을 반환해줌 (@ResponseBody가 필요없음)
 @RequestMapping("/auth")
 @RequiredArgsConstructor  // final 객체를 Constructor Injection 해줌. (Autowired 역할)
