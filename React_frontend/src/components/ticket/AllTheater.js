@@ -41,7 +41,8 @@ const TheaterEnties = styled.ul`
   .notClickbutton {
     height: 30px;
     background-color: white;
-    color: black;
+    color: black;  background-color: #f2f0e5;
+
     margin-bottom: -10px;
     position:relative;
     left:-40px;

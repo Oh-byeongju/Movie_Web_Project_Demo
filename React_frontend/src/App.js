@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import UserLogin from "./pages/UserLogin";
 import UserJoin from "./pages/UserJoin";
 import Reserve from "./pages/Reserve";
+import Movie from "./pages/Movie";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Route path="/UserLogin" element={<UserLogin />}></Route>
       <Route path="/UserJoin" element={<UserJoin />}></Route>
       <Route path="/Reserve" element={<Reserve />}></Route>
+      <Route path="/movie" element={<Movie />}></Route>
     </Routes>
   );
 }

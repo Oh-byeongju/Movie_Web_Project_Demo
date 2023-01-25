@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components";
 import {
   GithubOutlined,
-	HomeOutlined,
-	UserAddOutlined,
+  HomeOutlined,
+  UserAddOutlined,
 } from "@ant-design/icons";
 import { Link } from 'react-router-dom';
 
@@ -80,119 +80,119 @@ const Footer = () => {
 
 const FooterLayout = styled.div`
   background: #ebeef1;
-	position: relative;
+  position: relative;
 `;
 
 const FooterLink = styled.div`
-	background: #dddfe4;
-	overflow: hidden;
-	height: 56px;
-	border-left: none;
+  background: #dddfe4;
+  overflow: hidden;
+  height: 56px;
+  border-left: none;
 `;
 
 const FooterLinkList = styled.ul`
-	padding-left: 16px;
+  padding-left: 16px;
   padding-right: 16px;
   max-width: 1044px;
   margin: 19px auto 19px -33px;
-	height: 19px;
-	padding: 0;
-	margin: 19px auto 18px;
-	list-style: none;
+  height: 19px;
+  padding: 0;
+  margin: 19px auto 18px;
+  list-style: none;
 
-	li{ 
-		&:first-child {
-			padding-left: 0;
-			margin-left: 0;
-			border-left: 0;
-		}
-	}
-	&:after {
-		content: "";
-		display: block;
-		clear: both;
-	}
+  li {
+    &:first-child {
+      padding-left: 0;
+      margin-left: 0;
+      border-left: 0;
+    }
+  }
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 
-	a {
-		text-decoration: none;
+  a {
+    text-decoration: none;
     color: inherit;
-	}
+  }
 `;
 
 const FooterLinkListItem = styled.li`
-	float: left;
+  float: left;
   border-left: 1px solid #c5cbd0;
   color: #7b858e;
   line-height: 19px;
   font-size: 16px;
-	list-style: none;
-	padding-left: 16px;
-	margin-left: 16px;
+  list-style: none;
+  padding-left: 16px;
+  margin-left: 16px;
 `;
 
 const FooterLinkListItemHide = styled.li`
-	display: block;
-	float: left;
+  display: block;
+  float: left;
   border-left: 1px solid #c5cbd0;
   color: #7b858e;
   line-height: 19px;
   font-size: 16px;
-	padding-left: 16px;
+  padding-left: 16px;
   margin-left: 16px;
 `;
 
 const Content = styled.div`
-	position: relative;
-	padding: 8px 0px 16px 0px;
-	max-width: 1044px;
-	margin: 0 auto;
-	height: 212px;
-	
-	&:after {
-		content: "";
+  position: relative;
+  padding: 8px 0px 16px 0px;
+  max-width: 1044px;
+  margin: 0 auto;
+  height: 212px;
+
+  &:after {
+    content: "";
     display: block;
     clear: both;
   }
 `;
 
 const CorpInfo = styled.div`
-	line-height: 20px;
+  line-height: 20px;
   font-size: 14px;
   color: #7b858e;
 `;
 
 const CorpLogo = styled.div`
-	display: block;
+  display: block;
   width: 93px;
   margin-bottom: 24px;
 `;
 
 const CorpSns = styled.div`
-	margin-top: 0;
-	position: absolute;
-	bottom: 32px;
-	right: 5px;
+  margin-top: 0;
+  position: absolute;
+  bottom: 32px;
+  right: 5px;
 
-	&:after {
-	content: "";
-	display: block;
-	clear: both;
-	}
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 `;
 
 const CorpSnsList = styled.ul`
-	list-style: none;
-	li{ 
-		 	&:first-child {
-				margin-left: 0px;
-			}
-		}
+  list-style: none;
+  li {
+    &:first-child {
+      margin-left: 0px;
+    }
+  }
 `;
 
 const CorpSnsListItem = styled.li`
-	float: left;
+  float: left;
   margin-left: 15px;
-	background-color: #eaeef1;
+  background-color: #eaeef1;
 `;
 
 export default Footer;
