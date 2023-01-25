@@ -21,11 +21,17 @@ function loadAllMovie() {
 
 function* allMovieLoad() {
   const result = yield call(loadAllMovie);
-
   const allmoviedata = result.data.map((mv) => ({
-    id: mv.mid,
-    title: mv.mtitle,
-    mrating: mv.mrating,
+    id: mv.mid, //영화번호
+    dir: mv.mdir, //감독
+    date: mv.mdate, //개봉일
+    actor: mv.mactor, //주연
+    supactor: mv.supactor, //조연
+    time: mv.mtime, //러닝타임
+    genre: mv.mgenre, //장르
+    story: mv.mstory,
+    title: mv.mtitle, //제목
+    mrating: mv.mrating, //연령
   }));
   try {
     yield put({

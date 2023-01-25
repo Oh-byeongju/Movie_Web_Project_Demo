@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "./Box";
 import styled from "styled-components";
 import { PlusOutlined } from "@ant-design/icons";
-const MovieList = [
+import { useDispatch, useSelector } from "react-redux";
+
+import { ALLMOVIE_REQUEST } from "../../reducer/ticket";
+/*onst MovieList = [
   {
     id: 1,
     src: "img/ranking/av.jpg",
@@ -24,10 +27,19 @@ const MovieList = [
     src: "img/ranking/hero.jpg",
     description: "영웅",
   },
-];
+];*/
 
 //이미지는 public 폴더에 넣어서 주소를 가져옴
 const BoxList = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({
+      type: ALLMOVIE_REQUEST,
+    });
+  }, []);
+  const { allMovie } = useSelector((state) => state.ticket);
+
   return (
     <CardList>
       <div style={{ paddingBottom: "30px" }}>
@@ -37,13 +49,8 @@ const BoxList = () => {
         </More>
       </div>
       <UL>
-        {MovieList.map((movie) => (
-          <Box
-            key={movie.id}
-            src={movie.src}
-            id={movie.id}
-            description={movie.description}
-          />
+        {allMovie.slice(0, 4).map((movie) => (
+          <Box movie={movie} key={movie.id} />
         ))}
       </UL>
     </CardList>
@@ -74,9 +81,9 @@ const UL = styled.ul`
   align-items: center;
   list-style-type: none;
   padding-left: 160px;
-  
+
   &:after {
-    content: '';
+    content: "";
     clear: both;
     display: block;
   }

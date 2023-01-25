@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import UserJoin from "./pages/UserJoin";
 import Reserve from "./pages/Reserve";
+import Movie from "./pages/Movie";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Route path="/" element={<Home />} exact={true}></Route>
       <Route path="/UserJoin" element={<UserJoin />}></Route>
       <Route path="/Reserve" element={<Reserve />}></Route>
+      <Route path="/movie" element={<Movie />}></Route>
     </Routes>
   );
 }
