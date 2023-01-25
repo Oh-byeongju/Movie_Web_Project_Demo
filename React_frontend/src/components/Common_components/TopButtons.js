@@ -1,48 +1,83 @@
-import React, { useCallback, useState } from "react";
+/*
+ 23-01-24 로그인 상태확인 구현(오병주)
+ 23-01-25 페이지 이동 구현(오병주)
+*/
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import {
   SearchOutlined,
   CalendarOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import LoginModal from "../Login_components/LoginModal";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useLocation, Link } from "react-router-dom";
+import { USER_LOGIN_STATUS_REQUEST } from '../../reducer/R_user_login';
 
 const TopButtons = () => {
-  // 로그인 시 뜨는 모달창 on/off용 변수 및 함수
-  const [login, setlogin] = useState(false);
-  const toggle_login = () => setlogin(true);
-  const [search, setSearch] = useState("");
 
-  const onChange = useCallback((e) => {
-    setSearch(e.target.value);
-  }, []);
+  // 로그인 상태확인용 변수
+  var check_login = false;
+  const dispatch = useDispatch(); 
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
-  const onClick = useCallback(() => {
-    console.log(search);
-  }, [search]);
+  // 현재 페이지의 정보를 받기위해 선언
+  const location = useLocation();
+
+  // 로그인 상태를 확인하는 useEffect
+  // 이제 내가 할거는 토큰이 있을때 uname을 한박자 늦게 사용하는거랑,
+  // 리프레시 인터셉터 해버리면 로그인은 끝날듯??
+  // 로그인 하고 뒤로 가는거도 예외로 적어줘야함 몇가지
+  useEffect(() => {
+    dispatch({
+      type: USER_LOGIN_STATUS_REQUEST,
+    });
+  }, [dispatch]);
+
+  if (LOGIN_data.uname === undefined) {
+    console.log("로그인 안됨");
+    check_login = true;
+  }
+  else {
+    console.log("로그인 됨");
+    check_login = false;
+  }
+
+  // const [search, setSearch] = useState("");
+
+  // const onChange = useCallback((e) => {
+  //   setSearch(e.target.value);
+  // }, []);
+
+  // const onClick = useCallback(() => {
+  //   console.log(search);
+  // }, [search]);  
 
   return (
     <>
-      <div>
-        {/* login변수와 Login모달창을 앤드로 묶어서 상태관리 */}
-        {login && <LoginModal setlogin={setlogin} />}
-      </div>
       <NavBar>
         <div className="nav">
           <div className="Top_left">
-            <a href="./">VIP LOUNGE</a>
-            <a href="./">멤버쉽</a>
-            <a href="./">고객센터</a>
+            <Link to ="/">VIP LOUNGE</Link>
+            <Link to ="/">멤버쉽</Link>
+            <Link to ="/">고객센터</Link>
           </div>
+          {check_login ?
           <div className="Top_right">
-            <button onClick={toggle_login}>로그인</button>
-            <a href="http://localhost:3000/UserJoin">회원가입</a>
+            {/* 로그인으로 갈때는 이전 url의 주소를 넘겨줘야함 */}
+            <Link to={`/UserLogin`} state={{ url: location.pathname }}>
+              로그인
+            </Link>
+            <Link to="/UserJoin">회원가입</Link>   
           </div>
+          : <div className="Top_right">
+              <span>{LOGIN_data.uname}님 환영합니다.</span>
+              <button>로그아웃</button>   
+            </div>
+          }
           <h2 className="logo">
-            <a href="./" style={{ content: "" }}>
+            <Link to ="/" style={{ content: "" }}>
               홈버튼
-            </a>
+            </Link>
           </h2>
           <div className="LeftIcon">
             {/*} <input
@@ -53,31 +88,31 @@ const TopButtons = () => {
               placeholder="검색"
               style={{ outline: "none", border: "none", height: "30px" }}
             /> Input 다시 해야댐 일단 주석처리 
-  */}
-            <Button onClick={onClick}>
+            */}
+            <Button>
               <SearchOutlined style={{ fontSize: "25px", color: "white" }} />
             </Button>
           </div>
           <div className="Menu">
             <ul className="MenuList">
               <li className="topMenuLi">
-                <a href="./">영화</a>
+                <Link to ="/">영화</Link>
               </li>
               <li className="topMenuLi">
-                <a href="./">예매</a>
+                <Link to ="/">예매</Link>
               </li>
               <li className="topMenuLi">
-                <a href="./">극장</a>
+                <Link to ="/">극장</Link>
               </li>
               <li className="topMenuLi">
-                <a href="./">이벤트</a>
+                <Link to ="/">이벤트</Link>
               </li>
               <li className="topMenuLi">
-                <a href="./">혜택</a>
+                <Link to ="/">혜택</Link>
                 <div className="Black_SubMenu"></div>
               </li>
               <li className="topMenuLi">
-                <a href="./">개발진</a>
+                <Link to ="/">개발진</Link>
               </li>
               <div className="menu_pan">
                 <div className="w_1350">
@@ -226,6 +261,18 @@ const NavBar = styled.div`
       :hover {
         text-decoration: underline;
       }
+    }
+    span {
+      margin-top: 1.4px;
+      color: #888;
+      float: left;
+      margin-right: 15px;
+      text-decoration: none;
+      background-color: black;
+      padding: 0;
+      border: 0;
+      font-weight: 600;
+      font-family: NanumBarunGothic, Dotum, "돋움", sans-serif !important;
     }
   }
 

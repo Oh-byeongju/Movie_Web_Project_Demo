@@ -6,14 +6,18 @@ import com.movie.Spring_backend.dto.MemberDto;
 import com.movie.Spring_backend.dto.TokenDto;
 import com.movie.Spring_backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.nio.file.AccessDeniedException;
 
 // 나중에 cros localhost 3000번만 열고 닫기
-@CrossOrigin(origins = "*")
+// 쿠키를 프론트단과 같이 사용하기 위해 allowCredentials를 true로 설정
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/normal")
@@ -37,8 +41,39 @@ public class MemberController {
 
     // 로그인을 위한 메소드, id와 pw가 일치할 경우 Token을 생성하여 리턴
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody MemberDto requestDto) {
-        return ResponseEntity.ok(memberService.login(requestDto));
+    public ResponseEntity<MemberDto> login_check(@RequestBody MemberDto requestDto, HttpServletResponse response) {
+
+        // 토큰을 만들기 위한 정보
+        TokenDto result = memberService.login(requestDto);
+
+        // XSS를 방지하기 위해 httpOnly 기능을 활성화
+        // access 토큰을 헤더에 넣기 위한 작업
+        // maxAge를 설정 안하면 세션으로, 0을 만들면 삭제
+        ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + result.getAccessToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge( 60 * 20)  // 20분
+                .sameSite("None")
+                .build();
+
+        // XSS를 방지하기 위해 httpOnly 기능을 활성화
+        // 리프레시 토큰을 헤더에 넣기 위한 작업
+        ResponseCookie refreshCookie = ResponseCookie.from("RTK", result.getRefreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge( 60 * 60 * 24 * 7)  // 7일
+                .sameSite("None")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+        // 로그인한 사용자의 이름을 리턴
+        MemberDto send_result = MemberDto.builder().uname(result.getUname()).build();
+
+        return ResponseEntity.ok().body(send_result);
     }
 
     // 리프레시 토큰을 이용한 토큰 재발급 메소드
