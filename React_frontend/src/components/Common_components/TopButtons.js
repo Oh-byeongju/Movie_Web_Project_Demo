@@ -16,31 +16,23 @@ import { USER_LOGIN_STATUS_REQUEST } from '../../reducer/R_user_login';
 const TopButtons = () => {
 
   // 로그인 상태확인용 변수
-  var check_login = false;
   const dispatch = useDispatch(); 
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
   // 현재 페이지의 정보를 받기위해 선언
   const location = useLocation();
 
-  // 로그인 상태를 확인하는 useEffect
-  // 이제 내가 할거는 토큰이 있을때 uname을 한박자 늦게 사용하는거랑,
-  // 리프레시 인터셉터 해버리면 로그인은 끝날듯??
-  // 로그인 하고 뒤로 가는거도 예외로 적어줘야함 몇가지
-  useEffect(() => {
-    dispatch({
-      type: USER_LOGIN_STATUS_REQUEST,
-    });
-  }, [dispatch]);
-
-  if (LOGIN_data.uname === undefined) {
-    console.log("로그인 안됨");
-    check_login = true;
-  }
-  else {
-    console.log("로그인 됨");
-    check_login = false;
-  }
+  // // 로그인 상태를 확인하는 useEffect
+  // // 리프레시 인터셉터 해버리면 로그인은 끝날듯??
+  // // 로그인 하고 뒤로 가는거도 예외로 적어줘야함 몇가지
+  // // 로그인 창에서 엔터키 누르면 검색 되는거도 해야함
+  // useEffect(() => {
+  //   if (LOGIN_data.uname === undefined) {
+  //     dispatch({
+  //       type: USER_LOGIN_STATUS_REQUEST,
+  //     });
+  //   }
+  // },[LOGIN_data.uname, dispatch])
 
   // const [search, setSearch] = useState("");
 
@@ -61,7 +53,7 @@ const TopButtons = () => {
             <Link to ="/">멤버쉽</Link>
             <Link to ="/">고객센터</Link>
           </div>
-          {check_login ?
+          {LOGIN_data.uname === undefined ?
           <div className="Top_right">
             {/* 로그인으로 갈때는 이전 url의 주소를 넘겨줘야함 */}
             <Link to={`/UserLogin`} state={{ url: location.pathname }}>

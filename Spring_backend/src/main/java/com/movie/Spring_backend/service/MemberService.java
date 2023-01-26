@@ -143,6 +143,17 @@ public class MemberService {
         return tokenDto;
     }
 
+    // 로그인 상태확인 메소드
+    @Transactional
+    public MemberDto getMyInfoBySecurity(String currentMemberId) {
+        MemberEntity Data = memberRepository.findByUid(currentMemberId)
+                .orElseThrow(() -> new MemberNotFoundException(currentMemberId));
+
+        // 로그인 정보가 있을경우 id와 이름을 리턴
+        return MemberDto.builder()
+                .uname(Data.getUname()).build();
+    }
+
     // id와 pw를 파라미터로 전달 받아 UsernamePasswordAuthenticationToken 으로 반환하여 리턴해주는 메소드
     public UsernamePasswordAuthenticationToken toAuthentication(String uid, String upw) {
         return new UsernamePasswordAuthenticationToken(uid, upw);

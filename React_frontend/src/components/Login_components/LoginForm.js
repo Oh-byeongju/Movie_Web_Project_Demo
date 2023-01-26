@@ -4,7 +4,7 @@
 */
 import React, {useState} from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { USER_LOGIN_REQUEST } from '../../reducer/R_user_login';
 import { useLocation, Link, useNavigate } from "react-router-dom";
 
@@ -33,8 +33,11 @@ const LoginForm = () => {
     });
   };
 
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+
   // 로그인 버튼 누를 때 적용되는 함수
-  const submit = ()=> {
+  const submit = () => {
     const datas = {
       uid: id,
       upw: pw
@@ -45,14 +48,18 @@ const LoginForm = () => {
 			data: datas
     });
 
+    console.log(LOGIN_data);
+    // 지금 값을 바로 못받아서 alert을 못띄움 이걸 판단 해야함.
+
+
 		// 만약에 로그인 페이지 url을 바로 입력해서 들어왔을경우 메인 페이지로, 아닌경우 이전 페이지로 이동
 		// 근데 추후 회원가입 페이지나 이런곳에서 왔으면 메인으로 보내게 만들어야할듯
-		if (location.state === null) {
-			navigate(`/`);
-		}
-		else {
-			navigate(`${location.state.url}`);
-		}
+		// if (location.state === null) {
+		// 	navigate(`/`);
+		// }
+		// else {
+		// 	navigate(`${location.state.url}`);
+		// }
   };
 
   // id, pw 입력에 따른 로그인 버튼 활성화 함수
