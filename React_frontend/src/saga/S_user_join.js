@@ -35,7 +35,7 @@ function* IDcheck(action) {
 
 // 디비에서 데이터 select 하고 바로 리턴해줌(아이디 중복검사)
 async function idexsits(data) {
-	return await axios.get(baseUrl + "/normal/id",{
+	return await axios.get(baseUrl + "/member/normal/id",{
     params: {
       uid: data
     }
@@ -67,7 +67,7 @@ function* UserSignUp(action) {
 
 // 디비에 회원정보를 전달하고 저장
 async function SignUp(data) {
-	return await axios.post(baseUrl + "/normal/signup", data)
+	return await axios.post(baseUrl + "/member/normal/signup", data)
   .then((response) => {
     return response;
   })
