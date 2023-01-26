@@ -27,7 +27,6 @@ public class TempController {
 
     @GetMapping("/v2/selectmovie")
     @CrossOrigin(origins = "http://localhost:3000")
-
     public ResponseEntity<TempDto> getInfo(@RequestParam Long id){
 
         return ResponseEntity.ok().body(tempService.findById(id));
@@ -36,6 +35,16 @@ public class TempController {
 
     }
 
+    @GetMapping("/v2/searchmovie")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<TempDto> SearchTitle(@RequestParam(value="title", required=false) String title){
+
+        return ResponseEntity.ok().body(tempService.findByMtitleContaining(title));
+
+
+
+
+    }
 
 }
 

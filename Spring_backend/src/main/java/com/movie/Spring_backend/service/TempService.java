@@ -61,6 +61,24 @@ public class TempService {
                 .mstory(data.getMstory())
                 /*.members(data.getMembers())*/.build();
     }
+
+    public TempDto findByMtitleContaining(String title) {
+        TempEntity data = tempRepository.findByMtitleContaining(title).orElseThrow(() -> new RuntimeException("오류"));
+        String titles = data.getMtitle();
+        System.out.println(titles);
+
+        return TempDto.builder().mid(data.getMid())
+                .mtitle(titles)
+                .mdir(data.getMdir())
+                .mactor(data.getMactor())
+                .msupactor(data.getMsupactor())
+                .mgenre(data.getMgenre())
+                .mtime(data.getMtime())
+                .mdate(data.getMdate())
+                .mrating(data.getMrating())
+                .mstory(data.getMstory())
+                /*.members(data.getMembers())*/.build();
+    }
 }//findAll의 결과의 스트림을 맵을 통해 dto변환 -> list로 별환
 //ong mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
 //                      int mtime, Date mdate, String mrating, String mstory)
