@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ALLMOVIE_REQUEST, MOVIE_SEARCH_REQUEST } from "../../reducer/ticket";
 import Movie from "./Movie";
+import Loading from "../Common_components/Loading";
 import styled from "styled-components";
 import { Input } from "antd";
 const { Search } = Input;
@@ -18,10 +19,10 @@ const MovieList = () => {
       type: MOVIE_SEARCH_REQUEST,
       data: value,
     });
-    console.log(value);
   }, []);
 
-  const { allMovie } = useSelector((state) => state.ticket);
+  const { allMovie, movie_search_done, movie_search_loading, searchmovie } =
+    useSelector((state) => state.ticket);
   return (
     <Container>
       <Content>
@@ -31,7 +32,9 @@ const MovieList = () => {
           </div>
           <div className="search">
             <p style={{ fontWeight: "1000" }}>
-              {`${allMovie.length}개의 영화가 검색되었습니다.`}
+              {movie_search_done && searchmovie != 0
+                ? `${searchmovie.length}개의 영화가 검색되었습니다.`
+                : `${allMovie.length}개의 영화가 검색되었습니다.`}
             </p>
             <div className="search_button">
               <Search
@@ -46,13 +49,21 @@ const MovieList = () => {
             </div>
           </div>
 
-          <div className="movie-list">
-            <UL>
-              {allMovie.map((movie) => (
-                <Movie movie={movie} key={movie.id} />
-              ))}
-            </UL>
-          </div>
+          {movie_search_loading ? (
+            <Loading />
+          ) : (
+            <div className="movie-list">
+              <UL>
+                {movie_search_done && searchmovie != 0
+                  ? searchmovie.map((movie) => (
+                      <Movie movie={movie} key={movie.id} />
+                    ))
+                  : allMovie.map((movie) => (
+                      <Movie movie={movie} key={movie.id} />
+                    ))}
+              </UL>
+            </div>
+          )}
         </InnerWraps>
       </Content>
     </Container>

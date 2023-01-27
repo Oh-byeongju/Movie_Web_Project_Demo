@@ -11,7 +11,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/normal")
+@RequestMapping("/v2")
 
 
 public class TempController {
@@ -19,30 +19,26 @@ public class TempController {
 
     private final TempService tempService;
 
-    @GetMapping("/v2/movie")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/normal/movie")
     public ResponseEntity<List<TempDto>> getData() {
         return ResponseEntity.ok().body(tempService.getMovie());
     }
 
-    @GetMapping("/v2/selectmovie")
+
+    @PostMapping("/normal/searchmovie")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<TempDto> getInfo(@RequestParam Long id){
 
-        return ResponseEntity.ok().body(tempService.findById(id));
-
-
-
-    }
-
-    @GetMapping("/v2/searchmovie")
-    @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<TempDto> SearchTitle(@RequestParam(value="title", required=false) String title){
-
+    public ResponseEntity<List<TempDto>> SearchTitle(@RequestParam String title){
         return ResponseEntity.ok().body(tempService.findByMtitleContaining(title));
 
 
-
+/*
+*  @PostMapping("/normal/selectmovie")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<List<MovieInfoDto>> findMid(@RequestParam Long id){
+        return ResponseEntity.ok().body(movieInfoService.findAllByTempMid(id)); //findAllby + 외래키를 가진 Entity명 + 외래키 컬럼명
+    }
+*/
 
     }
 

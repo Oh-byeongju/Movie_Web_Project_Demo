@@ -6,7 +6,7 @@ import com.movie.Spring_backend.entity.MovieInfoEntity;
 import com.movie.Spring_backend.entity.TempEntity;
 import com.movie.Spring_backend.repository.TempRepository;
 import lombok.Data;
-
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Transactional
 @RequiredArgsConstructor
 @Service
 public class TempService {
@@ -62,22 +61,20 @@ public class TempService {
                 /*.members(data.getMembers())*/.build();
     }
 
-    public TempDto findByMtitleContaining(String title) {
-        TempEntity data = tempRepository.findByMtitleContaining(title).orElseThrow(() -> new RuntimeException("오류"));
-        String titles = data.getMtitle();
-        System.out.println(titles);
+    public List<TempDto> findByMtitleContaining(String title) {
 
-        return TempDto.builder().mid(data.getMid())
-                .mtitle(titles)
-                .mdir(data.getMdir())
-                .mactor(data.getMactor())
-                .msupactor(data.getMsupactor())
-                .mgenre(data.getMgenre())
-                .mtime(data.getMtime())
-                .mdate(data.getMdate())
-                .mrating(data.getMrating())
-                .mstory(data.getMstory())
-                /*.members(data.getMembers())*/.build();
+    List<TempEntity> datas = tempRepository.findByMtitleContaining(title);
+    return datas.stream().map(data->TempDto.builder()
+            .mid(data.getMid())
+            .mtitle(data.getMtitle())
+            .mdir(data.getMdir())
+            .mactor(data.getMactor())
+            .msupactor(data.getMsupactor())
+            .mgenre(data.getMgenre())
+            .mtime(data.getMtime())
+            .mdate(data.getMdate())
+            .mrating(data.getMrating())
+            .mstory(data.getMstory()).build()).collect(Collectors.toList());
     }
 }//findAll의 결과의 스트림을 맵을 통해 dto변환 -> list로 별환
 //ong mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
@@ -85,11 +82,13 @@ public class TempService {
 
 
 /*
-*    public MovieInfoDto findById(Long id) {
-        MovieInfoEntity data = movieInfoRepository.findById(id).orElseThrow(()->new RuntimeException("오류"));
-        Long ids= data.getMiid();
-        System.out.println(ids);
+*      public List<MovieInfoDto> findAllByTempMid(Long id){
+        List<MovieInfoEntity> datas = movieInfoRepository.findAllByTempMid(id);
 
-        return MovieInfoDto.builder().miid(ids).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build();
+            return datas.stream().map(data ->
+            *  MovieInfoDto.builder().
+            * miid(data.getMiid()).mistarttime(data.getMistarttime())
+            * .miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build()).collect(Collectors.toList());
 
+        }
 */

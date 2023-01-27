@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, put, call } from "redux-saga/effects";
+import { all, takeLatest, fork, put, call, delay } from "redux-saga/effects";
 import {
   ALLMOVIE_REQUEST,
   ALLMOVIE_SUCCESS,
@@ -14,10 +14,9 @@ import {
   MOVIE_SEARCH_SUCCESS,
 } from "../reducer/ticket";
 import axios from "axios";
-import { RestOutlined } from "@ant-design/icons";
 
 function loadAllMovie() {
-  return axios.get("http://localhost:8080/normal/v2/movie", {
+  return axios.get("http://localhost:8080/v2/normal/movie", {
     "Access-Control-Allow-Credentials": true,
   });
 } //영화 불러오기
@@ -50,7 +49,7 @@ function* allMovieLoad() {
 }
 
 function loadAllTheater() {
-  return axios.get("http://localhost:8080/normal/v2/theater", {
+  return axios.get("http://localhost:8080/v2/normal/theater", {
     "Access-Control-Allow-Credentials": true,
   });
 } //극장 불러오기
@@ -78,7 +77,7 @@ function* allTheaterLoad() {
 
 function selectMovie(data) {
   return axios.post(
-    `http://localhost:8080/normal/infomovie/selectmovie?id=${data}`,
+    `http://localhost:8080/infomovie/normal/selectmovie?id=${data}`,
     {
       "Access-Control-Allow-Credentials": true,
     }
@@ -114,9 +113,7 @@ function* selectMovieLoad(action) {
 
 function searchMovie(data) {
   return axios.post(
-    `http://localhost:8080/normal/v2/searchmovie?title=${encodeURIComponent(
-      data
-    )}`,
+    `http://localhost:8080/v2/normal/searchmovie?title=${data}`,
     {
       "Access-Control-Allow-Credentials": true,
     }
@@ -138,6 +135,7 @@ function* searchMovieLoad(action) {
     mrating: mv.mrating, //연령
   }));
   try {
+    yield delay(2000);
     yield put({
       type: MOVIE_SEARCH_SUCCESS,
       data: allmoviedata,
