@@ -75,6 +75,7 @@ function* allTheaterLoad() {
   }
 }
 
+//영화 검색
 function selectMovie(data) {
   return axios.post(
     `http://localhost:8080/infomovie/normal/selectmovie?id=${data}`,

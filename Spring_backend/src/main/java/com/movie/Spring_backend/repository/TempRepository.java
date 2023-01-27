@@ -17,6 +17,6 @@ public interface TempRepository extends JpaRepository<TempEntity,Long> {
     public Optional<TempEntity> findById(Long id);
 
     public List<TempEntity> findByMtitleContaining(String title);
-    //Containg == select시 like할때 사용
+    //Containing == select시 like할때 사용
 
 }

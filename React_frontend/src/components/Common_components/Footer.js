@@ -5,82 +5,101 @@ import {
   HomeOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const Footer = () => {
+  return (
+    <>
+      <Footerwrapper>
+        <FooterLayout>
+          <FooterLink>
+            <FooterLinkList>
+              <FooterLinkListItemHide>
+                <a
+                  href="https://github.com/Oh-byeongju/Movie_Project"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  프로젝트 소개
+                </a>
+              </FooterLinkListItemHide>
+              <FooterLinkListItem>
+                <Link to="/">공지사항</Link>
+              </FooterLinkListItem>
+              <FooterLinkListItem>
+                <Link to="/">영화예매</Link>
+              </FooterLinkListItem>
+              <FooterLinkListItem>
+                <Link to="/">극장조회</Link>
+              </FooterLinkListItem>
+              <FooterLinkListItem>
+                <Link to="/">이벤트</Link>
+              </FooterLinkListItem>
+              <FooterLinkListItemHide>
+                <Link to="/">개발진</Link>
+              </FooterLinkListItemHide>
+            </FooterLinkList>
+          </FooterLink>
+          <Content>
+            <CorpInfo style={{ fontSize: "15px" }}>
+              <CorpLogo>
+                <h1 style={{ fontSize: "36px" }}>MOVIE_PROJECT</h1>
+              </CorpLogo>
+              오병주 (프로젝트 제작)
+              <br></br>
+              E-mail : dhqudwn0@naver.com &nbsp; | &nbsp; Github :
+              https://github.com/Oh-byeongju
+              <br></br>
+              <br></br>
+              강경목 (프로젝트 제작)
+              <br></br>
+              E-mail : 여기 이메일좀 &nbsp; | &nbsp; Github :
+              https://github.com/kmsjkh12
+              <br></br>
+            </CorpInfo>
+            <CorpSns>
+              <CorpSnsList>
+                <CorpSnsListItem>
+                  <Link to="/">
+                    <HomeOutlined
+                      style={{ fontSize: "25px", color: "#97a0a7" }}
+                    />
+                  </Link>
+                </CorpSnsListItem>
+                <CorpSnsListItem>
+                  <Link to="/UserJoin">
+                    <UserAddOutlined
+                      style={{ fontSize: "25px", color: "#97a0a7" }}
+                    />
+                  </Link>
+                </CorpSnsListItem>
+                <CorpSnsListItem>
+                  <a
+                    href="https://github.com/Oh-byeongju/Movie_Project"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <GithubOutlined
+                      style={{ fontSize: "25px", color: "#97a0a7" }}
+                    />
+                  </a>
+                </CorpSnsListItem>
+              </CorpSnsList>
+            </CorpSns>
+          </Content>
+        </FooterLayout>
+      </Footerwrapper>
+    </>
+  );
+};
 
-	return(
-		<>
-		<div className="l-Footer">
-			<FooterLayout>
-				<FooterLink>
-					<FooterLinkList>
-						<FooterLinkListItemHide>
-							<a href="https://github.com/Oh-byeongju/Movie_Project" target="_blank" rel = "noreferrer">프로젝트 소개</a>
-						</FooterLinkListItemHide>
-						<FooterLinkListItem>
-							<Link to="/">공지사항</Link>
-						</FooterLinkListItem>
-						<FooterLinkListItem>
-							<Link to="/">영화예매</Link>
-						</FooterLinkListItem>
-						<FooterLinkListItem>
-							<Link to="/">극장조회</Link>
-						</FooterLinkListItem>
-						<FooterLinkListItem>
-							<Link to="/">이벤트</Link>
-						</FooterLinkListItem>
-						<FooterLinkListItemHide>
-							<Link to="/">개발진</Link>
-						</FooterLinkListItemHide>
-					</FooterLinkList>
-				</FooterLink>
-				<Content>
-					<CorpInfo style={{fontSize: "15px"}}>
-						<CorpLogo>
-							<h1 style={{fontSize: "36px"}}>
-								MOVIE_PROJECT
-							</h1>	
-						</CorpLogo>
-						오병주 (프로젝트 제작)
-						<br></br>
-						E-mail : dhqudwn0@naver.com &nbsp; | &nbsp; Github : https://github.com/Oh-byeongju
-						<br></br>
-						<br></br>
-						강경목 (프로젝트 제작)
-						<br></br>
-						E-mail : 여기 이메일좀 &nbsp; | &nbsp; Github : https://github.com/kmsjkh12
-						<br></br>
-					</CorpInfo>
-					<CorpSns>
-						<CorpSnsList>
-							<CorpSnsListItem>
-								<Link to ="/">
-									<HomeOutlined style={{fontSize: "25px", color: "#97a0a7"}}/>
-								</Link>
-							</CorpSnsListItem>
-							<CorpSnsListItem>
-								<Link to="/UserJoin">
-									<UserAddOutlined style={{fontSize: "25px", color: "#97a0a7"}}/>
-								</Link>
-							</CorpSnsListItem>
-							<CorpSnsListItem>
-								<a href="https://github.com/Oh-byeongju/Movie_Project" target="_blank" rel = "noreferrer">
-									<GithubOutlined style={{fontSize: "25px", color: "#97a0a7"}}/>
-								</a>		
-							</CorpSnsListItem>
-						</CorpSnsList>
-					</CorpSns>
-				</Content>
-			</FooterLayout>
-		</div>
-		</>
-	)
-}
-
+const Footerwrapper = styled.div`
+  position: relative;
+  transform: translateY(100%);
+`;
 const FooterLayout = styled.div`
   background: #ebeef1;
-  position: relative;
+  height: 212px;
 `;
 
 const FooterLink = styled.div`
@@ -94,6 +113,7 @@ const FooterLinkList = styled.ul`
   padding-left: 16px;
   padding-right: 16px;
   max-width: 1044px;
+
   margin: 19px auto 19px -33px;
   height: 19px;
   padding: 0;
