@@ -1,6 +1,7 @@
 /*
  23-01-19 로그인 구현(오병주)
  23-01-24 로그인 상태확인 구현(오병주)
+ 23-01-27 로그아웃 구현(오병주)
 */
 import { call, all, takeLatest, fork, put } from "redux-saga/effects";
 import {
@@ -9,11 +10,12 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_STATUS_REQUEST,
   USER_LOGIN_STATUS_FAILURE,
-  USER_LOGIN_STATUS_SUCCESS
+  USER_LOGIN_STATUS_SUCCESS,
+  USER_LOGOUT_REQUEST,
+  USER_LOGOUT_SUCCESS,
+  USER_LOGOUT_FAILURE
 } from "../reducer/R_user_login";
-import axios from "axios";
-
-const baseUrl = "http://localhost:8080";
+import { http } from '../lib/http';
 
 // 로그인 함수
 function* UserLogin(action) {
@@ -32,9 +34,9 @@ function* UserLogin(action) {
   }
 }
 
-// 디비에 로그인 정보를 전달하고 토큰을 리턴 /// csrf 검사도 넣어야함 /// 쿠키를 같이 보내려면 with~~ 저게 필요함
+// 디비에 로그인 정보를 전달하고 토큰을 리턴 /// csrf 검사도 넣어야함 /// 쿠키를 같이 사용하려면 with~~ 저게 필요함(백엔드 연결)
 async function Login(data) {
-	return await axios.post(baseUrl + "/member/normal/login", data, {withCredentials: true})  
+	return await http.post("/member/normal/login", data)
   .then((response) => {
     return response;
   })
@@ -60,9 +62,35 @@ function* UserCheck() {
   }
 }
 
-// 로그인 상태를 확인 하기 위해 쿠키를 전달함
+// 로그인 상태를 확인 하기 위해 쿠키를 전달함(백엔드 연결)
 async function Check() {
-  return await axios.get(baseUrl + "/member/normal/login_status", {withCredentials: true})  
+  return await http.get("/member/normal/login_status")
+  .then((response) => {
+    return response;
+  })
+  .catch((error)=>{
+    return error.response;
+  })
+};
+
+// 로그아웃 함수
+function* UserLogout() {
+  const result = yield call(Checkout);
+  if (result.status === 204) {
+    yield put({
+      type: USER_LOGOUT_SUCCESS
+    });
+  }
+  else {
+    yield put({
+      type: USER_LOGOUT_FAILURE
+    });
+  }
+}
+
+// 로그아웃을 처리하기 위해 쿠키를 전달함(백엔드 연결)
+async function Checkout() {
+  return await http.get("/member/normal/logout")  
   .then((response) => {
     return response;
   })
@@ -79,6 +107,10 @@ function* USER_STATUS() {
   yield takeLatest(USER_LOGIN_STATUS_REQUEST, UserCheck);
 }
 
+function* USER_LOGOUT() {
+  yield takeLatest(USER_LOGOUT_REQUEST, UserLogout);
+}
+
 export default function* S_user_loginSaga() {
-  yield all([fork(USER_LOGIN), fork(USER_STATUS)]);
+  yield all([fork(USER_LOGIN), fork(USER_STATUS), fork(USER_LOGOUT)]);
 }

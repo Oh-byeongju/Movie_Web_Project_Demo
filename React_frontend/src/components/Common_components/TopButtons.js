@@ -1,8 +1,9 @@
 /*
  23-01-24 로그인 상태확인 구현(오병주)
  23-01-25 페이지 이동 구현(오병주)
+ 23-01-27 로그아웃 구현(오병주)
 */
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import {
   SearchOutlined,
@@ -11,7 +12,7 @@ import {
 } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
-import { USER_LOGIN_STATUS_REQUEST } from "../../reducer/R_user_login";
+import { USER_LOGIN_STATUS_REQUEST, USER_LOGOUT_REQUEST } from "../../reducer/R_user_login";
 
 const TopButtons = () => {
   // 로그인 상태확인용 변수
@@ -21,17 +22,25 @@ const TopButtons = () => {
   // 현재 페이지의 정보를 받기위해 선언
   const location = useLocation();
 
-  // // 로그인 상태를 확인하는 useEffect
-  // // 리프레시 인터셉터 해버리면 로그인은 끝날듯??
-  // // 로그인 하고 뒤로 가는거도 예외로 적어줘야함 몇가지
-  // // 로그인 창에서 엔터키 누르면 검색 되는거도 해야함
-  // useEffect(() => {
-  //   if (LOGIN_data.uname === undefined) {
-  //     dispatch({
-  //       type: USER_LOGIN_STATUS_REQUEST,
-  //     });
-  //   }
-  // },[LOGIN_data.uname, dispatch])
+  // 로그인 상태를 확인하는 useEffect
+  // 리프레시 인터셉터 해버리면 로그인은 끝날듯??
+  // 로그인 하고 뒤로 가는거도 예외로 적어줘야함 몇가지
+  // 로그인 창에서 엔터키 누르면 검색 되는거도 해야함
+  useEffect(() => {
+    if (LOGIN_data.uname === undefined) {
+      dispatch({
+        type: USER_LOGIN_STATUS_REQUEST,
+      });
+    }
+  },[LOGIN_data.uname, dispatch])
+
+  // 로그아웃 버튼을 눌렀을 때 실행되는 함수
+  const onLogout = useCallback(() => {
+    dispatch({
+      type: USER_LOGOUT_REQUEST
+    });
+  }, [dispatch])
+
 
   // const [search, setSearch] = useState("");
 
@@ -52,7 +61,7 @@ const TopButtons = () => {
             <Link to="/">멤버쉽</Link>
             <Link to="/">고객센터</Link>
           </div>
-          {LOGIN_data.uname === undefined ? (
+          {LOGIN_data.uname === undefined || LOGIN_data.uname === "error!!"? (
             <div className="Top_right">
               {/* 로그인으로 갈때는 이전 url의 주소를 넘겨줘야함 */}
               <Link to={`/UserLogin`} state={{ url: location.pathname }}>
@@ -63,7 +72,7 @@ const TopButtons = () => {
           ) : (
             <div className="Top_right">
               <span>{LOGIN_data.uname}님 환영합니다.</span>
-              <button>로그아웃</button>
+              <button onClick={onLogout}>로그아웃</button>
             </div>
           )}
           <h2 className="logo">

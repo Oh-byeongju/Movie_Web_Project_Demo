@@ -14,19 +14,26 @@ import com.movie.Spring_backend.exceptionlist.MemberNotFoundException;
 import com.movie.Spring_backend.jwt.TokenProvider;
 import com.movie.Spring_backend.repository.MemberRepository;
 import com.movie.Spring_backend.repository.RefreshTokenRepository;
+import com.sun.tools.jconsole.JConsoleContext;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.nio.file.AccessDeniedException;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +81,7 @@ public class MemberService {
 
     // 로그인 메소드
     @Transactional
-    public TokenDto login(MemberDto requestDto) {
+    public MemberDto login(MemberDto requestDto, HttpServletResponse response) {
 
         // 로그인 한 유저의 이름 추출
         MemberEntity Data = memberRepository.findByUid(requestDto.getUid())
@@ -98,8 +105,33 @@ public class MemberService {
                 .build();
         refreshTokenRepository.save(refreshToken);
 
-        // 생선된 Jwt 토큰 리턴
-        return tokenDto;
+        // XSS를 방지하기 위해 httpOnly 기능을 활성화
+        // access 토큰을 헤더에 넣기 위한 작업
+        // maxAge를 설정 안하면 세션으로, 0을 만들면 삭제
+        ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + tokenDto.getAccessToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge( 60 * 30)  // 30분
+                .sameSite("None")
+                .build();
+
+        // XSS를 방지하기 위해 httpOnly 기능을 활성화
+        // 리프레시 토큰을 헤더에 넣기 위한 작업
+        ResponseCookie refreshCookie = ResponseCookie.from("RTK", tokenDto.getRefreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge( 60 * 60 * 24 * 7)  // 7일
+                .sameSite("None")
+                .build();
+
+        // 응답 헤더에 두 가지 쿠기를 할당
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+        // 로그인한 사용자의 이름을 리턴
+        return MemberDto.builder().uname(tokenDto.getUname()).build();
     }
 
     // 토큰 재발급 메소드
@@ -152,6 +184,39 @@ public class MemberService {
         // 로그인 정보가 있을경우 id와 이름을 리턴
         return MemberDto.builder()
                 .uname(Data.getUname()).build();
+    }
+
+    // 로그아웃 메소드
+    public void logout(HttpServletResponse response) {
+        // authentication 객체에서 아이디 확보
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
+        // Redis에 저장되어 있는 Refresh Token 삭제
+        refreshTokenRepository.deleteById(username);
+
+        // 기존에 있던 두 가지 쿠키와 이름은 동일하지만 value는 빈칸, duration은 0인 쿠키들을 생성
+        // 새로 생성된 쿠키들은 브라우저에 있는 기존의 쿠키들을 덮어쓴 후 사라짐
+        ResponseCookie accessCookie = ResponseCookie.from("ATK", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge( 0)
+                .sameSite("None")
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("RTK", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("None")
+                .build();
+
+        // 응답 헤더에 두 가지 쿠기를 할당
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
     }
 
     // id와 pw를 파라미터로 전달 받아 UsernamePasswordAuthenticationToken 으로 반환하여 리턴해주는 메소드

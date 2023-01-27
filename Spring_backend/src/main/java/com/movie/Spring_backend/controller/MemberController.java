@@ -42,38 +42,9 @@ public class MemberController {
     // 로그인을 위한 메소드, id와 pw가 일치할 경우 Token을 생성하여 리턴
     @PostMapping("/normal/login")
     public ResponseEntity<MemberDto> login_check(@RequestBody MemberDto requestDto, HttpServletResponse response) {
-
-        // 토큰을 만들기 위한 정보
-        TokenDto result = memberService.login(requestDto);
-
-        // XSS를 방지하기 위해 httpOnly 기능을 활성화
-        // access 토큰을 헤더에 넣기 위한 작업
-        // maxAge를 설정 안하면 세션으로, 0을 만들면 삭제
-        ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + result.getAccessToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge( 60 * 20)  // 20분
-                .sameSite("None")
-                .build();
-
-        // XSS를 방지하기 위해 httpOnly 기능을 활성화
-        // 리프레시 토큰을 헤더에 넣기 위한 작업
-        ResponseCookie refreshCookie = ResponseCookie.from("RTK", result.getRefreshToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge( 60 * 60 * 24 * 7)  // 7일
-                .sameSite("None")
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
-
-        // 로그인한 사용자의 이름을 리턴
-        MemberDto send_result = MemberDto.builder().uname(result.getUname()).build();
-
-        return ResponseEntity.ok().body(send_result);
+        // 로그인한 유저의 이름
+        MemberDto result = memberService.login(requestDto, response);
+        return ResponseEntity.ok().body(result);
     }
 
     // 로그인 상태를 확인하는 메소드
@@ -86,5 +57,12 @@ public class MemberController {
     @PostMapping("/normal/reissue")
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenDto tokenRequestDto, HttpServletRequest request) throws AccessDeniedException {
         return ResponseEntity.ok(memberService.reissue(tokenRequestDto, request));
+    }
+
+    // 로그아웃 메소드
+    @GetMapping("/normal/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        memberService.logout(response);
+        return ResponseEntity.noContent().build();
     }
 }
