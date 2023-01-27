@@ -8,7 +8,7 @@ const Layout = () => {
   return (
     <>
       <TopButtons />
-      	<Outlet />
+      <Outlet />
       <Footer />
     </>
   );

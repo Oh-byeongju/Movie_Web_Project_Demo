@@ -9,11 +9,19 @@ const Movie = ({ movie }) => {
     <LI>
       <div className="Image">
         <div className="banner_img">
-          <Img
-            className="imggg"
-            src={`img/ranking/${movie.id}.jpg`}
-            alt="영화"
-          />
+          <Link
+            to={{
+              pathname: `/moviedetail/${movie.id}`,
+              state: { form: true },
+            }}
+          >
+            <Img
+              className="imggg"
+              src={`img/ranking/1.jpg`} //수정 db
+              alt="영화"
+            />
+          </Link>
+
           <div className="middle">
             <Text className="hover_text">{movie.story}</Text>
           </div>
@@ -57,6 +65,7 @@ const LI = styled.li`
   padding-right: 82px;
   width: 230px;
   height: 450px;
+  padding-bottom: 15px;
   .banner_img {
     position: relative;
 
@@ -107,7 +116,7 @@ const Text = styled.div`
   position: absolute;
   width: 200px;
   top: -160px;
-  left: -142px;
+  left: -133px;
   color: white;
   font-size: 16px;
   padding: 16px 32px;
