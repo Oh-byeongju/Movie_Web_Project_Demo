@@ -2,7 +2,7 @@
  23-01-19 로그인 구현(오병주)
  23-01-25 페이지 이동 구현(오병주)
 */
-import React, {useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { USER_LOGIN_REQUEST } from '../../reducer/R_user_login';
@@ -15,7 +15,7 @@ const LoginForm = () => {
 	// 페이지 이동을 위해 선언
 	const location = useLocation();
 	const navigate = useNavigate();	
-
+  
 	//input창 두개 관리를 위해 만든것
 	const [inputs, setInputs] = useState({
     id: "",
@@ -35,9 +35,8 @@ const LoginForm = () => {
 
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
-
   // 로그인 버튼 누를 때 적용되는 함수
-  const submit = () => {
+  const submit = useCallback(() => {
     const datas = {
       uid: id,
       upw: pw
@@ -48,19 +47,27 @@ const LoginForm = () => {
 			data: datas
     });
 
-    console.log(LOGIN_data);
-    // 지금 값을 바로 못받아서 alert을 못띄움 이걸 판단 해야함.
-
-
 		// 만약에 로그인 페이지 url을 바로 입력해서 들어왔을경우 메인 페이지로, 아닌경우 이전 페이지로 이동
 		// 근데 추후 회원가입 페이지나 이런곳에서 왔으면 메인으로 보내게 만들어야할듯
-		// if (location.state === null) {
-		// 	navigate(`/`);
-		// }
-		// else {
-		// 	navigate(`${location.state.url}`);
-		// }
-  };
+		// 로그인 누르고 잠시 대기 화면도 있어야할듯함
+  }, [id, pw, dispatch]);
+
+  useEffect(()=> {
+    console.log(LOGIN_data.uname);
+    if (LOGIN_data.uname === "error!!") {
+      alert("존재하지 않는 회원입니다.")
+      return;
+    }
+
+    if (LOGIN_data.uname !== undefined && LOGIN_data.uname !== "error!!" ) {
+      if (location.state === null) {
+        	navigate(`/`);
+        }
+        else {
+        	navigate(`${location.state.url}`);
+        }
+    }
+  },[LOGIN_data, location.state, navigate]);
 
   // id, pw 입력에 따른 로그인 버튼 활성화 함수
   const [isActive, setActive] = useState(true);

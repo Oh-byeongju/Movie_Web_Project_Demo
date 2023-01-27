@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import AllTheater from "./AllTheater";
 import { all } from "axios";
 import { select } from "redux-saga/effects";
+
 const AllTheaterList = () => {
   const dispatch = useDispatch();
   const [movie, setMovie] = useState(false); // Movie를 선택했는지 bollean으로 확인
