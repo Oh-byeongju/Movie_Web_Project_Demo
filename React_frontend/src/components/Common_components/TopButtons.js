@@ -11,12 +11,11 @@ import {
 } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
-import { USER_LOGIN_STATUS_REQUEST } from '../../reducer/R_user_login';
+import { USER_LOGIN_STATUS_REQUEST } from "../../reducer/R_user_login";
 
 const TopButtons = () => {
-
   // 로그인 상태확인용 변수
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
   // 현재 페이지의 정보를 받기위해 선언
@@ -42,32 +41,33 @@ const TopButtons = () => {
 
   // const onClick = useCallback(() => {
   //   console.log(search);
-  // }, [search]);  
+  // }, [search]);
 
   return (
     <>
       <NavBar>
         <div className="nav">
           <div className="Top_left">
-            <Link to ="/">VIP LOUNGE</Link>
-            <Link to ="/">멤버쉽</Link>
-            <Link to ="/">고객센터</Link>
+            <Link to="/">VIP LOUNGE</Link>
+            <Link to="/">멤버쉽</Link>
+            <Link to="/">고객센터</Link>
           </div>
-          {LOGIN_data.uname === undefined ?
-          <div className="Top_right">
-            {/* 로그인으로 갈때는 이전 url의 주소를 넘겨줘야함 */}
-            <Link to={`/UserLogin`} state={{ url: location.pathname }}>
-              로그인
-            </Link>
-            <Link to="/UserJoin">회원가입</Link>   
-          </div>
-          : <div className="Top_right">
-              <span>{LOGIN_data.uname}님 환영합니다.</span>
-              <button>로그아웃</button>   
+          {LOGIN_data.uname === undefined ? (
+            <div className="Top_right">
+              {/* 로그인으로 갈때는 이전 url의 주소를 넘겨줘야함 */}
+              <Link to={`/UserLogin`} state={{ url: location.pathname }}>
+                로그인
+              </Link>
+              <Link to="/UserJoin">회원가입</Link>
             </div>
-          }
+          ) : (
+            <div className="Top_right">
+              <span>{LOGIN_data.uname}님 환영합니다.</span>
+              <button>로그아웃</button>
+            </div>
+          )}
           <h2 className="logo">
-            <Link to ="/" style={{ content: "" }}>
+            <Link to="/" style={{ content: "" }}>
               홈버튼
             </Link>
           </h2>
@@ -88,23 +88,23 @@ const TopButtons = () => {
           <div className="Menu">
             <ul className="MenuList">
               <li className="topMenuLi">
-                <Link to ="/">영화</Link>
+                <Link to="/">영화</Link>
               </li>
               <li className="topMenuLi">
-                <Link to ="/">예매</Link>
+                <Link to="/">예매</Link>
               </li>
               <li className="topMenuLi">
-                <Link to ="/">극장</Link>
+                <Link to="/">극장</Link>
               </li>
               <li className="topMenuLi">
-                <Link to ="/">이벤트</Link>
+                <Link to="/">이벤트</Link>
               </li>
               <li className="topMenuLi">
-                <Link to ="/">혜택</Link>
+                <Link to="/">혜택</Link>
                 <div className="Black_SubMenu"></div>
               </li>
               <li className="topMenuLi">
-                <Link to ="/">개발진</Link>
+                <Link to="/">개발진</Link>
               </li>
               <div className="menu_pan">
                 <div className="w_1350">

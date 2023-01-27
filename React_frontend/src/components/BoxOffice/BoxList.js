@@ -3,6 +3,7 @@ import Box from "./Box";
 import styled from "styled-components";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 import { ALLMOVIE_REQUEST } from "../../reducer/ticket";
 /*onst MovieList = [
@@ -34,6 +35,7 @@ const BoxList = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    setTimeout(1000);
     dispatch({
       type: ALLMOVIE_REQUEST,
     });
@@ -44,9 +46,11 @@ const BoxList = () => {
     <CardList>
       <div style={{ paddingBottom: "30px" }}>
         <Title>박스오피스</Title>
-        <More>
-          더 많은 영화보기 <PlusOutlined />
-        </More>
+        <Link to="/movie">
+          <More>
+            더 많은 영화보기 <PlusOutlined />
+          </More>
+        </Link>
       </div>
       <UL>
         {allMovie.slice(0, 4).map((movie) => (

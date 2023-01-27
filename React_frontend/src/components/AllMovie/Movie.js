@@ -1,6 +1,8 @@
 import React from "react";
+
 import styled from "styled-components";
 import { HeartOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const Movie = ({ movie }) => {
   return (
@@ -35,13 +37,15 @@ const Movie = ({ movie }) => {
           <Like>
             <HeartOutlined /> 0
           </Like>
-          <Ticket
-            onClick={() => {
-              console.log(movie);
-            }}
-          >
-            예매
-          </Ticket>
+          <Link to="/reserve">
+            <Ticket
+              onClick={() => {
+                console.log(movie);
+              }}
+            >
+              예매
+            </Ticket>
+          </Link>
         </Button>
       </div>
     </LI>
