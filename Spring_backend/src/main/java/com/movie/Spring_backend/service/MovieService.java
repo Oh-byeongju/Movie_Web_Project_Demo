@@ -74,6 +74,7 @@ public class MovieService {
                 .mid(data.getMid())
                 .mdir(data.getMdir())
                 .mactor(data.getMactor())
+                .mtitle(data.getMtitle())
                 .msupactor(data.getMsupactor())
                 .mgenre(data.getMgenre())
                 .mtime(data.getMtime())

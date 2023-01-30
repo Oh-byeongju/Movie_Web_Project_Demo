@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <>
-      <Footerwrapper>
+      <div className="l-Footer">
         <FooterLayout>
           <FooterLink>
             <FooterLinkList>
@@ -88,18 +88,14 @@ const Footer = () => {
             </CorpSns>
           </Content>
         </FooterLayout>
-      </Footerwrapper>
+      </div>
     </>
   );
 };
 
-const Footerwrapper = styled.div`
-  position: relative;
-  transform: translateY(100%);
-`;
 const FooterLayout = styled.div`
   background: #ebeef1;
-  height: 212px;
+  position: relative;
 `;
 
 const FooterLink = styled.div`
@@ -113,7 +109,6 @@ const FooterLinkList = styled.ul`
   padding-left: 16px;
   padding-right: 16px;
   max-width: 1044px;
-
   margin: 19px auto 19px -33px;
   height: 19px;
   padding: 0;

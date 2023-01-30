@@ -17,7 +17,7 @@ const enhancer =
   process.env.NODE_ENV === "production"
     ? compose(applyMiddleware(sagaMiddleware))
     : composeWithDevTools(applyMiddleware(sagaMiddleware));
-    
+
 const store = createStore(rootReducer, enhancer);
 sagaMiddleware.run(rootSaga);
 const container = document.getElementById("root");
@@ -26,7 +26,7 @@ const root = createRoot(container);
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <ScrollTop/>
+      <ScrollTop />
       <App />
     </BrowserRouter>
   </Provider>

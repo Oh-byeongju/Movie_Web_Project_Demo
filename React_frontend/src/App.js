@@ -13,10 +13,10 @@ function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<Home />} exact={true}></Route>
+        <Route path="/" element={<Home />} exact></Route>
         <Route path="/UserLogin" element={<UserLogin />}></Route>
         <Route path="/UserJoin" element={<UserJoin />}></Route>
-        <Route path="/Reserve" element={<Reserve />}></Route>
+        <Route path="/Reserve" exact element={<Reserve />}></Route>
         <Route path="/movie" element={<Movie />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
       </Route>

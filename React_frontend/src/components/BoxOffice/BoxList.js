@@ -5,7 +5,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { ALLMOVIE_REQUEST } from "../../reducer/ticket";
+import { ALLMOVIE_REQUEST } from "../../reducer/movie";
 const BoxList = () => {
   const dispatch = useDispatch();
 
@@ -14,7 +14,7 @@ const BoxList = () => {
       type: ALLMOVIE_REQUEST,
     });
   }, []);
-  const { allMovie } = useSelector((state) => state.ticket);
+  const { allMovie } = useSelector((state) => state.movie);
 
   return (
     <CardList>
