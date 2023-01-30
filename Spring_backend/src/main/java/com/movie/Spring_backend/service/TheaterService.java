@@ -1,14 +1,11 @@
 package com.movie.Spring_backend.service;
 
-import com.movie.Spring_backend.dto.CinemaDto;
 import com.movie.Spring_backend.dto.TheaterDto;
-import com.movie.Spring_backend.entity.CinemaEntity;
 import com.movie.Spring_backend.entity.TheaterEntity;
 import com.movie.Spring_backend.repository.TheaterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 

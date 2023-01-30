@@ -2,15 +2,10 @@ package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.entity.MovieInfoEntity;
-import com.movie.Spring_backend.entity.TempEntity;
-import com.movie.Spring_backend.repository.MemberRepository;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 

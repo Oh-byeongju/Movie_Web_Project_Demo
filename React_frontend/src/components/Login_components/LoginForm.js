@@ -15,7 +15,7 @@ const LoginForm = () => {
 	// 페이지 이동을 위해 선언
 	const location = useLocation();
 	const navigate = useNavigate();	
-  
+
 	//input창 두개 관리를 위해 만든것
 	const [inputs, setInputs] = useState({
     id: "",

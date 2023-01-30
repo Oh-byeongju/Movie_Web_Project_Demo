@@ -1,5 +1,4 @@
 package com.movie.Spring_backend.controller;
-import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.dto.TempDto;
 import com.movie.Spring_backend.service.TempService;
 import lombok.RequiredArgsConstructor;

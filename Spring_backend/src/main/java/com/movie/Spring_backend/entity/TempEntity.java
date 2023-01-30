@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name="movie")
 @Entity
 @Getter
-
 @NoArgsConstructor
 public class TempEntity {
     @Id

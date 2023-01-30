@@ -13,7 +13,6 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(500, "C004", "Server Error"),
     INVALID_TYPE_VALUE(400, "C005", " Invalid Type Value"),
     HANDLE_ACCESS_DENIED(403, "C006", "Access is Denied"),
-    AUTHENTICATION_ERROR(401, "C007", "Authentication Error"),
 
     // Member
     ID_DUPLICATION(400, "M001", "중복된 아이디입니다."),
@@ -21,9 +20,9 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(400, "M003", "회원정보가 존재하지 않습니다."),
 
     // Security
-    LOGIN_IS_NONE(401, "S001", "로그인이 필요한 서비스입니다."),
-    EXPIRED_TOKEN(401, "S002", "로그인이 만료되었습니다."),
-    INVALID_TOKEN(401, "S003", "로그인 정보가 불일치합니다."),
+    LOGIN_IS_NONE(400, "S001", "로그인 정보가 존재하지 않습니다."),
+    EXPIRED_TOKEN(400, "S002", "로그인이 만료되었습니다."),
+    INVALID_TOKEN(400, "S003", "로그인 정보가 불일치합니다."),
     SECURITY_ACCESS_DENIED(403, "S004", "권한이 필요합니다.")
     ;
 

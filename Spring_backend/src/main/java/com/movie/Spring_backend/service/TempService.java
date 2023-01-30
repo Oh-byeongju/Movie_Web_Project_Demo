@@ -1,18 +1,14 @@
 package com.movie.Spring_backend.service;
 
-import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.dto.TempDto;
-import com.movie.Spring_backend.entity.MovieInfoEntity;
 import com.movie.Spring_backend.entity.TempEntity;
 import com.movie.Spring_backend.repository.TempRepository;
-import lombok.Data;
+
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
