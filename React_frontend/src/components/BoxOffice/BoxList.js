@@ -5,42 +5,16 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { ALLMOVIE_REQUEST } from "../../reducer/ticket";
-/*onst MovieList = [
-  {
-    id: 1,
-    src: "img/ranking/av.jpg",
-    description:
-      "<아바타:물의 길>은 판도라 행성에서 '제이크 설리'와 '네이티리'가 이룬 가족이 겪게 되는 무자비한 위협과 살아남기 위해 떠나야 하는 긴 여정과 전투",
-  },
-  {
-    id: 2,
-    src: "img/ranking/dunk.jpg",
-    description: "슬램덩크",
-  },
-  {
-    id: 3,
-    src: "img/ranking/gentel.jpg",
-    description: "젠틀맨",
-  },
-  {
-    id: 4,
-    src: "img/ranking/hero.jpg",
-    description: "영웅",
-  },
-];*/
-
-//이미지는 public 폴더에 넣어서 주소를 가져옴
+import { ALLMOVIE_REQUEST } from "../../reducer/movie";
 const BoxList = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setTimeout(1000);
     dispatch({
       type: ALLMOVIE_REQUEST,
     });
   }, []);
-  const { allMovie } = useSelector((state) => state.ticket);
+  const { allMovie } = useSelector((state) => state.movie);
 
   return (
     <CardList>

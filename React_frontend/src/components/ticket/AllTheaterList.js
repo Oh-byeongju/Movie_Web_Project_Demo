@@ -1,29 +1,19 @@
+/* eslint-disable */
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { ALLTHEATER_REQUEST } from "../../reducer/ticket";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import AllTheater from "./AllTheater";
-import { all } from "axios";
-import { select } from "redux-saga/effects";
 
 const AllTheaterList = () => {
   const dispatch = useDispatch();
-  const [movie, setMovie] = useState(false); // Movie를 선택했는지 bollean으로 확인
   const [theater, setTheater] = useState([]); // theater 담기
 
-  const onClick = useCallback((e) => {
-    console.log(e.target.value);
-  });
   const { alltheater, selectmovie, movie_select_done } = useSelector(
     (state) => state.ticket
   );
   var obj_value = new Array();
-  const theaterList = alltheater.reduce((theater, { name, area, id }) => {
-    if (!theater[area]) theater[area] = [];
-    theater[area].push(name);
-    return theater;
-  }, {}); //지역별로 나눔
 
   const selectList = selectmovie.reduce((theater, { name, area, id }) => {
     if (!theater[area]) theater[area] = [];
@@ -33,28 +23,6 @@ const AllTheaterList = () => {
 
   var set = new Set(theater);
   const un = [...set];
-
-  const [reset, setReset] = useState("");
-  // theater.map((item) => {
-  //   //for each item in arrayOfObjects check if the object exists in the resulting array
-  //   if (
-  //     selectArray.find((object) => {
-  //       if (object === item && object.id === item.id) {
-  //         //if the object exists iterate times
-  //         object.cnt++;
-  //         return true;
-  //         //if it does not return false
-  //       } else {
-  //         return false;
-  //       }
-  //     })
-  //   ) {
-  //   } else {
-  //     //if the object does not exists push it to the resulting array and set the times count to 1
-  //     item.cnt = 1;
-  //     selectArray.push(item);
-  //   }
-  // });
 
   const [select, SetSelect] = useState(false);
 
@@ -139,40 +107,6 @@ const AllTheaterList = () => {
                 ))}
               </TheaterArea>
             ) : (
-              /*<TheaterArea>
-                <ul className="area">
-                  {Object.entries(theaterList).map(([key, value], index) => (
-                    <li
-                      className={select[index] ? "area-name" : "notchoicename"} // boolean ? click : NotClick
-                      onClick={() => {
-                        obj_value = [];
-                        for (var key in value) {
-                          obj_value.push(value[key]);
-                          setMovie(true);
-                        }
-                        handleClick(index);
-                        setTheater(obj_value);
-                      }}
-                    >
-                      <p>{key}</p>
-                    </li>
-                  ))}
-                </ul>
-                <TheaterEnties>
-                  {un.map((c, id) => (
-                    <li
-                      className={areas[id] ? "choice" : "notchoice"}
-                      key={id}
-                      onClick={() => {
-                        areaClick(id);
-                        console.log(id);
-                      }}
-                    >
-                      <p>{c}</p>
-                    </li>
-                  ))}
-                </TheaterEnties>
-              </TheaterArea>*/
               <div>영화를 선택하세요</div>
             )}
           </TheaterList>

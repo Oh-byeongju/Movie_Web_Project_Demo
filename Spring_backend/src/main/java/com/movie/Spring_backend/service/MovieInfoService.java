@@ -16,49 +16,22 @@ public class MovieInfoService {
     public MovieInfoService(MovieInfoRepository movieInfoRepository){
         this.movieInfoRepository=movieInfoRepository;
     }
+
     public List<MovieInfoDto> findAll() {
         List<MovieInfoEntity> datas = movieInfoRepository.findAll();
         return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build()).collect(Collectors.toList());
     }
+
     public MovieInfoDto findByMid(Long id) {
         MovieInfoEntity data = movieInfoRepository.findById(id).orElseThrow(()->new RuntimeException("오류"));
         Long ids= data.getMiid();
         System.out.println(ids);
-
         return MovieInfoDto.builder().miid(ids).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build();
-        }
+    }
 
-        public List<MovieInfoDto> findAllByTempMid(Long id){
+    public List<MovieInfoDto> findAllByTempMid(Long id){
         List<MovieInfoEntity> datas = movieInfoRepository.findAllByTempMid(id);
-
             return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build()).collect(Collectors.toList());
-
-        }
-
-
-
-
-
+    }
 }
 
-/*
-* Person person = findById(4)
-    .orElseThrow(() -> new NoPersonFoundException("No person found id maches: " + 4));
-System.out.println(person.getName());
-* */
-/*
-*  public List<TempDto> findAll(){
-        List<TempEntity> datas = tempRepository.findAll();
-        return datas.stream()
-                .map(data -> TempDto.builder()
-                        .mid(data.getMid())
-                        .mtitle(data.getMtitle())
-                        .mdir(data.getMdir())
-                        .mactor(data.getMactor())
-                        .msupactor(data.getMsupactor())
-                        .mgenre(data.getMgenre())
-                        .mtime(data.getMtime())
-                        .mdate(data.getMdate())
-                        .mrating(data.getMrating())
-                        .mstory(data.getMstory()).build()).collect(Collectors.toList());
-    }*/
