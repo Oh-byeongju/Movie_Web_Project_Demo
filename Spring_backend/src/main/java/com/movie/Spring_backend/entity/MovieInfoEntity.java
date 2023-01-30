@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Table(name="movie_information")
 @Entity
@@ -29,7 +28,7 @@ public class MovieInfoEntity {
 
     @ManyToOne
     @JoinColumn(name="MID")
-    private TempEntity temp; //주인 N
+    private MovieEntity temp; //주인 N
 
 
 
@@ -40,7 +39,7 @@ public class MovieInfoEntity {
     private CinemaEntity cinema;
 
     @Builder
-    public MovieInfoEntity(Long miid, String mistarttime, String miendtime ,TempEntity temp, CinemaEntity cinema) {
+    public MovieInfoEntity(Long miid, String mistarttime, String miendtime , MovieEntity temp, CinemaEntity cinema) {
        this.miid= miid;
        this.mistarttime=mistarttime;
        this.miendtime=miendtime;
