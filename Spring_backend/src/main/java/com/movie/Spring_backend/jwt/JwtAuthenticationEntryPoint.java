@@ -17,43 +17,15 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+    // 한글 출력을 위해 getWriter() 사용, 프론트단으로 보내는 error 가공
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        String exception = (String) request.getAttribute("exception");
-        ErrorCode errorCode;
-
-        // 로그인 토큰이 없는 경우
-        if (exception == null) {
-            log.error("JwtAuthenticationEntryPointException errorCode : {}", "S001");
-            errorCode = ErrorCode.LOGIN_IS_NONE;
-            setResponse(response, errorCode);
-            return;
-        }
-
-        // 토큰이 만료된 경우
-        if (exception.equals(ErrorCode.EXPIRED_TOKEN.getCode())) {
-            log.error("JwtAuthenticationEntryPointException errorCode : {}", exception);
-            errorCode = ErrorCode.EXPIRED_TOKEN;
-            setResponse(response, errorCode);
-            return;
-        }
-
-        // 토큰 시그니처가 다른 경우
-        if (exception.equals(ErrorCode.INVALID_TOKEN.getCode())) {
-            log.error("JwtAuthenticationEntryPointException errorCode : {}", exception);
-            errorCode = ErrorCode.INVALID_TOKEN;
-            setResponse(response, errorCode);
-        }
-    }
-
-    // 한글 출력을 위해 getWriter() 사용, 프론트단으로 보내는 error 가공
-    private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().println("{ \"message\" : \"" + errorCode.getMessage()
-                + "\", \"status\" : " + errorCode.getStatus()
+        response.getWriter().println("{ \"message\" : \"" + ErrorCode.INVALID_TOKEN.getMessage()
+                + "\", \"status\" : " + ErrorCode.INVALID_TOKEN.getStatus()
                 + ", \"errors\" : [ ]"
-                + ", \"code\" : " + "\"" + errorCode.getCode()
+                + ", \"code\" : " + "\"" + ErrorCode.INVALID_TOKEN.getCode()
                 + "\"" + "}");
     }
 }

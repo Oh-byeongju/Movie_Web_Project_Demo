@@ -3,8 +3,9 @@
 package com.movie.Spring_backend.jwt;
 
 import com.movie.Spring_backend.dto.TokenDto;
-import com.movie.Spring_backend.entity.MemberEntity;
+import com.movie.Spring_backend.error.exception.EntityNotFoundException;
 import com.movie.Spring_backend.error.exception.ErrorCode;
+import com.movie.Spring_backend.error.exception.InvalidValueException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -20,7 +21,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -112,21 +112,23 @@ public class TokenProvider {
     }
 
     // Jwts 모듈을 통해 토큰을 검증하기 위한 메소드
-    public boolean validateToken(String token, HttpServletRequest request) {
+    public void validateToken(String token) {
+
         // 토큰의 정보가 검증 되었을 경우 true를 리턴
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
+        }
+        // 토큰이 null인 경우의 예외처리
+        catch (IllegalArgumentException e) {
+            throw new EntityNotFoundException("로그인 정보가 없음", ErrorCode.LOGIN_IS_NONE);
         }
         // 토큰이 만료되었을 경우의 예외처리
         catch (ExpiredJwtException e) {
-            request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN.getCode());
-            throw e;
+            throw new InvalidValueException("토큰이 만료 됐음", ErrorCode.EXPIRED_TOKEN);
         }
         // 토큰의 시그니처가 잘못되었을 경우의 예외처리
         catch (JwtException e) {
-            request.setAttribute("exception", ErrorCode.INVALID_TOKEN.getCode());
-            throw e;
+            throw new InvalidValueException("토큰의 정보가 잘못 됐음", ErrorCode.INVALID_TOKEN);
         }
     }
 

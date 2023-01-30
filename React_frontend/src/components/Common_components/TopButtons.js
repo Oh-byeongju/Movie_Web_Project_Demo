@@ -66,7 +66,7 @@ const TopButtons = () => {
           {LOGIN_data.uname === undefined || LOGIN_data.uname === "error!!" ? (
             <div className="Top_right">
               {/* 로그인으로 갈때는 이전 url의 주소를 넘겨줘야함 */}
-              <Link to={`/UserLogin`} state={{ url: location.pathname }}>
+              <Link to={`/UserLogin`} state={{ url: location.pathname}}>
                 로그인
               </Link>
               <Link to="/UserJoin">회원가입</Link>

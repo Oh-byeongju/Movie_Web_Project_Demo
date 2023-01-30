@@ -11,13 +11,11 @@ import com.movie.Spring_backend.entity.RefreshTokenEntity;
 import com.movie.Spring_backend.error.exception.ErrorCode;
 import com.movie.Spring_backend.exceptionlist.IdDuplicateException;
 import com.movie.Spring_backend.exceptionlist.MemberNotFoundException;
+import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.jwt.TokenProvider;
 import com.movie.Spring_backend.repository.MemberRepository;
 import com.movie.Spring_backend.repository.RefreshTokenRepository;
-import com.sun.tools.jconsole.JConsoleContext;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -32,8 +30,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.nio.file.AccessDeniedException;
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +40,7 @@ public class MemberService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder managerBuilder;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtValidCheck jwtValidCheck;
 
     // 아이디 중복을 확인하기 위한 메소드
     @Transactional
@@ -112,7 +109,7 @@ public class MemberService {
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .maxAge( 60 * 30)  // 30분
+                .maxAge( 60 * 60 * 24 * 7)  // 생각을 더 해봐야겠지만 시간을 늘림
                 .sameSite("None")
                 .build();
 
@@ -126,7 +123,7 @@ public class MemberService {
                 .sameSite("None")
                 .build();
 
-        // 응답 헤더에 두 가지 쿠기를 할당
+        // 응답 헤더에 두 가지 토큰을 쿠키에 할당
         response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
@@ -134,26 +131,37 @@ public class MemberService {
         return MemberDto.builder().uname(tokenDto.getUname()).build();
     }
 
+    // 로그인 상태확인 메소드
+    @Transactional
+    public MemberDto getMyInfoBySecurity(String currentMemberId, HttpServletRequest request) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        MemberEntity Data = memberRepository.findByUid(currentMemberId)
+                .orElseThrow(() -> new MemberNotFoundException(currentMemberId));
+
+        // 로그인 정보가 있을경우 이름을 리턴
+        return MemberDto.builder()
+                .uname(Data.getUname()).build();
+    }
+
     // 토큰 재발급 메소드
     @Transactional
-    public TokenDto reissue(TokenDto tokenRequestDto, HttpServletRequest request) throws AccessDeniedException {
-
-        // Refresh Token 검증
-        if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken(), request)) {
-            throw new AccessDeniedException("Refresh Token이 유효하지 않습니다.");
-        }
+    public void reissue(HttpServletResponse response, HttpServletRequest request) {
+        // Refresh Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "RTK");
 
         // Access Token 에서 MemberID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(jwtValidCheck.resolveAccessToken(request));
 
         // Redis에서 MemberID를 기반으로 저장된 값 가져옴
         RefreshTokenEntity refreshToken = refreshTokenRepository.findById(authentication.getName())
                 .orElseThrow(() -> new MemberNotFoundException(authentication.getName()));
 
-        // Refresh Token 일치하는지 검사
-        if (!refreshToken.getRefreshToken().equals(tokenRequestDto.getRefreshToken())) {
+        // 헤더의 Refresh Token과 Redis의 Refresh Token이 일치하는지 검사
+        if (!refreshToken.getRefreshToken().equals(jwtValidCheck.resolveRefreshToken(request))) {
             request.setAttribute("exception", ErrorCode.INVALID_TOKEN.getCode());
-            throw new AccessDeniedException("토큰의 유저 정보가 일치하지 않습니다.");
+            throw new JwtException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
         // 로그인 한 유저의 이름 추출
@@ -171,21 +179,33 @@ public class MemberService {
                 .build();
         refreshTokenRepository.save(newRefreshToken);
 
-        // 토큰 발급
-        return tokenDto;
+        // XSS를 방지하기 위해 httpOnly 기능을 활성화
+        // access 토큰을 헤더에 넣기 위한 작업
+        // maxAge를 설정 안하면 세션으로, 0을 만들면 삭제
+        ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + tokenDto.getAccessToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge( 60 * 60 * 24 * 7)  // 생각을 더 해봐야겠지만 시간을 늘림
+                .sameSite("None")
+                .build();
+
+        // XSS를 방지하기 위해 httpOnly 기능을 활성화
+        // 리프레시 토큰을 헤더에 넣기 위한 작업
+        ResponseCookie refreshCookie = ResponseCookie.from("RTK", tokenDto.getRefreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge( 60 * 60 * 24 * 7)  // 7일
+                .sameSite("None")
+                .build();
+
+        // 응답 헤더에 두 가지 쿠기를 할당
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
     }
 
-    // 로그인 상태확인 메소드
     @Transactional
-    public MemberDto getMyInfoBySecurity(String currentMemberId) {
-        MemberEntity Data = memberRepository.findByUid(currentMemberId)
-                .orElseThrow(() -> new MemberNotFoundException(currentMemberId));
-
-        // 로그인 정보가 있을경우 id와 이름을 리턴
-        return MemberDto.builder()
-                .uname(Data.getUname()).build();
-    }
-
     // 로그아웃 메소드
     public void logout(HttpServletResponse response) {
         // authentication 객체에서 아이디 확보

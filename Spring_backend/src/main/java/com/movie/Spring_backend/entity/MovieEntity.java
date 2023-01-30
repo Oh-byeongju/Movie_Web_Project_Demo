@@ -8,7 +8,6 @@ import java.sql.Date;
 @Table(name="movie")
 @Entity
 @Getter
-
 @NoArgsConstructor
 public class MovieEntity {
     @Id

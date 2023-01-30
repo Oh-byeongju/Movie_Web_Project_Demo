@@ -2,7 +2,6 @@
 package com.movie.Spring_backend.jwt;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -14,7 +13,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 // Jwt의 필터링이 실행되는 곳, OncePerRequestFilter 인터페이스를 구현하기 때문에 요청 받을 때 단 한번만 실행됨
 @RequiredArgsConstructor
@@ -35,9 +33,8 @@ public class JwtFilter extends OncePerRequestFilter {
         // Request Header에서 토큰을 꺼내 jwt 변수에 저장
         String jwt = resolveToken(request);
 
-        // validateToken으로 토큰 유효성 검사
         // 정상 토큰이면 해당 토큰으로 Authentication을 가져와서 SecurityContext에 저장
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt, request)) {
+        if (StringUtils.hasText(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -52,7 +49,9 @@ public class JwtFilter extends OncePerRequestFilter {
         Cookie [] Cookies = request.getCookies();
 
         // 로그인이 필요 없을경우 쿠키가 전송되지 않으니까 예외처리
-        if (Cookies == null) return null;
+        if (Cookies == null) {
+            return null;
+        };
 
         // ATK 토큰의 값을 추출
         String bearerToken = "";
