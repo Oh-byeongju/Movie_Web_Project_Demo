@@ -1,5 +1,4 @@
 import React from "react";
-
 import styled from "styled-components";
 import { HeartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -17,7 +16,7 @@ const Movie = ({ movie }) => {
           >
             <Img
               className="imggg"
-              src={`img/ranking/1.jpg`} //수정 db
+              src={movie.imagepath} //수정 완
               alt="영화"
             />
           </Link>
@@ -30,7 +29,7 @@ const Movie = ({ movie }) => {
           <div className="title">
             <img
               className="rating"
-              src={`img/age/${movie.mrating}.png`}
+              src={`img/age/${movie.rating}.png`}
               alt="rating"
               style={{ width: "30px", height: "30px" }}
             />
@@ -173,8 +172,12 @@ const Ticket = styled.button`
   border-radius: 4px;
   height: 36px;
   text-align: center;
-  background-color: white;
+  background: #503396;
   cursor: pointer;
+  color: white;
+  border: 0;
+  font-weight: 400;
+  font-size: 16px;
 `; //예매하기 버튼
 
 export default Movie;

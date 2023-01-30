@@ -24,8 +24,10 @@ public enum ErrorCode {
     LOGIN_IS_NONE(401, "S001", "로그인이 필요한 서비스입니다."),
     EXPIRED_TOKEN(401, "S002", "로그인이 만료되었습니다."),
     INVALID_TOKEN(401, "S003", "로그인 정보가 불일치합니다."),
-    SECURITY_ACCESS_DENIED(403, "S004", "권한이 필요합니다.")
-    ;
+    SECURITY_ACCESS_DENIED(403, "S004", "권한이 필요합니다."),
+
+    // Movie
+    SELECT_IS_NONE(400, "MV001", "검색결과가 존재하지 않습니다.");
 
     private final String code;
     private final String message;
