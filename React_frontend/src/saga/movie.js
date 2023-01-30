@@ -6,7 +6,7 @@ import {
   MOVIE_SEARCH_REQUEST,
   MOVIE_SEARCH_FAILURE,
   MOVIE_SEARCH_SUCCESS,
-} from "../reducer/ticket";
+} from "../reducer/movie";
 import axios from "axios";
 import { http } from "../lib/http";
 
@@ -57,9 +57,8 @@ function* allMovieLoad() {
 //영화를 검색하기 위한 사가
 async function searchMovie(data) {
   return await http
-    .post(`/v2/normal/searchmovie?title=${data}`)
+    .get(`/v2/normal/searchmovie?title=${data}`)
     .then((response) => {
-      console.log(response);
       return response;
     })
     .catch((error) => {
@@ -92,6 +91,7 @@ function* searchMovieLoad(action) {
       data: allmoviedata,
     });
   } else {
+    alert("검색결과 없습니다.");
     yield put({
       type: MOVIE_SEARCH_FAILURE,
       data: result.status,

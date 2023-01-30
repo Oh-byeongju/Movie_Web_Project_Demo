@@ -12,7 +12,10 @@ import {
 } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
-import { USER_LOGIN_STATUS_REQUEST, USER_LOGOUT_REQUEST } from "../../reducer/R_user_login";
+import {
+  USER_LOGIN_STATUS_REQUEST,
+  USER_LOGOUT_REQUEST,
+} from "../../reducer/R_user_login";
 
 const TopButtons = () => {
   // 로그인 상태확인용 변수
@@ -32,15 +35,14 @@ const TopButtons = () => {
         type: USER_LOGIN_STATUS_REQUEST,
       });
     }
-  },[LOGIN_data.uname, dispatch])
+  }, [LOGIN_data.uname, dispatch]);
 
   // 로그아웃 버튼을 눌렀을 때 실행되는 함수
   const onLogout = useCallback(() => {
     dispatch({
-      type: USER_LOGOUT_REQUEST
+      type: USER_LOGOUT_REQUEST,
     });
-  }, [dispatch])
-
+  }, [dispatch]);
 
   // const [search, setSearch] = useState("");
 
@@ -61,7 +63,7 @@ const TopButtons = () => {
             <Link to="/">멤버쉽</Link>
             <Link to="/">고객센터</Link>
           </div>
-          {LOGIN_data.uname === undefined || LOGIN_data.uname === "error!!"? (
+          {LOGIN_data.uname === undefined || LOGIN_data.uname === "error!!" ? (
             <div className="Top_right">
               {/* 로그인으로 갈때는 이전 url의 주소를 넘겨줘야함 */}
               <Link to={`/UserLogin`} state={{ url: location.pathname }}>
@@ -207,20 +209,17 @@ const NavBar = styled.div`
     }
     // 로고 누르면 홈으로 돌아가게끔 설정, 로고 이미지는 img 안에 있음
   }
-
   .nav {
     position: absolute;
     background-color: black;
     width: 1150px;
   }
-
   .Top_left {
     position: absolute;
     top: 15px;
     left: 0;
     font-size: 0.8667em;
     font-family: NanumBarunGothic, Dotum, "돋움", sans-serif;
-
     a {
       color: #888;
       float: left;
@@ -231,14 +230,12 @@ const NavBar = styled.div`
       }
     }
   }
-
   .Top_right {
     position: absolute;
     top: 15px;
     right: 0;
     font-size: 0.8667em !important;
     font-family: NanumBarunGothic, Dotum, "돋움", sans-serif !important;
-
     a {
       margin-top: 1.2px;
       color: #888;
@@ -249,7 +246,6 @@ const NavBar = styled.div`
         text-decoration: underline;
       }
     }
-
     button {
       color: #888;
       float: left;
@@ -276,7 +272,6 @@ const NavBar = styled.div`
       font-family: NanumBarunGothic, Dotum, "돋움", sans-serif !important;
     }
   }
-
   .LeftIcon {
     display: flex;
     position: absolute;
@@ -285,7 +280,6 @@ const NavBar = styled.div`
     width: 36px;
     margin-left: 10px;
   }
-
   .RightIcon {
     display: flex;
     position: absolute;
@@ -293,45 +287,36 @@ const NavBar = styled.div`
     width: 36px;
     right: 50px;
   }
-
   .Menu {
     position: relative;
     width: 100%;
     margin: 90px auto 0 auto;
-
     .MenuList {
       position: relative;
-
       top: -40px;
       .topMenuLi:hover ~ .menu_pan {
         display: block;
       }
-
       .menu_pan {
         width: 1414px;
         position: absolute;
         left: -260px;
         top: 43px;
         z-index: 999;
-
         padding-left: 180px;
         font-size: 15px;
         display: none;
         background-color: black;
-
         &:hover {
           display: block;
         }
       }
-
       .menu_category {
         float: left;
         margin: 30px 0;
-
         transition: 0.2s ease-in-out;
         transform: translateY (-20px);
       }
-
       .menu_category .category {
         transition: 0.2s ease-in-out;
         transform: translateY (-20px);
@@ -340,27 +325,22 @@ const NavBar = styled.div`
         position: relative;
         left: 150px;
       }
-
       .menu_category:nth-child(2) {
         position: relative;
         left: 170px;
       }
-
       .menu_category:nth-child(3) {
         position: relative;
         left: 190px;
       }
-
       .menu_category:nth-child(4) {
         position: relative;
         left: 210px;
       }
-
       .menu_category:nth-child(5) {
         position: relative;
         left: 230px;
       }
-
       .menu_category:nth-child(6) {
         position: relative;
         left: 250px;
@@ -378,7 +358,6 @@ const NavBar = styled.div`
         font-weight: bold;
         padding-bottom: 10px;
       }
-
       .category:hover {
         text-decoration: underline;
       }
@@ -412,7 +391,6 @@ const NavBar = styled.div`
       }
     }
   }
-
   // 서브 메뉴가 길경우 사용하면 됨
   // ex) 이벤트의 하위 메뉴는 6글자, 5글자라서 이 클래스이름 사용
 `;

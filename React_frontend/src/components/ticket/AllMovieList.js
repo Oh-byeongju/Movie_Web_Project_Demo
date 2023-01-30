@@ -5,14 +5,15 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
-  ALLMOVIE_REQUEST,
   MOVIE_SELECT_REQUEST,
   MOVIE_SELECT_CANCEL,
 } from "../../reducer/ticket";
+import { ALLMOVIE_REQUEST } from "../../reducer/movie";
 
 const AllMovieList = () => {
   const dispatch = useDispatch();
-  const { allMovie, movie_select_done } = useSelector((state) => state.ticket);
+  const { allMovie } = useSelector((state) => state.movie);
+  const { movie_select_done } = useSelector((state) => state.ticket);
   useEffect(() => {
     dispatch({
       type: ALLMOVIE_REQUEST,

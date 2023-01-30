@@ -22,11 +22,10 @@ public class MovieController {
         return ResponseEntity.ok().body(movieService.getMovie());
     }
 
-    @PostMapping("/normal/searchmovie")
+    @GetMapping("/normal/searchmovie")
     @CrossOrigin(origins = "*")
     public ResponseEntity<List<MovieDto>> SearchTitle(@RequestParam String title){
         return ResponseEntity.ok().body(movieService.findByMtitleContaining(title));
-
     }
 
 }

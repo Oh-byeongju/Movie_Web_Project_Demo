@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MovieList from "../components/AllMovie/MovieList";
-import styled from "styled-components";
 
 const Movie = () => {
   return (
