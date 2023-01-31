@@ -1,121 +1,93 @@
+/*
+  23-01-31 axios interceptor 구현(오병주)
+  23-02-01 CSRF 공격 대응 구현(오병주)
+*/
 import axios from 'axios';
-import createAuthRefreshInterceptor from 'axios-auth-refresh';
+
 // axios instance 생성
 export const http = axios.create({
   baseURL: "http://localhost:8080", // 백엔드 주소
-	withCredentials: true
+	withCredentials: true,
 });
 
+// axios 요청시 resquest에 대한 처리
+http.interceptors.request.use(
+  (config) => {
 
-// // 원래의 요청에서 반환된 failedRequest를 파라미터로 받아 새 액세스 토큰을 적용한 후 Promise 객체를 반환하는 함수
-// const refreshAuthLogic = failedRequest => http.get('/member/normal/reissue', {
-//   headers: { Authorization: undefined }, withCredentials: true // 해당 설정을 적용하여 액세스 토큰 재발급 요청
-// }).then(resp => {
-// 	console.log(resp);
-//   const bearer = `Bearer ${resp.data.accessToken}`;
-//   /* 새 액세스 토큰을 브라우저용 instance 및 failedRequest에 적용 */
-//   http.defaults.headers.Authorization = bearer;
-//   failedRequest.response.config.headers['Authorization'] = bearer;
+    // if (
+    //   config.method === "post" ||
+    //   config.method === "put" ||
+    //   config.method === "delete"||
+    //   config.method === "get"
+    // )  내일 쓸꺼면 쓰기(get 말고 post put delete 일때(디비에 접근하는 애들만) 더블 서브밋 해주면될듯)
 
-//   return Promise.resolve();
-// }).catch(() => Promise.reject());
+    // 만약에 CTK라는 쿠키가 존재하지 않는 경우
+    if (getCookie('CTK') === undefined) {
+      // 랜덤으로 난수를 생성해서 쿠키에 등록
+      const RandomText = generateRandomString();
+      setCookie('CTK', encodeURIComponent(RandomText));
+    }
+    // 쿠키에 등록된 CTK값 추출후 임의의 값을 붙인 후 헤더에 넣음
+    // 추후 백엔드단에서 cookie로 받은 값에 현재 적용한 임의의값을 붙여서 Double Submit Cookie를 진행
+    const csrfToken = getCookie('CTK').substring(4, 64) + "S1e2rfaSDASXx3sx631s1RVGcQsFEWZX5S11a2FdaT22fwLOa32q3";
+    config.headers.Checktoken = csrfToken;
+    
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
+// csrf 공격 방지를 위한 난수 생성 함수
+const generateRandomString = () => {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for(var i = 0; i < 60; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
 
+// 쿠키 등록 함수
+const setCookie = (cname, cvalue) => {
+  document.cookie = cname + "=" + cvalue + ";path=/";
+}
 
-// const refreshAuthLogic = (failedRequest) => {
-// 	console.log(failedRequest.response.status)
-// 	if (failedRequest.response.status === 400 && failedRequest.response.data.code === "S002") {
-// 		http.get("/member/normal/reissue")
-// 		.then((response) => {
-// 			console.log(response);
-// 			return Promise.resolve();
-// 		})
-// 		.catch((error)=>{
-// 			console.log(error);
-// 			Promise.reject()
-// 		})
-// 	}
-// }
+// 쿠키를 가져오는 함수
+const getCookie = (cname) => {
+  let cookies = document.cookie.split(';');
+  for (let i in cookies) {
+    // 존재하지 않으면 -1을 반환한다.
+    if (cookies[i].indexOf(cname) > -1) {
+      return `${cookies[i]};`;
+    }
+  }
+}
 
-// createAuthRefreshInterceptor(http, refreshAuthLogic);
-	// 
-		
+// axios 요청시 response에 대한 처리
+http.interceptors.response.use(
+  // 200 번대 정상 요청이 왔을경우 일반적인 리턴
+  function (response) {
+    return response;
+  },
+  // 에러가 발생하였을 경우
+  async (error) => {
+    // 비구조화 할당으로 데이터 추출
+    const { config, response: { status }} = error;
+    // error의 상태와 메시지가 Access 토큰의 만료를 알리는 경우
+    if (status === 400) {
+      if (error.response.data.message === "로그인이 만료되었습니다.") {
 
-	// .then((response) => {
-  //   return response;
-  // })
-  // .catch((error)=>{
-  //   console.log(error.response);
-  //   return error.response;
-  // })
+        // 원래의 요청을 변수에 저장
+        const originalRequest = config;
 
+        // 토큰 재발급 요청
+        await http.get("/member/normal/reissue");
 
-	// }
-
-
- 
-
-
-
-
-
-
-
-
-
-
-// var isTokenRefreshing = false;
-// var refreshSubscribers = [];
-
-// const onTokenRefreshed = () => {
-//   refreshSubscribers.map((callback) => callback());
-// };
-
-// const addRefreshSubscriber = (callback) => {
-//   refreshSubscribers.push(callback);
-// };
-
-// // 토큰이 만료돼서 재발급 요청을 하는경우 사용
-// http.interceptors.response.use(
-// 	// 오류가 없을경우(200번대) 일반적인 리턴
-//   (response) => {
-// 		console.log(response);
-//     return response;
-//   },
-// 	// 오류가 발생하였을 경우
-//   async (error) => {
-// 		// 오류가 발생하기 이전의 요청, 오류의 상태, 오류의 코드번호를 할당
-// 		const config = error.config;
-// 		const status = error.response.status;
-// 		const code_num = error.response.data.code;
-//     const originalRequest = config;
-
-// 		// status가 401번이고 에러 코드가 S002(토큰만료)일 경우에만 재발급 요청
-//     if (status === 401) {
-// 			if (code_num === "S002") {
-// 				console.log("돌아유");
-// 				// isTokenRefreshing이 false인 경우에만 token refresh 요청
-// 				if (!isTokenRefreshing) {
-// 					isTokenRefreshing = true;
-// 					// 토큰 재발급 요청
-// 					const result = await http.get("/member/normal/reissue");
-
-// 					console.log("axiso 결과괎");
-// 					console.log(result);
-
-// 					isTokenRefreshing = false;
-// 					// 새로운 토큰으로 지연되었던 요청 진행
-// 					onTokenRefreshed();
-// 				}        
-// 				// token이 재발급 되는 동안의 axios 요청은 refreshSubscribers에 저장
-// 				const retryOriginalRequest = new Promise((resolve) => {
-// 					addRefreshSubscriber(() => {
-// 						resolve(axios(originalRequest));
-// 					});
-// 				});
-// 				return retryOriginalRequest;
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+        // 실패했던 원래의 요청을 토큰을 재발급 받은뒤에 다시 요청
+        return axios(originalRequest);
+      }
+    }
+    // Access 토큰의 만료 error가 아닌경우 리턴
+    return Promise.reject(error);
+  }
+);

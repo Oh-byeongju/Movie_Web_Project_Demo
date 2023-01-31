@@ -28,7 +28,7 @@ public class JwtValidCheck {
             // Request Header에서 Access 토큰을 꺼내 jwt 변수에 저장
             String ATK = resolveAccessToken(request);
             // 추출한 Access 토큰에 대한 유효성 검사 실행
-            tokenProvider.validateToken(ATK);
+            tokenProvider.validateToken(ATK, "ATK");
             return;
         }
 
@@ -37,7 +37,7 @@ public class JwtValidCheck {
             // Request Header에서 Refresh 토큰을 꺼내 jwt 변수에 저장
             String RTK = resolveRefreshToken(request);
             // 추출한 Refresh 토큰에 대한 유효성 검사 실행
-            tokenProvider.validateToken(RTK);
+            tokenProvider.validateToken(RTK, "RTK");
         }
     }
 

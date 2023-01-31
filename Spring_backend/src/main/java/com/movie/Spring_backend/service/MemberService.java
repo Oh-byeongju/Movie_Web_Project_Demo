@@ -27,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -95,37 +96,77 @@ public class MemberService {
         // 인증 정보를 기반으로 Jwt 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, Name);
 
-        // Redis에 RefreshToken 저장
-        RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
-                .uid(authentication.getName())
-                .refreshToken(tokenDto.getRefreshToken())
-                .build();
-        refreshTokenRepository.save(refreshToken);
+        // 로그인 유지하기 버튼을 누른 상태로 로그인 했을 경우
+        if (requestDto.getUname().equals("유지")) {
 
-        // XSS를 방지하기 위해 httpOnly 기능을 활성화
-        // access 토큰을 헤더에 넣기 위한 작업
-        // maxAge를 설정 안하면 세션으로, 0을 만들면 삭제
-        ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + tokenDto.getAccessToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge( 60 * 60 * 24 * 7)  // 생각을 더 해봐야겠지만 시간을 늘림
-                .sameSite("None")
-                .build();
+            // Redis에 RefreshToken 저장(로그인 상태에 대한 정보 포함)
+            RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
+                    .uid(authentication.getName())
+                    .refreshToken(tokenDto.getRefreshToken())
+                    .state("o")
+                    .build();
+            refreshTokenRepository.save(refreshToken);
 
-        // XSS를 방지하기 위해 httpOnly 기능을 활성화
-        // 리프레시 토큰을 헤더에 넣기 위한 작업
-        ResponseCookie refreshCookie = ResponseCookie.from("RTK", tokenDto.getRefreshToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge( 60 * 60 * 24 * 7)  // 7일
-                .sameSite("None")
-                .build();
+            // XSS를 방지하기 위해 httpOnly 기능을 활성화
+            // access 토큰을 헤더에 넣기 위한 작업
+            // maxAge를 7일로 지정
+            ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + tokenDto.getAccessToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge( 60 * 60 * 24 * 7)
+                    .sameSite("None")
+                    .build();
 
-        // 응답 헤더에 두 가지 토큰을 쿠키에 할당
-        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+            // XSS를 방지하기 위해 httpOnly 기능을 활성화
+            // refresh 토큰을 헤더에 넣기 위한 작업
+            // maxAge를 7일로 지정
+            ResponseCookie refreshCookie = ResponseCookie.from("RTK", tokenDto.getRefreshToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge( 60 * 60 * 24 * 7)
+                    .sameSite("None")
+                    .build();
+
+            // 응답 헤더에 두 가지 토큰을 쿠키에 할당
+            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        }
+        // 로그인 유지하기 기능이 없을 경우
+        else {
+            // Redis에 RefreshToken 저장(로그인 상태에 대한 정보 포함)
+            RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
+                    .uid(authentication.getName())
+                    .refreshToken(tokenDto.getRefreshToken())
+                    .state("x")
+                    .build();
+            refreshTokenRepository.save(refreshToken);
+
+            // XSS를 방지하기 위해 httpOnly 기능을 활성화
+            // access 토큰을 헤더에 넣기 위한 작업
+            // maxAge는 지정 안할경우 브라우저 기준으로 session
+            ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + tokenDto.getAccessToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .sameSite("None")
+                    .build();
+
+            // XSS를 방지하기 위해 httpOnly 기능을 활성화
+            // refresh 토큰을 헤더에 넣기 위한 작업
+            // maxAge는 지정 안할경우 브라우저 기준으로 session
+            ResponseCookie refreshCookie = ResponseCookie.from("RTK", tokenDto.getRefreshToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .sameSite("None")
+                    .build();
+
+            // 응답 헤더에 두 가지 토큰을 쿠키에 할당
+            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        }
 
         // 로그인한 사용자의 이름을 리턴
         return MemberDto.builder().uname(tokenDto.getUname()).build();
@@ -172,37 +213,76 @@ public class MemberService {
         // 새로운 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, Name);
 
-        // Redis에 RefreshToken 갱신
-        RefreshTokenEntity newRefreshToken = RefreshTokenEntity.builder()
-                .uid(authentication.getName())
-                .refreshToken(tokenDto.getRefreshToken())
-                .build();
-        refreshTokenRepository.save(newRefreshToken);
+        // 사용자가 로그인 할때 로그인 유지기능을 사용했을 경우
+        if (refreshToken.getState().equals("o")) {
+            // Redis에 RefreshToken 갱신
+            RefreshTokenEntity newRefreshToken = RefreshTokenEntity.builder()
+                    .uid(authentication.getName())
+                    .refreshToken(tokenDto.getRefreshToken())
+                    .state("o")
+                    .build();
+            refreshTokenRepository.save(newRefreshToken);
 
-        // XSS를 방지하기 위해 httpOnly 기능을 활성화
-        // access 토큰을 헤더에 넣기 위한 작업
-        // maxAge를 설정 안하면 세션으로, 0을 만들면 삭제
-        ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + tokenDto.getAccessToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge( 60 * 60 * 24 * 7)  // 생각을 더 해봐야겠지만 시간을 늘림
-                .sameSite("None")
-                .build();
+            // XSS를 방지하기 위해 httpOnly 기능을 활성화
+            // access 토큰을 헤더에 넣기 위한 작업
+            // maxAge를 7일로 지정
+            ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + tokenDto.getAccessToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge( 60 * 60 * 24 * 7)
+                    .sameSite("None")
+                    .build();
 
-        // XSS를 방지하기 위해 httpOnly 기능을 활성화
-        // 리프레시 토큰을 헤더에 넣기 위한 작업
-        ResponseCookie refreshCookie = ResponseCookie.from("RTK", tokenDto.getRefreshToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge( 60 * 60 * 24 * 7)  // 7일
-                .sameSite("None")
-                .build();
+            // XSS를 방지하기 위해 httpOnly 기능을 활성화
+            // refresh 토큰을 헤더에 넣기 위한 작업
+            // maxAge를 7일로 지정
+            ResponseCookie refreshCookie = ResponseCookie.from("RTK", tokenDto.getRefreshToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge( 60 * 60 * 24 * 7)
+                    .sameSite("None")
+                    .build();
 
-        // 응답 헤더에 두 가지 쿠기를 할당
-        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+            // 응답 헤더에 두 가지 토큰을 쿠키에 할당
+            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        }
+        // 사용자가 로그인 유지기능을 사용하지 않았을 경우
+        else {
+            // Redis에 RefreshToken 갱신
+            RefreshTokenEntity newRefreshToken = RefreshTokenEntity.builder()
+                    .uid(authentication.getName())
+                    .refreshToken(tokenDto.getRefreshToken())
+                    .state("x")
+                    .build();
+            refreshTokenRepository.save(newRefreshToken);
+
+            // XSS를 방지하기 위해 httpOnly 기능을 활성화
+            // access 토큰을 헤더에 넣기 위한 작업
+            // maxAge는 지정 안할경우 브라우저 기준으로 session
+            ResponseCookie accessCookie = ResponseCookie.from("ATK", "Bearer" + tokenDto.getAccessToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .sameSite("None")
+                    .build();
+
+            // XSS를 방지하기 위해 httpOnly 기능을 활성화
+            // refresh 토큰을 헤더에 넣기 위한 작업
+            // maxAge는 지정 안할경우 브라우저 기준으로 session
+            ResponseCookie refreshCookie = ResponseCookie.from("RTK", tokenDto.getRefreshToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .sameSite("None")
+                    .build();
+
+            // 응답 헤더에 두 가지 토큰을 쿠키에 할당
+            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        }
     }
 
     @Transactional
