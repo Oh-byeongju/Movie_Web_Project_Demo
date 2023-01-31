@@ -112,7 +112,7 @@ public class TokenProvider {
     }
 
     // Jwts 모듈을 통해 토큰을 검증하기 위한 메소드
-    public void validateToken(String token) {
+    public void validateToken(String token, String name) {
 
         // 토큰의 정보가 검증 되었을 경우 true를 리턴
         try {
@@ -124,7 +124,13 @@ public class TokenProvider {
         }
         // 토큰이 만료되었을 경우의 예외처리
         catch (ExpiredJwtException e) {
-            throw new InvalidValueException("토큰이 만료 됐음", ErrorCode.EXPIRED_TOKEN);
+            // Refresh 토큰과 Access 토큰의 만료됐을때 예외를 다르게 해줘야함(axios interceptor 때문에)
+            if (name.equals("ATK")) {
+                throw new InvalidValueException("토큰이 만료 됐음", ErrorCode.EXPIRED_TOKEN);
+            }
+            else {
+                throw new InvalidValueException("토큰이 만료 됐음", ErrorCode.INVALID_TOKEN);
+            }
         }
         // 토큰의 시그니처가 잘못되었을 경우의 예외처리
         catch (JwtException e) {

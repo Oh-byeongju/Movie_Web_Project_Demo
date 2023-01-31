@@ -26,8 +26,6 @@ const TopButtons = () => {
   const location = useLocation();
 
   // 로그인 상태를 확인하는 useEffect
-  // 리프레시 인터셉터 해버리면 로그인은 끝날듯??
-  // 로그인 하고 뒤로 가는거도 예외로 적어줘야함 몇가지
   // 로그인 창에서 엔터키 누르면 검색 되는거도 해야함
   useEffect(() => {
     if (LOGIN_data.uname === undefined) {
