@@ -14,7 +14,6 @@ async function loadAllMovie() {
   return await http
     .get("/v2/normal/movie")
     .then((response) => {
-      console.log(response);
       return response;
     })
     .catch((error) => {

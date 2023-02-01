@@ -28,4 +28,5 @@ public class MovieInfoDto {
         this.temp=temp;
         this.cinema=cinema;
     }
+
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+/*import React, { useCallback, useEffect, useState } from "react";
 import AllMovie from "./AllMovie";
 import axios from "axios";
 import styled from "styled-components";
@@ -146,3 +146,4 @@ const UL = styled.div`
 `;
 const List = styled.div``;
 export default AllMovieList;
+*/

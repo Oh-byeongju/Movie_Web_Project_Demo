@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${spring.cors.origins}", allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v2")
@@ -18,7 +18,6 @@ public class TheaterController {
 
 
     @GetMapping("/normal/theater")
-    @CrossOrigin(origins = "http://localhost:3000")
 
     public ResponseEntity<List<TheaterDto>> getData() {
         return ResponseEntity.ok().body(theaterService.getInfo());

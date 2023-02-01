@@ -10,8 +10,7 @@ import java.util.Optional;
 @Repository
 public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long> {
     List<MovieInfoEntity> findAll();
-    public List<MovieInfoEntity> findAllByTempMid(Long id);
-    public Optional<MovieInfoEntity> findById(Long id);
+    public List<MovieInfoEntity> findByTempMid(Long id);
 
 }
 
