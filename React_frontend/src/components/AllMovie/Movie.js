@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { HeartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import Parser from "html-react-parser";
 
 const Movie = ({ movie }) => {
   return (
@@ -9,10 +10,8 @@ const Movie = ({ movie }) => {
       <div className="Image">
         <div className="banner_img">
           <Link
-            to={{
-              pathname: `/moviedetail/${movie.id}`,
-              state: { form: true },
-            }}
+            to={`/moviedetail/${movie.id}`}
+            state={{ movie: movie, key: movie.id }}
           >
             <Img
               className="imggg"
@@ -22,7 +21,14 @@ const Movie = ({ movie }) => {
           </Link>
 
           <div className="middle">
-            <Text className="hover_text">{movie.story}</Text>
+            <Link
+              to={`/moviedetail/${movie.id}`}
+              state={{ movie: movie, key: movie.id }}
+            >
+              <Text className="hover_text">
+                <p>{Parser(movie.story)}</p>
+              </Text>
+            </Link>
           </div>
         </div>
         <Des>
@@ -113,13 +119,19 @@ const Img = styled.img`
 
 const Text = styled.div`
   position: absolute;
+
   width: 200px;
   top: -160px;
   left: -133px;
+  height: 150px;
   color: white;
   font-size: 16px;
   padding: 16px 32px;
   cursor: pointer;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
 `;
 
 const Des = styled.div`

@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { MOVIE_SELECT_REQUEST } from "../../reducer/ticket";
 const AllMovie = ({
   title,
   rating,

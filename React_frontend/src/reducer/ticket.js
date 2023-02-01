@@ -1,94 +1,42 @@
+import { cardActionAreaClasses } from "@mui/material";
+
 export const initalState = {
-  allmovie_loading: false,
-  allmovie_done: false,
-  allmovie_error: null,
-
-  movie_select_loading: false,
-  movie_select_done: false,
-  movie_select_error: null,
-
-  movie_search_loading: false,
-  movie_search_done: false,
-  movie_search_error: null,
-
-  allMovie: [],
-  alltheater: [],
-  selectmovie: [],
-  searchmovie: [],
-
-  //내가 쓰려고 만든 더미 데이터
+  select_theater_loading: false,
+  select_theater_done: false,
+  select_theater_error: null,
+  selectTheater: [],
 };
 
-export const ALLTHEATER_REQUEST = "ALLTHEATER_REQUEST";
-export const ALLTHEATER_SUCCESS = "ALLTHEATER_SUCCESS";
-export const ALLTHEATER_FAILURE = "ALLTHEATER_FAILURE";
-
-export const MOVIE_SELECT_REQUEST = "MOVIE_SELECT_REQUEST";
-export const MOVIE_SELECT_SUCCESS = "MOVIE_SELECT_SUCCESS";
-export const MOVIE_SELECT_FAILURE = "MOVIE_SELECT_FAILURE";
-
-export const MOVIE_SELECT_CANCEL = "MOVIE_SELECT_CANCEL";
+export const SELECT_THEATER_REQUEST = "SELECT_THEATER_REQUEST";
+export const SELECT_THEATER_SUCCESS = "SELECT_THEATER_SUCCESS";
+export const SELECT_THEATER_FAILURE = "SELECT_THEATER_FAILURE";
 
 const ticket = (state = initalState, action) => {
   switch (action.type) {
-    case ALLTHEATER_REQUEST:
-      return {
-        ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨
-        allmovie_loading: true,
-        allmovie_done: false,
-        allmovie_error: null,
-      };
+    //영화에 대한 지역을 찾기 위한 리듀서
 
-    case ALLTHEATER_SUCCESS:
+    case SELECT_THEATER_REQUEST:
       return {
         ...state,
-        allmovie_loading: false,
-        allmovie_done: true,
-        allmovie_error: null,
-        alltheater: action.data,
+        select_theater_loading: true,
+        select_theater_done: false,
+        select_theater_error: null,
       };
 
-    case ALLTHEATER_FAILURE:
+    case SELECT_THEATER_SUCCESS:
       return {
         ...state,
-        add_ticket_loading: false,
-        add_ticket_done: false,
-        add_ticket_error: action.error,
+        select_theater_loading: false,
+        select_theater_done: true,
+        select_theater_error: null,
+        selectTheater: action.data,
       };
-
-    // -------------------------------------------------- 영화 검색 -------------------------------------------------
-    case MOVIE_SELECT_REQUEST:
-      return {
-        ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨
-        movie_select_loading: true,
-        movie_select_done: false,
-        movie_select_error: null,
-      };
-
-    case MOVIE_SELECT_SUCCESS:
+    case SELECT_THEATER_FAILURE:
       return {
         ...state,
-        movie_select_loading: false,
-        movie_select_done: true,
-        movie_select_error: null,
-        selectmovie: action.data,
-      };
-
-    case MOVIE_SELECT_FAILURE:
-      return {
-        ...state,
-        movie_select_loading: false,
-        movie_select_done: false,
-        movie_select_error: action.error,
-      };
-
-    /**-------------------------------------전체 영화 페이지에서 영화검색 */
-
-    case MOVIE_SELECT_CANCEL:
-      return {
-        ...state,
-        movie_select_loading: false,
-        movie_select_done: false,
+        select_theater_loading: false,
+        select_theater_done: false,
+        select_theater_error: action.error,
       };
     default:
       return state;

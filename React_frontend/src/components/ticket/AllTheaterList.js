@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useCallback, useEffect, useState } from "react";
+/*import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { ALLTHEATER_REQUEST } from "../../reducer/ticket";
 import { useDispatch } from "react-redux";
@@ -240,3 +240,4 @@ const TheaterEnties = styled.ul`
 `;
 
 export default AllTheaterList;
+*/
