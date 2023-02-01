@@ -17,13 +17,7 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/normal/movie")
-<<<<<<< HEAD
-    public ResponseEntity<List<MovieDto>> getData() {
-        return ResponseEntity.ok().body(movieService.getMovie());
-    }
-=======
     public ResponseEntity<List<MovieDto>> getData() { return ResponseEntity.ok().body(movieService.getMovie()); }
->>>>>>> 7654984befab0def77a3b6b9db6ecb73507ec304
 
     @GetMapping("/normal/searchmovie")
     public ResponseEntity<List<MovieDto>> SearchTitle(@RequestParam String title){

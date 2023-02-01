@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* 
 	23-01-02 ~ 23-01-04 회원가입 ui 수정 및 기능 추가(오병주)
 	23-01-13 ~ 23-01-13 중복확인 기능 추가(오병주)
@@ -9,7 +10,8 @@ import Post from './Post';
 import TermofService from './TermofService';
 import PrivacyofService from './PrivacyofService';
 import { USER_ID_REQUEST, USER_ID_RESET, USER_JOIN_REQUEST } from '../../reducer/R_user_join';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from "react-router-dom";
 
 const JoinForm = () => {
 
@@ -507,9 +509,29 @@ const JoinForm = () => {
 		}
 	};
 
+	// 로그인 상태확인용 리덕스 상태
+	const dispatch = useDispatch();
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+	// 페이지 이동을 위해 선언
+	const location = useLocation();
+	const navigate = useNavigate();	
+
+	// 로그인이 되어있으면 회원가입 페이지에 진입못하게 하는 useEffect
+	useEffect(() => {
+    if (LOGIN_data.uname !== undefined) {
+      alert("로그아웃 이후 사용 가능한 페이지입니다.");
+			if (location.state === null) {
+				navigate(`/`);
+			}
+			else {
+				navigate(`${location.state.url}`);
+			}
+    }
+  }, [LOGIN_data.uname, dispatch]);
+
 	// ID 중복을 확인하기 위한 리덕스 상태
 	const { ID_status } = useSelector((state) => state.R_user_join);
-	const dispatch = useDispatch();
 	const [IDButton, setIDButton] = useState(false);
 	const [IDText, setIDText] = useState(false);
 
@@ -522,7 +544,7 @@ const JoinForm = () => {
       type: USER_ID_REQUEST,
 			data: id
     });
-	}, [dispatch, id, ID_status]);
+	}, [dispatch, id]);
 
 	// IDcheck를 호출해서 ID_status의 상태가 변경이 됐을 때 유효성 검사를 해주는 useEffect
 	useEffect(() => {

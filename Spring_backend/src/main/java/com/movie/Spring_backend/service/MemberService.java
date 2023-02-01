@@ -98,7 +98,6 @@ public class MemberService {
 
         // 로그인 유지하기 버튼을 누른 상태로 로그인 했을 경우
         if (requestDto.getUname().equals("유지")) {
-
             // Redis에 RefreshToken 저장(로그인 상태에 대한 정보 포함)
             RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
                     .uid(authentication.getName())

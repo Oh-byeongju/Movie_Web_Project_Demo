@@ -26,12 +26,19 @@ const LoginForm = () => {
   const { id, pw } = inputs; 
 
   const onChange = (e) => {
-    console.log(check_type);
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
     setInputs({
       ...inputs, // 기존의 input 객체를 복사한 뒤
       [name]: value, // name 키를 가진 값을 value 로 설정
     });
+  };
+
+  // id, pw 입력에 따른 로그인 버튼 활성화 함수
+  const [isActive, setActive] = useState(true);
+
+  // id, pw 입력마다 실행되는 함수 (id, pw 둘다 빈칸이 아닌경우 로그인 버튼이 활성화됨)
+  const ActiveIsPassedLogin = () => {
+    return id !== "" && pw !== "" ? setActive(false) : setActive(true);
   };
 
   // 체크박스 체크 유무 확인(로그인 상태 유지)
@@ -53,7 +60,15 @@ const LoginForm = () => {
     }
   },[check])
 
+  // 로그인 상태확인용 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+  // enter키를 누르면 로그인이 실행되게 하는 함수
+  const handleOnKeyPress = e => {
+    if (e.key === 'Enter' && !isActive) {
+      submit();
+    }
+  };
 
   // 로그인 버튼 누를 때 적용되는 함수
   const submit = useCallback(() => {
@@ -62,25 +77,21 @@ const LoginForm = () => {
       upw: pw,
       uname: check_type
     };
-
     dispatch({
       type: USER_LOGIN_REQUEST,
 			data: datas
     });
-
-		// 만약에 로그인 페이지 url을 바로 입력해서 들어왔을경우 메인 페이지로, 아닌경우 이전 페이지로 이동
-		// 근데 추후 회원가입 페이지나 이런곳에서 왔으면 메인으로 보내게 만들어야할듯
-		// 로그인 누르고 잠시 대기 화면도 있어야할듯함
   }, [id, pw, check_type, dispatch]);
 
+  // 로그인의 성공 여부를 알리는 useEffect
   useEffect(()=> {
     if (LOGIN_data.uname === "error!!") {
       alert("존재하지 않는 회원입니다.")
       return;
     }
-
+    // 로그인에 성공했을 경우 메인페이지 또는 이전 페이지로 넘어가게 함
     if (LOGIN_data.uname !== undefined && LOGIN_data.uname !== "error!!" ) {
-      if (location.state === null) {
+      if (location.state === null || location.state.url === "/UserJoin") {
         	navigate(`/`);
         }
         else {
@@ -88,31 +99,6 @@ const LoginForm = () => {
         }
     }
   },[LOGIN_data, location.state, navigate]);
-
-  // id, pw 입력에 따른 로그인 버튼 활성화 함수
-  const [isActive, setActive] = useState(true);
-
-  // id, pw 입력마다 실행되는 함수 (id, pw 둘다 빈칸이 아닌경우 로그인 버튼이 활성화됨)
-  const ActiveIsPassedLogin = () => {
-    return id !== "" && pw !== "" ? setActive(false) : setActive(true);
-  };
-
-
-
-  // const generateRandomString = () => {
-  //   var text = "";
-  //   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  //   for(var i = 0; i < 60; i++) {
-  //       text += possible.charAt(Math.floor(Math.random() * possible.length));
-  //   }
-  //   return text;
-  // }
-  // console.log(generateRandomString());
-
-
-
-
-
 
 	return (
 		<div>
@@ -129,6 +115,7 @@ const LoginForm = () => {
 					onChange={onChange}
 					value={id}
 					onKeyUp={ActiveIsPassedLogin}
+          onKeyPress={handleOnKeyPress}
 					>
 					</LoginId>
           <LoginPw
@@ -138,6 +125,7 @@ const LoginForm = () => {
 					onChange={onChange}
 					value={pw}
 					onKeyUp={ActiveIsPassedLogin}
+          onKeyPress={handleOnKeyPress}
 					>
 					</LoginPw>
 					<LoginMid>
@@ -151,8 +139,8 @@ const LoginForm = () => {
           </LoginButton>
 					<Links>
 						<Link to="/UserJoin">회원가입</Link>
-						<Link to="/">아이디 찾기</Link>
-						<Link to="/">비밀번호 찾기</Link>
+						<Link to="/">아이디 찾기(미구현)</Link>
+						<Link to="/">비밀번호 찾기(미구현)</Link>
 					</Links>
 				</Form>
 			</Layout>

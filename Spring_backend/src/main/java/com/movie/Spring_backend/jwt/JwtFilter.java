@@ -1,6 +1,8 @@
 // 23-01-15 Jwt 토큰 필터링 검증 로직 구현(오병주)
+// 23-02-01 Csrf 공격 방지 로직 구현(오병주)
 package com.movie.Spring_backend.jwt;
 
+import com.movie.Spring_backend.util.CsrfCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,9 +28,18 @@ public class JwtFilter extends OncePerRequestFilter {
 
     // 실제 필터링 로직이 수행되는 메소드
     // 가입/로그인/재발급을 제외한 모든 Request 요청은 이 필터를 거치기 때문에 토큰 정보가 없거나 유효하지 않으면 정상적으로 수행되지 않음
-    // 반대로 Request가 정상적으로 Controller까지 도착했으면 SecurityContext에 Member ID가 존재한다는 것이 보장
+    // 반대로 Request가 정상적으로 Controller까지 도착했으면 SecurityContext에 Member ID가 존재한다는 것이 보장함
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        // axios 요청이 POST, DELETE, PUT, PATCH인 경우 Double submit cookie 메소드 실행(csrf 공격 방지)
+        if (request.getMethod().equals("POST")
+         || request.getMethod().equals("DELETE")
+         || request.getMethod().equals("PUT")
+         || request.getMethod().equals("PATCH")) {
+            CsrfCheckUtil.CsrfCheck(request);
+            System.out.println("CSRF 공격 검사 완료");
+        }
 
         // Request Header에서 토큰을 꺼내 jwt 변수에 저장
         String jwt = resolveToken(request);

@@ -5,9 +5,10 @@ import {
   HomeOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 const Footer = () => {
+  const location = useLocation();
   return (
     <>
       <div className="l-Footer">
@@ -67,7 +68,7 @@ const Footer = () => {
                   </Link>
                 </CorpSnsListItem>
                 <CorpSnsListItem>
-                  <Link to="/UserJoin">
+                  <Link to={`/UserJoin`} state={{ url: location.pathname}}>
                     <UserAddOutlined
                       style={{ fontSize: "25px", color: "#97a0a7" }}
                     />

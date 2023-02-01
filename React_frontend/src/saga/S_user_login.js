@@ -33,7 +33,7 @@ function* UserLogin(action) {
   }
 }
 
-// 디비에 로그인 정보를 전달하고 토큰을 리턴 /// csrf 검사도 넣어야함
+// 디비에 로그인 정보를 전달하고 토큰을 리턴
 async function Login(data) {
   return await http
     .post("/member/normal/login", data)
@@ -90,7 +90,7 @@ function* UserLogout() {
 // 로그아웃을 처리하기 위해 쿠키를 전달함(백엔드 연결)
 async function Checkout() {
   return await http
-    .get("/member/normal/logout")
+    .post("/member/normal/logout")
     .then((response) => {
       return response;
     })
