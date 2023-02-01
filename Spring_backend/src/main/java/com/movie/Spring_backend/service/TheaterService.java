@@ -19,7 +19,7 @@ public class TheaterService {
         List<TheaterEntity> Datas = r.findAll();
 
         return Datas.stream()
-                .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTarea(),data.getTarea()))
+                .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTaddr(),data.getArea()))
                 .collect(Collectors.toList());
     }// 매핑해주는거
 }

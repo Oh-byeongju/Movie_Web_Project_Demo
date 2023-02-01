@@ -2,6 +2,7 @@ package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.entity.MovieInfoEntity;
+import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +23,17 @@ public class MovieInfoService {
         return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build()).collect(Collectors.toList());
     }
 
-    public MovieInfoDto findByMid(Long id) {
-        MovieInfoEntity data = movieInfoRepository.findById(id).orElseThrow(()->new RuntimeException("오류"));
-        Long ids= data.getMiid();
-        System.out.println(ids);
-        return MovieInfoDto.builder().miid(ids).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build();
-    }
 
-    public List<MovieInfoDto> findAllByTempMid(Long id){
-        List<MovieInfoEntity> datas = movieInfoRepository.findAllByTempMid(id);
-            return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build()).collect(Collectors.toList());
+
+    public List<MovieInfoDto> findByTempMid(Long id){
+        List<MovieInfoEntity> datas = movieInfoRepository.findByTempMid(id);
+        if(!datas.isEmpty()){
+            return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).cinema(data.getCinema()).build()).collect(Collectors.toList());
+
+        }
+        else{
+            throw new MovieNotFoundException("검색 결과 없습니다.");
+        }
     }
 }
 

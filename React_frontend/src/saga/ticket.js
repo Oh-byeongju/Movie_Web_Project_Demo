@@ -1,89 +1,53 @@
 import { all, takeLatest, fork, put, call, delay } from "redux-saga/effects";
 import {
-  ALLTHEATER_FAILURE,
-  ALLTHEATER_REQUEST,
-  ALLTHEATER_SUCCESS,
-  MOVIE_SELECT_REQUEST,
-  MOVIE_SELECT_SUCCESS,
-  MOVIE_SELECT_FAILURE,
+  SELECT_THEATER_SUCCESS,
+  SELECT_THEATER_FAILURE,
+  SELECT_THEATER_REQUEST,
 } from "../reducer/ticket";
 import axios from "axios";
 import { http } from "../lib/http";
 
-//영화 불러오기
+//모두 수정
 
-function loadAllTheater() {
-  return axios.get("http://localhost:8080/v2/normal/theater", {
-    "Access-Control-Allow-Credentials": true,
-  });
-} //극장 불러오기
-
-function* allTheaterLoad() {
-  const result = yield call(loadAllTheater);
-  const alltheaterdata = result.data.map((mv) => ({
-    id: mv.tid,
-    name: mv.tname,
-    area: mv.tarea,
-    addr: mv.taddr,
-  }));
-  try {
-    yield put({
-      type: ALLTHEATER_SUCCESS,
-      data: alltheaterdata,
+async function selectTheater(data) {
+  return await http
+    .get(`/infomovie/normal/movieselect?id=${data}`)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
     });
-  } catch (err) {
-    console.log(err);
-    yield put({
-      type: ALLTHEATER_FAILURE,
-    });
-  }
 }
 
-//영화 검색
-function selectMovie(data) {
-  return axios.post(
-    `http://localhost:8080/infomovie/normal/selectmovie?id=${data}`,
-    {
-      "Access-Control-Allow-Credentials": true,
-    }
-  );
-} //영화 불러오기
+function* selectedTheater(action) {
+  const result = yield call(selectTheater, action.data);
 
-function* selectMovieLoad(action) {
-  const result = yield call(selectMovie, action.data);
+  if (result.status === 200) {
+    const selectedData = result.data.map((mv) => ({
+      id: mv.cinema.theater.area.aid,
+      tid: mv.cinema.theater.tid,
+      area: mv.cinema.theater.area.aarea,
+      name: mv.cinema.theater.tname,
+    }));
+    console.log(selectedData);
+    //네트워크에
+    //네트워크에서 200으로 받아서 수정했음 id: mv.cinema.theater.area.aarea:{}
 
-  console.log(result);
-
-  const selectMovieList = result.data.map((mv) => ({
-    id: mv.cinema.theater.tid,
-    name: mv.cinema.theater.tname,
-    area: mv.cinema.theater.tarea,
-    addr: mv.cinema.theater.taddr,
-    miid: mv.miid,
-    starttime: mv.mistarttime,
-    endtime: mv.miendtime,
-  }));
-  try {
     yield put({
-      type: MOVIE_SELECT_SUCCESS,
-      data: selectMovieList,
+      type: SELECT_THEATER_SUCCESS,
+      data: selectedData,
     });
-  } catch (err) {
-    console.log(err);
+  } else {
     yield put({
-      type: MOVIE_SELECT_FAILURE,
+      type: SELECT_THEATER_FAILURE,
+      data: result.status,
     });
   }
 }
-
-function* allTheater() {
-  yield takeLatest(ALLTHEATER_REQUEST, allTheaterLoad);
+function* Theater() {
+  yield takeLatest(SELECT_THEATER_REQUEST, selectedTheater);
 }
-
-function* selectedMovie() {
-  yield takeLatest(MOVIE_SELECT_REQUEST, selectMovieLoad);
-}
-
 export default function* ticketSaga() {
-  yield all([fork(allTheater), fork(selectedMovie)]);
+  yield all([fork(Theater)]);
 }
