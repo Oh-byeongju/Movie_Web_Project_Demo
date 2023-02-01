@@ -18,7 +18,7 @@ import {
 } from "../../reducer/R_user_login";
 
 const TopButtons = () => {
-  // 로그인 상태확인용 변수
+  // 로그인 상태확인용 리덕스 상태
   const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
@@ -26,7 +26,6 @@ const TopButtons = () => {
   const location = useLocation();
 
   // 로그인 상태를 확인하는 useEffect
-  // 로그인 창에서 엔터키 누르면 검색 되는거도 해야함
   useEffect(() => {
     if (LOGIN_data.uname === undefined) {
       dispatch({

@@ -1,5 +1,5 @@
 // 23-01-16 Security 기본적인 설정 구현(오병주)
-package com.movie.Spring_backend.config;
+package com.movie.Spring_backend.util;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

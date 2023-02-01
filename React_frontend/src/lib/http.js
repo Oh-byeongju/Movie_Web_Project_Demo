@@ -13,27 +13,27 @@ export const http = axios.create({
 // axios 요청시 resquest에 대한 처리
 http.interceptors.request.use(
   (config) => {
+    // axios 요청이 post, delete, put, patch인 경우 쿠키와 헤더를 추가함 (csrf 공격 방지를 위해)
+    if (
+      config.method === "post" ||
+      config.method === "delete" ||
+      config.method === "patch"||
+      config.method === "put") {
 
-    // if (
-    //   config.method === "post" ||
-    //   config.method === "put" ||
-    //   config.method === "delete"||
-    //   config.method === "get"
-    // )  내일 쓸꺼면 쓰기(get 말고 post put delete 일때(디비에 접근하는 애들만) 더블 서브밋 해주면될듯)
-
-    // 만약에 CTK라는 쿠키가 존재하지 않는 경우
-    if (getCookie('CTK') === undefined) {
-      // 랜덤으로 난수를 생성해서 쿠키에 등록
-      const RandomText = generateRandomString();
-      setCookie('CTK', encodeURIComponent(RandomText));
-    }
-    // 쿠키에 등록된 CTK값 추출후 임의의 값을 붙인 후 헤더에 넣음
-    // 추후 백엔드단에서 cookie로 받은 값에 현재 적용한 임의의값을 붙여서 Double Submit Cookie를 진행
-    const csrfToken = getCookie('CTK').substring(4, 64) + "S1e2rfaSDASXx3sx631s1RVGcQsFEWZX5S11a2FdaT22fwLOa32q3";
-    config.headers.Checktoken = csrfToken;
-    
-    return config;
-  },
+        // CTK라는 쿠키가 존재하지 않는 경우
+        if (getCookie('CTK') === undefined) {
+        // 랜덤으로 난수를 생성해서 쿠키에 등록
+        const RandomText = generateRandomString();
+        setCookie('CTK', encodeURIComponent(RandomText));
+        }
+        // 쿠키에 등록된 CTK값 추출후 임의의 값을 붙인 후 헤더에 넣음
+        // 추후 백엔드단에서 cookie로 받은 값에 현재 적용한 임의의값을 붙여서 Double Submit Cookie를 진행
+        const csrfToken = getCookie('CTK').substring(4, 64) + "S1e2rfaSDASXx3sx631s1RVGcQsFEWZX5S11a2FdaT22fwLOa32q3";
+        config.headers.Checktoken = csrfToken;
+        return config;
+      }
+      return config; 
+    },
   (error) => Promise.reject(error)
 );
 
@@ -81,7 +81,7 @@ http.interceptors.response.use(
         const originalRequest = config;
 
         // 토큰 재발급 요청
-        await http.get("/member/normal/reissue");
+        await http.post("/member/normal/reissue");
 
         // 실패했던 원래의 요청을 토큰을 재발급 받은뒤에 다시 요청
         return axios(originalRequest);

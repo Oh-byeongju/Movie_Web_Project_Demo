@@ -46,7 +46,7 @@ public class JwtValidCheck {
         // Request Header의 내용중 쿠키의 값들을 추출
         Cookie [] Cookies = request.getCookies();
 
-        // 쿠키가 없을 예외처리
+        // 쿠키가 없을 경우 예외처리
         if (Cookies == null) {
             return null;
         };
@@ -72,7 +72,7 @@ public class JwtValidCheck {
         // Request Header의 내용중 쿠키의 값들을 추출
         Cookie [] Cookies = request.getCookies();
 
-        // 쿠키가 없을 예외처리
+        // 쿠키가 없을 경우 예외처리
         if (Cookies == null) {
             return null;
         };
