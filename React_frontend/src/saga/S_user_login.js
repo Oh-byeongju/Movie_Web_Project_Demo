@@ -33,7 +33,7 @@ function* UserLogin(action) {
   }
 }
 
-// 디비에 로그인 정보를 전달하고 토큰을 리턴 /// csrf 검사도 넣어야함 /// 쿠키를 같이 사용하려면 with~~ 저게 필요함(백엔드 연결)
+// 디비에 로그인 정보를 전달하고 토큰을 리턴 /// csrf 검사도 넣어야함
 async function Login(data) {
   return await http
     .post("/member/normal/login", data)

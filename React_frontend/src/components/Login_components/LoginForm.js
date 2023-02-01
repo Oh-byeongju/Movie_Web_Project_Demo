@@ -26,6 +26,7 @@ const LoginForm = () => {
   const { id, pw } = inputs; 
 
   const onChange = (e) => {
+    console.log(check_type);
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
     setInputs({
       ...inputs, // 기존의 input 객체를 복사한 뒤
@@ -33,13 +34,33 @@ const LoginForm = () => {
     });
   };
 
+  // 체크박스 체크 유무 확인(로그인 상태 유지)
+	const [check, setcheck] = useState(false);
+  const [check_type, setcheck_type] = useState("");
+
+  // 체크박스 상태 변경
+	const Clickcheck = (check) => {
+		setcheck(!check);
+	}
+
+  // 로그인 유지하기 체크박스를 변경 할때 마다 check_type 변수의 내용을 변경
+  useEffect(() => {
+    if (check === true) {
+      setcheck_type("유지");
+    }
+    else {
+      setcheck_type("");
+    }
+  },[check])
+
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
   // 로그인 버튼 누를 때 적용되는 함수
   const submit = useCallback(() => {
     const datas = {
       uid: id,
-      upw: pw
+      upw: pw,
+      uname: check_type
     };
 
     dispatch({
@@ -50,10 +71,9 @@ const LoginForm = () => {
 		// 만약에 로그인 페이지 url을 바로 입력해서 들어왔을경우 메인 페이지로, 아닌경우 이전 페이지로 이동
 		// 근데 추후 회원가입 페이지나 이런곳에서 왔으면 메인으로 보내게 만들어야할듯
 		// 로그인 누르고 잠시 대기 화면도 있어야할듯함
-  }, [id, pw, dispatch]);
+  }, [id, pw, check_type, dispatch]);
 
   useEffect(()=> {
-    console.log(LOGIN_data.uname);
     if (LOGIN_data.uname === "error!!") {
       alert("존재하지 않는 회원입니다.")
       return;
@@ -76,6 +96,23 @@ const LoginForm = () => {
   const ActiveIsPassedLogin = () => {
     return id !== "" && pw !== "" ? setActive(false) : setActive(true);
   };
+
+
+
+  // const generateRandomString = () => {
+  //   var text = "";
+  //   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  //   for(var i = 0; i < 60; i++) {
+  //       text += possible.charAt(Math.floor(Math.random() * possible.length));
+  //   }
+  //   return text;
+  // }
+  // console.log(generateRandomString());
+
+
+
+
+
 
 	return (
 		<div>
@@ -106,7 +143,7 @@ const LoginForm = () => {
 					<LoginMid>
 						<label className="autoLogin" htmlFor="hint">
 							{" "}
-							<input type="checkbox" id="hint" /> 로그인 유지하기
+							<input type="checkbox" id="hint" value={check} onClick={() => Clickcheck(check)}/> 로그인 유지하기
 						</label>
           </LoginMid>
 					<LoginButton onClick={submit} disabled={isActive}>

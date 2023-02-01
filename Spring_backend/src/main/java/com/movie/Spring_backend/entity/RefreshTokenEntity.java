@@ -15,10 +15,12 @@ public class RefreshTokenEntity {
     @Id
     private String uid;
     private String refreshToken;
+    private String state;
 
     @Builder
-    public RefreshTokenEntity(String uid, String refreshToken) {
+    public RefreshTokenEntity(String uid, String refreshToken, String state) {
         this.uid = uid;
         this.refreshToken = refreshToken;
+        this.state = state;
     }
 }

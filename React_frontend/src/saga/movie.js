@@ -7,7 +7,6 @@ import {
   MOVIE_SEARCH_FAILURE,
   MOVIE_SEARCH_SUCCESS,
 } from "../reducer/movie";
-import axios from "axios";
 import { http } from "../lib/http";
 
 //영화 불러오기
