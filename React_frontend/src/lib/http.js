@@ -13,7 +13,7 @@ export const http = axios.create({
 // axios 요청시 resquest에 대한 처리
 http.interceptors.request.use(
   (config) => {
-    // axios 요청이 post, delete, put, patch인 경우 쿠키와 헤더를 추가함 (csrf 공격 방지를 위해)
+    // axios 요청이 post, delete, put, patch인 경우 쿠키와 헤더를 추가 (csrf 공격 방지를 위해)
     if (
       config.method === "post" ||
       config.method === "delete" ||
