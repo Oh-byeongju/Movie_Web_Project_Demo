@@ -34,13 +34,14 @@ public class MovieEntity {
 
     @Column(nullable = false, length = 30)
     private Date mdate;
+
     @Column(nullable = false, length = 30)
     private String mrating;
 
     @Column(nullable = false, length = 30)
     private String mstory;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private int mlike;
 
     @Column(nullable = false, length = 50)

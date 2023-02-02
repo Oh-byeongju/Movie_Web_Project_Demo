@@ -6,6 +6,7 @@
 export const USER_LOGIN_REQUEST = "USER_LOGIN_REQUEST";
 export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
 export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
+export const USER_LOGIN_RESET = "USER_LOGIN_RESET";
 export const USER_LOGIN_STATUS_REQUEST = "USER_LOGIN_STATUS_REQUEST";
 export const USER_LOGIN_STATUS_SUCCESS = "USER_LOGIN_STATUS_SUCCESS";
 export const USER_LOGIN_STATUS_FAILURE = "USER_LOGIN_STATUS_FAILURE";
@@ -51,6 +52,14 @@ const R_user_login = (state = initalState, action) => {
         LOGIN_done: false,
         LOGIN_error: action.data,
         LOGIN_data: {uname : 'error!!'}
+      };
+    case USER_LOGIN_RESET:
+      return {
+        ...state,
+        LOGIN_loading: false,
+        LOGIN_done: false,
+        LOGIN_error: null,
+        LOGIN_data: [{uname : ''}]
       };
     // 로그인 상태확인 케이스들
     case USER_LOGIN_STATUS_REQUEST:
