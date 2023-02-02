@@ -1,15 +1,31 @@
-import React, { useEffect } from "react";
+/*
+ 23-02-02 css 수정 및 Like수 적용(오병주)
+*/
+import React from "react";
 import styled from "styled-components";
 import { HeartOutlined } from "@ant-design/icons";
 
 const Box = ({ movie }) => {
+
+  // 반올림 없이 소수점 생성해주는 함수
+  const getNotRoundDecimalNumber = (number, decimalPoint = 1) => {
+    let num = typeof number === "number" ? String(number) : number;
+    const pointPos = num.indexOf(".");
+  
+    if (pointPos === -1) return Number(num).toFixed(decimalPoint);
+  
+    const splitNumber = num.split(".");
+    const rightNum = splitNumber[1].substring(0, decimalPoint);
+    return Number(`${splitNumber[0]}.${rightNum}`).toFixed(decimalPoint);
+  };
+
   return (
     <LI>
       <div className="Image">
         <div className="banner_img">
           <Img
             className="imggg"
-            src={`img/ranking/${movie.id}.jpg`}
+            src={`${movie.imagepath}`}
             alt="영화"
           />
           <div className="middle">
@@ -18,7 +34,7 @@ const Box = ({ movie }) => {
         </div>
         <Button>
           <Like>
-            <HeartOutlined /> 0
+            <HeartOutlined /> {movie.like > 999 ? getNotRoundDecimalNumber(movie.like / 1000) + "K" : movie.like} 
           </Like>
           <Ticket
             onClick={() => {
@@ -61,20 +77,8 @@ const LI = styled.li`
       opacity: 1;
     }
   }
-`; //하나의 div
+`;
 
-/* .Image {
-    position: relative;
-    .banner_img:hover:after,
-    .banner_img:hover > .hover_text {
-      display: block;
-    }
-
-    .banner_img:after,
-    .hover_text {
-      display: none;
-    }
-  } */
 const Img = styled.img`
   opacity: 1;
   display: block;
@@ -100,25 +104,32 @@ const Text = styled.div`
 const Button = styled.div`
   position: absolute;
   display: flex;
-  padding-top: 10px;
+  padding-top: 15px;
   width: 250px;
 `;
+
 const Like = styled.div`
   position: absolute;
   cursor: pointer;
   text-align: center;
-  width: 45px;
-  height: 30px;
+  width: 64px;
+  height: 33.4px;
   border: 1px solid;
+  vertical-align: middle;
+  margin: 0;
+  line-height: 33.4px;
+  border-radius: 4px;
 `;
 
 const Ticket = styled.button`
+  margin: 0;
+  padding-top: 0 !important;
+  border-top: 0 !important;
   position: absolute;
-  right: 0;
-  top: 8px;
+  right: 0; 
   margin-left: 10px;
   text-align: center;
-  width: 80%;
+  width: 72%;
   padding-left: 10px;
   border-radius: 4px;
   height: 36px;

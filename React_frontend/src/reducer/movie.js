@@ -70,6 +70,7 @@ const movie = (state = initalState, action) => {
         movie_search_loading: false,
         movie_search_done: false,
         movie_search_error: action.error,
+        allMovie: []
       };
 
     default:

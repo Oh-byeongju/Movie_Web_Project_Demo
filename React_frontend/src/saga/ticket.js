@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, put, call, delay } from "redux-saga/effects";
+import { all, takeLatest, fork, put, call } from "redux-saga/effects";
 import {
   SELECT_THEATER_SUCCESS,
   SELECT_THEATER_FAILURE,

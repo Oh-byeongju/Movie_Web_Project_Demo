@@ -1,8 +1,12 @@
 import React from "react";
 import ClipLoader from "react-spinners/FadeLoader";
-const Loading = () => {
+import styled from "styled-components";
+
+const Loading = ({height}) => {
   return (
     <div className="contentWrap">
+      <StyledDiv ht={height}>
+      </StyledDiv>
       <div
         style={{
           position: "fixed",
@@ -22,5 +26,10 @@ const Loading = () => {
     </div>
   );
 };
+
+// 받아온 height를 이용해서 여백추가(Footer가 올라오는것 방지)
+const StyledDiv = styled.div`
+  height: ${props => `${props.ht}px`} ;
+`;
 
 export default Loading;
