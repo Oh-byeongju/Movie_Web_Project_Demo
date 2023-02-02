@@ -4,7 +4,6 @@ import {
   SELECT_THEATER_FAILURE,
   SELECT_THEATER_REQUEST,
 } from "../reducer/ticket";
-import axios from "axios";
 import { http } from "../lib/http";
 
 //모두 수정

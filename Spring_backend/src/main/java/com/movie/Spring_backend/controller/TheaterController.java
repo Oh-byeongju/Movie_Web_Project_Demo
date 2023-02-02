@@ -16,13 +16,8 @@ public class TheaterController {
 
     private final TheaterService theaterService;
 
-
     @GetMapping("/normal/theater")
-
     public ResponseEntity<List<TheaterDto>> getData() {
         return ResponseEntity.ok().body(theaterService.getInfo());
     }
-
-
-
 }

@@ -1,15 +1,12 @@
 package com.movie.Spring_backend.controller;
 
-
 import com.movie.Spring_backend.dto.MovieInfoDto;
-import com.movie.Spring_backend.repository.MovieInfoRepository;
 import com.movie.Spring_backend.service.MovieInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//crossorigin 바꿔야함
 @CrossOrigin(origins = "${spring.cors.origins}", allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
@@ -23,17 +20,8 @@ public class MovieInfoController {
         return ResponseEntity.ok().body(movieInfoService.findAll());
     }
 
-
-
-
-
-
     @GetMapping("/normal/movieselect")
-    public ResponseEntity<List<MovieInfoDto>> findAllByTempMid(@RequestParam Long id){
-
+    public ResponseEntity<List<MovieInfoDto>> findAllByTempMid(@RequestParam Long id) {
         return ResponseEntity.ok().body(movieInfoService.findByTempMid(id));
     }
-
-
-
 }

@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TheaterService {
 
-    private final TheaterRepository r;
+    private final TheaterRepository theaterRepository;
 
     public List<TheaterDto> getInfo() {
-        List<TheaterEntity> Datas = r.findAll();
+        List<TheaterEntity> Datas = theaterRepository.findAll();
 
         return Datas.stream()
-                .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTaddr(),data.getArea()))
+                .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTaddr(),data.getTarea()))
                 .collect(Collectors.toList());
     }// 매핑해주는거
 }
