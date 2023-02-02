@@ -13,27 +13,32 @@ import java.util.stream.Collectors;
 @Service
 public class MovieInfoService {
     private final MovieInfoRepository movieInfoRepository;
+    private final MovieInfoRepository TestMapping;
 
-    public MovieInfoService(MovieInfoRepository movieInfoRepository){
+
+    public MovieInfoService(MovieInfoRepository movieInfoRepository, MovieInfoRepository testMapping){
         this.movieInfoRepository=movieInfoRepository;
+        TestMapping = testMapping;
     }
 
     public List<MovieInfoDto> findAll() {
         List<MovieInfoEntity> datas = movieInfoRepository.findAll();
-        return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).temp(data.getTemp()).cinema(data.getCinema()).build()).collect(Collectors.toList());
+        return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).movie(data.getMovie()).cinema(data.getCinema()).build()).collect(Collectors.toList());
     }
 
 
 
-    public List<MovieInfoDto> findByTempMid(Long id){
-        List<MovieInfoEntity> datas = movieInfoRepository.findByTempMid(id);
+    public List<MovieInfoDto> findByMovieMid(Long id){
+        List<MovieInfoEntity> datas = movieInfoRepository.findByMovieMid(id);
         if(!datas.isEmpty()){
-            return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).cinema(data.getCinema()).build()).collect(Collectors.toList());
-
+            System.out.println(datas);
+            return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).movie(data.getMovie()).cinema(data.getCinema()).build()).collect(Collectors.toList());
         }
         else{
             throw new MovieNotFoundException("검색 결과 없습니다.");
         }
     }
+
+
 }
 

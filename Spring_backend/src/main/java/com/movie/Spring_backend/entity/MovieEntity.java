@@ -29,7 +29,7 @@ public class MovieEntity {
     @Column(nullable = false, length = 30)
     private String mgenre;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false )
     private int mtime;
 
     @Column(nullable = false, length = 30)

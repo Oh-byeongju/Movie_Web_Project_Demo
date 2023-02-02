@@ -28,22 +28,21 @@ public class MovieInfoEntity {
 
     @ManyToOne
     @JoinColumn(name="MID")
-    private MovieEntity temp; //주인 N
+    private MovieEntity movie; //주인 N
 
 
 
     @ManyToOne//다 대 일 여러개의 관들은 하나의 극장을 가진다
     @JoinColumn(name="cid")
     @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
-
     private CinemaEntity cinema;
 
     @Builder
-    public MovieInfoEntity(Long miid, String mistarttime, String miendtime , MovieEntity temp, CinemaEntity cinema) {
+    public MovieInfoEntity(Long miid, String mistarttime, String miendtime , MovieEntity movie, CinemaEntity cinema) {
        this.miid= miid;
        this.mistarttime=mistarttime;
        this.miendtime=miendtime;
-       this.temp=temp;
+       this.movie=movie;
        this.cinema=cinema;
     }
 }

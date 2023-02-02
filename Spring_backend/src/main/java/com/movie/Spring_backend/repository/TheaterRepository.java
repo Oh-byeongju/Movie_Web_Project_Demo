@@ -9,4 +9,6 @@ import java.util.List;
 public interface TheaterRepository extends JpaRepository<TheaterEntity,Long>  {
     //JpaRepository<Entity클래스, PK값>
     List<TheaterEntity> findAll();
+    List <TheaterEntity> findByTarea(String area);
+
 }

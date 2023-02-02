@@ -36,7 +36,8 @@ public class CinemaEntity { // 소문자 수정본
         this.cname = cname;
         this.ctype = ctype;
         this.cseat = cseat;
-        this.theater=theater;
+        this.theater = theater;
     }
+
 }
 
