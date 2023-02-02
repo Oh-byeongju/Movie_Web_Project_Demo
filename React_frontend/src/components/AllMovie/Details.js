@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import MovieDetail from "../../pages/MovieDetail";
 import { HeartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Parser from "html-react-parser";
@@ -44,7 +43,7 @@ const Details = ({ movie }) => {
               </Spec>
               <Like>
                 <Likes>
-                  <HeartOutlined /> 0
+                  <HeartOutlined /> {movie.like.toLocaleString()}
                 </Likes>
                 <Link to="/reserve">
                   <Ticket
@@ -147,6 +146,7 @@ const Like = styled.span`
   position: absolute;
   left: 0;
 `;
+
 const Likes = styled.div`
   width: 104px;
   height: 33px;
@@ -163,7 +163,7 @@ const Likes = styled.div`
 
 const Ticket = styled.button`
   width: 130px;
-  height: 33px;
+  height: 34.6px;
   border: 1px solid #222222;
   background: #503396;
 
@@ -180,11 +180,13 @@ const Ticket = styled.button`
 const ColsContent = styled.div`
   margin-top: 30px;
 `;
+
 const ColsDetails = styled.div`
   float: left;
   position: relative;
   width: 800px;
 `;
+
 const Story = styled.div`
   padding-top: 40px;
   margin-top: 35px;

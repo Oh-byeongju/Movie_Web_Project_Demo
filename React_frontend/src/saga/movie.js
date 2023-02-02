@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, put, call, delay } from "redux-saga/effects";
+import { all, takeLatest, fork, put, call } from "redux-saga/effects";
 import {
   ALLMOVIE_REQUEST,
   ALLMOVIE_SUCCESS,
@@ -83,13 +83,11 @@ function* searchMovieLoad(action) {
       imagepath: mv.mimagepath,
     }));
     //네트워크에서 200으로 받아서 수정했음
-    yield delay(2000);
     yield put({
       type: MOVIE_SEARCH_SUCCESS,
       data: allmoviedata,
     });
   } else {
-    alert("검색결과 없습니다.");
     yield put({
       type: MOVIE_SEARCH_FAILURE,
       data: result.status,

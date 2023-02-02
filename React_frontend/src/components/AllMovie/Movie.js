@@ -1,8 +1,23 @@
+/*
+ 23-02-02 css 수정 및 Like수 적용(오병주)
+*/
 import React from "react";
 import styled from "styled-components";
 import { HeartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Parser from "html-react-parser";
+
+// 반올림 없이 소수점 생성해주는 함수
+const getNotRoundDecimalNumber = (number, decimalPoint = 1) => {
+  let num = typeof number === "number" ? String(number) : number;
+  const pointPos = num.indexOf(".");
+
+  if (pointPos === -1) return Number(num).toFixed(decimalPoint);
+
+  const splitNumber = num.split(".");
+  const rightNum = splitNumber[1].substring(0, decimalPoint);
+  return Number(`${splitNumber[0]}.${rightNum}`).toFixed(decimalPoint);
+};
 
 const Movie = ({ movie }) => {
   return (
@@ -15,11 +30,10 @@ const Movie = ({ movie }) => {
           >
             <Img
               className="imggg"
-              src={movie.imagepath} //수정 완
+              src={movie.imagepath}
               alt="영화"
             />
           </Link>
-
           <div className="middle">
             <Link
               to={`/moviedetail/${movie.id}`}
@@ -48,7 +62,7 @@ const Movie = ({ movie }) => {
         </Des>
         <Button>
           <Like>
-            <HeartOutlined /> 0
+            <HeartOutlined /> {movie.like > 999 ? getNotRoundDecimalNumber(movie.like / 1000) + "K" : movie.like}
           </Like>
           <Link to="/reserve">
             <Ticket
@@ -93,20 +107,8 @@ const LI = styled.li`
       opacity: 1;
     }
   }
-`; //하나의 div
+`; 
 
-/* .Image {
-    position: relative;
-    .banner_img:hover:after,
-    .banner_img:hover > .hover_text {
-      display: block;
-    }
-
-    .banner_img:after,
-    .hover_text {
-      display: none;
-    }
-  } */
 const Img = styled.img`
   opacity: 1;
   display: block;
@@ -119,7 +121,6 @@ const Img = styled.img`
 
 const Text = styled.div`
   position: absolute;
-
   width: 200px;
   top: -160px;
   left: -133px;
@@ -164,18 +165,22 @@ const Button = styled.div`
   padding-top: 10px;
   width: 230px;
 `;
+
 const Like = styled.div`
   position: absolute;
   cursor: pointer;
   text-align: center;
-  width: 45px;
-  height: 30px;
+  width: 60px;
+  height: 31px;
   border: 1px solid;
+  font-size: 11pt;
+  line-height: 31px;
+  border-radius: 4px;
 `;
 
 const Ticket = styled.button`
   position: absolute;
-  right: 10px;
+  right: 0px;
   top: 8px;
   margin-left: 10px;
   text-align: center;

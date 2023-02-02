@@ -13,12 +13,12 @@ const BoxList = () => {
     dispatch({
       type: ALLMOVIE_REQUEST,
     });
-  }, []);
+  }, [dispatch]);
   const { allMovie } = useSelector((state) => state.movie);
 
   return (
     <CardList>
-      <div style={{ paddingBottom: "30px" }}>
+      <div style={{ paddingBottom: "40px" }}>
         <Title>박스오피스</Title>
         <Link to="/movie">
           <More>
@@ -40,6 +40,7 @@ const CardList = styled.div`
   position: relative;
   margin-top: 30px;
 `;
+
 const Title = styled.div`
   position: absolute;
   top: 0;
@@ -47,18 +48,21 @@ const Title = styled.div`
   width: 80px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 `;
+
 const More = styled.div`
   position: absolute;
   font-size: 13px;
-  top: 10px;
-  right: 50px;
+  top: 11px;
+  right: 100px;
   color: #808080;
   cursor: pointer;
 `;
+
 const UL = styled.ul`
   align-items: center;
   list-style-type: none;
   padding-left: 160px;
+  margin-bottom: 45px;
 
   &:after {
     content: "";
