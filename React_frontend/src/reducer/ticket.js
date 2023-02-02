@@ -1,11 +1,27 @@
-import { cardActionAreaClasses } from "@mui/material";
-
 export const initalState = {
+  allArea_loading: false,
+  allArea_done: false,
+  allArea_error: null,
+  allArea: [],
+
+  allTheater_loading: false,
+  allTheater_done: false,
+  allTheater_error: null,
+  allTheater: [],
+
   select_theater_loading: false,
   select_theater_done: false,
   select_theater_error: null,
   selectTheater: [],
 };
+
+export const ALLAREA_REQUEST = "ALLAREA_REQUEST";
+export const ALLAREA_SUCCESS = "ALLAREA_SUCCESS";
+export const ALLAREA_FAILURE = "ALLAREA_FAILURE";
+
+export const ALLTHEATER_REQUEST = "ALLTHEATER_REQUEST";
+export const ALLTHEATER_SUCCESS = "ALLTHEATER_SUCCESS";
+export const ALLTHEATER_FAILURE = "ALLTHEATER_FAILURE";
 
 export const SELECT_THEATER_REQUEST = "SELECT_THEATER_REQUEST";
 export const SELECT_THEATER_SUCCESS = "SELECT_THEATER_SUCCESS";
@@ -14,7 +30,57 @@ export const SELECT_THEATER_FAILURE = "SELECT_THEATER_FAILURE";
 const ticket = (state = initalState, action) => {
   switch (action.type) {
     //영화에 대한 지역을 찾기 위한 리듀서
+    case ALLAREA_REQUEST:
+      return {
+        ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨
+        allArea_loading: true,
+        allArea_done: false,
+        allArea_error: null,
+      };
 
+    case ALLAREA_SUCCESS:
+      return {
+        ...state,
+        allArea_loading: false,
+        allArea_done: true,
+        allArea_error: null,
+        allArea: action.data,
+      };
+
+    case ALLAREA_FAILURE:
+      return {
+        ...state,
+        allArea_loading: false,
+        allArea_done: false,
+        allArea_error: null,
+      };
+
+    //검색한 영화 검색
+    case ALLTHEATER_REQUEST:
+      return {
+        ...state,
+        allTheater_loading: true,
+        allTheater_done: false,
+        allTheater_error: null,
+      };
+
+    case ALLTHEATER_SUCCESS:
+      return {
+        ...state,
+        allTheater_loading: false,
+        allTheater_done: true,
+        allTheater_error: null,
+        allTheater: action.data,
+      };
+    case ALLTHEATER_FAILURE:
+      return {
+        ...state,
+        allTheater_loading: false,
+        allTheater_done: false,
+        allTheater_error: action.error,
+      };
+
+    //영화 id로 극장 검색하기
     case SELECT_THEATER_REQUEST:
       return {
         ...state,

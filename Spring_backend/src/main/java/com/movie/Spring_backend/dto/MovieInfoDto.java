@@ -16,16 +16,16 @@ public class MovieInfoDto {
 
     private String miendtime;
 
-    private MovieEntity temp;
+    private MovieEntity movie;
 
     private CinemaEntity cinema;
 
     @Builder
-    public MovieInfoDto(Long miid, String mistarttime, String miendtime, MovieEntity temp, CinemaEntity cinema) {
+    public MovieInfoDto(Long miid, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema) {
         this.miid= miid;
         this.mistarttime=mistarttime;
         this.miendtime=miendtime;
-        this.temp=temp;
+        this.movie=movie;
         this.cinema=cinema;
     }
 

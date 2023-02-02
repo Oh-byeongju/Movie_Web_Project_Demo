@@ -1,243 +1,212 @@
-/* eslint-disable */
-/*import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { ALLTHEATER_REQUEST } from "../../reducer/ticket";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import AllTheater from "./AllTheater";
-
+import { ALLAREA_REQUEST, ALLTHEATER_REQUEST } from "../../reducer/ticket";
 const AllTheaterList = () => {
   const dispatch = useDispatch();
-  const [theater, setTheater] = useState([]); // theater 담기
+  const { allArea, allTheater, select_theater_done, selectTheater } =
+    useSelector((state) => state.ticket);
+  const [selectedArea, setSelectedArea] = useState("서울");
+  const [area, setArea] = useState("서울");
 
-  const { alltheater, selectmovie, movie_select_done } = useSelector(
-    (state) => state.ticket
-  );
-  var obj_value = new Array();
-
-  const selectList = selectmovie.reduce((theater, { name, area, id }) => {
-    if (!theater[area]) theater[area] = [];
-    theater[area].push(name);
-    return theater;
-  }, {}); //극장 리스트
-
-  var set = new Set(theater);
-  const un = [...set];
-
-  const [select, SetSelect] = useState(false);
-
-  const [sel, setSel] = useState("");
-
-  const handleClick = (id) => {
-    //지역 클릭 시 토글 함수
-    //id번호로 영화 제목클릭시 하나만 가능하게 하는
-    const newArr = Array(Object.keys(selectList)).fill(false);
-
-    newArr[id] = true;
-
-    if (newArr !== select) {
-      setAreas(false);
-    } //지역 선택 시 극장 선택 한 버튼 초기화
-    SetSelect(newArr);
-  };
-
-  const [areas, setAreas] = useState(false);
-
-  const areaClick = (id) => {
-    //극장 클릭 시 토글 함수
-    //id번호로 지역클릭시 하나만 가능하게 하는
-
-    const area = Array(un.length).fill(false);
-    area[id] = true;
-    setAreas(area);
-  };
-
-  const [check, setCheck] = useState(true);
+  const [selectedTheater, setSelectedTheater] = useState("서울");
 
   useEffect(() => {
-    // 영화 선택 초기화 해줌
-
-    if (selectmovie != 0) {
-      setSel(selectmovie);
-      console.log(sel);
-      SetSelect(false);
-      setTheater("");
-    }
+    dispatch({
+      type: ALLAREA_REQUEST,
+    });
     dispatch({
       type: ALLTHEATER_REQUEST,
+      data: "서울",
     });
-  }, [selectmovie]); //지역불러오기
+  }, []);
 
   return (
-    <Center>
-      <div className="title">극장</div>
-      <Theater>
-        <TheaterSelect>
-          <TheaterList>
-            {movie_select_done && selectmovie != 0 ? ( //reducer 체크와 selectmovie에 데이터가 들어왔는지 확인
-              <TheaterArea>
-                <ul className="area">
-                  {Object.entries(selectList).map(([key, value], index) => (
-                    <li
-                      className={select[index] ? "area-name" : "notchoicename"} // boolean ? click : NotClick
-                      onClick={() => {
-                        obj_value = [];
-                        for (var key in value) {
-                          obj_value.push(value[key]);
-                        }
-
-                        handleClick(index);
-
-                        setTheater(obj_value);
-                      }}
+    <TheatersWrapper>
+      <TheatersTitle>극장</TheatersTitle>
+      <TheatersSelector>
+        <TheatersSelectorText>전체</TheatersSelectorText>
+      </TheatersSelector>
+      <TheatersRegionWrapper>
+        <TheatersListWrapper>
+          {select_theater_done ? (
+            <div>
+              <TheaterListBlock>
+                {selectTheater.map((area, index) => {
+                  return (
+                    <TheatersList
+                      key={index}
+                      area={area}
+                      selectedArea={selectedArea}
                     >
-                      <p>{key}</p>
-                    </li>
-                  ))}
-                </ul>
-
-                {un.map((c, id) => (
-                  <AllTheater
-                    isSelected={areas[id]}
-                    key={id}
-                    elementIndex={id}
-                    areaClick={areaClick}
-                    c={c}
-                  ></AllTheater>
+                      <div
+                        onClick={() => {
+                          setSelectedArea(area);
+                          dispatch({
+                            type: ALLTHEATER_REQUEST,
+                            data: area,
+                          });
+                        }}
+                      >
+                        {area}
+                      </div>
+                    </TheatersList>
+                  );
+                })}
+              </TheaterListBlock>
+              <RegionTheatersListWrapper>
+                {selectTheater.map((theater, index) => (
+                  <RegionItem
+                    key={index}
+                    selectedTheater={selectedTheater}
+                    theater={theater.tname}
+                  >
+                    <div
+                      onClick={() => {
+                        setSelectedTheater(theater.tname);
+                      }}
+                      theater={theater.tname}
+                      selectedTheater={selectedTheater}
+                    >
+                      {theater.tname}
+                    </div>
+                  </RegionItem>
                 ))}
-              </TheaterArea>
-            ) : (
-              <div>영화를 선택하세요</div>
-            )}
-          </TheaterList>
-        </TheaterSelect>
-      </Theater>
-    </Center>
+              </RegionTheatersListWrapper>
+            </div>
+          ) : (
+            <div>
+              <TheaterListBlock>
+                {allArea.map((area, index) => {
+                  return (
+                    <TheatersList
+                      key={index}
+                      area={area}
+                      selectedArea={selectedArea}
+                    >
+                      <div
+                        onClick={() => {
+                          setSelectedArea(area);
+                          dispatch({
+                            type: ALLTHEATER_REQUEST,
+                            data: area,
+                          });
+                        }}
+                      >
+                        {area}
+                      </div>
+                    </TheatersList>
+                  );
+                })}
+              </TheaterListBlock>
+              <RegionTheatersListWrapper>
+                {allTheater.map((theater, index) => (
+                  <RegionItem
+                    key={index}
+                    selectedTheater={selectedTheater}
+                    theater={theater.tname}
+                  >
+                    <div
+                      onClick={() => {
+                        setSelectedTheater(theater.tname);
+                      }}
+                      theater={theater.tname}
+                      selectedTheater={selectedTheater}
+                    >
+                      {theater.tname}
+                    </div>
+                  </RegionItem>
+                ))}
+              </RegionTheatersListWrapper>
+            </div>
+          )}
+        </TheatersListWrapper>
+      </TheatersRegionWrapper>
+    </TheatersWrapper>
   );
 };
 
-const Center = styled.div`
-  display: block;
-  position: relative;
-  background-color: #f2f0e5;
-
-  left: 72px;
-  top: -592px;
-  .title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    width: 302px;
-    height: 30px;
-    background-color: black;
-    color: white;
-    top: 141px;
-
-    left: 450px;
-  }
-`;
-
-const Theater = styled.div`
-  position: absolute;
-
-  width: 300px;
-  height: 500px;
-  top: 172px;
-  left: 450px;
-
-  background-color: white;
-`;
-
-const TheaterSelect = styled.div`
-  width: 100%;
-  height: 400px;
-  border: 1px solid;
-`;
-
-const TheaterList = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  background-color: #f2f0e5;
-`;
-const TheaterArea = styled.div`
-  width: 150px;
-  height: 100%;
-  position: absolute;
-  top: -24px;
-  cursor: pointer;
-  .area {
-    width: 150px;
-    position: absolute;
-    left: -40px;
-    list-style-type: none;
-    font-size: 12px;
-
-    .notchoicename {
-      height: 30px;
-      background-color: #686868;
-      margin-bottom: -10px;
-      color: black;
-      z-index: 1;
-      p {
-        position: relative;
-        width: 30px;
-        left: 110px;
-        top: 5px;
-      }
-    }
-    .area-name {
-      height: 30px;
-      background-color: black;
-      color: white;
-      margin-bottom: -10px;
-      z-index: 100;
-
-      p {
-        position: relative;
-        left: 110px;
-        width: 30px;
-
-        top: 5px;
-        font-color: white;
-      }
-    }
-  }
-`;
-
-const TheaterEnties = styled.ul`
-  position: absolute;
-  list-style-type: none;
-  width: 150px;
-  top: 0px;
-  left: 110px;
-  font-size: 12px;
-  .choice {
-    width: 150px;
-    height: 30px;
-    background-color: #686868;
-    margin-bottom: -10px;
-    color: black;
-    position:relative;
-    p {
-      position:relative;
-      left:10px;
-      top: 5px;
-    }
-  }
-  .notchoice {
-    height: 30px;
-    background-color: white;
-    color: black;
-    margin-bottom: -10px;
-
-    p {
-      position:relative;
-      left:10px;
-      top: 5px;
-    }
-`;
-
 export default AllTheaterList;
-*/
+const TheatersWrapper = styled.div`
+  display: inline-block;
+  flex-direction: column;
+  width: 270px;
+  border-right: 1px solid #d8d9db;
+`;
+const TheatersTitle = styled.div`
+  color: #222;
+  font-size: 20px;
+  line-height: 38px;
+  padding: 20px 0 0 20px;
+`;
+
+const TheatersSelector = styled.div`
+  padding: 18px;
+  > div {
+    border: 1px solid #d8d9db;
+    border-bottom: none;
+    height: 35px;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 10;
+    padding-top: 6px;
+  }
+`;
+
+const TheatersListWrapper = styled.div`
+  padding-left: 20px;
+  width: 100%;
+`;
+
+const TheatersRegionWrapper = styled.div`
+  display: flex;
+`;
+
+const TheaterListBlock = styled.div`
+  display: inline-block;
+  position: relative;
+  float: left;
+
+  width: 50%;
+`;
+const TheatersList = styled.div`
+  display: flex;
+
+  width: 100%;
+  padding-bottom: 7px;
+  background-color: ${(props) =>
+    props.area === props.selectedArea ? "gainsboro" : "white"};
+  > div {
+    padding: 6px 0px 5px 10px;
+    font-size: 13px;
+  }
+`;
+
+const TheatersSelectorText = styled.div`
+  border: 1px solid #d8d9db;
+  border-bottom: none;
+  height: 35px;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10;
+  padding-top: 6px;
+`;
+const RegionTheatersListWrapper = styled.div`
+  display: inline-block;
+  float: left;
+  width: 50%;
+  flex-direction: column;
+`;
+
+const RegionItem = styled.div`
+  display: flex;
+  padding-bottom: 7px;
+  background-color: ${(props) =>
+    props.theater === props.selectedTheater ? "gray" : "white"};
+  > div {
+    padding: 6px 70px 5px 10px;
+    font-size: 13px;
+    color: ${(props) =>
+      props.theater === props.selectedTheater ? "white" : "black"};
+  }
+`;

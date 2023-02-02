@@ -18,19 +18,18 @@ public class TheaterEntity {
     @Column(nullable = false, length = 30)
     private String tname;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 50)
     private String taddr;
 
-    @ManyToOne//다 대 일 여러개의 관들은 하나의 극장을 가진다
-    @JoinColumn(name="aid")
+    @Column(nullable = false, length = 30)
+    private String tarea;
 
-    private AreaEntity area;
     @Builder
-    public TheaterEntity(Long tid ,String tname, String taddr, AreaEntity area) {
+    public TheaterEntity(Long tid ,String tname, String taddr, String tarea) {
         this.tid=tid;
         this.tname=tname;
         this.taddr=taddr;
-        this.area= area;
+        this.tarea= tarea;
     }
 
 
