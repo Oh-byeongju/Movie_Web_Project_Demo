@@ -23,7 +23,6 @@ public class MovieController {
     public ResponseEntity<List<MovieDto>> SearchTitle(@RequestParam String title){
         return ResponseEntity.ok().body(movieService.findByMtitleContaining(title));
     }
-
 }
 
 

@@ -34,6 +34,7 @@ public class MovieEntity {
 
     @Column(nullable = false, length = 30)
     private Date mdate;
+
     @Column(nullable = false, length = 30)
     private String mrating;
 

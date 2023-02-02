@@ -5,7 +5,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { USER_LOGIN_REQUEST } from '../../reducer/R_user_login';
+import { USER_LOGIN_REQUEST, USER_LOGIN_RESET } from '../../reducer/R_user_login';
 import { useLocation, Link, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
@@ -87,6 +87,7 @@ const LoginForm = () => {
   useEffect(()=> {
     if (LOGIN_data.uname === "error!!") {
       alert("존재하지 않는 회원입니다.")
+      dispatch({type: USER_LOGIN_RESET});
       return;
     }
     // 로그인에 성공했을 경우 메인페이지 또는 이전 페이지로 넘어가게 함
@@ -98,7 +99,7 @@ const LoginForm = () => {
         	navigate(`${location.state.url}`);
         }
     }
-  },[LOGIN_data, location.state, navigate]);
+  },[LOGIN_data, location.state, navigate, dispatch]);
 
 	return (
 		<div>

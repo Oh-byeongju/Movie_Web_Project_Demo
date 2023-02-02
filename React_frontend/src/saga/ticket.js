@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, put, call, delay } from "redux-saga/effects";
+import { all, takeLatest, fork, put, call } from "redux-saga/effects";
 import {
   //전체 지역 및 극장 검색
   ALLAREA_FAILURE,
@@ -13,7 +13,6 @@ import {
   SELECT_THEATER_SUCCESS,
   SELECT_THEATER_FAILURE,
 } from "../reducer/ticket";
-import axios from "axios";
 import { http } from "../lib/http";
 
 //모두 수정

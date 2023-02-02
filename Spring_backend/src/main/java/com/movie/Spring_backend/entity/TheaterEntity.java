@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
-
 @Entity
 @Table(name="movie_theater")
 @Getter
@@ -31,7 +30,4 @@ public class TheaterEntity {
         this.taddr=taddr;
         this.tarea= tarea;
     }
-
-
-
 }

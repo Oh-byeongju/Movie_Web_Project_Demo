@@ -19,7 +19,7 @@ http.interceptors.request.use(
       config.method === "delete" ||
       config.method === "patch"||
       config.method === "put") {
-
+        
         // CTK라는 쿠키가 존재하지 않는 경우
         if (getCookie('CTK') === undefined) {
         // 랜덤으로 난수를 생성해서 쿠키에 등록

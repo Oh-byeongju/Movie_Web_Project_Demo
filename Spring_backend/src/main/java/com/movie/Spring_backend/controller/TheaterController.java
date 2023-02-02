@@ -23,6 +23,7 @@ public class TheaterController {
 
     private final TheaterService theaterService;
 
+<<<<<<< HEAD
 
     @GetMapping("/normal/area")
     public Set<String> getData() {
@@ -45,8 +46,10 @@ public class TheaterController {
     public ResponseEntity<List<TheaterDto>> findByTarea(@RequestParam String area)
     {
         return ResponseEntity.ok().body(theaterService.findByTarea(area));
+=======
+    @GetMapping("/normal/theater")
+    public ResponseEntity<List<TheaterDto>> getData() {
+        return ResponseEntity.ok().body(theaterService.getInfo());
+>>>>>>> 55401662662fb81ec2b7078091c3f62bfa411b1e
     }
-
-
-
 }

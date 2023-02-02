@@ -21,6 +21,10 @@ public class TheaterService {
 
     public List<TheaterDto> getInfo() {
         List<TheaterEntity> Datas = theaterRepository.findAll();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 55401662662fb81ec2b7078091c3f62bfa411b1e
         return Datas.stream()
                 .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTaddr(),data.getTarea()))
                 .collect(Collectors.toList());
