@@ -21,10 +21,6 @@ public class TheaterService {
 
     public List<TheaterDto> getInfo() {
         List<TheaterEntity> Datas = theaterRepository.findAll();
-<<<<<<< HEAD
-=======
-
->>>>>>> 55401662662fb81ec2b7078091c3f62bfa411b1e
         return Datas.stream()
                 .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTaddr(),data.getTarea()))
                 .collect(Collectors.toList());
@@ -34,7 +30,19 @@ public class TheaterService {
     public List<TheaterDto> findByTarea(String area){
         List<TheaterEntity> datas = theaterRepository.findByTarea(area);
         if(!datas.isEmpty()){
-            System.out.println(datas);
+            return datas.stream()
+                    .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTaddr(),data.getTarea()))
+                    .collect(Collectors.toList());
+        }
+        else{
+            throw new MovieNotFoundException("검색 결과 없습니다.");
+        }
+
+    }
+
+    public List<TheaterDto> findByTidInAndTarea (List<Long> id, String name){
+        List<TheaterEntity> datas = theaterRepository.findByTidInAndTarea(id, name);
+        if(!datas.isEmpty()){
             return datas.stream()
                     .map(data -> new TheaterDto(data.getTid(), data.getTname(),data.getTaddr(),data.getTarea()))
                     .collect(Collectors.toList());
@@ -43,7 +51,6 @@ public class TheaterService {
             throw new MovieNotFoundException("검색 결과 없습니다.");
         }
     }
-
 
 
 }

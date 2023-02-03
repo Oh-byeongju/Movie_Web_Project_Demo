@@ -1,18 +1,20 @@
 package com.movie.Spring_backend.controller;
 
+import com.movie.Spring_backend.dto.CinemaDto;
 import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.dto.TheaterDto;
 
+import com.movie.Spring_backend.entity.CinemaEntity;
+import com.movie.Spring_backend.entity.MovieInfoEntity;
+import com.movie.Spring_backend.entity.TheaterEntity;
+import com.movie.Spring_backend.repository.CinemaRepository;
 import com.movie.Spring_backend.service.TheaterService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "${spring.cors.origins}", allowCredentials = "true")
@@ -22,8 +24,9 @@ import java.util.stream.Collectors;
 public class TheaterController {
 
     private final TheaterService theaterService;
-
-<<<<<<< HEAD
+    MovieInfoController movieInfoService;
+    CinemaRepository cinemaService;
+    MovieInfoDto movieInfoDto;
 
     @GetMapping("/normal/area")
     public Set<String> getData() {
@@ -43,13 +46,9 @@ public class TheaterController {
 
     @GetMapping("/normal/theater")
     //선택한 지역에 따라 지역 검색
-    public ResponseEntity<List<TheaterDto>> findByTarea(@RequestParam String area)
-    {
+    public ResponseEntity<List<TheaterDto>> findByTarea(@RequestParam String area) {
         return ResponseEntity.ok().body(theaterService.findByTarea(area));
-=======
-    @GetMapping("/normal/theater")
-    public ResponseEntity<List<TheaterDto>> getData() {
-        return ResponseEntity.ok().body(theaterService.getInfo());
->>>>>>> 55401662662fb81ec2b7078091c3f62bfa411b1e
     }
+
+
 }
