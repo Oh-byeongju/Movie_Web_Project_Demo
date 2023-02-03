@@ -50,5 +50,5 @@ public class TheaterController {
         return ResponseEntity.ok().body(theaterService.findByTarea(area));
     }
 
-
 }
+

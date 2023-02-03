@@ -11,13 +11,10 @@ public class TheaterDto {
 
     private Long tid;
     private String tname;
-
     private String taddr;
     private String tarea;
 
-
     @Builder
-
     public TheaterDto(Long tid, String tname, String taddr, String tarea) {
         this.tid=tid;
         this.tname=tname;
@@ -25,3 +22,4 @@ public class TheaterDto {
         this.tarea=tarea;
     }
 }
+

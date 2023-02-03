@@ -30,8 +30,6 @@ public class MovieInfoEntity {
     @JoinColumn(name="MID")
     private MovieEntity movie; //주인 N
 
-
-
     @ManyToOne//다 대 일 여러개의 관들은 하나의 극장을 가진다
     @JoinColumn(name="cid")
     @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)

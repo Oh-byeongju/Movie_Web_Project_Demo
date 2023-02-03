@@ -54,7 +54,6 @@ public class MovieInfoController {
     }
 
 
-
     @GetMapping("/normal/movietheater")
     //선택한 지역에 따라 지역 검색
     public List<TheaterDto> getMovieTheaetr(@RequestParam Long id, @RequestParam String area) {
@@ -74,8 +73,6 @@ public class MovieInfoController {
         duplications.addAll(areas);
 
         return theaterService.findByTidInAndTarea(TheaterId, area);
-
-
 
     }
 }
