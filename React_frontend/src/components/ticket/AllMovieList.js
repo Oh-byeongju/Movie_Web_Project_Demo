@@ -4,7 +4,7 @@ import { select } from "redux-saga/effects";
 import styled from "styled-components";
 import { ALLMOVIE_REQUEST } from "../../reducer/movie";
 import { SELECT_THEATER_REQUEST } from "../../reducer/ticket";
-const AllMovieList = () => {
+const AllMovieList = ({ movieId, setMovieId }) => {
   const dispatch = useDispatch();
   const { allMovie } = useSelector((state) => state.movie);
   const [selectedMovie, setSelectedMovie] = useState("");
@@ -12,10 +12,13 @@ const AllMovieList = () => {
   useEffect(() => {
     dispatch({ type: ALLMOVIE_REQUEST });
   }, []);
+
+  //영화 토클 함수
   const selectMovie = (movie_id) => {
     const selectedObject = allMovie.find(({ id }) => id === movie_id);
     setSelectedMovie(selectedObject.id);
   };
+
   return (
     <MovieWrapper>
       <MovieTitle>영화</MovieTitle>
@@ -31,6 +34,7 @@ const AllMovieList = () => {
                 data: movie.id,
               });
               selectMovie(movie.id);
+              setMovieId(movie.id);
             }}
             movie={movie.id}
             selectedMovie={selectedMovie}

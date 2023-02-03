@@ -11,4 +11,7 @@ public interface TheaterRepository extends JpaRepository<TheaterEntity,Long>  {
     List<TheaterEntity> findAll();
     List <TheaterEntity> findByTarea(String area);
 
+    List <TheaterEntity> findByTidInAndTarea(List<Long> id, String area);
+
+
 }
