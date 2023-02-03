@@ -4,9 +4,12 @@ import { select } from "redux-saga/effects";
 import styled from "styled-components";
 import { ALLMOVIE_REQUEST } from "../../reducer/movie";
 import { SELECT_THEATER_REQUEST } from "../../reducer/ticket";
-const AllMovieList = ({ movieId, setMovieId }) => {
+const AllMovieList = ({ movieId, setMovieId, area }) => {
   const dispatch = useDispatch();
   const { allMovie } = useSelector((state) => state.movie);
+  const { select_TheaterToMovie_done, selectTheaterToMovie } = useSelector(
+    (state) => state.ticket
+  );
   const [selectedMovie, setSelectedMovie] = useState("");
 
   useEffect(() => {
@@ -14,6 +17,7 @@ const AllMovieList = ({ movieId, setMovieId }) => {
   }, []);
 
   //영화 토클 함수
+
   const selectMovie = (movie_id) => {
     const selectedObject = allMovie.find(({ id }) => id === movie_id);
     setSelectedMovie(selectedObject.id);
@@ -26,24 +30,49 @@ const AllMovieList = ({ movieId, setMovieId }) => {
         <MovieSelectorText>전체</MovieSelectorText>
       </MovieSelector>
       <MovieListWrapper>
-        {allMovie.map((movie) => (
-          <MovieList
-            onClick={() => {
-              dispatch({
-                type: SELECT_THEATER_REQUEST,
-                data: movie.id,
-              });
-              selectMovie(movie.id);
-              setMovieId(movie.id);
-            }}
-            movie={movie.id}
-            selectedMovie={selectedMovie}
-          >
-            <MovieListMovieName selectedMovie={selectedMovie}>
-              {movie.title}
-            </MovieListMovieName>
-          </MovieList>
-        ))}
+        {select_TheaterToMovie_done ? (
+          <div>
+            {selectTheaterToMovie.map((movie) => (
+              <MovieList
+                onClick={() => {
+                  dispatch({
+                    type: SELECT_THEATER_REQUEST,
+                    data: movie.id,
+                  });
+                  selectMovie(movie.id);
+                  setMovieId(movie.id);
+                }}
+                movie={movie.id}
+                selectedMovie={selectedMovie}
+              >
+                <MovieListMovieName selectedMovie={selectedMovie}>
+                  {movie.title}
+                </MovieListMovieName>
+              </MovieList>
+            ))}
+          </div>
+        ) : (
+          <div>
+            {allMovie.map((movie) => (
+              <MovieList
+                onClick={() => {
+                  dispatch({
+                    type: SELECT_THEATER_REQUEST,
+                    data: movie.id,
+                  });
+                  selectMovie(movie.id);
+                  setMovieId(movie.id);
+                }}
+                movie={movie.id}
+                selectedMovie={selectedMovie}
+              >
+                <MovieListMovieName selectedMovie={selectedMovie}>
+                  {movie.title}
+                </MovieListMovieName>
+              </MovieList>
+            ))}
+          </div>
+        )}
       </MovieListWrapper>
     </MovieWrapper>
   );

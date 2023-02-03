@@ -5,10 +5,18 @@ import AllMovieList from "../components/ticket/AllMovieList";
 import AllTheaterList from "../components/ticket/AllTheaterList";
 const Reserve = () => {
   const [movieId, setMovieId] = useState("");
+  const [theater, setTheater] = useState("");
+  useEffect(() => {
+    console.log(movieId, theater);
+  }, [movieId, theater]);
   return (
     <BookinWrapper>
       <AllMovieList movieId={movieId} setMovieId={setMovieId} />
-      <AllTheaterList movieId={movieId} />
+      <AllTheaterList
+        movieId={movieId}
+        theater={theater}
+        setTheater={setTheater}
+      />
     </BookinWrapper>
   );
 };

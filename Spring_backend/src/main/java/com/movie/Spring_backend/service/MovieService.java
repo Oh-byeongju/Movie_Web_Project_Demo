@@ -22,6 +22,7 @@ public class MovieService {
     private final MovieRepository movieRepository;
 
     //영화 테이블 불러오기
+    @Transactional
     public List<MovieDto> getMovie() {
         // Repository에 있는 함수, Entity형으로 디비에 있는 값을 불러옴
         List<MovieEntity> Datas = movieRepository.findAll();
@@ -46,6 +47,7 @@ public class MovieService {
     }
 
     //테이블의 아이디 값을 통해 불러오기
+    @Transactional
     public List<MovieDto> findById(Long id) {
         List<MovieEntity> datas = movieRepository.findByMid(id);
 
@@ -65,7 +67,29 @@ public class MovieService {
                 .build()).collect(Collectors.toList());
     }
 
+    @Transactional
+    public List<MovieDto> findByMidIn(List<Long> mid) {
+        List<MovieEntity> datas = movieRepository.findByMidIn(mid);
+
+        return datas.stream().map(data-> MovieDto.builder()
+                .mid(data.getMid())
+                .mtitle(data.getMtitle())
+                .mdir(data.getMdir())
+                .mactor(data.getMactor())
+                .msupactor(data.getMsupactor())
+                .mgenre(data.getMgenre())
+                .mtime(data.getMtime())
+                .mdate(data.getMdate())
+                .mrating(data.getMrating())
+                .mstory(data.getMstory())
+                .mlike(data.getMlike())
+                .mimagepath(data.getMimagepath())
+                .build()).collect(Collectors.toList());
+    }
+
+
     //movie 페이지에서 검색 기능
+    @Transactional
     public List<MovieDto> findByMtitleContaining(String title) {
     List<MovieEntity> datas = movieRepository.findByMtitleContaining(title);
 

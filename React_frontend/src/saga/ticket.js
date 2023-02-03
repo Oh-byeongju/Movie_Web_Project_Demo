@@ -19,6 +19,9 @@ import {
   SELECT_MOVIETHEATER_REQUEST,
   SELECT_MOVIETHEATER_SUCCESS,
   SELECT_MOVIETHEATER_FAILURE,
+  SELECT_THEATER_TO_MOVIE_REQUEST,
+  SELECT_THEATER_TO_MOVIE_SUCCESS,
+  SELECT_THEATER_TO_MOVIE_FAILURE,
 } from "../reducer/ticket";
 import axios from "axios";
 import { http } from "../lib/http";
@@ -130,7 +133,6 @@ async function selectMovieTheaterApi(data) {
     });
 }
 function* selectMovieTheater(action) {
-  console.log(action.data);
   const result = yield call(selectMovieTheaterApi, action.data);
   if (result.status === 200) {
     //네트워크에
@@ -143,6 +145,44 @@ function* selectMovieTheater(action) {
   } else {
     yield put({
       type: SELECT_MOVIETHEATER_FAILURE,
+      data: result.status,
+    });
+  }
+}
+
+//극장으로 영화 검색
+
+async function selectTheaterToMovieApi(data) {
+  return await http
+    .get("/v2/normal/theatertomovie", {
+      params: {
+        id: data,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+function* selectTheaterToMovie(action) {
+  const result = yield call(selectTheaterToMovieApi, action.data);
+  if (result.status === 200) {
+    //네트워크에
+    //네트워크에서 200으로 받아서 수정했음 id: mv.cinema.theater.area.aarea:{}
+    const allmoviedata = result.data.map((mv) => ({
+      id: mv.mid, //영화번호
+
+      title: mv.mtitle, //제목
+    }));
+    yield put({
+      type: SELECT_THEATER_TO_MOVIE_SUCCESS,
+      data: allmoviedata,
+    });
+  } else {
+    yield put({
+      type: SELECT_THEATER_TO_MOVIE_FAILURE,
       data: result.status,
     });
   }
@@ -161,11 +201,16 @@ function* selectMovieTheaterSaga() {
   yield takeLatest(SELECT_MOVIETHEATER_REQUEST, selectMovieTheater);
 }
 
+function* selectTheaterToMovieSaga() {
+  yield takeLatest(SELECT_THEATER_TO_MOVIE_REQUEST, selectTheaterToMovie);
+}
+
 export default function* ticketSaga() {
   yield all([
     fork(allTheaterSaga),
     fork(allAreaSaga),
     fork(selectTheaterSaga),
     fork(selectMovieTheaterSaga),
+    fork(selectTheaterToMovieSaga),
   ]);
 }
