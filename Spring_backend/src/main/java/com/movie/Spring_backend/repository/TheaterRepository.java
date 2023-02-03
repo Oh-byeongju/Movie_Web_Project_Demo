@@ -4,13 +4,13 @@ import org.springframework.stereotype.Repository;
 import com.movie.Spring_backend.entity.TheaterEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TheaterRepository extends JpaRepository<TheaterEntity,Long>  {
     //JpaRepository<Entity클래스, PK값>
     List<TheaterEntity> findAll();
     List <TheaterEntity> findByTarea(String area);
-
     List <TheaterEntity> findByTidInAndTarea(List<Long> id, String area);
 
 

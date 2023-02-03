@@ -5,8 +5,10 @@ import {
   ALLAREA_REQUEST,
   ALLTHEATER_REQUEST,
   SELECT_MOVIETHEATER_REQUEST,
+  SELECT_THEATER_REQUEST,
+  SELECT_THEATER_TO_MOVIE_REQUEST,
 } from "../../reducer/ticket";
-const AllTheaterList = ({ movieId }) => {
+const AllTheaterList = ({ movieId, setTheater }) => {
   const [selectedArea, setSelectedArea] = useState("서울");
   const [selectedTheater, setSelectedTheater] = useState("");
   const dispatch = useDispatch();
@@ -34,13 +36,13 @@ const AllTheaterList = ({ movieId }) => {
         type: SELECT_MOVIETHEATER_REQUEST,
         data: { movieId: movieId, area: data },
       });
-      console.log(movieId, data);
     } else {
       dispatch({
         type: ALLTHEATER_REQUEST,
         data: data,
       });
     }
+    setSelectedArea(data);
   };
 
   //select_theater_done 이것은 영화검색BOOLEAN삼항연산자
@@ -64,7 +66,6 @@ const AllTheaterList = ({ movieId }) => {
                     >
                       <div
                         onClick={() => {
-                          setSelectedArea(area);
                           SelectedArea(area);
                         }}
                       >
@@ -83,6 +84,15 @@ const AllTheaterList = ({ movieId }) => {
                   >
                     <div
                       onClick={() => {
+                        dispatch({
+                          type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                          data: theater.tid,
+                        });
+                        dispatch({
+                          type: SELECT_THEATER_REQUEST,
+                          data: { movieId: movieId, area: selectedArea },
+                        });
+                        setTheater(theater.tid);
                         setSelectedTheater(theater.tname);
                       }}
                       theater={theater.tname}
@@ -125,8 +135,14 @@ const AllTheaterList = ({ movieId }) => {
                   >
                     <div
                       onClick={() => {
+                        dispatch({
+                          type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                          data: theater.tid,
+                        });
                         setSelectedTheater(theater.tname);
+                        setTheater(theater.tid);
                       }}
+                      setTheater={theater.tid}
                       theater={theater.tname}
                       selectedTheater={selectedTheater}
                     >

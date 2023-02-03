@@ -1,12 +1,15 @@
 package com.movie.Spring_backend.controller;
 
 import com.movie.Spring_backend.dto.CinemaDto;
+import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.dto.TheaterDto;
 import com.movie.Spring_backend.entity.CinemaEntity;
+import com.movie.Spring_backend.entity.MovieEntity;
 import com.movie.Spring_backend.entity.TheaterEntity;
 import com.movie.Spring_backend.service.CinemaService;
 import com.movie.Spring_backend.service.MovieInfoService;
+import com.movie.Spring_backend.service.MovieService;
 import com.movie.Spring_backend.service.TheaterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,27 +29,24 @@ public class MovieInfoController {
     private final MovieInfoService movieInfoService;
     private final CinemaService cinemaService;
 
+    private final MovieService movieService;
     private final TheaterService theaterService;
     @GetMapping("/normal/movieinfo")
     public ResponseEntity<List<MovieInfoDto>> getData() {
         return ResponseEntity.ok().body(movieInfoService.findAll());
     }
 
-    @GetMapping("/normal/movieselect")
-    public Set<String> findByMovieMid(@RequestParam Long id) {
+        @GetMapping("/normal/movieselect")
+    public Set<String> findByMovie(@RequestParam MovieEntity id) {
         //영화 아이디로 영화 정보 추출 CID를 리스트로 추출
-        List<Long> datas = movieInfoService.findByMovieMid(id).stream().map(MovieInfoDto::getCinema).collect(Collectors.toList()).stream().map(CinemaEntity::getCid).collect(Collectors.toList());
+        List<Long> datas = movieInfoService.findByMovie(id).stream().map(MovieInfoDto::getCinema).collect(Collectors.toList()).stream().map(CinemaEntity::getCid).collect(Collectors.toList());
         //cinema 사용
-        List<CinemaDto> list = new ArrayList<>();
         //추출한 cid만큼 tid 검색
-        for (Long TheatersId : datas) {
-            List<CinemaDto> cinema = cinemaService.findByCid(TheatersId);
-            list.addAll(cinema);
-        }
+
+        List<String> theaterArea = cinemaService.findByCidIn(datas).stream().map(CinemaDto::getTheater).collect(Collectors.toList()).stream().map(TheaterEntity::getTarea).collect(Collectors.toList());
 
         Set<String> duplication = new HashSet<>();
-        List<String> area = list.stream().map(CinemaDto::getTheater).collect(Collectors.toList()).stream().map(TheaterEntity::getTarea).collect(Collectors.toList());
-        duplication.addAll(area);
+        duplication.addAll(theaterArea);
 
 
         return duplication;
@@ -57,23 +57,16 @@ public class MovieInfoController {
 
     @GetMapping("/normal/movietheater")
     //선택한 지역에 따라 지역 검색
-    public List<TheaterDto> getMovieTheaetr(@RequestParam Long id, @RequestParam String area) {
-        List<Long> datad = movieInfoService.findByMovieMid(id).stream().map(MovieInfoDto::getCinema).collect(Collectors.toList()).stream().map(CinemaEntity::getCid).collect(Collectors.toList());
+    public List<TheaterDto> getMovieTheaetr(@RequestParam MovieEntity id, @RequestParam String area) {
 
-        List<CinemaDto> lists = new ArrayList<>();
+        List<Long> datad = movieInfoService.findByMovie(id).stream().map(MovieInfoDto::getCinema).collect(Collectors.toList()).stream().map(CinemaEntity::getCid).collect(Collectors.toList());
         //추출한 cid만큼 tid 검색
-        for (Long TheatersId : datad) {
-            List<CinemaDto> cinema = cinemaService.findByCid(TheatersId);
-            lists.addAll(cinema);
-        }
+        //cid로 tid 추출하기
+        List<Long> theaterId = cinemaService.findByCidIn(datad).stream().map(CinemaDto::getTheater).collect(Collectors.toList()).stream().map(TheaterEntity::getTid).collect(Collectors.toList());
 
-        Set<String> duplications = new HashSet<>();
-        List<String> areas = lists.stream().map(CinemaDto::getTheater).collect(Collectors.toList()).stream().map(TheaterEntity::getTarea).collect(Collectors.toList());
-        List<Long> TheaterId = lists.stream().map(CinemaDto::getTheater).collect(Collectors.toList()).stream().map(TheaterEntity::getTid).collect(Collectors.toList());
 
-        duplications.addAll(areas);
+        return theaterService.findByTidInAndTarea(theaterId, area);
 
-        return theaterService.findByTidInAndTarea(TheaterId, area);
 
 
 

@@ -18,6 +18,11 @@ export const initalState = {
   select_MovieTheater_done: false,
   select_MovieTheater_error: null,
   selectMovieTheater: [],
+
+  select_TheaterToMovie_loading: false,
+  select_TheaterToMovie_done: false,
+  select_TheaterToMovie_error: null,
+  selectTheaterToMovie: [],
 };
 
 //지역 검색
@@ -34,6 +39,14 @@ export const ALLTHEATER_FAILURE = "ALLTHEATER_FAILURE";
 export const SELECT_THEATER_REQUEST = "SELECT_THEATER_REQUEST";
 export const SELECT_THEATER_SUCCESS = "SELECT_THEATER_SUCCESS";
 export const SELECT_THEATER_FAILURE = "SELECT_THEATER_FAILURE";
+
+//극장으로 영화 검색
+export const SELECT_THEATER_TO_MOVIE_REQUEST =
+  "SELECT_THEATER_TO_MOVIE_REQUEST";
+export const SELECT_THEATER_TO_MOVIE_SUCCESS =
+  "SELECT_THEATER_TO_MOVIE_SUCCESS";
+export const SELECT_THEATER_TO_MOVIE_FAILURE =
+  "SELECT_THEATER_TO_MOVIE_FAILURE";
 
 //영화ID + AREA로 극장 검색
 export const SELECT_MOVIETHEATER_REQUEST = "SELECT_MOVIETHEATER_REQUEST";
@@ -139,6 +152,29 @@ const ticket = (state = initalState, action) => {
         select_MovieTheater_loading: false,
         select_MovieTheater_done: false,
         select_MovieTheater_error: action.error,
+      };
+
+    case SELECT_THEATER_TO_MOVIE_REQUEST:
+      return {
+        ...state,
+        select_TheaterToMovie_loading: true,
+        select_TheaterToMovie_done: false,
+        select_TheaterToMovie_error: null,
+      };
+    case SELECT_THEATER_TO_MOVIE_SUCCESS:
+      return {
+        ...state,
+        select_TheaterToMovie_loading: false,
+        select_TheaterToMovie_done: true,
+        select_TheaterToMovie_error: null,
+        selectTheaterToMovie: action.data,
+      };
+    case SELECT_THEATER_TO_MOVIE_FAILURE:
+      return {
+        ...state,
+        select_TheaterToMovie_loading: false,
+        select_TheaterToMovie_done: false,
+        select_TheaterToMovie_error: action.error,
       };
     default:
       return state;
