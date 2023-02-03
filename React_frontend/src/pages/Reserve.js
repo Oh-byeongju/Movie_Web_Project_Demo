@@ -4,10 +4,11 @@ import styled from "styled-components";
 import AllMovieList from "../components/ticket/AllMovieList";
 import AllTheaterList from "../components/ticket/AllTheaterList";
 const Reserve = () => {
+  const [movieId, setMovieId] = useState("");
   return (
     <BookinWrapper>
-      <AllMovieList />
-      <AllTheaterList />
+      <AllMovieList movieId={movieId} setMovieId={setMovieId} />
+      <AllTheaterList movieId={movieId} />
     </BookinWrapper>
   );
 };

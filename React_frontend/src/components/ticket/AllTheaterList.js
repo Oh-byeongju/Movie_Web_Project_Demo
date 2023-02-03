@@ -1,15 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { ALLAREA_REQUEST, ALLTHEATER_REQUEST } from "../../reducer/ticket";
-const AllTheaterList = () => {
-  const dispatch = useDispatch();
-  const { allArea, allTheater, select_theater_done, selectTheater } =
-    useSelector((state) => state.ticket);
+import {
+  ALLAREA_REQUEST,
+  ALLTHEATER_REQUEST,
+  SELECT_MOVIETHEATER_REQUEST,
+} from "../../reducer/ticket";
+const AllTheaterList = ({ movieId }) => {
   const [selectedArea, setSelectedArea] = useState("서울");
-  const [area, setArea] = useState("서울");
-
-  const [selectedTheater, setSelectedTheater] = useState("서울");
+  const [selectedTheater, setSelectedTheater] = useState("");
+  const dispatch = useDispatch();
+  const {
+    allArea,
+    allTheater,
+    select_theater_done,
+    selectTheater,
+    selectMovieTheater,
+  } = useSelector((state) => state.ticket);
 
   useEffect(() => {
     dispatch({
@@ -21,6 +28,22 @@ const AllTheaterList = () => {
     });
   }, []);
 
+  const SelectedArea = (data) => {
+    if (select_theater_done) {
+      dispatch({
+        type: SELECT_MOVIETHEATER_REQUEST,
+        data: { movieId: movieId, area: data },
+      });
+      console.log(movieId, data);
+    } else {
+      dispatch({
+        type: ALLTHEATER_REQUEST,
+        data: data,
+      });
+    }
+  };
+
+  //select_theater_done 이것은 영화검색BOOLEAN삼항연산자
   return (
     <TheatersWrapper>
       <TheatersTitle>극장</TheatersTitle>
@@ -42,10 +65,7 @@ const AllTheaterList = () => {
                       <div
                         onClick={() => {
                           setSelectedArea(area);
-                          dispatch({
-                            type: ALLTHEATER_REQUEST,
-                            data: area,
-                          });
+                          SelectedArea(area);
                         }}
                       >
                         {area}
@@ -55,7 +75,7 @@ const AllTheaterList = () => {
                 })}
               </TheaterListBlock>
               <RegionTheatersListWrapper>
-                {selectTheater.map((theater, index) => (
+                {selectMovieTheater.map((theater, index) => (
                   <RegionItem
                     key={index}
                     selectedTheater={selectedTheater}
@@ -87,10 +107,7 @@ const AllTheaterList = () => {
                       <div
                         onClick={() => {
                           setSelectedArea(area);
-                          dispatch({
-                            type: ALLTHEATER_REQUEST,
-                            data: area,
-                          });
+                          SelectedArea(area);
                         }}
                       >
                         {area}
