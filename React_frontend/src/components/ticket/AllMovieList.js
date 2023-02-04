@@ -3,23 +3,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { select } from "redux-saga/effects";
 import styled from "styled-components";
 import { ALLMOVIE_REQUEST } from "../../reducer/movie";
-import { SELECT_THEATER_REQUEST } from "../../reducer/ticket";
-const AllMovieList = ({ movieId, setMovieId, area }) => {
+import {
+  ALLTHEATER_REQUEST,
+  SELECT_THEATER_REQUEST,
+  SELECT_MOVIETHEATER_REQUEST,
+  T_ALLMOVIE_REQUEST,
+} from "../../reducer/ticket";
+const AllMovieList = ({ movieId, setMovieId, areaName }) => {
   const dispatch = useDispatch();
-  const { allMovie } = useSelector((state) => state.movie);
-  const { select_TheaterToMovie_done, selectTheaterToMovie } = useSelector(
-    (state) => state.ticket
-  );
+  const {
+    select_TheaterToMovie_done,
+    select_MovieTheater_doneselectTheaterToMovie,
+    allTheater_done,
+    select_MovieTheater_done,
+    t_allMovie,
+  } = useSelector((state) => state.ticket);
   const [selectedMovie, setSelectedMovie] = useState("");
 
   useEffect(() => {
-    dispatch({ type: ALLMOVIE_REQUEST });
+    dispatch({ type: T_ALLMOVIE_REQUEST });
   }, []);
 
-  //영화 토클 함수
+  useEffect(() => {
+    if (!select_MovieTheater_done) {
+      dispatch({
+        type: SELECT_THEATER_REQUEST,
+        data: selectedMovie,
+      });
+    }
+  }, [select_MovieTheater_done]);
 
+  //영화 토클 함수
   const selectMovie = (movie_id) => {
-    const selectedObject = allMovie.find(({ id }) => id === movie_id);
+    const selectedObject = t_allMovie.find(({ id }) => id === movie_id);
     setSelectedMovie(selectedObject.id);
   };
 
@@ -30,49 +46,34 @@ const AllMovieList = ({ movieId, setMovieId, area }) => {
         <MovieSelectorText>전체</MovieSelectorText>
       </MovieSelector>
       <MovieListWrapper>
-        {select_TheaterToMovie_done ? (
-          <div>
-            {selectTheaterToMovie.map((movie) => (
-              <MovieList
-                onClick={() => {
-                  dispatch({
-                    type: SELECT_THEATER_REQUEST,
-                    data: movie.id,
-                  });
-                  selectMovie(movie.id);
-                  setMovieId(movie.id);
-                }}
-                movie={movie.id}
-                selectedMovie={selectedMovie}
-              >
-                <MovieListMovieName selectedMovie={selectedMovie}>
-                  {movie.title}
-                </MovieListMovieName>
-              </MovieList>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {allMovie.map((movie) => (
-              <MovieList
-                onClick={() => {
-                  dispatch({
-                    type: SELECT_THEATER_REQUEST,
-                    data: movie.id,
-                  });
-                  selectMovie(movie.id);
-                  setMovieId(movie.id);
-                }}
-                movie={movie.id}
-                selectedMovie={selectedMovie}
-              >
-                <MovieListMovieName selectedMovie={selectedMovie}>
-                  {movie.title}
-                </MovieListMovieName>
-              </MovieList>
-            ))}
-          </div>
-        )}
+        {t_allMovie.map((movie) => (
+          <MovieList
+            onClick={() => {
+              //지역이 선택되어 있으면
+              if (allTheater_done) {
+                //영화ID로 지역 검색
+                dispatch({
+                  type: SELECT_THEATER_REQUEST,
+                  data: movie.id,
+                });
+                //동시에 영화ID와 지역으로 극장 검색
+                dispatch({
+                  type: SELECT_MOVIETHEATER_REQUEST,
+                  data: { movieId: movie.id, area: areaName },
+                });
+
+                selectMovie(movie.id);
+                setMovieId(movie.id);
+              }
+            }}
+            movie={movie.id}
+            selectedMovie={selectedMovie}
+          >
+            <MovieListMovieName selectedMovie={selectedMovie}>
+              {movie.title}
+            </MovieListMovieName>
+          </MovieList>
+        ))}
       </MovieListWrapper>
     </MovieWrapper>
   );

@@ -8,7 +8,7 @@ import {
   SELECT_THEATER_REQUEST,
   SELECT_THEATER_TO_MOVIE_REQUEST,
 } from "../../reducer/ticket";
-const AllTheaterList = ({ movieId, setTheater }) => {
+const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
   const [selectedArea, setSelectedArea] = useState("서울");
   const [selectedTheater, setSelectedTheater] = useState("");
   const dispatch = useDispatch();
@@ -28,6 +28,7 @@ const AllTheaterList = ({ movieId, setTheater }) => {
       type: ALLTHEATER_REQUEST,
       data: "서울",
     });
+    setAreaName(selectedArea);
   }, []);
 
   const SelectedArea = (data) => {
@@ -54,105 +55,52 @@ const AllTheaterList = ({ movieId, setTheater }) => {
       </TheatersSelector>
       <TheatersRegionWrapper>
         <TheatersListWrapper>
-          {select_theater_done ? (
-            <div>
-              <TheaterListBlock>
-                {selectTheater.map((area, index) => {
-                  return (
-                    <TheatersList
-                      key={index}
-                      area={area}
-                      selectedArea={selectedArea}
-                    >
-                      <div
-                        onClick={() => {
-                          SelectedArea(area);
-                        }}
-                      >
-                        {area}
-                      </div>
-                    </TheatersList>
-                  );
-                })}
-              </TheaterListBlock>
-              <RegionTheatersListWrapper>
-                {selectMovieTheater.map((theater, index) => (
-                  <RegionItem
-                    key={index}
-                    selectedTheater={selectedTheater}
-                    theater={theater.tname}
+          <TheaterListBlock>
+            {allArea.map((area, index) => {
+              return (
+                <TheatersList
+                  key={index}
+                  area={area}
+                  selectedArea={selectedArea}
+                >
+                  <div
+                    onClick={() => {
+                      setSelectedArea(area);
+                      SelectedArea(area);
+                      setAreaName(area);
+                    }}
                   >
-                    <div
-                      onClick={() => {
-                        dispatch({
-                          type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                          data: theater.tid,
-                        });
-                        dispatch({
-                          type: SELECT_THEATER_REQUEST,
-                          data: { movieId: movieId, area: selectedArea },
-                        });
-                        setTheater(theater.tid);
-                        setSelectedTheater(theater.tname);
-                      }}
-                      theater={theater.tname}
-                      selectedTheater={selectedTheater}
-                    >
-                      {theater.tname}
-                    </div>
-                  </RegionItem>
-                ))}
-              </RegionTheatersListWrapper>
-            </div>
-          ) : (
-            <div>
-              <TheaterListBlock>
-                {allArea.map((area, index) => {
-                  return (
-                    <TheatersList
-                      key={index}
-                      area={area}
-                      selectedArea={selectedArea}
-                    >
-                      <div
-                        onClick={() => {
-                          setSelectedArea(area);
-                          SelectedArea(area);
-                        }}
-                      >
-                        {area}
-                      </div>
-                    </TheatersList>
-                  );
-                })}
-              </TheaterListBlock>
-              <RegionTheatersListWrapper>
-                {allTheater.map((theater, index) => (
-                  <RegionItem
-                    key={index}
-                    selectedTheater={selectedTheater}
-                    theater={theater.tname}
-                  >
-                    <div
-                      onClick={() => {
-                        dispatch({
-                          type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                          data: theater.tid,
-                        });
-                        setSelectedTheater(theater.tname);
-                        setTheater(theater.tid);
-                      }}
-                      setTheater={theater.tid}
-                      theater={theater.tname}
-                      selectedTheater={selectedTheater}
-                    >
-                      {theater.tname}
-                    </div>
-                  </RegionItem>
-                ))}
-              </RegionTheatersListWrapper>
-            </div>
-          )}
+                    {area}
+                  </div>
+                </TheatersList>
+              );
+            })}
+          </TheaterListBlock>
+          <RegionTheatersListWrapper>
+            {allTheater.map((theater, index) => (
+              <RegionItem
+                key={index}
+                selectedTheater={selectedTheater}
+                theater={theater.tname}
+              >
+                <div
+                  onClick={() => {
+                    dispatch({
+                      type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                      data: theater.tid,
+                    });
+                    setSelectedTheater(theater.tname);
+                    setTheater(theater.tid);
+                  }}
+                  setTheater={theater.tid}
+                  theater={theater.tname}
+                  selectedTheater={selectedTheater}
+                >
+                  {theater.tname}
+                </div>
+              </RegionItem>
+            ))}
+          </RegionTheatersListWrapper>
         </TheatersListWrapper>
       </TheatersRegionWrapper>
     </TheatersWrapper>
