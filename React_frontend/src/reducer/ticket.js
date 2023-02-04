@@ -1,4 +1,9 @@
 export const initalState = {
+  t_allMovie_loading: false,
+  t_allMovie_done: false,
+  t_allMovie_error: null,
+  t_allMovie: [],
+
   allArea_loading: false,
   allArea_done: false,
   allArea_error: null,
@@ -24,6 +29,10 @@ export const initalState = {
   select_TheaterToMovie_error: null,
   selectTheaterToMovie: [],
 };
+
+export const T_ALLMOVIE_REQUEST = "T_ALLMOVIE_REQUEST";
+export const T_ALLMOVIE_SUCCESS = "T_ALLMOVIE_SUCCESS";
+export const T_ALLMOVIE_FAILURE = "T_ALLMOVIE_FAILURE";
 
 //지역 검색
 export const ALLAREA_REQUEST = "ALLAREA_REQUEST";
@@ -55,7 +64,34 @@ export const SELECT_MOVIETHEATER_FAILURE = "SELECT_MOVIETHEATER_FAILURE";
 
 const ticket = (state = initalState, action) => {
   switch (action.type) {
-    //영화에 대한 지역을 찾기 위한 리듀서
+    //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
+
+    case T_ALLMOVIE_REQUEST:
+      return {
+        ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨
+        t_allMovie_loading: true,
+        t_allMovie_done: false,
+        t_allMovie_error: null,
+      };
+
+    case T_ALLMOVIE_SUCCESS:
+      return {
+        ...state,
+        t_allMovie_loading: false,
+        t_allMovie_done: true,
+        t_allMovie_error: null,
+        t_allMovie: action.data,
+      };
+
+    case T_ALLMOVIE_FAILURE:
+      return {
+        ...state,
+        t_allMovie_loading: false,
+        t_allMovie_done: false,
+        t_allMovie_error: action.error,
+      };
+
+    // 전체 지역 SELECT
     case ALLAREA_REQUEST:
       return {
         ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨
@@ -81,7 +117,7 @@ const ticket = (state = initalState, action) => {
         allArea_error: null,
       };
 
-    //검색한 영화 검색
+    //검색한 극장에 대한 지역 SELECT
     case ALLTHEATER_REQUEST:
       return {
         ...state,
@@ -106,7 +142,7 @@ const ticket = (state = initalState, action) => {
         allTheater_error: action.error,
       };
 
-    //영화 id로 극장 검색하기
+    //영화 클릭 시 영화id로 지역 검색
     case SELECT_THEATER_REQUEST:
       return {
         ...state,
@@ -121,7 +157,7 @@ const ticket = (state = initalState, action) => {
         select_theater_loading: false,
         select_theater_done: true,
         select_theater_error: null,
-        selectTheater: action.data,
+        allArea: action.data,
       };
     case SELECT_THEATER_FAILURE:
       return {
@@ -131,6 +167,7 @@ const ticket = (state = initalState, action) => {
         select_theater_error: action.error,
       };
 
+    //영화 클릭 시 영화id로 지역 검색
     case SELECT_MOVIETHEATER_REQUEST:
       return {
         ...state,
@@ -144,7 +181,7 @@ const ticket = (state = initalState, action) => {
         select_MovieTheater_loading: false,
         select_MovieTheater_done: true,
         select_MovieTheater_error: null,
-        selectMovieTheater: action.data,
+        allTheater: action.data,
       };
     case SELECT_MOVIETHEATER_FAILURE:
       return {
@@ -152,8 +189,10 @@ const ticket = (state = initalState, action) => {
         select_MovieTheater_loading: false,
         select_MovieTheater_done: false,
         select_MovieTheater_error: action.error,
+        allTheater: [],
       };
 
+    //지역에 따른 영화 SELECT
     case SELECT_THEATER_TO_MOVIE_REQUEST:
       return {
         ...state,
@@ -167,7 +206,7 @@ const ticket = (state = initalState, action) => {
         select_TheaterToMovie_loading: false,
         select_TheaterToMovie_done: true,
         select_TheaterToMovie_error: null,
-        selectTheaterToMovie: action.data,
+        t_allMovie: action.data,
       };
     case SELECT_THEATER_TO_MOVIE_FAILURE:
       return {
