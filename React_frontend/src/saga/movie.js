@@ -34,7 +34,6 @@ function* allMovieLoad() {
     story: mv.mstory,
     title: mv.mtitle, //제목
     rating: mv.mrating, //연령
-    like: mv.mlike,
     imagepath: mv.mimagepath,
   }));
 
@@ -79,7 +78,6 @@ function* searchMovieLoad(action) {
       story: mv.mstory,
       title: mv.mtitle, //제목
       rating: mv.mrating, //연령
-      like: mv.mlike,
       imagepath: mv.mimagepath,
     }));
     //네트워크에서 200으로 받아서 수정했음

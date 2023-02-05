@@ -1,6 +1,6 @@
 // 23-01-13 아이디 중복 검사 메소드구현(오병주)
 // 23-01-16 회원가입 및 로그인 메소드구현(오병주)
-// 23-01-18 토큰 재발급 관련 메소드구현(오병주) 
+// 23-01-18 토큰 재발급 관련 메소드구현(오병주)
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.MemberDto;
