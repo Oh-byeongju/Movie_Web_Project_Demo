@@ -30,17 +30,7 @@ public class TheaterController {
 
     @GetMapping("/normal/area")
     public Set<String> getData() {
-
-        Set<String> duplication= new HashSet<>();
-        List<TheaterDto> theater =theaterService.getInfo();
-
-        List<String> area  = theater.stream().map(TheaterDto::getTarea).collect(Collectors.toList());
-
-                duplication.addAll(area);
-
-        System.out.println(duplication);
-
-        return duplication;
+        return theaterService.getInfo();
     }
 
 

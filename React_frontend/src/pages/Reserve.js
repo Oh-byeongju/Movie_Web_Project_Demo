@@ -1,14 +1,33 @@
 import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
+import AllDayList from "../components/ticket/AllDayList";
 import AllMovieList from "../components/ticket/AllMovieList";
 import AllTheaterList from "../components/ticket/AllTheaterList";
 const Reserve = () => {
   const [movieId, setMovieId] = useState("");
+  const [areaName, setAreaName] = useState("");
+  const [theater, setTheater] = useState("");
+
+  useEffect(() => {
+    console.log(movieId, areaName, theater);
+  }, [movieId, areaName, theater]);
   return (
     <BookinWrapper>
-      <AllMovieList movieId={movieId} setMovieId={setMovieId} />
-      <AllTheaterList movieId={movieId} />
+      <AllMovieList
+        movieId={movieId}
+        setMovieId={setMovieId}
+        areaName={areaName}
+        theater={theater}
+      />
+      <AllTheaterList
+        movieId={movieId}
+        theater={theater}
+        setTheater={setTheater}
+        areaName={setAreaName}
+        setAreaName={setAreaName}
+      />
+      <AllDayList />
     </BookinWrapper>
   );
 };
