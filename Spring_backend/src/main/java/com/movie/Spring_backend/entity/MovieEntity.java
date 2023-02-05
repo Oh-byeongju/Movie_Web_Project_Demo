@@ -41,19 +41,12 @@ public class MovieEntity {
     @Column(nullable = false, length = 30)
     private String mstory;
 
-    @Column(nullable = false)
-    private int mlike;
-
     @Column(nullable = false, length = 50)
     private String mimagepath;
 
-//    @OneToMany(mappedBy = "temp", fetch = FetchType.LAZY)
-//    private List<MovieInfoEntity> members = new ArrayList<>(); //주인을 가리킴
-
-
     @Builder
     public MovieEntity(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
-                       int mtime, Date mdate, String mrating, String mstory  ,int mlike, String mimagepath) {
+                       int mtime, Date mdate, String mrating, String mstory, String mimagepath) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;
@@ -64,7 +57,6 @@ public class MovieEntity {
         this.mdate=mdate;
         this.mrating=mrating;
         this.mstory=mstory;
-        this.mlike=mlike;
         this.mimagepath=mimagepath;
     }
 }

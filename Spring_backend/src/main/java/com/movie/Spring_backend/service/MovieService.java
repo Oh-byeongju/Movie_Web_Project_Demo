@@ -26,7 +26,6 @@ public class MovieService {
         // Repository에 있는 함수, Entity형으로 디비에 있는 값을 불러옴
         List<MovieEntity> Datas = movieRepository.findAll();
 
-
         // 리턴을 해줄때는 entity형인 Datas를 dto형으로 바꿔줘야 해서 빌더패턴을 사용해서 매핑
         return Datas.stream()
                 .map(data -> MovieDto.builder()
@@ -40,7 +39,6 @@ public class MovieService {
                         .mdate(data.getMdate())
                         .mrating(data.getMrating())
                         .mstory(data.getMstory())
-                        .mlike(data.getMlike())
                         .mimagepath(data.getMimagepath())
                         .build()).collect(Collectors.toList());
     }
@@ -60,7 +58,6 @@ public class MovieService {
                 .mdate(data.getMdate())
                 .mrating(data.getMrating())
                 .mstory(data.getMstory())
-                .mlike(data.getMlike())
                 .mimagepath(data.getMimagepath())
                 .build()).collect(Collectors.toList());
     }
@@ -81,12 +78,11 @@ public class MovieService {
                 .mdate(data.getMdate())
                 .mrating(data.getMrating())
                 .mstory(data.getMstory())
-                .mlike(data.getMlike())
                 .mimagepath(data.getMimagepath())
                 .build()).collect(Collectors.toList());
     }
-    else{
+    else {
         throw new MovieNotFoundException("검색 결과 없습니다.");
+        }
     }
-}
 }

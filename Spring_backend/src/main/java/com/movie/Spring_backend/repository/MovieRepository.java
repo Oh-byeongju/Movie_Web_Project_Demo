@@ -14,7 +14,6 @@ public interface MovieRepository extends JpaRepository<MovieEntity,Long> {
 
     public List<MovieEntity> findByMid(Long id);
 
+    // Containing == select시 like할때 사용
     public List<MovieEntity> findByMtitleContaining(String title);
-    //Containing == select시 like할때 사용
-
 }
