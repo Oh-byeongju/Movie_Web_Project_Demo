@@ -1,7 +1,12 @@
+/*
+  23-02-06 MovieEntity 좋아요, 평점 추출을 위한 수정(오병주)
+ */
+
 package com.movie.Spring_backend.entity;
 import javax.persistence.*;
 
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import java.sql.Date;
 
@@ -29,7 +34,7 @@ public class MovieEntity {
     @Column(nullable = false, length = 30)
     private String mgenre;
 
-    @Column(nullable = false )
+    @Column(nullable = false)
     private int mtime;
 
     @Column(nullable = false, length = 30)
@@ -44,9 +49,19 @@ public class MovieEntity {
     @Column(nullable = false, length = 50)
     private String mimagepath;
 
+    // 좋아요 개수 추출
+    // 테이블에는 존재하지 않고 Formula 어노테이션으로 테이블을 join 시켜서 들고옴
+    @Formula("(select count(mm.umlike) from movie_member mm where mm.umlike = true and mm.mid = mid)")
+    private int cntMovieLike;
+
+    // 평점 추출
+    // 테이블에는 존재하지 않고 Formula 어노테이션으로 테이블을 join 시켜서 들고옴
+    @Formula("(select avg(mm.umscore) from movie_member mm where mm.mid = mid)")
+    private Float avgScore; // 평점의 평균
+
     @Builder
     public MovieEntity(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
-                       int mtime, Date mdate, String mrating, String mstory, String mimagepath) {
+                       int mtime, Date mdate, String mrating, String mstory, String mimagepath, int cntMovieLike, Float avgScore) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;
@@ -58,6 +73,8 @@ public class MovieEntity {
         this.mrating=mrating;
         this.mstory=mstory;
         this.mimagepath=mimagepath;
+        this.cntMovieLike = cntMovieLike;
+        this.avgScore = avgScore;
     }
 }
 

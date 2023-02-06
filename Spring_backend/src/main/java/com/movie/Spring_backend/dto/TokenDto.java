@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class TokenDto {
-    private String uname;
     private String grantType;
     private String accessToken;
     private String refreshToken;
@@ -17,8 +16,7 @@ public class TokenDto {
     private Long RtokenExpiresIn;
 
     @Builder
-    public TokenDto(String uname, String grantType, String accessToken, Long AtokenExpiresIn, String refreshToken, Long RtokenExpiresIn) {
-        this.uname = uname;
+    public TokenDto(String grantType, String accessToken, Long AtokenExpiresIn, String refreshToken, Long RtokenExpiresIn) {
         this.grantType = grantType;
         this.accessToken = accessToken;
         this.AtokenExpiresIn = AtokenExpiresIn;
