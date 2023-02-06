@@ -13,12 +13,14 @@ const AllMovieList = ({ movieId, setMovieId, areaName }) => {
   const dispatch = useDispatch();
   const {
     select_TheaterToMovie_done,
-    select_MovieTheater_doneselectTheaterToMovie,
-    allTheater_done,
     select_MovieTheater_done,
+    selectTheaterToMovie,
+    allTheater_done,
     t_allMovie,
+    disableMovie,
   } = useSelector((state) => state.ticket);
   const [selectedMovie, setSelectedMovie] = useState("");
+  const [disable, setDisable] = useState(true);
 
   useEffect(() => {
     dispatch({ type: T_ALLMOVIE_REQUEST });
@@ -46,34 +48,63 @@ const AllMovieList = ({ movieId, setMovieId, areaName }) => {
         <MovieSelectorText>전체</MovieSelectorText>
       </MovieSelector>
       <MovieListWrapper>
-        {t_allMovie.map((movie) => (
-          <MovieList
-            onClick={() => {
-              //지역이 선택되어 있으면
-              if (allTheater_done) {
-                //영화ID로 지역 검색
-                dispatch({
-                  type: SELECT_THEATER_REQUEST,
-                  data: movie.id,
-                });
-                //동시에 영화ID와 지역으로 극장 검색
-                dispatch({
-                  type: SELECT_MOVIETHEATER_REQUEST,
-                  data: { movieId: movie.id, area: areaName },
-                });
+        {t_allMovie.map((movie) => {
+          let selectedClassName = "";
+          selectedClassName += t_allMovie.find(
+            (selectedMovie) => selectedMovie.id === movie.id
+          )
+            ? "selectedInfoDarker "
+            : "";
+          let disableClassName = "";
+          if (select_TheaterToMovie_done) {
+            disableClassName = disableMovie.find(
+              (canSelectedMovie) => canSelectedMovie.id === movie.id
+            )
+              ? ""
+              : "disable";
+          }
+          return (
+            <MovieList
+              onClick={() => {
+                if (allTheater_done) {
+                  //영화ID로 지역 검색
+                  dispatch({
+                    type: SELECT_THEATER_REQUEST,
+                    data: movie.id,
+                  });
+                  //동시에 영화ID와 지역으로 극장 검색
+                  dispatch({
+                    type: SELECT_MOVIETHEATER_REQUEST,
+                    data: { movieId: movie.id, area: areaName },
+                  });
 
-                selectMovie(movie.id);
-                setMovieId(movie.id);
-              }
-            }}
-            movie={movie.id}
-            selectedMovie={selectedMovie}
-          >
-            <MovieListMovieName selectedMovie={selectedMovie}>
-              {movie.title}
-            </MovieListMovieName>
-          </MovieList>
-        ))}
+                  selectMovie(movie.id);
+                  setMovieId(movie.id);
+                }
+                if (disableClassName === "disable") {
+                  alert("새로 입력합니다 ");
+                  dispatch({
+                    type: SELECT_THEATER_REQUEST,
+                    data: movie.id,
+                  });
+                  dispatch({
+                    type: SELECT_MOVIETHEATER_REQUEST,
+                    data: { movieId: movie.id, area: areaName },
+                  });
+                }
+              }}
+              movie={movie.id}
+              selectedMovie={selectedMovie}
+            >
+              <MovieListMovieName
+                selectedMovie={selectedMovie}
+                className={selectedClassName + disableClassName}
+              >
+                {movie.title}
+              </MovieListMovieName>
+            </MovieList>
+          );
+        })}
       </MovieListWrapper>
     </MovieWrapper>
   );
@@ -119,6 +150,13 @@ const MovieList = styled.div`
   margin-bottom: 10px;
   align-items: center;
   padding: 4px 0px 4px 7px;
+    .disable {
+      cursor: default;
+        opacity:0.5;
+      
+    }
+  }
+
   background-color: ${(props) =>
     props.selectedMovie === props.movie ? "gray" : "white"};
 `;

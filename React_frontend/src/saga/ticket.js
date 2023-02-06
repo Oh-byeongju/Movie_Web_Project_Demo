@@ -53,6 +53,7 @@ function* allMovieLoad() {
     rating: mv.mrating, //연령
     like: mv.mlike,
     imagepath: mv.mimagepath,
+    able: true,
   }));
 
   if (result.status === 200) {
@@ -214,6 +215,7 @@ function* selectTheaterToMovie(action) {
       data: allmoviedata,
     });
   } else {
+    alert("실패");
     yield put({
       type: SELECT_THEATER_TO_MOVIE_FAILURE,
       data: result.status,

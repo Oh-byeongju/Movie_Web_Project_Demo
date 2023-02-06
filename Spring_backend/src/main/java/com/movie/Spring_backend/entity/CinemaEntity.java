@@ -25,7 +25,7 @@ public class CinemaEntity { // 소문자 수정본
     @Column(nullable = false)
     private String cseat;
 
-    @ManyToOne  //다 대 일 여러개의 관들은 하나의 극장을 가진다
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="tid") //조인할 컬럼 이름
     private TheaterEntity theater;
 
