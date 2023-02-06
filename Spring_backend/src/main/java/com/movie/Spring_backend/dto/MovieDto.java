@@ -1,3 +1,7 @@
+/*
+  23-02-06 MovieDto 좋아요, 평점 추출을 위한 수정(오병주)
+ */
+
 package com.movie.Spring_backend.dto;
 
 import lombok.Builder;
@@ -20,10 +24,12 @@ public class MovieDto {
     private String mrating;
     private String mstory;
     private String mimagepath; //이미지 주소
+    private int mlike; // 좋아요 개수
+    private Float mscore; // 평점 평균
 
     @Builder
     public MovieDto(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
-                    int mtime, Date mdate, String mrating, String mstory , String mimagepath) {
+                    int mtime, Date mdate, String mrating, String mstory , String mimagepath, int mlike, Float mscore) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;
@@ -35,6 +41,8 @@ public class MovieDto {
         this.mrating=mrating;
         this.mstory=mstory;
         this.mimagepath=mimagepath;
+        this.mlike=mlike;
+        this.mscore=mscore;
     }
 }
 

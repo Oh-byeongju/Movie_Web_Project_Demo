@@ -31,7 +31,7 @@ function* IDcheck(action) {
   }
 }
 
-// 디비에서 데이터 select 하고 바로 리턴해줌(아이디 중복검사)
+// 디비에서 데이터 select 하고 바로 리턴해줌(아이디 중복 검사)
 async function idexsits(data) {
 	return await http.get("/member/normal/id",{
     params: {

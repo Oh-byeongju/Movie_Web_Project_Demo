@@ -3,7 +3,7 @@
  23-01-25 페이지 이동 구현(오병주)
  23-01-27 로그아웃 구현(오병주)
 */
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import {
   SearchOutlined,
@@ -13,7 +13,6 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
 import {
-  USER_LOGIN_STATUS_REQUEST,
   USER_LOGOUT_REQUEST,
 } from "../../reducer/R_user_login";
 
@@ -24,15 +23,6 @@ const TopButtons = () => {
 
   // 현재 페이지의 정보를 받기위해 선언
   const location = useLocation();
-
-  // 로그인 상태를 확인하는 useEffect
-  useEffect(() => {
-    if (LOGIN_data.uname === undefined) {
-      dispatch({
-        type: USER_LOGIN_STATUS_REQUEST,
-      });
-    }
-  }, [LOGIN_data.uname, dispatch]);
 
   // 로그아웃 버튼을 눌렀을 때 실행되는 함수
   const onLogout = useCallback(() => {

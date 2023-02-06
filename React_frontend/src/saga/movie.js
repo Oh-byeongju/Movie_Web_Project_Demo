@@ -35,6 +35,8 @@ function* allMovieLoad() {
     title: mv.mtitle, //제목
     rating: mv.mrating, //연령
     imagepath: mv.mimagepath,
+    like: mv.mlike,
+    score: mv.mscore
   }));
 
   if (result.status === 200) {
@@ -79,6 +81,8 @@ function* searchMovieLoad(action) {
       title: mv.mtitle, //제목
       rating: mv.mrating, //연령
       imagepath: mv.mimagepath,
+      like: mv.mlike,
+      score: mv.mscore
     }));
     //네트워크에서 200으로 받아서 수정했음
     yield put({

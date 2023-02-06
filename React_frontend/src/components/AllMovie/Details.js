@@ -43,8 +43,7 @@ const Details = ({ movie }) => {
               </Spec>
               <Like>
                 <Likes>
-                  <HeartOutlined /> {movie.like}
-                  {/* like 뒤에 .toLocaleString() 추후에 추가 (숫자 없어서 오류나서 빼둠) */}
+                  <HeartOutlined /> {movie.like.toLocaleString()}
                 </Likes>
                 <Link to="/reserve">
                   <Ticket

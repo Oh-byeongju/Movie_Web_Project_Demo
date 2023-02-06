@@ -81,10 +81,9 @@ public class MemberService {
     @Transactional
     public MemberDto login(MemberDto requestDto, HttpServletResponse response) {
 
-        // 로그인 한 유저의 이름 추출
+        // 로그인 한 유저의 정보 추출
         MemberEntity Data = memberRepository.findByUid(requestDto.getUid())
                 .orElseThrow(() -> new MemberNotFoundException(requestDto.getUid()));
-        String Name = Data.getUname();
 
         // Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = toAuthentication(requestDto.getUid(), requestDto.getUpw());
@@ -94,7 +93,7 @@ public class MemberService {
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
         // 인증 정보를 기반으로 Jwt 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, Name);
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 로그인 유지하기 버튼을 누른 상태로 로그인 했을 경우
         if (requestDto.getUname().equals("유지")) {
@@ -167,8 +166,10 @@ public class MemberService {
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
         }
 
-        // 로그인한 사용자의 이름을 리턴
-        return MemberDto.builder().uname(tokenDto.getUname()).build();
+        // 로그인한 사용자의 아이디와 이름을 리턴
+        return MemberDto.builder()
+                .uid(Data.getUid())
+                .uname(Data.getUname()).build();
     }
 
     // 로그인 상태확인 메소드
@@ -177,11 +178,13 @@ public class MemberService {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
 
+        // SecurityContext 에서 추출한 유저정보를 이용하여 Member 검색
         MemberEntity Data = memberRepository.findByUid(currentMemberId)
                 .orElseThrow(() -> new MemberNotFoundException(currentMemberId));
 
-        // 로그인 정보가 있을경우 이름을 리턴
+        // 로그인 정보가 있을경우 아이디와 이름을 리턴
         return MemberDto.builder()
+                .uid(Data.getUid())
                 .uname(Data.getUname()).build();
     }
 
@@ -204,13 +207,8 @@ public class MemberService {
             throw new JwtException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
-        // 로그인 한 유저의 이름 추출
-        MemberEntity Data = memberRepository.findByUid(refreshToken.getUid())
-                .orElseThrow(() -> new MemberNotFoundException(refreshToken.getUid()));
-        String Name = Data.getUname();
-
         // 새로운 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, Name);
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 사용자가 로그인 할때 로그인 유지기능을 사용했을 경우
         if (refreshToken.getState().equals("o")) {
@@ -316,6 +314,9 @@ public class MemberService {
         // 응답 헤더에 두 가지 쿠기를 할당
         response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+        // authentication 객체 초기화
+        SecurityContextHolder.clearContext();
     }
 
     // id와 pw를 파라미터로 전달 받아 UsernamePasswordAuthenticationToken 으로 반환하여 리턴해주는 메소드
