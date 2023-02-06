@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
+// 내일 수정하기
 @Repository
 public interface MovieMemberRepository extends JpaRepository<MovieMemberEntity, Long> {
-    
+
 }
