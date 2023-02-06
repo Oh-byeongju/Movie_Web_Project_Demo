@@ -27,7 +27,7 @@ const Reserve = () => {
         areaName={setAreaName}
         setAreaName={setAreaName}
       />
-      <AllDayList />
+      <AllDayList movieId={movieId} areaName={areaName} />
     </BookinWrapper>
   );
 };

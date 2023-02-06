@@ -17,7 +17,10 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
     allTheater,
     select_theater_done,
     selectTheater,
+    select_MovieTheater_done,
     selectMovieTheater,
+    disableTheater,
+    disableArea,
   } = useSelector((state) => state.ticket);
 
   useEffect(() => {
@@ -34,6 +37,10 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
   const SelectedArea = (data) => {
     if (select_theater_done) {
       dispatch({
+        type: ALLTHEATER_REQUEST,
+        data: data,
+      });
+      dispatch({
         type: SELECT_MOVIETHEATER_REQUEST,
         data: { movieId: movieId, area: data },
       });
@@ -47,6 +54,7 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
   };
 
   //select_theater_done 이것은 영화검색BOOLEAN삼항연산자
+
   return (
     <TheatersWrapper>
       <TheatersTitle>극장</TheatersTitle>
@@ -57,6 +65,25 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
         <TheatersListWrapper>
           <TheaterListBlock>
             {allArea.map((area, index) => {
+              //여기서 find해서 감ㅌ은 이름일시 able, 다르면 disable
+              let selectedClassNameArea = "";
+              selectedClassNameArea += allArea.find(
+                (selectedMovie) => selectedMovie === area
+              )
+                ? "selectedInfoDarker "
+                : "";
+              let disableClassNameArea = "";
+              if (select_theater_done) {
+                disableClassNameArea = disableArea.find(
+                  (canSelectedMovie) => canSelectedMovie === area
+                )
+                  ? ""
+                  : "disableArea";
+              }
+
+              //여기까지
+              //수정
+
               return (
                 <TheatersList
                   key={index}
@@ -69,6 +96,7 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
                       SelectedArea(area);
                       setAreaName(area);
                     }}
+                    className={selectedClassNameArea + disableClassNameArea}
                   >
                     {area}
                   </div>
@@ -77,29 +105,50 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
             })}
           </TheaterListBlock>
           <RegionTheatersListWrapper>
-            {allTheater.map((theater, index) => (
-              <RegionItem
-                key={index}
-                selectedTheater={selectedTheater}
-                theater={theater.tname}
-              >
-                <div
-                  onClick={() => {
-                    dispatch({
-                      type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                      data: theater.tid,
-                    });
-                    setSelectedTheater(theater.tname);
-                    setTheater(theater.tid);
-                  }}
-                  setTheater={theater.tid}
-                  theater={theater.tname}
+            {allTheater.map((theater, index) => {
+              let selectedClassNameTheater = "";
+              selectedClassNameTheater += allTheater.find(
+                (selectedMovie) => selectedMovie.tid === theater.tid
+              )
+                ? "selectedInfoDarker"
+                : "";
+              let disableClassNameTheater = "";
+              if (select_MovieTheater_done) {
+                disableClassNameTheater = disableTheater.find(
+                  (canSelectedMovie) => canSelectedMovie.tid === theater.tid
+                )
+                  ? ""
+                  : "disableTheater";
+              }
+              return (
+                <RegionItem
+                  key={index}
                   selectedTheater={selectedTheater}
+                  theater={theater.tname}
                 >
-                  {theater.tname}
-                </div>
-              </RegionItem>
-            ))}
+                  <div
+                    onClick={() => {
+                      if (selectedClassNameTheater === "selectedInfoDarker") {
+                        dispatch({
+                          type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                          data: theater.tid,
+                        });
+                      }
+                      setSelectedTheater(theater.tname);
+                      setTheater(theater.tid);
+                    }}
+                    setTheater={theater.tid}
+                    theater={theater.tname}
+                    selectedTheater={selectedTheater}
+                    className={
+                      selectedClassNameTheater + disableClassNameTheater
+                    }
+                  >
+                    {theater.tname}
+                  </div>
+                </RegionItem>
+              );
+            })}
           </RegionTheatersListWrapper>
         </TheatersListWrapper>
       </TheatersRegionWrapper>
@@ -147,8 +196,11 @@ const TheaterListBlock = styled.div`
   display: inline-block;
   position: relative;
   float: left;
-
   width: 50%;
+  .disableArea {
+    cursor: default;
+    opacity: 0.5;
+  }
 `;
 const TheatersList = styled.div`
   display: flex;
@@ -177,6 +229,10 @@ const RegionTheatersListWrapper = styled.div`
   float: left;
   width: 50%;
   flex-direction: column;
+  .selectedInfoDarkerdisableTheater {
+    cursor: default;
+    opacity: 0.5;
+  }
 `;
 
 const RegionItem = styled.div`

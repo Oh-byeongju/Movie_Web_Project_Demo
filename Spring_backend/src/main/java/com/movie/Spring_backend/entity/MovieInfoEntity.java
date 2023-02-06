@@ -26,13 +26,12 @@ public class MovieInfoEntity {
     @Column(nullable = false, length = 30)
     private String miendtime;
 
-    @ManyToOne
-    @JoinColumn(name="MID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="mid")
     private MovieEntity movie; //주인 N
 
-    @ManyToOne//다 대 일 여러개의 관들은 하나의 극장을 가진다
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cid")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
     private CinemaEntity cinema;
 
     @Builder

@@ -11,8 +11,10 @@ import java.util.Optional;
 public interface MovieRepository extends JpaRepository<MovieEntity,Long> {
     List<MovieEntity> findAll();
 
+    //단순 영화 검색
     public List<MovieEntity> findByMid(Long id);
 
+    //극장 클릭 시 영화 id list를 활용하여 검색
     public List<MovieEntity> findByMidIn(List<Long> mid);
 
     public List<MovieEntity> findByMtitleContaining(String title);
