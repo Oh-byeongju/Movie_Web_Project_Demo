@@ -28,6 +28,15 @@ export const initalState = {
   select_TheaterToMovie_done: false,
   select_TheaterToMovie_error: null,
   selectTheaterToMovie: [],
+
+  select_Day_loading: false,
+  select_Day_done: false,
+  select_Day_error: null,
+  selectDay: [],
+
+  disableMovie: [],
+  disableArea: [],
+  disableTheater: [],
 };
 
 export const T_ALLMOVIE_REQUEST = "T_ALLMOVIE_REQUEST";
@@ -61,6 +70,10 @@ export const SELECT_THEATER_TO_MOVIE_FAILURE =
 export const SELECT_MOVIETHEATER_REQUEST = "SELECT_MOVIETHEATER_REQUEST";
 export const SELECT_MOVIETHEATER_SUCCESS = "SELECT_MOVIETHEATER_SUCCESS";
 export const SELECT_MOVIETHEATER_FAILURE = "SELECT_MOVIETHEATER_FAILURE";
+
+export const SELECT_DAY_REQUEST = "SELECT_DAY_REQUEST";
+export const SELECT_DAY_SUCCESS = "SELECT_DAY_SUCCESS";
+export const SELECT_DAY_FAILURE = "SELECT_DAY_FAILURE";
 
 const ticket = (state = initalState, action) => {
   switch (action.type) {
@@ -157,7 +170,7 @@ const ticket = (state = initalState, action) => {
         select_theater_loading: false,
         select_theater_done: true,
         select_theater_error: null,
-        allArea: action.data,
+        disableArea: action.data,
       };
     case SELECT_THEATER_FAILURE:
       return {
@@ -167,7 +180,7 @@ const ticket = (state = initalState, action) => {
         select_theater_error: action.error,
       };
 
-    //영화 클릭 시 영화id로 지역 검색
+    //영화 클릭 시 영화id와 지역으로 극장 검색
     case SELECT_MOVIETHEATER_REQUEST:
       return {
         ...state,
@@ -181,7 +194,7 @@ const ticket = (state = initalState, action) => {
         select_MovieTheater_loading: false,
         select_MovieTheater_done: true,
         select_MovieTheater_error: null,
-        allTheater: action.data,
+        disableTheater: action.data,
       };
     case SELECT_MOVIETHEATER_FAILURE:
       return {
@@ -206,7 +219,7 @@ const ticket = (state = initalState, action) => {
         select_TheaterToMovie_loading: false,
         select_TheaterToMovie_done: true,
         select_TheaterToMovie_error: null,
-        t_allMovie: action.data,
+        disableMovie: action.data,
       };
     case SELECT_THEATER_TO_MOVIE_FAILURE:
       return {
@@ -214,6 +227,30 @@ const ticket = (state = initalState, action) => {
         select_TheaterToMovie_loading: false,
         select_TheaterToMovie_done: false,
         select_TheaterToMovie_error: action.error,
+      };
+
+    //지역에 따른 영화 SELECT
+    case SELECT_DAY_REQUEST:
+      return {
+        ...state,
+        select_Day_loading: true,
+        select_Day_done: false,
+        select_Day_error: null,
+      };
+    case SELECT_DAY_SUCCESS:
+      return {
+        ...state,
+        select_Day_loading: false,
+        select_Day_done: true,
+        select_Day_error: null,
+        selectDay: action.data,
+      };
+    case SELECT_DAY_FAILURE:
+      return {
+        ...state,
+        select_Day_loading: false,
+        select_Day_done: false,
+        select_Day_error: action.error,
       };
     default:
       return state;
