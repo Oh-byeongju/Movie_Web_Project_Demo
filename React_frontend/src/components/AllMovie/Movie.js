@@ -62,7 +62,10 @@ const Movie = ({ movie }) => {
         </Des>
         <Button>
           <Like>
-            <HeartOutlined /> {movie.like > 999 ? getNotRoundDecimalNumber(movie.like / 1000) + "K" : movie.like}
+            <HeartOutlined /> {movie.likes > 999 ? getNotRoundDecimalNumber(movie.likes / 1000) + "K" : movie.likes}
+            <div>
+            {movie.like === true ? "dsdsds" : "없음"}
+            </div>
           </Like>
           <Link to="/reserve">
             <Ticket

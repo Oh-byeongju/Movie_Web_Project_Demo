@@ -14,7 +14,7 @@ const Layout = () => {
 
   // 로그인 상태를 확인하는 useEffect
   useEffect(() => {
-    if (LOGIN_data.uname === undefined) {
+    if (LOGIN_data.uname === '') {
       dispatch({
         type: USER_LOGIN_STATUS_REQUEST,
       });

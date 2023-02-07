@@ -19,7 +19,6 @@ import {
   SELECT_THEATER_TO_MOVIE_SUCCESS,
   SELECT_THEATER_TO_MOVIE_FAILURE,
 } from "../reducer/ticket";
-import axios from "axios";
 import { http } from "../lib/http";
 
 //모두 수정
@@ -27,9 +26,12 @@ import { http } from "../lib/http";
 //전체 영화 검색
 
 //영화 불러오기
-async function loadAllMovie() {
-  return await http
-    .get("/v2/normal/movie")
+async function loadAllMovie(data) {
+  return await http.get("/v2/normal/movie", {
+    params: {
+      uid: data
+    }
+  })
     .then((response) => {
       return response;
     })
@@ -38,8 +40,8 @@ async function loadAllMovie() {
     });
 }
 
-function* allMovieLoad() {
-  const result = yield call(loadAllMovie);
+function* allMovieLoad(action) {
+  const result = yield call(loadAllMovie, action.data);
   const allmoviedata = result.data.map((mv) => ({
     id: mv.mid, //영화번호
     dir: mv.mdir, //감독
@@ -51,8 +53,10 @@ function* allMovieLoad() {
     story: mv.mstory,
     title: mv.mtitle, //제목
     rating: mv.mrating, //연령
-    like: mv.mlike,
     imagepath: mv.mimagepath,
+    likes: mv.mlikes,
+    score: mv.mscore,
+    like: mv.mlike,
     able: true,
   }));
 
