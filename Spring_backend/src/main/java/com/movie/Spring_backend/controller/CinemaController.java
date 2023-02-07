@@ -32,19 +32,13 @@ public class CinemaController {
     private final MovieInfoRepository movieInfoRepository;
     private final MovieService movieService;
 
+    //끝
+    //옮기기 서비스로
     private final MovieInfoService movieInfoService;
     @GetMapping("/normal/theatertomovie")
-    public List<MovieDto> getData(@RequestParam TheaterEntity id) {
-        List<CinemaDto> datad= cinemaservice.findByTheater(id);
-        List<Long> mappedCid = datad.stream().map(CinemaDto::getCid).collect(Collectors.toList());
+    public List<MovieDto> getData(@RequestParam Long id) {
+        return cinemaservice.findByTheater(id);
 
-
-        //cinema 정보
-        List<MovieInfoDto> mappedMid=  movieInfoService.findByCinemaCidIn(mappedCid);
-
-        List<Long> mid = mappedMid.stream().map(MovieInfoDto::getMovie).collect(Collectors.toList()).stream().map(MovieEntity::getMid).collect(Collectors.toList());
-
-        return movieService.findByMidIn(mid);
     }
 
 

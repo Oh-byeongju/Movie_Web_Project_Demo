@@ -25,7 +25,7 @@ public class CinemaEntity { // 소문자 수정본
     @Column(nullable = false)
     private String cseat;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="tid") //조인할 컬럼 이름
     private TheaterEntity theater;
 
