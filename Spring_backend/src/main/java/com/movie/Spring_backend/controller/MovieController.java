@@ -29,10 +29,10 @@ public class MovieController {
         return ResponseEntity.ok().body(movieService.findByMtitleContaining(title));
     }
 
-    // test중
+    // test중 // 이거 나중에 String으로 받는 dto로 바꿔야 내가 편할듯
     @GetMapping("/normal/test")
-    public ResponseEntity<List<MovieDto>> Check(@RequestParam String id) {
-        return ResponseEntity.ok().body(movieService.getTest(id));
+    public ResponseEntity<List<MovieDto>> Check(@RequestParam String uid) {
+        return ResponseEntity.ok().body(movieService.getTest(uid));
     }
 }
 
