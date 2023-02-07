@@ -4,16 +4,23 @@ import styled from "styled-components";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
 import { ALLMOVIE_REQUEST } from "../../reducer/movie";
+
 const BoxList = () => {
   const dispatch = useDispatch();
 
+  // 로그인 리덕스 상태
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+  // 로그인 상태에 따라 전체 검색이 다름(좋아요 표시 때문)
   useEffect(() => {
     dispatch({
       type: ALLMOVIE_REQUEST,
+      data: LOGIN_data.uid
     });
-  }, [dispatch]);
+  }, [LOGIN_data.uid, dispatch]);
+
+  // 영화 리덕스 상태
   const { allMovie } = useSelector((state) => state.movie);
 
   return (

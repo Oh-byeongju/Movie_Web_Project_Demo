@@ -34,8 +34,11 @@ const Box = ({ movie }) => {
         </div>
         <Button>
           <Like>
-            <HeartOutlined /> {movie.like > 999 ? getNotRoundDecimalNumber(movie.like / 1000) + "K" : movie.like} 
+            <HeartOutlined /> {movie.likes > 999 ? getNotRoundDecimalNumber(movie.likes / 1000) + "K" : movie.likes} 
           </Like>
+          <div>
+            {movie.like === true ? "dsdsds" : "없음"}
+          </div>
           <Ticket
             onClick={() => {
               console.log(movie);

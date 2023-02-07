@@ -91,7 +91,7 @@ const LoginForm = () => {
       return;
     }
     // 로그인에 성공했을 경우 메인페이지 또는 이전 페이지로 넘어가게 함
-    if (LOGIN_data.uname !== undefined && LOGIN_data.uname !== "error!!" ) {
+    if (LOGIN_data.uname !== '' && LOGIN_data.uname !== "error!!" ) {
       if (location.state === null || location.state.url === "/UserJoin") {
         	navigate(`/`);
         }
@@ -100,6 +100,12 @@ const LoginForm = () => {
         }
     }
   },[LOGIN_data, location.state, navigate, dispatch]);
+
+
+
+
+  console.log(LOGIN_data.uname);
+console.log(LOGIN_data.uid);
 
 	return (
 		<div>

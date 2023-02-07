@@ -519,7 +519,7 @@ const JoinForm = () => {
 
 	// 로그인이 되어있으면 회원가입 페이지에 진입못하게 하는 useEffect
 	useEffect(() => {
-    if (LOGIN_data.uname !== undefined) {
+    if (LOGIN_data.uname !== '') {
       alert("로그아웃 이후 사용 가능한 페이지입니다.");
 			if (location.state === null) {
 				navigate(`/`);

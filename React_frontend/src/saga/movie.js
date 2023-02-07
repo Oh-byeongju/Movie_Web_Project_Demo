@@ -10,9 +10,12 @@ import {
 import { http } from "../lib/http";
 
 //영화 불러오기
-async function loadAllMovie() {
-  return await http
-    .get("/v2/normal/movie")
+async function loadAllMovie(data) {
+  return await http.get("/v2/normal/movie", {
+    params: {
+      uid: data
+    }
+  })
     .then((response) => {
       return response;
     })
@@ -21,8 +24,8 @@ async function loadAllMovie() {
     });
 }
 
-function* allMovieLoad() {
-  const result = yield call(loadAllMovie);
+function* allMovieLoad(action) {
+  const result = yield call(loadAllMovie, action.data);
   const allmoviedata = result.data.map((mv) => ({
     id: mv.mid, //영화번호
     dir: mv.mdir, //감독
@@ -35,8 +38,9 @@ function* allMovieLoad() {
     title: mv.mtitle, //제목
     rating: mv.mrating, //연령
     imagepath: mv.mimagepath,
-    like: mv.mlike,
-    score: mv.mscore
+    likes: mv.mlikes,
+    score: mv.mscore,
+    like: mv.mlike
   }));
 
   if (result.status === 200) {
@@ -81,8 +85,9 @@ function* searchMovieLoad(action) {
       title: mv.mtitle, //제목
       rating: mv.mrating, //연령
       imagepath: mv.mimagepath,
-      like: mv.mlike,
-      score: mv.mscore
+      likes: mv.mlikes,
+      score: mv.mscore,
+      like: mv.mlike
     }));
     //네트워크에서 200으로 받아서 수정했음
     yield put({

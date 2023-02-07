@@ -46,7 +46,7 @@ const movie = (state = initalState, action) => {
         add_ticket_done: false,
         add_ticket_error: action.error,
       };
-    /**-------------------------------------전체 영화 페이지에서 영화검색 */
+    /*-------------------------------------전체 영화 페이지에서 영화검색 */
     case MOVIE_SEARCH_REQUEST:
       return {
         ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨

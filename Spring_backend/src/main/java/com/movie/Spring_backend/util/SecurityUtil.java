@@ -11,9 +11,6 @@ public class SecurityUtil {
     public static String getCurrentMemberId(){
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        System.out.println(authentication.getName());
-        System.out.println("여기 확인해라.");
-
         return authentication.getName();
     }
 }
