@@ -43,11 +43,14 @@ public class MovieInfoController {
         //영화 아이디로 영화 정보 추출 CID를 리스트로 추출
         List<Long> datas = movieInfoService.findByMovie(id).stream().map(MovieInfoDto::getCinema).collect(Collectors.toList()).stream().map(CinemaEntity::getCid).collect(Collectors.toList());
         //cinema 사용
-        //추출한 cid만큼 tid 검색
+        //추출한 cid만큼 tid 검
+
 
         List<String> theaterArea = cinemaService.findByCidIn(datas).stream().map(CinemaDto::getTheater).collect(Collectors.toList()).stream().map(TheaterEntity::getTarea).collect(Collectors.toList());
         Set<String> duplication = new HashSet<>();
+
         duplication.addAll(theaterArea);
+        System.out.println(duplication);
         return duplication;
     }
 
