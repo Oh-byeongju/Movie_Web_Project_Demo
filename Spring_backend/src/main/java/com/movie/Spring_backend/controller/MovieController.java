@@ -17,15 +17,13 @@ public class MovieController {
 
     // 전체 영화 가져오는 메소드
     @GetMapping("/normal/movie")
-    public ResponseEntity<List<MovieDto>> Check(@RequestParam("uid") String uid) {
-        return ResponseEntity.ok().body(movieService.getTest(uid));
+    public ResponseEntity<List<MovieDto>> AllMovie(@RequestParam("uid") String uid) {
+        return ResponseEntity.ok().body(movieService.getAllMovie(uid));
     }
 
+    // 사용자가 영화를 검색할때 사용되는 메소드
     @GetMapping("/normal/searchmovie")
-    public ResponseEntity<List<MovieDto>> SearchTitle(@RequestParam String title){
-        return ResponseEntity.ok().body(movieService.findByMtitleContaining(title));
+    public ResponseEntity<List<MovieDto>> SearchTitle(@RequestParam(value = "title") String title, @RequestParam(value = "uid") String uid){
+        return ResponseEntity.ok().body(movieService.findByMtitleContaining(title, uid));
     }
 }
-
-
-

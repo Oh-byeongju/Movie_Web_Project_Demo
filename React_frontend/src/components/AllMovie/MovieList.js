@@ -1,3 +1,7 @@
+/*
+ 23-02-02 css 수정 및 Like수 적용(오병주)
+ 23-02-08 사용자가 누른 Like 적용(오병주)
+*/
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ALLMOVIE_REQUEST, MOVIE_SEARCH_REQUEST } from "../../reducer/movie";
@@ -33,10 +37,13 @@ const MovieList = () => {
   }, [LOGIN_data.uid, dispatch]);
 
   // 검색 버튼 누를때 실행되는 함수
-  const onSearch = useCallback((value) => {
+  const onSearch = (value) => {
     dispatch({
       type: MOVIE_SEARCH_REQUEST,
-      data: value,
+      data: {
+        title : value,
+        uid : LOGIN_data.uid
+      }
     });
     setLimit(L);
 
@@ -44,7 +51,7 @@ const MovieList = () => {
     var UL_Ref_style = window.getComputedStyle(UL_Ref.current);
     var UL_Ref_height = UL_Ref_style.getPropertyValue('height');
     setHeight(parseInt(UL_Ref_height) + 32.4);
-  }, [dispatch]);
+  };
 
   const onMoreClick = useCallback(() => {
     setLimit(Limit + 8);

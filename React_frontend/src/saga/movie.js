@@ -9,7 +9,7 @@ import {
 } from "../reducer/movie";
 import { http } from "../lib/http";
 
-//영화 불러오기
+// 전체 영화 불러오는 함수
 async function loadAllMovie(data) {
   return await http.get("/v2/normal/movie", {
     params: {
@@ -43,8 +43,8 @@ function* allMovieLoad(action) {
     like: mv.mlike
   }));
 
+  //네트워크에서 200으로 받아서 수정했음
   if (result.status === 200) {
-    //네트워크에서 200으로 받아서 수정했음
     yield put({
       type: ALLMOVIE_SUCCESS,
       data: allmoviedata,
@@ -57,10 +57,15 @@ function* allMovieLoad(action) {
   }
 }
 
-//영화를 검색하기 위한 사가
+// 사용자 영화 검색을 위한 함수
 async function searchMovie(data) {
   return await http
-    .get(`/v2/normal/searchmovie?title=${data}`)
+    .get(`/v2/normal/searchmovie`, {
+      params: {
+        title: data.title,
+        uid: data.uid
+      }
+    })
     .then((response) => {
       return response;
     })
@@ -71,7 +76,6 @@ async function searchMovie(data) {
 
 function* searchMovieLoad(action) {
   const result = yield call(searchMovie, action.data);
-
   if (result.status === 200) {
     const allmoviedata = result.data.map((mv) => ({
       id: mv.mid, //영화번호

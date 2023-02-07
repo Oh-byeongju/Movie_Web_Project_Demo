@@ -1,9 +1,10 @@
 /*
  23-02-02 css 수정 및 Like수 적용(오병주)
+ 23-02-08 사용자가 누른 Like 적용(오병주)
 */
 import React from "react";
 import styled from "styled-components";
-import { HeartOutlined } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 
 const Box = ({ movie }) => {
 
@@ -34,11 +35,13 @@ const Box = ({ movie }) => {
         </div>
         <Button>
           <Like>
-            <HeartOutlined /> {movie.likes > 999 ? getNotRoundDecimalNumber(movie.likes / 1000) + "K" : movie.likes} 
+            <span>
+              {movie.like === true ? <HeartFilled style={{color: "red"}} /> : <HeartOutlined />}
+            </span>
+            <span>
+              {movie.likes > 999 ? getNotRoundDecimalNumber(movie.likes / 1000) + "K" : movie.likes}
+            </span>
           </Like>
-          <div>
-            {movie.like === true ? "dsdsds" : "없음"}
-          </div>
           <Ticket
             onClick={() => {
               console.log(movie);
@@ -122,6 +125,10 @@ const Like = styled.div`
   margin: 0;
   line-height: 33.4px;
   border-radius: 4px;
+
+  span:first-child {
+    margin-right: 3px;
+  }
 `;
 
 const Ticket = styled.button`
