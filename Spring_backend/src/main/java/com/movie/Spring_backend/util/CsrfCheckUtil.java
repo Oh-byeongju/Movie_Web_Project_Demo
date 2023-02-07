@@ -3,11 +3,9 @@ package com.movie.Spring_backend.util;
 
 import com.movie.Spring_backend.error.exception.ErrorCode;
 import com.movie.Spring_backend.error.exception.InvalidValueException;
-import org.springframework.stereotype.Service;
-
-import javax.naming.AuthenticationException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+
 // Csrf 공격 방지를 위한 클래스
 public class CsrfCheckUtil {
     // Double submit cookie을 구현한 메소드
