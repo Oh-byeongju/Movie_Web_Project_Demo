@@ -81,6 +81,7 @@ public class MovieService {
         }
     }
 
+    // 현재 아래쪽 메소드들도 mapper로 묶는걸로 수정 해야함
     //테이블의 아이디 값을 통해 불러오기
     @Transactional
     public List<MovieDto> findById(Long id) {

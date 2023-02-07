@@ -25,7 +25,7 @@ const AllMovieList = ({ movieId, setMovieId, areaName }) => {
 // 로그인 리덕스 상태
 const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
-// 로그인 상태에 따라 전체 검색이 다름(좋아요 표시 때문)
+// 영화 예매 페이지에 쓸모 없을수도 있지만 Spring boot 메소드가 겹쳐서 로그인 상태도 같이 묶어서 보냄
 useEffect(() => {
   dispatch({
     type: T_ALLMOVIE_REQUEST,
