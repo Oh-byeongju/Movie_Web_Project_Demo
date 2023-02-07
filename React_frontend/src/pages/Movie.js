@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import MovieList from "../components/AllMovie/MovieList";
 
 const Movie = () => {

@@ -8,6 +8,10 @@ import Parser from "html-react-parser";
 // 그 다음   white-space: "pre-wrap"; css해주면 <br />이 사라지고 띄어쓰기가 가능.
 //일단 필요한 데이터만 띄어두고
 //나중에 코멘트랑 그래프 추가 수정필요**
+
+
+// movie를 받아서 넘기면 안됨(리프레시 했을경우 문제) // 이게 아닐수도 ?? 일단 수정
+
 const Details = ({ movie }) => {
   return (
     <Container>
@@ -43,8 +47,11 @@ const Details = ({ movie }) => {
               </Spec>
               <Like>
                 <Likes>
-                  <HeartOutlined /> {movie.likes.toLocaleString()}
+                  <HeartOutlined /> {movie.likes.toLocaleString()}  
                 </Likes>
+                <div>
+                  {movie.like === true ? "dsdsds" : "없음"}
+                </div>
                 <Link to="/reserve">
                   <Ticket
                     onClick={() => {
@@ -159,6 +166,10 @@ const Likes = styled.div`
   color: #222222;
   font-size: 14px;
   font-weight: 400;
+
+  span:first-child {
+    margin-right: 3px;
+  }
 `;
 
 const Ticket = styled.button`
