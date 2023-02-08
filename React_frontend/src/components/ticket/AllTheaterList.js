@@ -1,3 +1,4 @@
+import { th } from "date-fns/locale";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -6,7 +7,9 @@ import {
   ALLTHEATER_REQUEST,
   SELECT_MOVIETHEATER_REQUEST,
   SELECT_THEATER_REQUEST,
+  SELECT_MOVIETHEATER_TO_DAY_REQUEST,
   SELECT_THEATER_TO_MOVIE_REQUEST,
+  SELECT_THEATER_TO_DAY_REQUEST,
 } from "../../reducer/ticket";
 const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
   const [selectedArea, setSelectedArea] = useState("서울");
@@ -129,11 +132,31 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
                   <div
                     onClick={() => {
                       if (selectedClassNameTheater === "selectedInfoDarker") {
-                        dispatch({
-                          type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                          data: theater.tid,
-                        });
+                        if (!select_theater_done) {
+                          dispatch({
+                            type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                            data: theater.tid,
+                          });
+                          dispatch({
+                            type: SELECT_THEATER_TO_DAY_REQUEST,
+                            data: theater.tid,
+                          });
+                        }
+                        if (select_theater_done) {
+                          dispatch({
+                            type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                            data: theater.tid,
+                          });
+                          dispatch({
+                            type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
+                            data: {
+                              mid: movieId,
+                              tid: theater.tid,
+                            },
+                          });
+                        }
                       }
+
                       setSelectedTheater(theater.tname);
                       setTheater(theater.tid);
                     }}

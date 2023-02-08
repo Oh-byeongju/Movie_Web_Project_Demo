@@ -33,7 +33,7 @@ public class CinemaController {
     private final MovieService movieService;
 
     //끝
-    //옮기기 서비스로
+    //옮기기 서비스로 이상x
     private final MovieInfoService movieInfoService;
     @GetMapping("/normal/theatertomovie")
     public List<MovieDto> getData(@RequestParam Long id) {

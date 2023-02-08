@@ -6,12 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Getter
 @NoArgsConstructor
 public class MovieInfoDto {
 
     private Long miid;
 
+    private Date miday;
     private String mistarttime;
 
     private String miendtime;
@@ -21,8 +24,9 @@ public class MovieInfoDto {
     private CinemaEntity cinema;
 
     @Builder
-    public MovieInfoDto(Long miid, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema) {
+    public MovieInfoDto(Long miid, Date miday, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema) {
         this.miid= miid;
+        this.miday=miday;
         this.mistarttime=mistarttime;
         this.miendtime=miendtime;
         this.movie=movie;

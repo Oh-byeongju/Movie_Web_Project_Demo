@@ -14,6 +14,7 @@ public interface CinemaRepository extends JpaRepository<CinemaEntity,Long>  {
     @Query("SELECT c FROM CinemaEntity as c JOIN FETCH c.theater WHERE c.cid IN (:cid) ")
      public List<CinemaEntity> findByCidIn(@Param("cid")List<Long> cid);
      public List<CinemaEntity> findByTheater(TheaterEntity id);
+
 }
 //디비접근
 

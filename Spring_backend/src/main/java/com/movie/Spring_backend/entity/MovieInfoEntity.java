@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Table(name="movie_information")
 @Entity
@@ -20,6 +21,8 @@ public class MovieInfoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long miid;
 
+    @Column(nullable = false,length = 30)
+    private Date miday;
     @Column(nullable = false,length = 30)
     private String mistarttime;
 
@@ -35,8 +38,9 @@ public class MovieInfoEntity {
     private CinemaEntity cinema;
 
     @Builder
-    public MovieInfoEntity(Long miid, String mistarttime, String miendtime , MovieEntity movie, CinemaEntity cinema) {
+    public MovieInfoEntity(Long miid, Date miday,String mistarttime, String miendtime , MovieEntity movie, CinemaEntity cinema) {
        this.miid= miid;
+       this.miday=miday;
        this.mistarttime=mistarttime;
        this.miendtime=miendtime;
        this.movie=movie;

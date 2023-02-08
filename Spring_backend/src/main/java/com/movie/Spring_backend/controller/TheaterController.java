@@ -8,6 +8,8 @@ import com.movie.Spring_backend.entity.CinemaEntity;
 import com.movie.Spring_backend.entity.MovieInfoEntity;
 import com.movie.Spring_backend.entity.TheaterEntity;
 import com.movie.Spring_backend.repository.CinemaRepository;
+import com.movie.Spring_backend.service.CinemaService;
+import com.movie.Spring_backend.service.MovieInfoService;
 import com.movie.Spring_backend.service.TheaterService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +26,8 @@ import java.util.stream.Collectors;
 public class TheaterController {
 
     private final TheaterService theaterService;
-    MovieInfoController movieInfoService;
-    CinemaRepository cinemaService;
+    MovieInfoService movieInfoService;
+    CinemaService cinemaService;
     MovieInfoDto movieInfoDto;
 
     @GetMapping("/normal/area")
@@ -40,5 +42,8 @@ public class TheaterController {
         return ResponseEntity.ok().body(theaterService.findByTarea(area));
     }
 
+
+
 }
+
 
