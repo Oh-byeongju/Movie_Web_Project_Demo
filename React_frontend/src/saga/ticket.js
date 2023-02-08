@@ -9,15 +9,27 @@ import {
   ALLTHEATER_SUCCESS,
   ALLTHEATER_FAILURE,
   ALLTHEATER_REQUEST,
+  ALLDAY_REQUEST,
+  ALLDAY_SUCCESS,
+  ALLDAY_FAILURE,
   SELECT_THEATER_REQUEST,
   SELECT_THEATER_SUCCESS,
   SELECT_THEATER_FAILURE,
+  SELECT_DAY_REQUEST,
+  SELECT_DAY_SUCCESS,
+  SELECT_DAY_FAILURE,
   SELECT_MOVIETHEATER_REQUEST,
   SELECT_MOVIETHEATER_SUCCESS,
   SELECT_MOVIETHEATER_FAILURE,
   SELECT_THEATER_TO_MOVIE_REQUEST,
   SELECT_THEATER_TO_MOVIE_SUCCESS,
   SELECT_THEATER_TO_MOVIE_FAILURE,
+  SELECT_THEATER_TO_DAY_REQUEST,
+  SELECT_THEATER_TO_DAY_SUCCESS,
+  SELECT_THEATER_TO_DAY_FAILURE,
+  SELECT_MOVIETHEATER_TO_DAY_FAILURE,
+  SELECT_MOVIETHEATER_TO_DAY_SUCCESS,
+  SELECT_MOVIETHEATER_TO_DAY_REQUEST,
 } from "../reducer/ticket";
 import { http } from "../lib/http";
 
@@ -27,11 +39,12 @@ import { http } from "../lib/http";
 
 //영화 불러오기
 async function loadAllMovie(data) {
-  return await http.get("/v2/normal/movie", {
-    params: {
-      uid: data
-    }
-  })
+  return await http
+    .get("/v2/normal/movie", {
+      params: {
+        uid: data,
+      },
+    })
     .then((response) => {
       return response;
     })
@@ -211,7 +224,6 @@ function* selectTheaterToMovie(action) {
     //네트워크에서 200으로 받아서 수정했음 id: mv.cinema.theater.area.aarea:{}
     const allmoviedata = result.data.map((mv) => ({
       id: mv.mid, //영화번호
-
       title: mv.mtitle, //제목
     }));
     yield put({
@@ -226,6 +238,134 @@ function* selectTheaterToMovie(action) {
     });
   }
 }
+
+//날짜 검색
+async function AllDayApi() {
+  return await http
+    .get("/infomovie/normal/movieinfo")
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+function* AllDay(action) {
+  const result = yield call(AllDayApi);
+  if (result.status === 200) {
+    //네트워크에
+    //네트워크에서 200으로 받아서 수정했음 id: mv.cinema.theater.area.aarea:{}
+
+    yield put({
+      type: ALLDAY_SUCCESS,
+      data: result.data,
+    });
+  } else {
+    alert("실패");
+    yield put({
+      type: ALLDAY_FAILURE,
+      data: result.status,
+    });
+  }
+}
+
+//날짜 검색
+async function selectMovieToDayApi(data) {
+  return await http
+    .get("/infomovie/normal/movieselectday", {
+      params: {
+        id: data,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+function* selectMovieToDay(action) {
+  const result = yield call(selectMovieToDayApi, action.data);
+  if (result.status === 200) {
+    //네트워크에
+    //네트워크에서 200으로 받아서 수정했음 id: mv.cinema.theater.area.aarea:{}
+
+    yield put({
+      type: SELECT_DAY_SUCCESS,
+      data: result.data,
+    });
+  } else {
+    alert("실패");
+    yield put({
+      type: SELECT_DAY_FAILURE,
+      data: result.status,
+    });
+  }
+}
+
+//극장으로 날짜 검색
+async function selectTheaterTDayApi(data) {
+  return await http
+    .get("/infomovie/normal/theaterday", {
+      params: {
+        id: data,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+function* selectTheaterTDay(action) {
+  const result = yield call(selectTheaterTDayApi, action.data);
+  if (result.status === 200) {
+    yield put({
+      type: SELECT_THEATER_TO_DAY_SUCCESS,
+      data: result.data,
+    });
+  } else {
+    alert("실패");
+    yield put({
+      type: SELECT_THEATER_TO_DAY_FAILURE,
+      data: result.status,
+    });
+  }
+}
+
+//영화+극장 날짜검색
+async function selectMovieTheaterDayApi(data) {
+  return await http
+    .get("/infomovie/normal/movietheaterday", {
+      params: {
+        mid: data.mid,
+        tid: data.tid,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+function* selectMovieTheaterDay(action) {
+  const result = yield call(selectMovieTheaterDayApi, action.data);
+  if (result.status === 200) {
+    yield put({
+      type: SELECT_MOVIETHEATER_TO_DAY_SUCCESS,
+      data: result.data,
+    });
+  } else {
+    alert("실패");
+    yield put({
+      type: SELECT_MOVIETHEATER_TO_DAY_FAILURE,
+      data: result.status,
+    });
+  }
+}
+
 function* TallMovieSaga() {
   yield takeLatest(T_ALLMOVIE_REQUEST, allMovieLoad);
 }
@@ -245,6 +385,18 @@ function* selectMovieTheaterSaga() {
 function* selectTheaterToMovieSaga() {
   yield takeLatest(SELECT_THEATER_TO_MOVIE_REQUEST, selectTheaterToMovie);
 }
+function* allDaySaga() {
+  yield takeLatest(ALLDAY_REQUEST, AllDay);
+}
+function* selectMovieToDaySaga() {
+  yield takeLatest(SELECT_DAY_REQUEST, selectMovieToDay);
+}
+function* selectTheaterTDaySaga() {
+  yield takeLatest(SELECT_THEATER_TO_DAY_REQUEST, selectTheaterTDay);
+}
+function* selectMovieTheaterDaySaga() {
+  yield takeLatest(SELECT_MOVIETHEATER_TO_DAY_REQUEST, selectMovieTheaterDay);
+}
 
 export default function* ticketSaga() {
   yield all([
@@ -254,5 +406,9 @@ export default function* ticketSaga() {
     fork(selectTheaterSaga),
     fork(selectMovieTheaterSaga),
     fork(selectTheaterToMovieSaga),
+    fork(allDaySaga),
+    fork(selectMovieToDaySaga),
+    fork(selectTheaterTDaySaga),
+    fork(selectMovieTheaterDaySaga),
   ]);
 }

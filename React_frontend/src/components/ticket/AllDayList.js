@@ -1,123 +1,40 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { format } from "date-fns";
 import { now } from "moment/moment";
-import { SELECT_DAY_REQUEST } from "../../reducer/ticket";
+import moment from "moment";
+//선언하지 않아도, 디바이스 혹은 locale의 시간을 불러온다.
+import "moment/locale/ko";
+import { ALLDAY_REQUEST, SELECT_DAY_REQUEST } from "../../reducer/ticket";
 import cn from "classnames";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const AllDayList = ({ movieId, areaName }) => {
+  const { allDay, selectDay, select_Day_done, select_Theater_To_Day_done } =
+    useSelector((state) => state.ticket);
   const now = new Date();
-  const todayWeek = now.getDay();
-  const today = now.getDate();
+  const [selectedDay, setSelectedDay] = useState("");
   const year = now.getFullYear();
+  const nowTime = moment().format("YYYY-MM-DD");
   const month = now.getMonth() + 1;
-  const [lastDay, setLastDay] = useState(
-    new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
-  );
+  //날짜
+  const [weekday, setWeekDay] = useState([
+    "일",
+    "월",
+    "화",
+    "수",
+    "목",
+    "금",
+    "토",
+  ]);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch({
-      type: SELECT_DAY_REQUEST,
-      data: {
-        movieId: movieId,
-        areaName: areaName,
-      },
+      type: ALLDAY_REQUEST,
     });
-  }, [movieId, areaName]);
+  }, []);
+
   //날짜 계산
-  const getAlldate = (today, lastday) => {
-    let dates = [];
-
-    dates[0] = today;
-    for (let i = 1; i <= 30; i++) {
-      today++;
-      //마지막 날보다 날짜가 클경우 today를 1로 초기화.
-      if (today > lastday) {
-        today = 1;
-        dates[i] = today;
-      }
-      //일반 경우 그냥 날짜 추가
-      else {
-        dates[i] = today;
-      }
-    }
-
-    //요일 정상적으로 뜨는지 확인해보자
-    //console.log(dates[1].getDay());
-
-    return dates;
-  };
-
-  //요일 표시 평일 검정색 토요일 파란색 일요일 빨간색
-  const getAllweak = (todayWeak) => {
-    let strWeak = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    let weaklist = [];
-
-    //첫번째 오늘 날짜 적용
-
-    weaklist[0] = strWeak[todayWeak];
-
-    for (let i = 1; i <= 30; i++) {
-      todayWeak++;
-      if (todayWeak > 6) {
-        todayWeak = 0;
-        weaklist[i] = strWeak[todayWeak];
-      } else {
-        weaklist[i] = strWeak[todayWeak];
-      }
-    }
-
-    return weaklist;
-  };
-  //오늘 기준 날짜 계산하는 함수
-  const CalendarDay = getAlldate(today, lastDay);
-  const CalendarWeak = getAllweak(todayWeek);
-
-  /*⭐⭐날짜와 요일을 같이 표시하기위해서 만들어 놓은 객체
-  날짜를 하나씩 출력해서 객체로 만들기위해서 함수를 실행시킨뒤
-  분해로 하나씩 넣는 방법을 사용했음 ⭐⭐*/
-
-  const CalendarObject = [
-    { weak: CalendarWeak[0], day: CalendarDay[0] },
-    { weak: CalendarWeak[1], day: CalendarDay[1] },
-
-    { weak: CalendarWeak[2], day: CalendarDay[2] },
-    { weak: CalendarWeak[3], day: CalendarDay[3] },
-    { weak: CalendarWeak[4], day: CalendarDay[4] },
-    { weak: CalendarWeak[5], day: CalendarDay[5] },
-    { weak: CalendarWeak[6], day: CalendarDay[6] },
-    { weak: CalendarWeak[7], day: CalendarDay[7] },
-    { weak: CalendarWeak[8], day: CalendarDay[8] },
-
-    { weak: CalendarWeak[9], day: CalendarDay[9] },
-    { weak: CalendarWeak[10], day: CalendarDay[10] },
-    { weak: CalendarWeak[11], day: CalendarDay[11] },
-    { weak: CalendarWeak[12], day: CalendarDay[12] },
-    { weak: CalendarWeak[13], day: CalendarDay[13] },
-    { weak: CalendarWeak[14], day: CalendarDay[14] },
-    { weak: CalendarWeak[15], day: CalendarDay[15] },
-
-    { weak: CalendarWeak[16], day: CalendarDay[16] },
-    { weak: CalendarWeak[17], day: CalendarDay[17] },
-    { weak: CalendarWeak[18], day: CalendarDay[18] },
-    { weak: CalendarWeak[19], day: CalendarDay[19] },
-    { weak: CalendarWeak[20], day: CalendarDay[20] },
-    { weak: CalendarWeak[21], day: CalendarDay[21] },
-    { weak: CalendarWeak[22], day: CalendarDay[22] },
-    { weak: CalendarWeak[23], day: CalendarDay[23] },
-    { weak: CalendarWeak[24], day: CalendarDay[24] },
-    { weak: CalendarWeak[25], day: CalendarDay[25] },
-    { weak: CalendarWeak[26], day: CalendarDay[26] },
-    { weak: CalendarWeak[27], day: CalendarDay[27] },
-    { weak: CalendarWeak[28], day: CalendarDay[28] },
-    { weak: CalendarWeak[29], day: CalendarDay[29] },
-
-    { weak: CalendarWeak[30], day: CalendarDay[30] },
-  ];
-
-  useEffect(() => {
-    return () => console.log("Clean up");
-  });
 
   const Weak = useRef(null);
 
@@ -146,26 +63,58 @@ const AllDayList = ({ movieId, areaName }) => {
           </p>
         </YearMonthList>
         <DaylistSector>
-          {CalendarObject.map((calendar, index) => (
-            <li>
-              <div
-                className={cn(
-                  "weak",
-                  calendar.weak === "Sun" ? "Sun" : "weak",
-                  calendar.weak === "Sat" ? "Sat" : "weak"
-                )}
-                ref={Weak}
+          {allDay.map((calendar, index) => {
+            let selectedClassName = "";
+            selectedClassName += allDay.find(
+              (selectedMovie) => selectedMovie.miday === calendar.miday
+            )
+              ? "selectedInfoDarker "
+              : "";
+            let disableClassName = "";
+            if (select_Day_done || select_Theater_To_Day_done) {
+              disableClassName = selectDay.find(
+                (canSelectedMovie) => canSelectedMovie.miday === calendar.miday
+              )
+                ? ""
+                : "disable";
+            }
+            return (
+              <Today
+                today={calendar.miday}
+                selectedDay={selectedDay}
+                className={selectedClassName + disableClassName}
               >
-                {calendar.weak}
-              </div>
-              <div className={cn("day")}>{calendar.day}</div>
-            </li>
-          ))}
+                <div
+                  className={cn(
+                    "weak",
+                    weekday[new Date(`'${calendar.miday}'`).getDay()] === "토"
+                      ? "Sun"
+                      : "weak",
+                    weekday[new Date(`'${calendar.miday}'`).getDay()] === "일"
+                      ? "Sat"
+                      : "weak"
+                  )}
+                  ref={Weak}
+                >
+                  {weekday[new Date(`'${calendar.miday}'`).getDay()]}
+                </div>
+                <div
+                  className={cn("day")}
+                  onClick={() => {
+                    setSelectedDay(calendar.miday);
+                  }}
+                >
+                  {calendar.miday.substring(8, 10)}
+                </div>
+              </Today>
+            );
+          })}
         </DaylistSector>
       </DayList>
     </Calender>
   );
 };
+//{calendar.miday.substring(8, 10)}
 const Calender = styled.div`
   align-items: center; //수직 중앙 정렬
   justify-content: center; //수평 중앙 정렬
@@ -209,9 +158,7 @@ const DaylistSector = styled.ul`
   .Sat {
     color: blue !important;
   }
-  li {
-    padding-bottom: 10px;
-  }
+
   .weak {
     font-family: "Nanum Myeongjo";
     font-size: 0.8em;
@@ -224,6 +171,20 @@ const DaylistSector = styled.ul`
   .day {
     font-weight: bold;
   }
+  .disable {
+    div {
+      cursor: default;
+      opacity: 0.5;
+    }
+  }
+`;
+const Today = styled.li`
+padding-bottom: 10px;
+
+    background-color: ${(props) =>
+      props.today === props.selectedDay ? "gainsboro" : "white"};
+  }
+
 `;
 
 export default AllDayList;
