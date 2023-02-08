@@ -32,7 +32,7 @@ public class MovieService {
     @Transactional
     public List<MovieDto> getAllMovie(String uid) {
         // 테이블 내의 모든 영화 검색
-        List<MovieEntity> Movies = movieRepository.findAll();
+        List<MovieEntity> Movies = movieRepository.findAllDESC();
 
         // 받은 id 정보를 entity 형으로 변환(로그인 정보가 없으면 전달받은 매개변수 uid가 No_login 으로 설정)
         MemberEntity member = MemberEntity.builder()
@@ -56,7 +56,7 @@ public class MovieService {
     @Transactional
     public List<MovieDto> findByMtitleContaining(String title, String uid) {
         // 사용자가 입력한 제목으로 영화 검색(제목의 일부분 검색도 지원)
-        List<MovieEntity> Movies = movieRepository.findByMtitleContaining(title);
+        List<MovieEntity> Movies = movieRepository.findSearchDESC(title);
 
         // 받은 id 정보를 entity 형으로 변환(로그인 정보가 없으면 전달받은 매개변수 uid가 No_login 으로 설정)
         MemberEntity member = MemberEntity.builder()
