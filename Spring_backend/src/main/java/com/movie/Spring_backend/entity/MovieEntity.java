@@ -52,7 +52,7 @@ public class MovieEntity {
     // 좋아요 개수 추출
     // 테이블에는 존재하지 않고 Formula 어노테이션으로 테이블을 join 시켜서 들고옴
     @Formula("(select count(mm.umlike) from movie_member mm where mm.umlike = true and mm.mid = mid)")
-    private int cntMovieLike;
+    private Integer cntMovieLike;
 
     // 평점 추출
     // 테이블에는 존재하지 않고 Formula 어노테이션으로 테이블을 join 시켜서 들고옴
@@ -61,7 +61,7 @@ public class MovieEntity {
 
     @Builder
     public MovieEntity(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
-                       int mtime, Date mdate, String mrating, String mstory, String mimagepath, int cntMovieLike, Float avgScore) {
+                       int mtime, Date mdate, String mrating, String mstory, String mimagepath, Integer cntMovieLike, Float avgScore) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;

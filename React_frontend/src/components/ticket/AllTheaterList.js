@@ -11,6 +11,7 @@ import {
   SELECT_THEATER_TO_MOVIE_REQUEST,
   SELECT_THEATER_TO_DAY_REQUEST,
 } from "../../reducer/ticket";
+
 const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
   const [selectedArea, setSelectedArea] = useState("서울");
   const [selectedTheater, setSelectedTheater] = useState("");

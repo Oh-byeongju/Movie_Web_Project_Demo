@@ -16,9 +16,9 @@ public class MovieMemberEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long umid;
 
-    private boolean umlike;
+    private Boolean umlike;
 
-    private int umscore;
+    private Integer umscore;
 
     private String umcomment;
 
@@ -33,7 +33,7 @@ public class MovieMemberEntity {
     private MemberEntity member;
 
     @Builder
-    public MovieMemberEntity(Long umid, boolean umlike, int umscore , String umcomment, MovieEntity movie, MemberEntity member) {
+    public MovieMemberEntity(Long umid, Boolean umlike, Integer umscore , String umcomment, MovieEntity movie, MemberEntity member) {
         this.umid = umid;
         this.umlike = umlike;
         this.umscore = umscore;

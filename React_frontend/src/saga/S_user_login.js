@@ -111,6 +111,6 @@ function* USER_LOGOUT() {
   yield takeLatest(USER_LOGOUT_REQUEST, UserLogout);
 }
 
-export default function* S_user_loginSaga() {
+export default function* S_user_login() {
   yield all([fork(USER_LOGIN), fork(USER_STATUS), fork(USER_LOGOUT)]);
 }

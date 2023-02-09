@@ -32,6 +32,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        System.out.println("필터 돈다");
+        System.out.println(request.getMethod());
+
         // axios 요청이 POST, DELETE, PUT, PATCH인 경우 Double submit cookie 메소드 실행(csrf 공격 방지)
         if (request.getMethod().equals("POST")
          || request.getMethod().equals("DELETE")
@@ -44,12 +47,17 @@ public class JwtFilter extends OncePerRequestFilter {
         // Request Header에서 토큰을 꺼내 jwt 변수에 저장
         String jwt = resolveToken(request);
 
+        System.out.println(jwt);
+
+
         // 정상 토큰이면 해당 토큰으로 Authentication을 가져와서 SecurityContext에 저장
         if (StringUtils.hasText(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("필터 돈다2");
         }
 
+        System.out.println("필터 돈다3");
         // 체인의 다음 필터를 호출
         filterChain.doFilter(request, response);
     }
@@ -67,6 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // ATK 토큰의 값을 추출
         String bearerToken = "";
         for (Cookie cookie : Cookies) {
+            System.out.println("쿠키는 있다.");
             if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
                 bearerToken = cookie.getValue();
             }
