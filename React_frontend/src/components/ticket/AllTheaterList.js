@@ -16,7 +16,6 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
   const [selectedTheater, setSelectedTheater] = useState("");
   const dispatch = useDispatch();
   const {
-    allArea,
     allTheater,
     select_theater_done,
     selectTheater,
@@ -67,10 +66,10 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
       <TheatersRegionWrapper>
         <TheatersListWrapper>
           <TheaterListBlock>
-            {allArea.map((area, index) => {
+            {allTheater.map((area, index) => {
               //여기서 find해서 감ㅌ은 이름일시 able, 다르면 disable
               let selectedClassNameArea = "";
-              selectedClassNameArea += allArea.find(
+              selectedClassNameArea += allTheater.find(
                 (selectedMovie) => selectedMovie === area
               )
                 ? "selectedInfoDarker "
@@ -109,20 +108,6 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
           </TheaterListBlock>
           <RegionTheatersListWrapper>
             {allTheater.map((theater, index) => {
-              let selectedClassNameTheater = "";
-              selectedClassNameTheater += allTheater.find(
-                (selectedMovie) => selectedMovie.tid === theater.tid
-              )
-                ? "selectedInfoDarker"
-                : "";
-              let disableClassNameTheater = "";
-              if (select_MovieTheater_done) {
-                disableClassNameTheater = disableTheater.find(
-                  (canSelectedMovie) => canSelectedMovie.tid === theater.tid
-                )
-                  ? ""
-                  : "disableTheater";
-              }
               return (
                 <RegionItem
                   key={index}
@@ -131,30 +116,28 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
                 >
                   <div
                     onClick={() => {
-                      if (selectedClassNameTheater === "selectedInfoDarker") {
-                        if (!select_theater_done) {
-                          dispatch({
-                            type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                            data: theater.tid,
-                          });
-                          dispatch({
-                            type: SELECT_THEATER_TO_DAY_REQUEST,
-                            data: theater.tid,
-                          });
-                        }
-                        if (select_theater_done) {
-                          dispatch({
-                            type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                            data: theater.tid,
-                          });
-                          dispatch({
-                            type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
-                            data: {
-                              mid: movieId,
-                              tid: theater.tid,
-                            },
-                          });
-                        }
+                      if (!select_theater_done) {
+                        dispatch({
+                          type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                          data: theater.tid,
+                        });
+                        dispatch({
+                          type: SELECT_THEATER_TO_DAY_REQUEST,
+                          data: theater.tid,
+                        });
+                      }
+                      if (select_theater_done) {
+                        dispatch({
+                          type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                          data: theater.tid,
+                        });
+                        dispatch({
+                          type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
+                          data: {
+                            mid: movieId,
+                            tid: theater.tid,
+                          },
+                        });
                       }
 
                       setSelectedTheater(theater.tname);
@@ -163,15 +146,13 @@ const AllTheaterList = ({ movieId, setTheater, setAreaName, areaName }) => {
                     setTheater={theater.tid}
                     theater={theater.tname}
                     selectedTheater={selectedTheater}
-                    className={
-                      selectedClassNameTheater + disableClassNameTheater
-                    }
                   >
                     {theater.tname}
                   </div>
                 </RegionItem>
               );
             })}
+            : }
           </RegionTheatersListWrapper>
         </TheatersListWrapper>
       </TheatersRegionWrapper>

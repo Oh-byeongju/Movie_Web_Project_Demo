@@ -4,6 +4,7 @@ import styled from "styled-components";
 import AllDayList from "../components/ticket/AllDayList";
 import AllMovieList from "../components/ticket/AllMovieList";
 import AllTheaterList from "../components/ticket/AllTheaterList";
+import Test from "../components/ticket/Test";
 const Reserve = () => {
   const [movieId, setMovieId] = useState("");
   const [areaName, setAreaName] = useState("");
@@ -20,7 +21,7 @@ const Reserve = () => {
         areaName={areaName}
         theater={theater}
       />
-      <AllTheaterList
+      <Test
         movieId={movieId}
         theater={theater}
         setTheater={setTheater}

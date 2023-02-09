@@ -27,10 +27,10 @@ public class MovieDto {
     private int mlikes; // 좋아요 개수
     private Float mscore; // 평점 평균
     private Boolean mlike; // 사용자 개인별 좋아요 여부
-
+    private String able;
     @Builder
     public MovieDto(Long mid, String mtitle, String mdir, String mactor, String msupactor, String mgenre,
-                    int mtime, Date mdate, String mrating, String mstory , String mimagepath, int mlikes, Float mscore, Boolean mlike) {
+                    int mtime, Date mdate, String mrating, String mstory , String mimagepath, int mlikes, Float mscore, Boolean mlike, String able) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;
@@ -45,6 +45,7 @@ public class MovieDto {
         this.mlikes=mlikes;
         this.mscore=mscore;
         this.mlike=mlike;
+        this.able=able;
     }
 }
 

@@ -35,4 +35,55 @@ public class MovieMapper {
                 .mscore(entity.getAvgScore())
                 .mlike(like).build();
     }
+
+
+    public MovieDto toAble(MovieEntity entity) {
+
+        // 예외처리
+        if (entity == null) {
+            return null;
+        }
+
+        return MovieDto.builder()
+                .mid(entity.getMid())
+                .mdir(entity.getMdir())
+                .mactor(entity.getMactor())
+                .mtitle(entity.getMtitle())
+                .msupactor(entity.getMsupactor())
+                .mgenre(entity.getMgenre())
+                .mtime(entity.getMtime())
+                .mdate(entity.getMdate())
+                .mrating(entity.getMrating())
+                .mstory(entity.getMstory())
+                .mimagepath(entity.getMimagepath())
+                .mlikes(entity.getCntMovieLike())
+                .mscore(entity.getAvgScore())
+                .able("able").build();
+    }
+    public MovieDto toDisable(MovieEntity entity) {
+
+        // 예외처리
+        if (entity == null) {
+            return null;
+        }
+
+        return MovieDto.builder()
+                .mid(entity.getMid())
+                .mdir(entity.getMdir())
+                .mactor(entity.getMactor())
+                .mtitle(entity.getMtitle())
+                .msupactor(entity.getMsupactor())
+                .mgenre(entity.getMgenre())
+                .mtime(entity.getMtime())
+                .mdate(entity.getMdate())
+                .mrating(entity.getMrating())
+                .mstory(entity.getMstory())
+                .mimagepath(entity.getMimagepath())
+                .mlikes(entity.getCntMovieLike())
+                .mscore(entity.getAvgScore())
+                .able("disable")
+                .build();
+    }
+
+
 }
