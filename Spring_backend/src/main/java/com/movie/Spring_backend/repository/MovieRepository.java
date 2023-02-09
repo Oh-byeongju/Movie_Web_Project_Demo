@@ -29,8 +29,12 @@ public interface MovieRepository extends JpaRepository<MovieEntity,Long> {
     //단순 영화 검색
     List<MovieEntity> findByMid(Long id);
 
-    //극장 클릭 시 영화 id list를 활용하여 검색
     List<MovieEntity> findByMidIn(List<Long> mid);
+    //극장 클릭 시 영화 id list를 활용하여 검색
+    @Query(value ="SELECT m ,'able' as able FROM MovieEntity as m where m.mid IN (:mid) ORDER BY m.cntMovieLike DESC")
+    List<MovieEntity> findByMidInAble(@Param("mid") List<Long> mid);
 
+    @Query(value ="SELECT m ,'disable' as disable From MovieEntity as m where m.mid NOT IN (:mid) ORDER BY m.cntMovieLike DESC" )
+    List<MovieEntity> findByMidInDisAble(@Param("mid") List<Long> mid); 
 
 }

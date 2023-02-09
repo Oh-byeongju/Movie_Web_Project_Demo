@@ -1,3 +1,4 @@
+import { id } from "date-fns/locale";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { select } from "redux-saga/effects";
@@ -13,15 +14,8 @@ import {
 } from "../../reducer/ticket";
 const AllMovieList = ({ movieId, setMovieId, areaName, theater }) => {
   const dispatch = useDispatch();
-  const {
-    select_TheaterToMovie_done,
-    select_MovieTheater_done,
-    selectTheaterToMovie,
-    allTheater_done,
-    t_allMovie,
-    select_Theater_To_Day_done,
-    disableMovie,
-  } = useSelector((state) => state.ticket);
+  const { allTheater_done, t_allMovie, select_TheaterToMovie_done } =
+    useSelector((state) => state.ticket);
   const [selectedMovie, setSelectedMovie] = useState("");
   const [disable, setDisable] = useState(true);
   const CopyMovie = [];
@@ -37,15 +31,6 @@ const AllMovieList = ({ movieId, setMovieId, areaName, theater }) => {
     });
   }, [LOGIN_data.uid, dispatch]);
 
-  useEffect(() => {
-    if (!select_MovieTheater_done) {
-      dispatch({
-        type: SELECT_THEATER_REQUEST,
-        data: selectedMovie,
-      });
-    }
-  }, [select_MovieTheater_done]);
-
   //영화 토클 함수
   const selectMovie = (movie_id) => {
     const selectedObject = t_allMovie.find(({ id }) => id === movie_id);
@@ -60,42 +45,11 @@ const AllMovieList = ({ movieId, setMovieId, areaName, theater }) => {
       </MovieSelector>
       <MovieListWrapper>
         {t_allMovie.map((movie) => {
-          let selectedClassName = "";
-          selectedClassName += t_allMovie.find(
-            (selectedMovie) => selectedMovie.id === movie.id
-          )
-            ? "selectedInfoDarker "
-            : "";
-          let disableClassName = "";
-          if (select_TheaterToMovie_done) {
-            disableClassName = disableMovie.find(
-              (canSelectedMovie) => canSelectedMovie.id === movie.id
-            )
-              ? ""
-              : "disable";
-          }
-          return (
-            <MovieList
-              onClick={() => {
-                if (allTheater_done) {
-                  //영화ID로 지역 검색
-                  dispatch({
-                    type: SELECT_THEATER_REQUEST,
-                    data: movie.id,
-                  });
-                  console.log(CopyMovie);
-                  //동시에 영화ID와 지역으로 극장 검색
-                  dispatch({
-                    type: SELECT_MOVIETHEATER_REQUEST,
-                    data: { movieId: movie.id, area: areaName },
-                  });
-
-                  if (!select_Theater_To_Day_done) {
-                    dispatch({
-                      type: SELECT_DAY_REQUEST,
-                      data: movie.id,
-                    });
-                  } else if (select_Theater_To_Day_done) {
+          if (movie.able === "able") {
+            return (
+              <MovieList
+                onClick={() => {
+                  if (select_TheaterToMovie_done) {
                     dispatch({
                       type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
                       data: {
@@ -106,27 +60,66 @@ const AllMovieList = ({ movieId, setMovieId, areaName, theater }) => {
                   }
                   selectMovie(movie.id);
                   setMovieId(movie.id);
-                }
-
-                if (disableClassName === "disable") {
-                  alert("새로 입력합니다 ");
+                }}
+                movie={movie.id}
+                selectedMovie={selectedMovie}
+              >
+                <MovieListMovieName selectedMovie={selectedMovie}>
+                  {movie.title}
+                </MovieListMovieName>
+              </MovieList>
+            );
+          } else if (movie.able === "disable") {
+            return (
+              <MovieList
+                onClick={() => {}}
+                movie={movie.id}
+                selectedMovie={selectedMovie}
+              >
+                <MovieListMovieName
+                  selectedMovie={selectedMovie}
+                  className="disable"
+                >
+                  {movie.title}
+                </MovieListMovieName>
+              </MovieList>
+            );
+          } else {
+            return (
+              <MovieList
+                onClick={() => {
                   dispatch({
                     type: SELECT_THEATER_REQUEST,
                     data: movie.id,
                   });
-                }
-              }}
-              movie={movie.id}
-              selectedMovie={selectedMovie}
-            >
-              <MovieListMovieName
+
+                  if (select_TheaterToMovie_done) {
+                    dispatch({
+                      type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
+                      data: {
+                        mid: movie.id,
+                        tid: theater,
+                      },
+                    });
+                  } else if (!select_TheaterToMovie_done) {
+                    dispatch({
+                      type: SELECT_DAY_REQUEST,
+                      data: movie.id,
+                    });
+                  }
+
+                  selectMovie(movie.id);
+                  setMovieId(movie.id);
+                }}
+                movie={movie.id}
                 selectedMovie={selectedMovie}
-                className={selectedClassName + disableClassName}
               >
-                {movie.title}
-              </MovieListMovieName>
-            </MovieList>
-          );
+                <MovieListMovieName selectedMovie={selectedMovie}>
+                  {movie.title}
+                </MovieListMovieName>
+              </MovieList>
+            );
+          }
         })}
       </MovieListWrapper>
     </MovieWrapper>

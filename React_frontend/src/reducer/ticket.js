@@ -4,11 +4,6 @@ export const initalState = {
   t_allMovie_error: null,
   t_allMovie: [],
 
-  allArea_loading: false,
-  allArea_done: false,
-  allArea_error: null,
-  allArea: [],
-
   allTheater_loading: false,
   allTheater_done: false,
   allTheater_error: null,
@@ -135,32 +130,6 @@ const ticket = (state = initalState, action) => {
         t_allMovie_error: action.error,
       };
 
-    // 전체 지역 SELECT
-    case ALLAREA_REQUEST:
-      return {
-        ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨
-        allArea_loading: true,
-        allArea_done: false,
-        allArea_error: null,
-      };
-
-    case ALLAREA_SUCCESS:
-      return {
-        ...state,
-        allArea_loading: false,
-        allArea_done: true,
-        allArea_error: null,
-        allArea: action.data,
-      };
-
-    case ALLAREA_FAILURE:
-      return {
-        ...state,
-        allArea_loading: false,
-        allArea_done: false,
-        allArea_error: null,
-      };
-
     //검색한 극장에 대한 지역 SELECT
     case ALLTHEATER_REQUEST:
       return {
@@ -228,7 +197,7 @@ const ticket = (state = initalState, action) => {
         select_theater_loading: false,
         select_theater_done: true,
         select_theater_error: null,
-        disableArea: action.data,
+        allTheater: action.data,
       };
     case SELECT_THEATER_FAILURE:
       return {
@@ -277,7 +246,7 @@ const ticket = (state = initalState, action) => {
         select_TheaterToMovie_loading: false,
         select_TheaterToMovie_done: true,
         select_TheaterToMovie_error: null,
-        disableMovie: action.data,
+        t_allMovie: action.data,
       };
     case SELECT_THEATER_TO_MOVIE_FAILURE:
       return {
