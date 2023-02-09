@@ -74,7 +74,6 @@ async function SignUp(data) {
   })
 };
 
-
 function* USER_ID() {
   yield takeLatest(USER_ID_REQUEST, IDcheck);
 }
@@ -83,6 +82,6 @@ function* USER_JOIN() {
   yield takeLatest(USER_JOIN_REQUEST, UserSignUp)
 }
 
-export default function* S_user_joinSaga() {
+export default function* S_user_join() {
   yield all([fork(USER_ID), fork(USER_JOIN)]);
 }

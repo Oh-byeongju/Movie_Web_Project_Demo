@@ -101,12 +101,6 @@ const LoginForm = () => {
     }
   },[LOGIN_data, location.state, navigate, dispatch]);
 
-
-
-
-  console.log(LOGIN_data.uname);
-console.log(LOGIN_data.uid);
-
 	return (
 		<div>
 			<Layout>
