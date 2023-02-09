@@ -36,17 +36,18 @@ public class MovieInfoService {
 
     //movieinfo에서 movie 데이터를 받아서 cid 추출하는 서비스
     @Transactional
-    public List<Long> findByMovie(Long id){
+    public Set<Long> findByMovie(Long id){
         //외래키로 엔티티 검색 위해 매핑
         MovieEntity movieEntity= MovieEntity.builder().mid(id).build();
         List<MovieInfoEntity> datas = movieInfoRepository.findByMovie(movieEntity);
 
-        List<Long> mappedcid = new ArrayList<>();
+        Set<Long> mappedcid = new HashSet<>();
         //cid 추출
         for(MovieInfoEntity cc :datas){
             mappedcid.add(cc.getCinema().getCid());
         }
         return mappedcid;
+        //cid 추출
     }
     @Transactional
     public List<MovieInfoDto> findByMovieToDay(Long id){

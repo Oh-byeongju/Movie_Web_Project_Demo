@@ -24,6 +24,9 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
     @Query("SELECT mi From MovieInfoEntity as mi, CinemaEntity as c WHERE mi.cinema.cid IN (:cid)")
     public List<MovieInfoEntity> findByCinemaCidIn(@Param("cid")List<Long> cid);
 
+    @Query("SELECT mi From MovieInfoEntity as mi, CinemaEntity as c WHERE mi.cinema.cid Not IN (:cid)")
+    public List<MovieInfoEntity> findByCinemaCidNotIn(@Param("cid")List<Long> cid);
+
     public List<MovieInfoEntity> findByCinemaCidInAndMovieMid(List<Long> cid, Long mid);
 
 

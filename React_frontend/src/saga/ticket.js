@@ -3,9 +3,6 @@ import {
   T_ALLMOVIE_FAILURE,
   T_ALLMOVIE_SUCCESS,
   T_ALLMOVIE_REQUEST,
-  ALLAREA_FAILURE,
-  ALLAREA_SUCCESS,
-  ALLAREA_REQUEST,
   ALLTHEATER_SUCCESS,
   ALLTHEATER_FAILURE,
   ALLTHEATER_REQUEST,
@@ -37,10 +34,10 @@ import { http } from "../lib/http";
 
 //전체 영화 검색
 
-//영화 불러오기
+//영화 불러오기 좋아요순
 async function loadAllMovie(data) {
   return await http
-    .get("/v2/normal/movie", {
+    .get("v2/normal/movie", {
       params: {
         uid: data,
       },
@@ -87,8 +84,8 @@ function* allMovieLoad(action) {
   }
 }
 
-//전체 지역 SELECT API
-async function allAreaApi() {
+//전체 극장 검색하기
+async function allTheaterApi() {
   return await http
     .get("/v2/normal/area")
     .then((response) => {
@@ -98,37 +95,9 @@ async function allAreaApi() {
       return error.response;
     });
 }
-
-//전체 지역 SELECT SAGA
-function* allArea() {
-  const result = yield call(allAreaApi);
-  if (result.status === 200) {
-    yield put({
-      type: ALLAREA_SUCCESS,
-      data: result.data,
-    });
-  } else {
-    yield put({
-      type: ALLAREA_FAILURE,
-      data: result.status,
-    });
-  }
-}
-
-//지역 클릭시 지역NAME으로 극장 검색 API
-async function allTheaterApi(data) {
-  return await http
-    .get(`/v2/normal/theater?area=${data}`)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      return error.response;
-    });
-}
 //지역 클릭시 지역NAME으로 극장 검색 SAGA
 function* allTheater(action) {
-  const result = yield call(allTheaterApi, action.data);
+  const result = yield call(allTheaterApi);
   if (result.status === 200) {
     yield put({
       type: ALLTHEATER_SUCCESS,
@@ -142,7 +111,7 @@ function* allTheater(action) {
   }
 }
 
-//영화 클릭 시 영화id로 지역 검색
+//영화 클릭 시 영화id로 극장 검색
 async function selectTheaterApi(data) {
   return await http
     .get(`/infomovie/normal/movieselect?id=${data}`)
@@ -167,7 +136,7 @@ function* selectTheater(action) {
     });
   }
 }
-
+/*
 //영화 클릭 시 영화 ID와 지역NAME으로 해당되는 극장 SELECT
 async function selectMovieTheaterApi(data) {
   return await http
@@ -200,7 +169,7 @@ function* selectMovieTheater(action) {
       data: result.status,
     });
   }
-}
+}*/
 
 //극장으로 영화 검색
 async function selectTheaterToMovieApi(data) {
@@ -219,13 +188,27 @@ async function selectTheaterToMovieApi(data) {
 }
 function* selectTheaterToMovie(action) {
   const result = yield call(selectTheaterToMovieApi, action.data);
+  const allmoviedata = result.data.map((mv) => ({
+    id: mv.mid, //영화번호
+    dir: mv.mdir, //감독
+    date: mv.mdate, //개봉일
+    actor: mv.mactor, //주연
+    supactor: mv.supactor, //조연
+    time: mv.mtime, //러닝타임
+    genre: mv.mgenre, //장르
+    story: mv.mstory,
+    title: mv.mtitle, //제목
+    rating: mv.mrating, //연령
+    imagepath: mv.mimagepath,
+    likes: mv.mlikes,
+    score: mv.mscore,
+    like: mv.mlike,
+    able: mv.able,
+  }));
   if (result.status === 200) {
     //네트워크에
     //네트워크에서 200으로 받아서 수정했음 id: mv.cinema.theater.area.aarea:{}
-    const allmoviedata = result.data.map((mv) => ({
-      id: mv.mid, //영화번호
-      title: mv.mtitle, //제목
-    }));
+
     yield put({
       type: SELECT_THEATER_TO_MOVIE_SUCCESS,
       data: allmoviedata,
@@ -372,15 +355,14 @@ function* TallMovieSaga() {
 function* allTheaterSaga() {
   yield takeLatest(ALLTHEATER_REQUEST, allTheater);
 }
-function* allAreaSaga() {
-  yield takeLatest(ALLAREA_REQUEST, allArea);
-}
+
 function* selectTheaterSaga() {
   yield takeLatest(SELECT_THEATER_REQUEST, selectTheater);
 }
+/*
 function* selectMovieTheaterSaga() {
   yield takeLatest(SELECT_MOVIETHEATER_REQUEST, selectMovieTheater);
-}
+}*/
 
 function* selectTheaterToMovieSaga() {
   yield takeLatest(SELECT_THEATER_TO_MOVIE_REQUEST, selectTheaterToMovie);
@@ -402,9 +384,8 @@ export default function* ticketSaga() {
   yield all([
     fork(TallMovieSaga),
     fork(allTheaterSaga),
-    fork(allAreaSaga),
     fork(selectTheaterSaga),
-    fork(selectMovieTheaterSaga),
+    /*fork(selectMovieTheaterSaga),*/
     fork(selectTheaterToMovieSaga),
     fork(allDaySaga),
     fork(selectMovieToDaySaga),

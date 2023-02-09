@@ -31,16 +31,11 @@ public class TheaterController {
     MovieInfoDto movieInfoDto;
 
     @GetMapping("/normal/area")
-    public Set<String> getData() {
+    public List<TheaterDto> getData() {
         return theaterService.getInfo();
     }
 
 
-    @GetMapping("/normal/theater")
-    //선택한 지역에 따라 지역 검색
-    public ResponseEntity<List<TheaterDto>> findByTarea(@RequestParam String area) {
-        return ResponseEntity.ok().body(theaterService.findByTarea(area));
-    }
 
 
 
