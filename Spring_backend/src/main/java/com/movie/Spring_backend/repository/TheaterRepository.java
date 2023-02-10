@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface TheaterRepository extends JpaRepository<TheaterEntity,Long>  {
     //JpaRepository<Entity클래스, PK값>
     List<TheaterEntity> findAll();
+
     List <TheaterEntity> findByTidIn(List<Long> tid);
 
     List <TheaterEntity> findByTidNotIn(List<Long> tid);

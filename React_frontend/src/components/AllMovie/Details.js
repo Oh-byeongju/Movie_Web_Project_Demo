@@ -21,7 +21,7 @@ const Details = () => {
   
     if (pointPos === -1) return Number(num).toFixed(decimalPoint);
   
-    const splitNumber = num.split(".");
+    const splitNumber = num.split("."); 
     const rightNum = splitNumber[1].substring(0, decimalPoint);
     return Number(`${splitNumber[0]}.${rightNum}`).toFixed(decimalPoint);
   };
