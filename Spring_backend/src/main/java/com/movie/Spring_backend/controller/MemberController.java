@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// 쿠키를 프론트단과 같이 사용하기 위해 allowCredentials를 true로 설정
-@CrossOrigin(origins = "${spring.cors.origins}", allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")

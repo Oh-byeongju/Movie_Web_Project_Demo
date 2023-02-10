@@ -1,5 +1,6 @@
 /*
- 23-02-07 전체영화 조회 및 사용자 영화 검색 메소드 수정(오병주)
+  23-02-07 전체영화 조회 및 사용자 영화 검색 메소드 수정(오병주)
+  23-02-10 영화 세부내용을 위한 메소드 설계(오병주)
 */
 package com.movie.Spring_backend.service;
 import com.movie.Spring_backend.dto.MovieDto;
@@ -12,6 +13,7 @@ import com.movie.Spring_backend.repository.MovieMemberRepository;
 import com.movie.Spring_backend.repository.MovieRepository;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +56,7 @@ public class MovieService {
 
     // 사용자 영화 검색 메소드
     @Transactional
-    public List<MovieDto> findByMtitleContaining(String title, String uid) {
+    public List<MovieDto> getSearchMovie(String title, String uid) {
         // 사용자가 입력한 제목으로 영화 검색(제목의 일부분 검색도 지원)
         List<MovieEntity> Movies = movieRepository.findSearchDESC(title);
 
@@ -71,7 +73,7 @@ public class MovieService {
             MovieLikeNum.add(mm.getMovie().getMid());
         }
 
-        // 검색된 영화가 없을경우 예외처리 아닐 경우 영화 목록과 좋아요 기록을 mapping 후 리턴
+        // 검색된 영화가 없을경우 예외처리, 아닐 경우 영화 목록과 좋아요 기록을 mapping 후 리턴
         if(!Movies.isEmpty()) {
             return Movies.stream().map(movie ->
                     movieMapper.toDto(movie, MovieLikeNum.contains(movie.getMid()))).collect(Collectors.toList());
@@ -81,47 +83,30 @@ public class MovieService {
         }
     }
 
-    // 현재 아래쪽 메소드들도 mapper로 묶는걸로 수정 해야함
-    //테이블의 아이디 값을 통해 불러오기
+    // 영화 ID로 검색하는 메소드
     @Transactional
-    public List<MovieDto> findById(Long id) {
-        List<MovieEntity> datas = movieRepository.findByMid(id);
+    public MovieDto getMovieDetail(Long mid, String uid) {
+        // 영화 ID를 기반으로 영화 검색
+        MovieEntity movie = movieRepository.findByMid(mid);
 
-        return datas.stream().map(data-> MovieDto.builder()
-                .mid(data.getMid())
-                .mtitle(data.getMtitle())
-                .mdir(data.getMdir())
-                .mactor(data.getMactor())
-                .msupactor(data.getMsupactor())
-                .mgenre(data.getMgenre())
-                .mtime(data.getMtime())
-                .mdate(data.getMdate())
-                .mrating(data.getMrating())
-                .mstory(data.getMstory())
-                .mimagepath(data.getMimagepath())
-                .mlikes(data.getCntMovieLike())
-                .mscore(data.getAvgScore())
-                .build()).collect(Collectors.toList());
-    }
+        // 받은 id 정보를 entity 형으로 변환(로그인 정보가 없으면 전달받은 매개변수 uid가 No_login 으로 설정)
+        MemberEntity member = MemberEntity.builder()
+                .uid(uid).build();
 
-    @Transactional
-    public List<MovieDto> findByMidIn(List<Long> mid) {
-        List<MovieEntity> datas = movieRepository.findByMidIn(mid);
+        // 사용자의 현재 영화 평가 기록 검색
+        MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
 
-        return datas.stream().map(data-> MovieDto.builder()
-                .mid(data.getMid())
-                .mtitle(data.getMtitle())
-                .mdir(data.getMdir())
-                .mactor(data.getMactor())
-                .msupactor(data.getMsupactor())
-                .mgenre(data.getMgenre())
-                .mtime(data.getMtime())
-                .mdate(data.getMdate())
-                .mrating(data.getMrating())
-                .mstory(data.getMstory())
-                .mimagepath(data.getMimagepath())
-                .mlikes(data.getCntMovieLike())
-                .mscore(data.getAvgScore())
-                .build()).collect(Collectors.toList());
+        // 사용자의 영화 평가가 없을 경우 좋아요 여부를 false 로 return
+        if (MovieMember == null) {
+            return movieMapper.toDto(movie, false);
+        }
+
+        // 사용자의 영화 평가에서 좋아요 여부를 판단 후 return
+        if (MovieMember.getUmlike() == null || !MovieMember.getUmlike()) {
+            return movieMapper.toDto(movie, false);
+        }
+        else {
+            return movieMapper.toDto(movie, true);
+        }
     }
 }

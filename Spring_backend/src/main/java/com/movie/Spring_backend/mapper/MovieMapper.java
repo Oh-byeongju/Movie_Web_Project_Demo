@@ -84,6 +84,4 @@ public class MovieMapper {
                 .able("disable")
                 .build();
     }
-
-
 }

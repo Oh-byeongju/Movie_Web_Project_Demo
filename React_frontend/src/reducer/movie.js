@@ -5,29 +5,38 @@ export const initalState = {
   movie_search_loading: false,
   movie_search_done: false,
   movie_search_error: null,
+  detail_movie_loading: false,
+  detail_movie_done: false,
+  detail_movie_error: null,
 
   allMovie: [],
-  searchmovie: [],
+  detailMovie: [],
 };
 
-//전체 영화 리스트
+// 전체 영화 리스트
 export const ALLMOVIE_REQUEST = "ALLMOVIE_REQUEST";
 export const ALLMOVIE_SUCCESS = "ALLMOVIE_SUCCESS";
 export const ALLMOVIE_FAILURE = "ALLMOVIE_FAILURE";
 
-//검색한 영화 리스트
+// 검색한 영화 리스트
 export const MOVIE_SEARCH_REQUEST = "MOVIE_SEARCH_REQUEST";
 export const MOVIE_SEARCH_SUCCESS = "MOVIE_SEARCH_SUCCESS";
 export const MOVIE_SEARCH_FAILURE = "MOVIE_SEARCH_FAILURE";
 
+// 영화 세부정보 리스트
+export const DETAIL_MOVIE_REQUEST = "DETAIL_MOVIE_REQUEST";
+export const DETAIL_MOVIE_SUCCESS = "DETAIL_MOVIE_SUCCESS";
+export const DETAIL_MOVIE_FAILURE = "DETAIL_MOVIE_FAILURE";
+
 const movie = (state = initalState, action) => {
   switch (action.type) {
+    // 전체 영화 케이스들
     case ALLMOVIE_REQUEST:
       return {
-        ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨
+        ...state, 
         allmovie_loading: true,
         allmovie_done: false,
-        allmovie_error: null,
+        allmovie_error: null
       };
 
     case ALLMOVIE_SUCCESS:
@@ -36,23 +45,23 @@ const movie = (state = initalState, action) => {
         allmovie_loading: false,
         allmovie_done: true,
         allmovie_error: null,
-        allMovie: action.data,
+        allMovie: action.data
       };
 
     case ALLMOVIE_FAILURE:
       return {
         ...state,
-        add_ticket_loading: false,
-        add_ticket_done: false,
-        add_ticket_error: action.error,
+        allmovie_loading: false,
+        allmovie_done: false,
+        allmovie_error: action.error
       };
-    /*-------------------------------------전체 영화 페이지에서 영화검색 */
+    // 영화 검색 케이스들
     case MOVIE_SEARCH_REQUEST:
       return {
-        ...state, //불변성 때문에 ...state case 추가할 시 무조건 첫줄에 추가해야 됨
+        ...state, 
         movie_search_loading: true,
         movie_search_done: false,
-        movie_search_error: null,
+        movie_search_error: null
       };
 
     case MOVIE_SEARCH_SUCCESS:
@@ -61,7 +70,7 @@ const movie = (state = initalState, action) => {
         movie_search_loading: false,
         movie_search_done: true,
         movie_search_error: null,
-        allMovie: action.data,
+        allMovie: action.data
       };
 
     case MOVIE_SEARCH_FAILURE:
@@ -72,7 +81,29 @@ const movie = (state = initalState, action) => {
         movie_search_error: action.error,
         allMovie: []
       };
-
+    // 영화 세부정보 케이스들
+    case DETAIL_MOVIE_REQUEST:
+      return {
+        ...state, 
+        detail_movie_loading: true,
+        detail_movie_done: false,
+        detail_movie_error: null
+      };
+    case DETAIL_MOVIE_SUCCESS:
+      return {
+        ...state,
+        detail_movie_loading: false,
+        detail_movie_done: true,
+        detail_movie_error: null,
+        detailMovie: action.data
+      };
+    case DETAIL_MOVIE_FAILURE:
+      return {
+        ...state,
+        detail_movie_loading: false,
+        detail_movie_done: false,
+        detail_movie_errorr: action.error
+      };
     default:
       return state;
   }

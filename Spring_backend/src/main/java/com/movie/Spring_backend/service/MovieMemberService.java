@@ -6,10 +6,12 @@ package com.movie.Spring_backend.service;
 import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.entity.MovieEntity;
 import com.movie.Spring_backend.entity.MovieMemberEntity;
+import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.repository.MovieMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Map;
 
@@ -18,10 +20,14 @@ import java.util.Map;
 public class MovieMemberService {
 
     private final MovieMemberRepository movieMemberRepository;
+    private final JwtValidCheck jwtValidCheck;
 
     // 사용자가 영화 좋아요를 누를 때 실행되는 메소드
     @Transactional
-    public void MovieLikeUpdate(Map<String, String> requestMap) {
+    public void MovieLikeUpdate(Map<String, String> requestMap, HttpServletRequest request) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
         // requestMap 안에 정보를 추출
         String User_id = requestMap.get("uid");
         String Movie_id = requestMap.get("mid");

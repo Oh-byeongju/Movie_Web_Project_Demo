@@ -1,4 +1,7 @@
-// 23-01-16 Security 기본적인 설정 구현(오병주)
+/*
+  23-01-16 Security 기본적인 설정 구현(오병주)
+  23-02-10 Cors 전역 설정 구현(오병주)
+*/
 package com.movie.Spring_backend.config;
 
 import com.movie.Spring_backend.jwt.JwtAccessDeniedHandler;
@@ -14,9 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 // Spring Security의 기본적인 설정을 클래스
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurityConfig {
 
     private final TokenProvider tokenProvider;
+    private final CorsConfig corsConfig;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -37,10 +38,10 @@ public class WebSecurityConfig {
 
     // 실질적인 로직인 filterChain 메소드 HttpSecurity를 Configuring해서 사용
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
                 // https만 사용하기위해 httpBasic을 disable
-                .httpBasic().disable()
+                .cors().disable()
                 // 리액트와 스프링부트 사이에 REST API 사용을 위해 csrf 방지 disable
                 .csrf().disable()
                 // REST API를 통해 세션 없이 토큰을 주고받으며 데이터를 주고받기 때문에 세션설정을 STATELESS로 설정
@@ -59,10 +60,12 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 //                .antMatchers("/mypage").hasRole("ADMIN") // ROLE_ADMIN 권한을 가진 사용자만 접근 허용 추후 사용
 
-                // 사전에 만든 JwtSecurityConfig 클래스를 통해 tokenProvider를 적용
                 .and()
+                // cors 관련 필터 적용(전역 설정)
+                .addFilter(corsConfig.corsFilter())
+                // 사전에 만든 JwtSecurityConfig 클래스를 통해 tokenProvider를 적용(Security 필터 적용)
                 .apply(new JwtSecurityConfig(tokenProvider));
 
-        return http.build();
+        return httpSecurity.build();
     }
 }
