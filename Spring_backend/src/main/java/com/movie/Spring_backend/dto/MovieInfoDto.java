@@ -2,6 +2,7 @@ package com.movie.Spring_backend.dto;
 
 import com.movie.Spring_backend.entity.CinemaEntity;
 import com.movie.Spring_backend.entity.MovieEntity;
+import com.movie.Spring_backend.entity.TheaterEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,15 +23,19 @@ public class MovieInfoDto {
     private MovieEntity movie;
 
     private CinemaEntity cinema;
-
+    public TheaterEntity getTheater() {
+        return cinema.getTheater();
+    }
     @Builder
-    public MovieInfoDto(Long miid, Date miday, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema) {
+    public MovieInfoDto(Long miid, Date miday, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema
+                        ) {
         this.miid= miid;
         this.miday=miday;
         this.mistarttime=mistarttime;
         this.miendtime=miendtime;
         this.movie=movie;
         this.cinema=cinema;
+
     }
 
 }

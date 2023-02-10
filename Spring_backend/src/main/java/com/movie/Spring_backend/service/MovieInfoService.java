@@ -8,6 +8,7 @@ import com.movie.Spring_backend.entity.MovieEntity;
 import com.movie.Spring_backend.entity.MovieInfoEntity;
 import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
+import com.movie.Spring_backend.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 public class MovieInfoService {
     private final MovieInfoRepository movieInfoRepository;
+    private final MovieRepository movieRepository;
 
 
     @Transactional
@@ -49,6 +51,7 @@ public class MovieInfoService {
         return mappedcid;
         //cid 추출
     }
+    //영화로 날짜 검색
     @Transactional
     public List<MovieInfoDto> findByMovieToDay(Long id){
         //외래키로 엔티티 검색 위해 매핑
@@ -65,6 +68,7 @@ public class MovieInfoService {
 
 
     //~ing
+    //극장 in 데이터 검색
     @Transactional
     public List<MovieInfoDto> findByCinemaCidIn(List<Long> cid){
         List<MovieInfoEntity> datas = movieInfoRepository.findByCinemaCidIn(cid);
@@ -77,6 +81,7 @@ public class MovieInfoService {
         }
     }
 
+    //극장과 영화로 데이터 추출
     @Transactional
     public List<MovieInfoDto> findByMovieTheaterDay(List<Long> cid, Long mid){
 
@@ -85,6 +90,62 @@ public class MovieInfoService {
 
     }
 
+    @Transactional
+    public List<Long> findByMidayToMid(Date miday){
+        List<MovieInfoEntity> datas = movieInfoRepository.findByMiday(miday);
+        //여기서 mid를 추출
+        List<Long> mid = new ArrayList<>();
+        for(MovieInfoEntity mm :datas){
+            mid.add(mm.getMovie().getMid());
+        }
 
+     return mid;
+
+    }
+    @Transactional
+    public Set<Long> findByMidayToCid(Date miday){
+        List<MovieInfoEntity> datas = movieInfoRepository.findByMiday(miday);
+        //여기서 mid를 추출
+        Set<Long> cid = new HashSet<>();
+        for(MovieInfoEntity mm :datas){
+            cid.add(mm.getCinema().getCid());
+        }
+
+        return cid;
+
+    }
+
+    @Transactional
+    public List<Long> findByMidayAndCinemaCidIn(Date miday, List<Long> cid){
+        List<MovieInfoEntity> datas= movieInfoRepository.findByMidayAndCinemaCidIn(miday,cid);
+        //여기서 mid를 추출
+
+        List<Long> mid = new ArrayList<>();
+        for(MovieInfoEntity mm :datas){
+            mid.add(mm.getMovie().getMid());
+        }
+        return mid;
+    }
+    @Transactional
+    public List<Long> findByMidayAndMovieMid(Date miday, Long mid){
+        List<MovieInfoEntity> datas=movieInfoRepository.findByMidayAndMovieMid(miday,mid);
+
+        List<Long> cid= new ArrayList<>();
+        for(MovieInfoEntity mm :datas){
+            cid.add(mm.getCinema().getCid());
+        }
+        return cid;
+    }
+    @Transactional
+    public List<MovieInfoDto> findBySchedule(Date miday, Long mid, List<Long> cid){
+        List<MovieInfoEntity> datas = movieInfoRepository.findBySchedule(miday,mid,cid);
+
+        return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).miday(data.getMiday()).mistarttime(data.getMistarttime())
+                .miendtime(data.getMiendtime())
+                .movie(data.getMovie())
+                .cinema(data.getCinema())
+                .build()).collect(Collectors.toList());
+
+    }
 }
 
