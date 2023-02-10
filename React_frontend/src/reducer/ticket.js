@@ -13,7 +13,9 @@ export const initalState = {
   allDay_done: false,
   allDay_error: null,
   allDay: [],
-
+  choiceMovie: false,
+  choiceTheater: false,
+  choiceDay: false,
   select_theater_loading: false,
   select_theater_done: false,
   select_theater_error: null,
@@ -41,6 +43,22 @@ export const initalState = {
   select_MovieTheater_To_Day_loading: false,
   select_MovieTheater_To_Day_done: false,
   select_MovieTheater_To_Day_error: null,
+
+  select_day_to_movie_loading: false,
+  select_day_to_movie_done: false,
+  select_day_to_movie_error: null,
+
+  select_day_to_theater_loading: false,
+  select_day_to_theater_done: false,
+  select_day_to_theater_error: null,
+
+  select_daytheater_to_movie_loading: false,
+  select_daytheater_to_movie_done: false,
+  select_daytheater_to_movie_error: null,
+
+  select_daymovie_to_theater_loading: false,
+  select_daymovie_to_theater_done: false,
+  select_daymovie_to_theater_error: null,
 
   disableMovie: [],
   disableArea: [],
@@ -101,6 +119,27 @@ export const SELECT_MOVIETHEATER_TO_DAY_SUCCESS =
 export const SELECT_MOVIETHEATER_TO_DAY_FAILURE =
   "SELECT_MOVIETHEATER_TO_DAY_FAILURE";
 
+export const SELECT_DAY_TO_MOVIE_REQUEST = "SELECT_DAY_TO_MOVIE_REQUEST";
+export const SELECT_DAY_TO_MOVIE_SUCCESS = "SELECT_DAY_TO_MOVIE_SUCCESS";
+export const SELECT_DAY_TO_MOVIE_FAILURE = "SELECT_DAY_TO_MOVIE_FAILURE";
+
+export const SELECT_DAY_TO_THEATER_REQUEST = "SELECT_DAY_TO_THEATER_REQUEST";
+export const SELECT_DAY_TO_THEATER_SUCCESS = "SELECT_DAY_TO_THEATER_SUCCESS";
+export const SELECT_DAY_TO_THEATER_FAILURE = "SELECT_DAY_TO_THEATER_FAILURE";
+
+export const SELECT_DAYMOVIE_TO_THEATER_REQUEST =
+  "SELECT_DAYMOVIE_TO_THEATER_REQUEST";
+export const SELECT_DAYMOVIE_TO_THEATER_SUCCESS =
+  "SELECT_DAYMOVIE_TO_THEATER_SUCCESS";
+export const SELECT_DAYMOVIE_TO_THEATER_FAILURE =
+  "SELECT_DAYMOVIE_TO_THEATER_FAILURE";
+
+export const SELECT_DAYTHEATER_TO_MOVIE_REQUEST =
+  "SELECT_DAYTHEATER_TO_MOVIE_REQUEST";
+export const SELECT_DAYTHEATER_TO_MOVIE_SUCCESS =
+  "SELECT_DAYTHEATER_TO_MOVIE_SUCCESS";
+export const SELECT_DAYTHEATER_TO_MOVIE_FAILURE =
+  "SELECT_DAYTHEATER_TO_MOVIE_FAILURE";
 const ticket = (state = initalState, action) => {
   switch (action.type) {
     //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
@@ -189,6 +228,7 @@ const ticket = (state = initalState, action) => {
         select_theater_loading: true,
         select_theater_done: false,
         select_theater_error: null,
+        choiceMovie: false,
       };
 
     case SELECT_THEATER_SUCCESS:
@@ -197,6 +237,8 @@ const ticket = (state = initalState, action) => {
         select_theater_loading: false,
         select_theater_done: true,
         select_theater_error: null,
+        choiceMovie: true,
+
         allTheater: action.data,
       };
     case SELECT_THEATER_FAILURE:
@@ -205,6 +247,7 @@ const ticket = (state = initalState, action) => {
         select_theater_loading: false,
         select_theater_done: false,
         select_theater_error: action.error,
+        choiceMovie: false,
       };
 
     //영화 클릭 시 영화id와 지역으로 극장 검색
@@ -214,6 +257,7 @@ const ticket = (state = initalState, action) => {
         select_MovieTheater_loading: true,
         select_MovieTheater_done: false,
         select_MovieTheater_error: null,
+        choiceMovie: false,
       };
     case SELECT_MOVIETHEATER_SUCCESS:
       return {
@@ -221,6 +265,7 @@ const ticket = (state = initalState, action) => {
         select_MovieTheater_loading: false,
         select_MovieTheater_done: true,
         select_MovieTheater_error: null,
+        choiceMovie: true,
         disableTheater: action.data,
       };
     case SELECT_MOVIETHEATER_FAILURE:
@@ -229,7 +274,7 @@ const ticket = (state = initalState, action) => {
         select_MovieTheater_loading: false,
         select_MovieTheater_done: false,
         select_MovieTheater_error: action.error,
-        allTheater: [],
+        choiceMovie: false,
       };
 
     //지역에 따른 영화 SELECT
@@ -239,6 +284,7 @@ const ticket = (state = initalState, action) => {
         select_TheaterToMovie_loading: true,
         select_TheaterToMovie_done: false,
         select_TheaterToMovie_error: null,
+        choiceTheater: false,
       };
     case SELECT_THEATER_TO_MOVIE_SUCCESS:
       return {
@@ -246,6 +292,7 @@ const ticket = (state = initalState, action) => {
         select_TheaterToMovie_loading: false,
         select_TheaterToMovie_done: true,
         select_TheaterToMovie_error: null,
+        choiceTheater: true,
         t_allMovie: action.data,
       };
     case SELECT_THEATER_TO_MOVIE_FAILURE:
@@ -254,6 +301,7 @@ const ticket = (state = initalState, action) => {
         select_TheaterToMovie_loading: false,
         select_TheaterToMovie_done: false,
         select_TheaterToMovie_error: action.error,
+        choiceTheater: false,
       };
 
     //영화에 따른 날짜 SELECT
@@ -263,6 +311,7 @@ const ticket = (state = initalState, action) => {
         select_Day_loading: true,
         select_Day_done: false,
         select_Day_error: null,
+        choiceMovie: false,
       };
     case SELECT_DAY_SUCCESS:
       return {
@@ -270,6 +319,7 @@ const ticket = (state = initalState, action) => {
         select_Day_loading: false,
         select_Day_done: true,
         select_Day_error: null,
+        choiceMovie: true,
         selectDay: action.data,
       };
     case SELECT_DAY_FAILURE:
@@ -278,6 +328,7 @@ const ticket = (state = initalState, action) => {
         select_Day_loading: false,
         select_Day_done: false,
         select_Day_error: action.error,
+        choiceMovie: false,
       };
 
     //극장에 따른 날짜 SELECT
@@ -287,6 +338,7 @@ const ticket = (state = initalState, action) => {
         select_Theater_To_Day_loading: true,
         select_Theater_To_Day_done: false,
         select_Theater_To_Day_error: null,
+        choiceTheater: false,
       };
     case SELECT_THEATER_TO_DAY_SUCCESS:
       return {
@@ -294,6 +346,7 @@ const ticket = (state = initalState, action) => {
         select_Theater_To_Day_loading: false,
         select_Theater_To_Day_done: true,
         select_Theater_To_Day_error: null,
+        choiceTheater: true,
         selectDay: action.data,
       };
     case SELECT_THEATER_TO_DAY_FAILURE:
@@ -302,14 +355,17 @@ const ticket = (state = initalState, action) => {
         select_Theater_To_Day_loading: false,
         select_Theater_To_Day_done: false,
         select_Theater_To_Day_error: action.error,
+        choiceTheater: false,
       };
 
+    //지역 선택되어있는 상태에서 영화선택
     case SELECT_MOVIETHEATER_TO_DAY_REQUEST:
       return {
         ...state,
         select_MovieTheater_To_Day_loading: true,
         select_MovieTheater_To_Day_done: false,
         select_MovieTheater_To_Day_error: null,
+        choiceMovie: false,
       };
     case SELECT_MOVIETHEATER_TO_DAY_SUCCESS:
       return {
@@ -317,6 +373,7 @@ const ticket = (state = initalState, action) => {
         select_MovieTheater_To_Day_loading: false,
         select_MovieTheater_To_Day_done: true,
         select_MovieTheater_To_Day_error: null,
+        choiceMovie: true,
         selectDay: action.data,
       };
     case SELECT_MOVIETHEATER_TO_DAY_FAILURE:
@@ -325,6 +382,116 @@ const ticket = (state = initalState, action) => {
         select_MovieTheater_To_Day_loading: false,
         select_MovieTheater_To_Day_done: false,
         select_MovieTheater_To_Day_error: null,
+        choiceMovie: false,
+      };
+
+    //날짜로 영화 검색
+
+    case SELECT_DAY_TO_MOVIE_REQUEST:
+      return {
+        ...state,
+        select_day_to_movie_loading: true,
+        select_day_to_movie_done: false,
+        select_day_to_movie_error: null,
+        choiceDay: false,
+      };
+    case SELECT_DAY_TO_MOVIE_SUCCESS:
+      return {
+        ...state,
+        select_day_to_movie_loading: false,
+        select_day_to_movie_done: true,
+        select_day_to_movie_error: null,
+        choiceDay: true,
+        t_allMovie: action.data,
+      };
+    case SELECT_DAY_TO_MOVIE_FAILURE:
+      return {
+        ...state,
+        select_day_to_movie_loading: false,
+        select_day_to_movie_done: false,
+        select_day_to_movie_error: action.error,
+        choiceDay: false,
+      };
+
+    //날짜로 극장 검색
+
+    case SELECT_DAY_TO_THEATER_REQUEST:
+      return {
+        ...state,
+        select_day_to_theater_loading: true,
+        select_day_to_theater_done: false,
+        select_day_to_theater_error: null,
+        choiceDay: false,
+      };
+    case SELECT_DAY_TO_THEATER_SUCCESS:
+      return {
+        ...state,
+        select_day_to_theater_loading: false,
+        select_day_to_theater_done: true,
+        select_day_to_theater_error: null,
+        choiceDay: true,
+        allTheater: action.data,
+      };
+    case SELECT_DAY_TO_THEATER_FAILURE:
+      return {
+        ...state,
+        select_day_to_theater_loading: false,
+        select_day_to_theater_done: false,
+        select_day_to_theater_error: action.error,
+        choiceDay: false,
+      };
+
+    //
+    case SELECT_DAYTHEATER_TO_MOVIE_REQUEST:
+      return {
+        ...state,
+        select_daytheater_to_movie_loading: true,
+        select_daytheater_to_movie_done: false,
+        select_daytheater_to_movie_error: null,
+        choiceDay: false,
+      };
+    case SELECT_DAYTHEATER_TO_MOVIE_SUCCESS:
+      return {
+        ...state,
+        select_daytheater_to_movie_loading: false,
+        select_daytheater_to_movie_done: true,
+        select_daytheater_to_movie_error: null,
+        choiceDay: true,
+        t_allMovie: action.data,
+      };
+    case SELECT_DAYTHEATER_TO_MOVIE_FAILURE:
+      return {
+        ...state,
+        select_daytheater_to_movie_loading: false,
+        select_daytheater_to_movie_done: false,
+        select_daytheater_to_movie_error: null,
+        choiceDay: false,
+      };
+
+    case SELECT_DAYMOVIE_TO_THEATER_REQUEST:
+      return {
+        ...state,
+        select_daymovie_to_theater_loading: true,
+        select_daymovie_to_theater_done: false,
+        select_daymovie_to_theater_error: null,
+        choiceDay: false,
+      };
+    case SELECT_DAYMOVIE_TO_THEATER_SUCCESS:
+      return {
+        ...state,
+        select_daymovie_to_theater_loading: false,
+        select_daymovie_to_theater_done: true,
+        select_daymovie_to_theater_error: null,
+        choiceDay: true,
+        allTheater: action.data,
+      };
+    case SELECT_DAYMOVIE_TO_THEATER_FAILURE:
+      return {
+        ...state,
+        select_daymovie_to_theater_loading: false,
+        select_daymovie_to_theater_done: false,
+        select_daymovie_to_theater_error: null,
+        choiceDay: false,
       };
 
     default:

@@ -23,6 +23,7 @@ public interface CinemaRepository extends JpaRepository<CinemaEntity,Long>  {
 
      public List<CinemaEntity> findByTheater(TheaterEntity id);
 
+    public List<CinemaEntity> findByCidIn(@Param("cid") List<Long> cid);
 }
 //디비접근
 

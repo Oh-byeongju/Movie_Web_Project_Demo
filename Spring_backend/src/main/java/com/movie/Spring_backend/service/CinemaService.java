@@ -31,6 +31,9 @@ public class CinemaService {
 
 
 
+
+    //cid로 tid추출하기
+
         @Transactional
     public List<Long> findByCidIn(Set<Long> id) {
             List<CinemaEntity> datasIn = cinemaRepository.findByCidIn(id);
@@ -47,20 +50,29 @@ public class CinemaService {
             }
             return tid;
         }
+
+
+
     @Transactional
-    public List<Long> findByCidInTid(Set<Long> id) {
-
-        List<CinemaEntity> datas = cinemaRepository.findByCidIn(id);
-
-        List<Long> duplication = new ArrayList<>();
-        //cid 추출
-        for(CinemaEntity cc :datas){
-            duplication.add(cc.getTheater().getTid());
+    public List<Long> SelectTid(List<Long> id) {
+        List<CinemaEntity> datasIn = cinemaRepository.findByCidIn(id);
+        List<CinemaDto> cinemaIn = datasIn.stream().map(data -> CinemaDto.builder()
+                .cid(data.getCid())
+                .cname(data.getCname())
+                .cseat(data.getCseat())
+                .ctype(data.getCtype())
+                .theater(data.getTheater())
+                .build()).collect(Collectors.toList());
+        List<Long> tid = new ArrayList<>();
+        for (CinemaDto tt : cinemaIn) {
+            tid.add(tt.getTheater().getTid());
         }
-        return duplication;
-
-
+        return tid;
     }
+
+
+
+    //극장으로 cid뽑아서 movie able disable 검색
     @Transactional
     public List<MovieDto> findByTheater(Long id) {
         //외래키 검색을 위해 엔티티 매핑
@@ -114,6 +126,7 @@ public class CinemaService {
 
 
 
+    //tid로 cid추출함
     @Transactional
     public List<Long> findByTheaterday(Long id) {
         //외래키 검색을 위해 엔티티 매핑

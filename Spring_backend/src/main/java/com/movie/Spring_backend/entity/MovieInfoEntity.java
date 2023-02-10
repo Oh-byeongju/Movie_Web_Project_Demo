@@ -1,7 +1,5 @@
 package com.movie.Spring_backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +34,8 @@ public class MovieInfoEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cid")
     private CinemaEntity cinema;
+
+
 
     @Builder
     public MovieInfoEntity(Long miid, Date miday,String mistarttime, String miendtime , MovieEntity movie, CinemaEntity cinema) {

@@ -4,12 +4,25 @@ import { now } from "moment/moment";
 import moment from "moment";
 //선언하지 않아도, 디바이스 혹은 locale의 시간을 불러온다.
 import "moment/locale/ko";
-import { ALLDAY_REQUEST, SELECT_DAY_REQUEST } from "../../reducer/ticket";
+import {
+  ALLDAY_REQUEST,
+  SELECT_DAY_REQUEST,
+  SELECT_DAY_TO_MOVIE_REQUEST,
+  SELECT_DAY_TO_THEATER_REQUEST,
+  SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
+  SELECT_DAYMOVIE_TO_THEATER_REQUEST,
+} from "../../reducer/ticket";
 import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-const AllDayList = ({ movieId, areaName }) => {
-  const { allDay, selectDay, select_Day_done, select_Theater_To_Day_done } =
-    useSelector((state) => state.ticket);
+const AllDayList = ({ movieId, theater, setDay }) => {
+  const {
+    allDay,
+    selectDay,
+    select_Day_done,
+    select_Theater_To_Day_done,
+    choiceMovie,
+    choiceTheater,
+  } = useSelector((state) => state.ticket);
   const now = new Date();
   const [selectedDay, setSelectedDay] = useState("");
   const year = now.getFullYear();
@@ -42,6 +55,7 @@ const AllDayList = ({ movieId, areaName }) => {
 
   return (
     <Calender>
+      <Header>날짜</Header>
       <DayList ticking={false}>
         <YearMonthList>
           <p>
@@ -83,8 +97,67 @@ const AllDayList = ({ movieId, areaName }) => {
                 today={calendar.miday}
                 selectedDay={selectedDay}
                 className={selectedClassName + disableClassName}
+                onClick={() => {
+                  setDay(calendar.miday);
+                  //영화 선택
+                  if (choiceMovie && !choiceTheater) {
+                    dispatch({
+                      //영화+날짜
+                      type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
+                      data: {
+                        miday: calendar.miday,
+                        mid: movieId,
+                      },
+                    });
+                    dispatch({
+                      type: SELECT_DAY_TO_MOVIE_REQUEST,
+                      data: calendar.miday,
+                    });
+                  }
+                  //극장 선택
+                  else if (!choiceMovie && choiceTheater) {
+                    dispatch({
+                      type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
+                      data: {
+                        miday: calendar.miday,
+                        tid: theater,
+                      },
+                    });
+                    dispatch({
+                      type: SELECT_DAY_TO_THEATER_REQUEST,
+                      data: calendar.miday,
+                    });
+                  } else if (choiceMovie && choiceTheater) {
+                    //둘다 클릭
+                    dispatch({
+                      //영화+날짜
+                      type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
+                      data: {
+                        miday: calendar.miday,
+                        mid: movieId,
+                      },
+                    });
+                    dispatch({
+                      type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
+                      data: {
+                        miday: calendar.miday,
+                        tid: theater,
+                      },
+                    });
+                  } else {
+                    dispatch({
+                      type: SELECT_DAY_TO_MOVIE_REQUEST,
+                      data: calendar.miday,
+                    });
+                    dispatch({
+                      type: SELECT_DAY_TO_THEATER_REQUEST,
+                      data: calendar.miday,
+                    });
+                  }
+                  setSelectedDay(calendar.miday);
+                }}
               >
-                <div
+                <Week
                   className={cn(
                     "weak",
                     weekday[new Date(`'${calendar.miday}'`).getDay()] === "토"
@@ -97,13 +170,8 @@ const AllDayList = ({ movieId, areaName }) => {
                   ref={Weak}
                 >
                   {weekday[new Date(`'${calendar.miday}'`).getDay()]}
-                </div>
-                <div
-                  className={cn("day")}
-                  onClick={() => {
-                    setSelectedDay(calendar.miday);
-                  }}
-                >
+                </Week>
+                <div className={cn("day")}>
                   {calendar.miday.substring(8, 10)}
                 </div>
               </Today>
@@ -116,13 +184,25 @@ const AllDayList = ({ movieId, areaName }) => {
 };
 //{calendar.miday.substring(8, 10)}
 const Calender = styled.div`
-  align-items: center; //수직 중앙 정렬
-  justify-content: center; //수평 중앙 정렬
-  text-align: center;
-  height: 20vh;
-  width: 91px;
+  display: flex;
+  flex-direction: column;
   height: 528px;
-  overflow: initial;
+  width: 91px;
+  border-right: 1px solid #d8d9db;
+  background-color: #f2f0e5;
+  margin-left: 1px;
+`;
+const Header = styled.div`
+  color: #222;
+  position: relative;
+  height: 33px;
+  line-height: 33px;
+
+  text-align: center;
+  font-size: 20px;
+  padding: 40px 0 0px 0px;
+  font-weight: bold;
+  top: -15px;
 `;
 const YearMonthList = styled.div`
   font-family: "SEBANG";
@@ -130,10 +210,10 @@ const YearMonthList = styled.div`
   color: #1864ab;
 `;
 const Year = styled.div`
-  font-size: 25px;
+  font-size: 15px;
 `;
 const Month = styled.div`
-  font-size: 20px;
+  font-size: 30px;
 `;
 const DayList = styled.div`
   width: 100%;
@@ -148,7 +228,7 @@ const DayList = styled.div`
 `;
 const DaylistSector = styled.ul`
   position: relative;
-  left: -20px;
+  left: -39px;
   cursor: pointer;
   list-style-type: none;
   padding-top: 10px;
@@ -163,7 +243,6 @@ const DaylistSector = styled.ul`
     font-family: "Nanum Myeongjo";
     font-size: 0.8em;
     align-items: center; //수직 중앙 정렬
-
     justify-content: center; //수평 중앙 정렬
     color: black;
     text-align: center;
@@ -181,10 +260,19 @@ const DaylistSector = styled.ul`
 const Today = styled.li`
 padding-bottom: 10px;
 
-    background-color: ${(props) =>
-      props.today === props.selectedDay ? "gainsboro" : "white"};
-  }
+width:73px;
+display:flex;
+float:left;  
 
+    background-color: ${(props) =>
+      props.today === props.selectedDay ? "gainsboro" : "#f2f0e5"};
+  }
+`;
+const Week = styled.div`
+  padding-left: 20px;
+  padding-right: 5px;
+  position: relative;
+  top: 3px;
 `;
 
 export default AllDayList;

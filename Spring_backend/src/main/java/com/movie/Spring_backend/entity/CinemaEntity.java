@@ -1,5 +1,6 @@
 package com.movie.Spring_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,6 @@ public class CinemaEntity { // 소문자 수정본
 
     @Column(nullable = false)
     private String cseat;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="tid") //조인할 컬럼 이름
     private TheaterEntity theater;
