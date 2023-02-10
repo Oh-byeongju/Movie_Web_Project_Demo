@@ -27,13 +27,10 @@ public class JwtFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
 
     // 실제 필터링 로직이 수행되는 메소드
-    // 가입/로그인/재발급을 제외한 모든 Request 요청은 이 필터를 거치기 때문에 토큰 정보가 없거나 유효하지 않으면 정상적으로 수행되지 않음
+    // 모든 Request 요청은 이 필터를 거치기 때문에 토큰 정보가 유효하지 않으면 정상적으로 수행되지 않음(/**/normal/** url 제외)
     // 반대로 Request가 정상적으로 Controller까지 도착했으면 SecurityContext에 Member ID가 존재한다는 것이 보장함
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        System.out.println("필터 돈다");
-        System.out.println(request.getMethod());
 
         // axios 요청이 POST, DELETE, PUT, PATCH인 경우 Double submit cookie 메소드 실행(csrf 공격 방지)
         if (request.getMethod().equals("POST")
@@ -47,17 +44,12 @@ public class JwtFilter extends OncePerRequestFilter {
         // Request Header에서 토큰을 꺼내 jwt 변수에 저장
         String jwt = resolveToken(request);
 
-        System.out.println(jwt);
-
-
         // 정상 토큰이면 해당 토큰으로 Authentication을 가져와서 SecurityContext에 저장
         if (StringUtils.hasText(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("필터 돈다2");
         }
 
-        System.out.println("필터 돈다3");
         // 체인의 다음 필터를 호출
         filterChain.doFilter(request, response);
     }
@@ -75,7 +67,6 @@ public class JwtFilter extends OncePerRequestFilter {
         // ATK 토큰의 값을 추출
         String bearerToken = "";
         for (Cookie cookie : Cookies) {
-            System.out.println("쿠키는 있다.");
             if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
                 bearerToken = cookie.getValue();
             }

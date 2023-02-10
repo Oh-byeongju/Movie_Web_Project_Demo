@@ -1,63 +1,126 @@
-import React from "react";
+/*
+ 23-02-11 영화 상세내용 페이지 구현(오병주)
+*/
+import React, { useState, useEffect, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { HeartOutlined } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import Parser from "html-react-parser";
-// &nbsp; 공백 한칸
-// import Parser from "html-react-parser"; 이 함수에 <br />이 들어있는 텍스를 넣음
-// 그 다음   white-space: "pre-wrap"; css해주면 <br />이 사라지고 띄어쓰기가 가능.
-//일단 필요한 데이터만 띄어두고
-//나중에 코멘트랑 그래프 추가 수정필요**
+import { useDispatch, useSelector } from "react-redux";
+import { DETAIL_MOVIE_REQUEST } from "../../reducer/movie";
+import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
 
+const Details = () => {
+  const location = useLocation();  
+  const dispatch = useDispatch();
 
-// movie를 받아서 넘기면 안됨(리프레시 했을경우 문제) // 이게 아닐수도 ?? 일단 수정
+  // 반올림 없이 소수점 생성해주는 함수
+  const getNotRoundDecimalNumber = (number, decimalPoint = 1) => {
+    let num = typeof number === "number" ? String(number) : number;
+    const pointPos = num.indexOf(".");
+  
+    if (pointPos === -1) return Number(num).toFixed(decimalPoint);
+  
+    const splitNumber = num.split("."); 
+    const rightNum = splitNumber[1].substring(0, decimalPoint);
+    return Number(`${splitNumber[0]}.${rightNum}`).toFixed(decimalPoint);
+  };
 
-const Details = ({ movie }) => {
+  // 로그인 리덕스 상태
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+  // 로그인 상태에 따라 영화 검색이 다름(좋아요 표시 때문)
+  useEffect(() => {
+    dispatch({
+      type: DETAIL_MOVIE_REQUEST,
+      data: {
+        pathname: location.pathname,
+        uid: LOGIN_data.uid
+      }
+    });
+  }, [LOGIN_data.uid, location.pathname, dispatch]);
+
+  // 영화의 상세내용 상태
+  const { detailMovie } = useSelector((state) => state.movie);
+
+  // 사용자가 보이는 like UI 변경을 위한 변수
+  const [like, setlike] = useState(false);
+  const [likes, setlikes] = useState("");
+
+  useEffect(() => {
+    setlike(detailMovie.mlike);
+    setlikes(detailMovie.mlikes);
+  }, [detailMovie]);
+
+  // 사용자가 영화의 좋아요를 누를 때 호출되는 함수
+  const LikeChange = useCallback(() => {
+    if (LOGIN_data.uid === 'No_login') {
+      alert("로그인이 필요한 서비스입니다.")
+      return;
+    }   
+
+    dispatch({
+      type: USER_MLIKE_REQUEST,
+      data: {
+        mid: detailMovie.mid,
+        mlike: like,
+        uid: LOGIN_data.uid
+      }
+    })
+
+    // 백엔드를 한번 더 호출하지 않고 like와 likes의 변수만 변경하여 사용자가 보고 있는 브라우저 UI를 변경
+    if (like) {
+      setlike(false);
+      setlikes(likes - 1);
+    }
+    else {
+      setlike(true);
+      setlikes(likes + 1);
+    }
+  }, [detailMovie.mid, LOGIN_data.uid, like, likes, dispatch]);
+
   return (
     <Container>
       <Content>
         <Wrapper>
           <BaseMovie>
             <BoxImage>
-              <Poster src={`/${movie.imagepath}`} alt="포스터" />
+              <Poster src={`/${detailMovie.mimagepath}`} alt="포스터" />
             </BoxImage>
-
             <BoxContent>
               <Title>
-                <strong>{movie.title}</strong>
+                <strong>{detailMovie.mtitle}</strong>
               </Title>
               <Spec>
                 <dl>
                   <dt>감독 : &nbsp;</dt>
-                  <dd>{movie.dir} &nbsp;</dd>
+                  <dd>{detailMovie.mdir} &nbsp;</dd>
                   <dd></dd>
                   <dt>/ 배우 : &nbsp;</dt>
-                  <dd>{movie.actor} </dd>
+                  <dd>{detailMovie.mactor} </dd>
                   <br />
                   <dt>장르 : &nbsp; </dt>
-                  <dd>{movie.genre} &nbsp;</dd>
+                  <dd>{detailMovie.mgenre} &nbsp;</dd>
                   <dt> / 기본 : &nbsp;</dt>
                   <dd>
-                    {movie.rating}, {movie.time}
+                    {detailMovie.mrating}, {detailMovie.mtime}
                   </dd>
                   <br />
                   <dt>개봉일 : &nbsp;</dt>
-                  <dd>{movie.date}</dd>
+                  <dd>{detailMovie.mdate}</dd>
                 </dl>
               </Spec>
               <Like>
-                <Likes>
-                  <HeartOutlined /> {movie.likes.toLocaleString()}  
+                <Likes onClick={LikeChange}>
+                  <span>
+                    {like === true ? <HeartFilled style={{color: "red"}} /> : <HeartOutlined />}
+                  </span>
+                  <span>
+                    {likes > 999 ? getNotRoundDecimalNumber(likes / 1000) + "K" : likes}
+                  </span>
                 </Likes>
-                <div>
-                  {movie.like === true ? "dsdsds" : "없음"}
-                </div>
                 <Link to="/reserve">
-                  <Ticket
-                    onClick={() => {
-                      console.log(movie);
-                    }}
-                  >
+                  <Ticket>
                     예매
                   </Ticket>
                 </Link>
@@ -66,7 +129,7 @@ const Details = ({ movie }) => {
           </BaseMovie>
           <ColsContent>
             <ColsDetails>
-              <Story>{Parser(movie.story)}</Story>
+              <Story>{detailMovie.mstory}</Story>
             </ColsDetails>
           </ColsContent>
         </Wrapper>
@@ -79,13 +142,13 @@ const Container = styled.div`
   overflow: hidden;
   position: relative;
   width: 100%;
-
   margin: 0;
   padding: 0;
   border: 0;
   vertical-align: baseline;
   word-break: break-all;
 `;
+
 const Content = styled.div`
   clear: both;
   padding-bottom: 50px;
@@ -93,26 +156,32 @@ const Content = styled.div`
   width: 980px;
   margin: 0 auto;
 `;
+
 const Wrapper = styled.div``;
+
 const BaseMovie = styled.div`
   padding-top: 40px;
 `;
+
 const BoxImage = styled.div`
   margin-right: 30px;
   width: 185px;
   height: 260px;
   float: left;
 `;
+
 const Poster = styled.img`
   display: block;
   width: 185px;
   height: 260px;
 `;
+
 const BoxContent = styled.div`
   width: 765px;
   float: left;
   position: relative;
 `;
+
 const Title = styled.div`
   display: block;
   color: #333333;
@@ -166,6 +235,7 @@ const Likes = styled.div`
   color: #222222;
   font-size: 14px;
   font-weight: 400;
+  cursor: pointer;
 
   span:first-child {
     margin-right: 3px;
@@ -207,4 +277,5 @@ const Story = styled.div`
   font-weight: 400;
   line-height: 1.8;
 `;
+
 export default Details;

@@ -25,7 +25,7 @@ function* LikeToggle(action) {
 
 // 유저 정보를 전달한 뒤 좋아요 기록 변경(백엔드 연결)
 async function CallLikeToggle(data) {
-  return await http.post("/MovieMember/normal/LikeToggle", data)
+  return await http.post("/MovieMember/auth/LikeToggle", data)
     .then((response) => {
       return response;
     })

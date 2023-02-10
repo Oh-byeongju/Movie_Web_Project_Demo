@@ -8,10 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-// 쿠키를 프론트단과 같이 사용하기 위해 allowCredentials를 true로 설정
-@CrossOrigin(origins = "${spring.cors.origins}", allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/MovieMember")
@@ -19,12 +18,10 @@ public class MovieMemberController {
 
     private final MovieMemberService movieMemberService;
 
-    // 좋아요 토글을 위한 메소드, 회원가입을 성공할 경우 noContent 리턴
-    // 추후 auth로 교체
-    // 내일 이거 뭐가 문젠지 생각해보기
-    @PostMapping("/normal/LikeToggle")
-    public ResponseEntity<String> LikeToggle(@RequestBody Map<String, String> requestMap) {
-        movieMemberService.MovieLikeUpdate(requestMap);
+    // 좋아요 토글을 위한 메소드, 토글을 성공할 경우 noContent 리턴
+    @PostMapping("/auth/LikeToggle")
+    public ResponseEntity<String> LikeToggle(@RequestBody Map<String, String> requestMap, HttpServletRequest request) {
+        movieMemberService.MovieLikeUpdate(requestMap, request);
         return ResponseEntity.noContent().build();
     }
 }

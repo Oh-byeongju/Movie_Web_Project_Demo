@@ -4,11 +4,12 @@
 */
 import React from "react";
 import styled from "styled-components";
-import { HeartOutlined, HeartFilled, ConsoleSqlOutlined } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback } from "react";
 import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Box = ({ movie }) => {
 
@@ -38,20 +39,19 @@ const Box = ({ movie }) => {
   },[movie]);
 
   // 사용자가 영화의 좋아요를 누를 때 호출되는 함수
-  // 로그인 정보가 있어야 누를 수 있게 해야함
   const LikeChange = useCallback(() => {
     if (LOGIN_data.uid === 'No_login') {
       alert("로그인이 필요한 서비스입니다.")
       return;
-    }
-    const datas = {
-      mid: movie.id,
-      mlike: movie.like,
-      uid: LOGIN_data.uid
-    };
+    }   
+
     dispatch({
       type: USER_MLIKE_REQUEST,
-      data: datas
+      data: {
+        mid: movie.id,
+        mlike: like,
+        uid: LOGIN_data.uid
+      }
     })
 
     // 백엔드를 한번 더 호출하지 않고 like와 likes의 변수만 변경하여 사용자가 보고 있는 브라우저 UI를 변경
@@ -63,19 +63,23 @@ const Box = ({ movie }) => {
       setlike(true);
       setlikes(likes + 1);
     }
-  }, [movie.id, movie.like, LOGIN_data.uid, like, likes, dispatch]);
+  }, [movie.id, LOGIN_data.uid, like, likes, dispatch]);
 
   return (
     <LI>
       <div className="Image">
         <div className="banner_img">
-          <Img
+          <Link to={`/moviedetail/${movie.id}`}>
+            <Img
             className="imggg"
             src={`${movie.imagepath}`}
             alt="영화"
-          />
+            />
+          </Link>
           <div className="middle">
+          <Link to={`/moviedetail/${movie.id}`}>
             <Text className="hover_text">{movie.story}</Text>
+          </Link>
           </div>
         </div>
         <Button>

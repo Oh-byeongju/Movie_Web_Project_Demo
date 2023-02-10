@@ -17,7 +17,7 @@ const MovieList = () => {
 
   // UL의 높이를 구하기 위한 useRef
   const UL_Ref = useRef();
-  const [Height, setHeight] = useState(962.4);
+  const [Height, setHeight] = useState(962.2);
 
   const [Limit, setLimit] = useState(8); //더보기 리미트
   const L = 8;
@@ -46,8 +46,8 @@ const MovieList = () => {
         uid : LOGIN_data.uid
       }
     });
-    setLimit(L);
 
+    setLimit(L);
     // UL의 높이 갱신
     var UL_Ref_style = window.getComputedStyle(UL_Ref.current);
     var UL_Ref_height = UL_Ref_style.getPropertyValue('height');
@@ -80,6 +80,8 @@ const MovieList = () => {
             />
           </div>
         </div>
+        {/* 처음 랜더링 될때 로딩화면 */}
+        {allMovie.length === 0 && Height === 962.2 ? <div><Loading height={Height}/></div> : null}
         {movie_search_loading ? (
           <Loading height={Height}/>
         ) : (
@@ -98,9 +100,7 @@ const MovieList = () => {
             </UL>
           </div>
         )}
-        {Limit >= allMovie.length ? (
-          ""
-        ) : (
+        {Limit >= allMovie.length ? ("") : (
           <More onClick={onMoreClick}>
             더보기 <DownOutlined />
           </More>
