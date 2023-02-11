@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
+import { SELECT_SCHEDULE_REQUEST } from "../../reducer/ticket";
 const AllSchedule = ({ movieId, theater, day }) => {
   const dispatch = useDispatch();
-  const { choiceTheater, choiceMovie, choiceDay } = useSelector(
+  const { choiceTheater, choiceMovie, choiceDay, selectSchedule } = useSelector(
     (state) => state.ticket
   );
+
+  useEffect(() => {
+    if (choiceTheater && choiceMovie && choiceDay) {
+      console.log("데이터 3개다 투입되어서 영화검색");
+      dispatch({
+        type: SELECT_SCHEDULE_REQUEST,
+        data: {
+          miday: day,
+          mid: movieId,
+          tid: theater,
+        },
+      });
+    }
+  }, [movieId, theater, day, choiceTheater, choiceMovie, choiceDay]);
   return (
     <Schedule>
       <ScheduleTitle>
@@ -14,87 +29,34 @@ const AllSchedule = ({ movieId, theater, day }) => {
       <ScheduleList>
         <Result>
           <TimeList>
-            <Time>
-              <Button type="button">
-                <Legend></Legend>
-                <Hour>
-                  <StartTime>08:50</StartTime>
-                  <EndTime>11~05</EndTime>
-                </Hour>
-                <Title>
-                  <Name>
-                    title 슬램덩크
-                    <Em>2D(자막)</Em>
-                  </Name>
-                </Title>
-                <Info>
-                  infomovie
-                  <Theater>
-                    극장
-                    <br />
-                    컴포트 6관
-                  </Theater>
-                  <Seat>
-                    <Now>잔여좌석</Now>
-                    <All>전체좌석</All>
-                  </Seat>
-                </Info>
-              </Button>
-            </Time>
-            <Time>
-              <Button type="button">
-                <Legend></Legend>
-                <Hour>
-                  <StartTime>08:50</StartTime>
-                  <EndTime>11~05</EndTime>
-                </Hour>
-                <Title>
-                  <Name>
-                    title 슬램덩크
-                    <Em>2D(자막)</Em>
-                  </Name>
-                </Title>
-                <Info>
-                  infomovie
-                  <Theater>
-                    극장
-                    <br />
-                    컴포트 6관
-                  </Theater>
-                  <Seat>
-                    <Now>잔여좌석</Now>
-                    <All>전체좌석</All>
-                  </Seat>
-                </Info>
-              </Button>
-            </Time>
-            <Time>
-              <Button type="button">
-                <Legend></Legend>
-                <Hour>
-                  <StartTime>08:50</StartTime>
-                  <EndTime>11~05</EndTime>
-                </Hour>
-                <Title>
-                  <Name>
-                    title 슬램덩크
-                    <Em>2D(자막)</Em>
-                  </Name>
-                </Title>
-                <Info>
-                  infomovie
-                  <Theater>
-                    극장
-                    <br />
-                    컴포트 6관
-                  </Theater>
-                  <Seat>
-                    <Now>잔여좌석</Now>
-                    <All>전체좌석</All>
-                  </Seat>
-                </Info>
-              </Button>
-            </Time>
+            {selectSchedule.map((sc) => (
+              <Time>
+                <Button type="button">
+                  <Legend></Legend>
+                  <Hour>
+                    <StartTime>{sc.mistarttime.substring(0, 5)}</StartTime>
+                    <EndTime>{sc.miendtime.substring(0, 5)}</EndTime>
+                  </Hour>
+                  <Title>
+                    <Name>
+                      {sc.movie.mtitle}
+                      <Em>{sc.movie.mgenre}</Em>
+                    </Name>
+                  </Title>
+                  <Info>
+                    <Theater>
+                      {sc.cinema.theater.tarea} {sc.cinema.theater.tname}점
+                      <br />
+                      {sc.cinema.ctype} {sc.cinema.cname}
+                    </Theater>
+                    <Seat>
+                      <Now>{sc.cinema.cseat}</Now>
+                      <All>/{sc.cinema.cseat}</All>
+                    </Seat>
+                  </Info>
+                </Button>
+              </Time>
+            ))}
           </TimeList>
         </Result>
       </ScheduleList>
