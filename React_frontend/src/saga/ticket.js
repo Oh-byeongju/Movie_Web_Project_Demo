@@ -46,7 +46,7 @@ import { http } from "../lib/http";
 //영화 불러오기 좋아요순
 async function loadAllMovie(data) {
   return await http
-    .get("v2/normal/movie", {
+    .get("movie/normal/allmovie", {
       params: {
         uid: data,
       },
