@@ -2,7 +2,7 @@ import React from "react";
 import ClipLoader from "react-spinners/FadeLoader";
 import styled from "styled-components";
 
-const Loading = ({height}) => {
+const MovieSearchLoading = ({height}) => {
   return (
     <div className="contentWrap">
       <StyledDiv ht={height}>
@@ -32,4 +32,4 @@ const StyledDiv = styled.div`
   height: ${props => `${props.ht}px`} ;
 `;
 
-export default Loading;
+export default MovieSearchLoading;

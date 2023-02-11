@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ALLMOVIE_REQUEST, MOVIE_SEARCH_REQUEST } from "../../reducer/movie";
 import Movie from "./Movie";
-import Loading from "../Common_components/Loading";
+import MovieSearchLoading from "../Common_components/MovieSearchLoading";
 import styled from "styled-components";
 import { Input } from "antd";
 import { DownOutlined } from "@ant-design/icons";
@@ -81,9 +81,9 @@ const MovieList = () => {
           </div>
         </div>
         {/* 처음 랜더링 될때 로딩화면 */}
-        {allMovie.length === 0 && Height === 962.2 ? <div><Loading height={Height}/></div> : null}
+        {allMovie.length === 0 && Height === 962.2 ? <div><MovieSearchLoading height={Height}/></div> : null}
         {movie_search_loading ? (
-          <Loading height={Height}/>
+          <MovieSearchLoading height={Height}/>
         ) : (
           <div className="movie-list">
             <UL ref={UL_Ref}>

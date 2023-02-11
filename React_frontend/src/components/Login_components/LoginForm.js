@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { USER_LOGIN_REQUEST, USER_LOGIN_RESET } from '../../reducer/R_user_login';
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import MovieSearchLoading from "../Common_components/MovieSearchLoading";
 
 const LoginForm = () => {
 	// useDispatch를 dispatch로 선언
@@ -63,6 +64,11 @@ const LoginForm = () => {
   // 로그인 상태확인용 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
+
+  // 아래껄로 로딩창 수정
+  const { LOGIN_loading } = useSelector((state) => state.R_user_login);
+  // const { LOGIN_done } = useSelector((state) => state.R_user_login);
+
   // enter키를 누르면 로그인이 실행되게 하는 함수
   const handleOnKeyPress = e => {
     if (e.key === 'Enter' && !isActive) {
@@ -103,6 +109,7 @@ const LoginForm = () => {
 
 	return (
 		<div>
+      { LOGIN_loading  ? <MovieSearchLoading/> :
 			<Layout>
 				<Title>
 					회원 로그인
@@ -145,6 +152,7 @@ const LoginForm = () => {
 					</Links>
 				</Form>
 			</Layout>
+     }
 		</div>
 	);
 };
