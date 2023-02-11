@@ -48,8 +48,11 @@ const BookinWrapper = styled.div`
   display: flex;
   width: 996px;
   border-top: 1px solid black !important;
+  background: #fff;
   border: 1px solid #d8d9db;
-  padding-left: 200px-;
+  padding-left: 330px;
+  padding-top: 100px;
+  padding-bottom: 100px;
 `;
 
 /*  

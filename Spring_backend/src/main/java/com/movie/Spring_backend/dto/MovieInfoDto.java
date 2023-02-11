@@ -23,9 +23,7 @@ public class MovieInfoDto {
     private MovieEntity movie;
 
     private CinemaEntity cinema;
-    public TheaterEntity getTheater() {
-        return cinema.getTheater();
-    }
+
     @Builder
     public MovieInfoDto(Long miid, Date miday, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema
                         ) {
@@ -35,7 +33,7 @@ public class MovieInfoDto {
         this.miendtime=miendtime;
         this.movie=movie;
         this.cinema=cinema;
-
     }
+
 
 }
