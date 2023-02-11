@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 
-// 다시 수정해서 사용
+// 다시 수정해서 사용하기
 const LoginLoading = () => {
 	return (
 		<Background>
