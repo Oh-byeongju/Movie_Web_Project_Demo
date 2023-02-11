@@ -129,4 +129,5 @@ public class MovieInfoController {
         List<Long> cid = cinemaService.findByTheaterday(tid);
         return movieInfoService.findBySchedule(miday,mid,cid);
     }
+
 }

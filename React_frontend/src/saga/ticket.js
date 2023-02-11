@@ -36,6 +36,9 @@ import {
   SELECT_DAYMOVIE_TO_THEATER_REQUEST,
   SELECT_DAYMOVIE_TO_THEATER_SUCCESS,
   SELECT_DAYMOVIE_TO_THEATER_FAILURE,
+  SELECT_SCHEDULE_SUCCESS,
+  SELECT_SCHEDULE_FAILURE,
+  SELECT_SCHEDULE_REQUEST,
 } from "../reducer/ticket";
 import { http } from "../lib/http";
 
@@ -46,7 +49,7 @@ import { http } from "../lib/http";
 //영화 불러오기 좋아요순
 async function loadAllMovie(data) {
   return await http
-    .get("v2/normal/movie", {
+    .get("movie/normal/allmovie", {
       params: {
         uid: data,
       },
@@ -489,6 +492,40 @@ function* selectDayMovieToTheater(action) {
     });
   }
 }
+
+//날짜+영화  극장검색
+//movieinfo daymovietotheater
+async function selectScheduleApi(data) {
+  return await http
+    .get("/infomovie/normal/Schedule", {
+      params: {
+        miday: data.miday,
+        mid: data.mid,
+        tid: data.tid,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+function* selectSchedule(action) {
+  const result = yield call(selectScheduleApi, action.data);
+  if (result.status === 200) {
+    yield put({
+      type: SELECT_SCHEDULE_SUCCESS,
+      data: result.data,
+    });
+  } else {
+    alert("실패");
+    yield put({
+      type: SELECT_SCHEDULE_FAILURE,
+      data: result.status,
+    });
+  }
+}
 function* TallMovieSaga() {
   yield takeLatest(T_ALLMOVIE_REQUEST, allMovieLoad);
 }
@@ -529,7 +566,9 @@ function* selectDayTheaterToMovieSaga() {
 function* selectDayMovieToTheaterSaga() {
   yield takeLatest(SELECT_DAYMOVIE_TO_THEATER_REQUEST, selectDayMovieToTheater);
 }
-
+function* selectScheduleSaga() {
+  yield takeLatest(SELECT_SCHEDULE_REQUEST, selectSchedule);
+}
 export default function* ticketSaga() {
   yield all([
     fork(TallMovieSaga),
@@ -544,5 +583,6 @@ export default function* ticketSaga() {
     fork(selectDayToTheaterSaga),
     fork(selectDayTheaterToMovieSaga),
     fork(selectDayMovieToTheaterSaga),
+    fork(selectScheduleSaga),
   ]);
 }

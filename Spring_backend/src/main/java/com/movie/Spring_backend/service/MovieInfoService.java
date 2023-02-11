@@ -136,9 +136,10 @@ public class MovieInfoService {
         }
         return cid;
     }
+
     @Transactional
-    public List<MovieInfoDto> findBySchedule(Date miday, Long mid, List<Long> cid){
-        List<MovieInfoEntity> datas = movieInfoRepository.findBySchedule(miday,mid,cid);
+    public List<MovieInfoDto> findBySchedule(Date miday, Long mid, List<Long> cid) {
+        List<MovieInfoEntity> datas = movieInfoRepository.findBySchedule(miday, mid, cid);
 
         return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).miday(data.getMiday()).mistarttime(data.getMistarttime())
                 .miendtime(data.getMiendtime())
