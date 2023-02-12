@@ -71,6 +71,7 @@ export const initalState = {
   movieData: "",
   theaterData: "",
   DayData: "",
+  scheduleData: "",
 };
 
 export const T_ALLMOVIE_REQUEST = "T_ALLMOVIE_REQUEST";
@@ -157,7 +158,7 @@ export const SELECT_SCHEDULE_FAILURE = "SELECT_SCHEDULE_FAILURE";
 export const MOVIE_DATA = "MOVIE_DATA";
 export const THEATER_DATA = "THEATER_DATA";
 export const DAY_DATA = "DAY_DATA";
-
+export const SCHEDULE_DATA = "SCHEDULE_DATA";
 //검색 데이터 초기화 하기
 export const RESET_MOVIE_DATA = "RESET_MOVIE_DATA";
 export const RESET_THEATER_DATA = "RESET_THEATER_DATA";
@@ -558,11 +559,17 @@ const ticket = (state = initalState, action) => {
         DayData: action.data,
         choiceDay: true,
       };
+    case SCHEDULE_DATA:
+      return {
+        ...state,
+        scheduleData: action.data,
+      };
 
     case RESET_MOVIE_DATA:
       return {
         ...state,
         movieData: "",
+        scheduleData: "",
         choiceMovie: false,
       };
 
@@ -570,14 +577,20 @@ const ticket = (state = initalState, action) => {
       return {
         ...state,
         theaterData: "",
+        scheduleData: "",
         choiceTheater: false,
       };
+
     case RESET_DAY_DATA:
+      const copydata = [...state.allDay];
       return {
         ...state,
         DayData: "",
+        scheduleData: "",
         choiceDay: false,
+        selectDay: [...copydata],
       };
+
     default:
       return state;
   }

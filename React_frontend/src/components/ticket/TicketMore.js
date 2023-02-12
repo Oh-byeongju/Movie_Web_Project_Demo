@@ -1,32 +1,27 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-const TicketMore = ({
-  movieId,
-  theater,
-  day,
-  moviePoster,
-  theaterMore,
-  dayMore,
-}) => {
-  useEffect(() => {
-    console.log(moviePoster);
-  }, []);
+import { useSelector } from "react-redux";
+const TicketMore = ({ dayMore }) => {
+  const { movieData, theaterData, DayData, scheduleData } = useSelector(
+    (state) => state.ticket
+  );
+
   return (
     <TicketWrapper>
       <TicketStep>
-        {moviePoster !== "" ? (
+        {movieData !== "" ? (
           <MoviePoster>
             <Poster>
               <Img
                 className="imggg"
-                src={`${moviePoster.imagePath}`}
+                src={`${movieData.imagepath}`}
                 alt="영화"
               />
             </Poster>
             <Title>
-              <span>{moviePoster.title}</span>
+              <span>{movieData.title}</span>
             </Title>
-            <Title>{moviePoster.rating}세 관람가</Title>
+            <Title>{movieData.rating}세 관람가</Title>
           </MoviePoster>
         ) : (
           <MoviePoster>
@@ -35,11 +30,11 @@ const TicketMore = ({
           </MoviePoster>
         )}
         <MovieTheater>
-          {theaterMore !== "" ? (
+          {theaterData !== "" ? (
             <Name>
               <span>극장</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span>
-                {theaterMore.area} {theaterMore.name}점
+                {theaterData.tarea} {theaterData.tname}점
               </span>
             </Name>
           ) : (
@@ -49,13 +44,21 @@ const TicketMore = ({
           )}
           <Date>
             <span>일시</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span>{dayMore.day}</span>&nbsp;
-            <span>{dayMore.week}</span>
+            <span>{DayData.miday}</span>
           </Date>
-          <Screen>
-            <span>상영관</span>&nbsp;&nbsp;&nbsp;
-            <span>버튼 클릭해서 바꿔야 함 hover onclick</span>
-          </Screen>
+          {scheduleData !== "" ? (
+            <Screen>
+              <span>상영관</span>&nbsp;&nbsp;&nbsp;
+              <span>
+                {scheduleData.cinema.ctype} {scheduleData.cinema.cname}
+              </span>
+            </Screen>
+          ) : (
+            <Screen>
+              <span>상영관</span>&nbsp;&nbsp;&nbsp;
+              <span></span>
+            </Screen>
+          )}
         </MovieTheater>
         <MovieSeat></MovieSeat>
       </TicketStep>
