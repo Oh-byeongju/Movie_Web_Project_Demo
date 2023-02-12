@@ -1,39 +1,31 @@
-import { id } from "date-fns/locale";
-import React, { useEffect, useState } from "react";
+import { da } from "date-fns/locale";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { select } from "redux-saga/effects";
 import styled from "styled-components";
-import { ALLMOVIE_REQUEST } from "../../reducer/movie";
 import {
-  ALLTHEATER_REQUEST,
   SELECT_THEATER_REQUEST,
   SELECT_DAY_REQUEST,
-  SELECT_MOVIETHEATER_REQUEST,
   T_ALLMOVIE_REQUEST,
   SELECT_MOVIETHEATER_TO_DAY_REQUEST,
   SELECT_DAYMOVIE_TO_THEATER_REQUEST,
 } from "../../reducer/ticket";
-const AllMovieList = ({ setMovieId, theater, day }) => {
+const AllMovieList = ({
+  setMovieId,
+  movieId,
+  theater,
+  day,
+  setMoviePoster,
+  setTheater,
+  setDay,
+  setTheaterMore,
+  setDayMore,
+}) => {
   const dispatch = useDispatch();
-  const {
-    allTheater_done,
-    t_allMovie,
-    select_TheaterToMovie_done,
-    select_Theater_To_Day_done,
-    select_day_to_theater_done,
-    select_day_to_movie_done,
-    select_daytheater_to_movie_done,
-    choiceMovie,
-    choiceTheater,
-    choiceDay,
-  } = useSelector((state) => state.ticket);
-  const [selectedMovie, setSelectedMovie] = useState("");
-  const [disable, setDisable] = useState(true);
-  const CopyMovie = [];
-
+  const { t_allMovie, choiceTheater, choiceDay } = useSelector(
+    (state) => state.ticket
+  );
   // 로그인 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
-
   // 영화 예매 페이지에 쓸모 없을수도 있지만 Spring boot 메소드가 겹쳐서 로그인 상태도 같이 묶어서 보냄
   useEffect(() => {
     dispatch({
@@ -42,11 +34,98 @@ const AllMovieList = ({ setMovieId, theater, day }) => {
     });
   }, [LOGIN_data.uid, dispatch]);
 
+  //able된 영화를 선택하는 함수
+  const onClickMovie = useCallback((data) => {
+    //날짜와 극장이 선택되어있을 때
+    if (choiceDay && choiceTheater) {
+      dispatch({
+        type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
+        data: {
+          miday: day,
+          mid: data,
+        },
+      });
+      dispatch({
+        type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
+        data: {
+          mid: data,
+          tid: theater,
+        },
+      });
+    }
+    //극장이 선택되어 있을 때
+    else if (choiceTheater && !choiceDay) {
+      dispatch({
+        type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
+        data: {
+          mid: data,
+          tid: theater,
+        },
+      });
+
+      //극장이 선택되어 있어도 극장은 같이 변해야함
+      dispatch({
+        type: SELECT_THEATER_REQUEST,
+        data: data,
+      });
+    }
+    //날짜가 선택되어 있을 때
+    else if (!choiceTheater && choiceDay) {
+      dispatch({
+        type: SELECT_DAY_REQUEST,
+        data: data,
+      });
+      dispatch({
+        type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
+        data: {
+          miday: day,
+          mid: data,
+        },
+      });
+    }
+  });
+
+  //disable된 상태 검색
+  const onClickDisable = useCallback(
+    (data) => {
+      if (
+        !window.confirm(
+          "선택한 영화에 원하시는 상영스케줄이 없습니다. 계속하겠습니까?"
+        )
+      ) {
+        return;
+      }
+
+      //영화도 새로고침
+      dispatch({
+        type: T_ALLMOVIE_REQUEST,
+        data: LOGIN_data.uid,
+      });
+      //극장을 영화에 대해 검색
+      dispatch({
+        type: SELECT_THEATER_REQUEST,
+        data: data.id,
+      });
+      //날짜를 영화에 대해 검색
+      dispatch({
+        type: SELECT_DAY_REQUEST,
+        data: data.id,
+      });
+      setMovieId(data.id);
+      setMoviePoster({
+        id: data.id,
+        imagePath: data.imagepath,
+        title: data.title,
+        rating: data.rating,
+      });
+      setTheater("");
+      setDay("");
+      setTheaterMore("");
+      setDayMore("");
+    },
+    [window]
+  );
   //영화 토클 함수
-  const selectMovie = (movie_id) => {
-    const selectedObject = t_allMovie.find(({ id }) => id === movie_id);
-    setSelectedMovie(selectedObject.id);
-  };
 
   return (
     <MovieWrapper>
@@ -66,62 +145,20 @@ const AllMovieList = ({ setMovieId, theater, day }) => {
             return (
               <MovieList
                 onClick={() => {
-                  //둘다 선택
-                  if (choiceDay && choiceTheater) {
-                    dispatch({
-                      type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
-                      data: {
-                        miday: day,
-                        mid: movie.id,
-                      },
-                    });
-                    dispatch({
-                      type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
-                      data: {
-                        mid: movie.id,
-                        tid: theater,
-                      },
-                    });
-                  }
-                  //극장 선택
-                  else if (choiceTheater && !choiceDay) {
-                    dispatch({
-                      type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
-                      data: {
-                        mid: movie.id,
-                        tid: theater,
-                      },
-                    });
-
-                    //극장이 선택되어 있어도 극장은 같이 변해야함
-                    dispatch({
-                      type: SELECT_THEATER_REQUEST,
-                      data: movie.id,
-                    });
-                  }
-                  //날
-                  else if (!choiceTheater && choiceDay) {
-                    dispatch({
-                      type: SELECT_DAY_REQUEST,
-                      data: movie.id,
-                    });
-                    dispatch({
-                      type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
-                      data: {
-                        miday: day,
-                        mid: movie.id,
-                      },
-                    });
-                  }
-                  //두개다 선택되어있을때
-
-                  selectMovie(movie.id);
+                  onClickMovie(movie.id);
                   setMovieId(movie.id);
+
+                  setMoviePoster({
+                    id: movie.id,
+                    imagePath: movie.imagepath,
+                    title: movie.title,
+                    rating: movie.rating,
+                  });
                 }}
+                movieId={movieId}
                 movie={movie.id}
-                selectedMovie={selectedMovie}
               >
-                <MovieListMovieName selectedMovie={selectedMovie}>
+                <MovieListMovieName movieId={movieId}>
                   <Img src={`img/age/${movie.rating}.png`} alt="영화" />
 
                   {movie.title}
@@ -134,24 +171,13 @@ const AllMovieList = ({ setMovieId, theater, day }) => {
             return (
               <MovieList
                 onClick={() => {
-                  dispatch({
-                    type: SELECT_THEATER_REQUEST,
-                    data: movie.id,
-                  });
-                  dispatch({
-                    type: SELECT_DAY_REQUEST,
-                    data: movie.id,
-                  });
-                  selectMovie(movie.id);
-                  setMovieId(movie.id);
+                  //disable된 영화를 선택하면 theater day 모두 영화로 다시 검색
+                  onClickDisable(movie);
                 }}
+                movieId={movieId}
                 movie={movie.id}
-                selectedMovie={selectedMovie}
               >
-                <MovieListMovieName
-                  selectedMovie={selectedMovie}
-                  className="disable"
-                >
+                <MovieListMovieName movieId={movieId} className="disable">
                   <Img src={`img/age/${movie.rating}.png`} alt="영화" />
 
                   {movie.title}
@@ -162,7 +188,7 @@ const AllMovieList = ({ setMovieId, theater, day }) => {
             return (
               <MovieList
                 onClick={() => {
-                  //allmovie(초기상태)
+                  //allmovie(태초상태)
                   //영화 클릭시 날짜 극장 검색해주면 됨
                   dispatch({
                     type: SELECT_THEATER_REQUEST,
@@ -172,14 +198,18 @@ const AllMovieList = ({ setMovieId, theater, day }) => {
                     type: SELECT_DAY_REQUEST,
                     data: movie.id,
                   });
-
-                  selectMovie(movie.id);
                   setMovieId(movie.id);
+                  setMoviePoster({
+                    id: movie.id,
+                    imagePath: movie.imagepath,
+                    title: movie.title,
+                    rating: movie.rating,
+                  });
                 }}
+                movieId={movieId}
                 movie={movie.id}
-                selectedMovie={selectedMovie}
               >
-                <MovieListMovieName selectedMovie={selectedMovie}>
+                <MovieListMovieName movieId={movieId}>
                   <Img src={`img/age/${movie.rating}.png`} alt="영화" />
                   {movie.title}
                 </MovieListMovieName>
@@ -264,15 +294,14 @@ background-color:#f2f0e5;
     }
   }
   background-color: ${(props) =>
-    props.selectedMovie === props.movie ? "gray" : "#f2f0e5"};
+    props.movieId === props.movie ? "gray" : "#f2f0e5"};
 `;
 
 const MovieListMovieName = styled.div`
   font-size: 13px;
   width: 174px;
   margin-left: 10px;
-  color: ${(props) =>
-    props.selectedMovie === props.movie ? "white" : "black"};
+  color: ${(props) => (props.movieId === props.movie ? "white" : "black")};
 `;
 
 const Img = styled.img`

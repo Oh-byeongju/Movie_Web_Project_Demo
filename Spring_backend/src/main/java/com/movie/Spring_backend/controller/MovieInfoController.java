@@ -40,6 +40,8 @@ public class MovieInfoController {
         return movieInfoService.findAllMiday();
     }
 
+
+    //영화 클릭 시 영화id로 극장 검색
     @GetMapping("/normal/movieselect")
     public List<TheaterDto> findByMovie(@RequestParam Long id) {
         //영화 아이디로 영화 정보 추출 CID를 리스트로 추출
@@ -48,8 +50,8 @@ public class MovieInfoController {
 
         return theaterService.findByTidIn(tid);
     }
-    ////#################################////##################################/////
 
+    //날짜 검색
     @GetMapping("/normal/movieselectday")
     public List<MovieInfoDto> findByMovieToDay(@RequestParam Long id) {
         //영화 아이디로 영화 정보 추출 CID를 리스트로 추출
@@ -59,7 +61,7 @@ public class MovieInfoController {
         //영화 검색 시 해당하는 상영 날짜 추출
     }
 
-
+    //극장으로 날짜 검색
     @GetMapping("/normal/theaterday")
     public List<MovieInfoDto> getTheaterDay(@RequestParam Long id) {
         //Long cid에 담겨있음
@@ -69,7 +71,7 @@ public class MovieInfoController {
         return movieInfoService.findByCinemaCidIn(mappedcid);
 
     }
-
+    //영화+극장 날짜검색
     @GetMapping("/normal/movietheaterday")
     public List<MovieInfoDto> findByMovieTheaterDay(@RequestParam Long tid, @RequestParam Long mid) {
 
@@ -78,6 +80,7 @@ public class MovieInfoController {
         return movieInfoService.findByMovieTheaterDay(mappedcid, mid);
     }
 
+    
     //날짜로 극장이랑 영화를 추출해야한다.
     @GetMapping("/normal/daytomovie")
     public List<MovieDto> findByDayToMovie(@RequestParam Date miday) {

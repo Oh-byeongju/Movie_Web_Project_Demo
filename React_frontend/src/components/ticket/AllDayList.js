@@ -6,7 +6,6 @@ import moment from "moment";
 import "moment/locale/ko";
 import {
   ALLDAY_REQUEST,
-  SELECT_DAY_REQUEST,
   SELECT_DAY_TO_MOVIE_REQUEST,
   SELECT_DAY_TO_THEATER_REQUEST,
   SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
@@ -14,7 +13,7 @@ import {
 } from "../../reducer/ticket";
 import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-const AllDayList = ({ movieId, theater, setDay }) => {
+const AllDayList = ({ movieId, theater, setDay, setDayMore, day }) => {
   const {
     allDay,
     selectDay,
@@ -95,10 +94,9 @@ const AllDayList = ({ movieId, theater, setDay }) => {
             return (
               <Today
                 today={calendar.miday}
-                selectedDay={selectedDay}
+                day={day}
                 className={selectedClassName + disableClassName}
                 onClick={() => {
-                  setDay(calendar.miday);
                   //영화 선택
                   if (choiceMovie && !choiceTheater) {
                     dispatch({
@@ -144,7 +142,12 @@ const AllDayList = ({ movieId, theater, setDay }) => {
                         tid: theater,
                       },
                     });
-                  } else {
+                  }
+                  if (
+                    //디스에이블 된거, 아무거도 클릭이 안된거
+                    disableClassName === "disable" ||
+                    (!choiceMovie && !choiceTheater)
+                  ) {
                     dispatch({
                       type: SELECT_DAY_TO_MOVIE_REQUEST,
                       data: calendar.miday,
@@ -154,7 +157,11 @@ const AllDayList = ({ movieId, theater, setDay }) => {
                       data: calendar.miday,
                     });
                   }
-                  setSelectedDay(calendar.miday);
+                  setDay(calendar.miday);
+                  setDayMore({
+                    day: calendar.miday,
+                    week: weekday[new Date(`'${calendar.miday}'`).getDay()],
+                  });
                 }}
               >
                 <Week
@@ -264,8 +271,8 @@ width:73px;
 display:flex;
 float:left;  
 
-    background-color: ${(props) =>
-      props.today === props.selectedDay ? "gainsboro" : "#f2f0e5"};
+   background-color: ${(props) =>
+     props.today === props.day ? "gainsboro" : "#f2f0e5"};
   }
 `;
 const Week = styled.div`

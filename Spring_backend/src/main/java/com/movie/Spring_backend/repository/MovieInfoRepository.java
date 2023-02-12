@@ -53,5 +53,4 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
     @EntityGraph(attributePaths = {"cinema.theater"})
     //페치조인을 해서 영화와 극장 정보까지 함께 보내기
     public List<MovieInfoEntity> findBySchedule(@Param("miday")Date miday,@Param("mid") Long mid, @Param("cid")List<Long> cid);
-
     }
