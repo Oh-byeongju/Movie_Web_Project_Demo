@@ -65,9 +65,12 @@ export const initalState = {
   select_schedule_error: null,
 
   selectSchedule: [],
-  disableMovie: [],
-  disableArea: [],
   disableTheater: [],
+
+  //검색한 데이터들을 담아두기
+  movieData: "",
+  theaterData: "",
+  DayData: "",
 };
 
 export const T_ALLMOVIE_REQUEST = "T_ALLMOVIE_REQUEST";
@@ -149,6 +152,16 @@ export const SELECT_DAYTHEATER_TO_MOVIE_FAILURE =
 export const SELECT_SCHEDULE_REQUEST = "SELECT_SCHEDULE_REQUEST";
 export const SELECT_SCHEDULE_SUCCESS = "SELECT_SCHEDULE_SUCCESS";
 export const SELECT_SCHEDULE_FAILURE = "SELECT_SCHEDULE_FAILURE";
+
+//검색한 데이터 담아두기 위한 액션
+export const MOVIE_DATA = "MOVIE_DATA";
+export const THEATER_DATA = "THEATER_DATA";
+export const DAY_DATA = "DAY_DATA";
+
+//검색 데이터 초기화 하기
+export const RESET_MOVIE_DATA = "RESET_MOVIE_DATA";
+export const RESET_THEATER_DATA = "RESET_THEATER_DATA";
+export const RESET_DAY_DATA = "RESET_DAY_DATA";
 const ticket = (state = initalState, action) => {
   switch (action.type) {
     //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
@@ -525,6 +538,45 @@ const ticket = (state = initalState, action) => {
         select_schedule_loading: false,
         select_schedule_done: false,
         select_schedule_error: null,
+      };
+
+    case MOVIE_DATA:
+      return {
+        ...state,
+        movieData: action.data,
+        choiceMovie: true,
+      };
+    case THEATER_DATA:
+      return {
+        ...state,
+        theaterData: action.data,
+        choiceTheater: true,
+      };
+    case DAY_DATA:
+      return {
+        ...state,
+        DayData: action.data,
+        choiceDay: true,
+      };
+
+    case RESET_MOVIE_DATA:
+      return {
+        ...state,
+        movieData: "",
+        choiceMovie: false,
+      };
+
+    case RESET_THEATER_DATA:
+      return {
+        ...state,
+        theaterData: "",
+        choiceTheater: false,
+      };
+    case RESET_DAY_DATA:
+      return {
+        ...state,
+        DayData: "",
+        choiceDay: false,
       };
     default:
       return state;
