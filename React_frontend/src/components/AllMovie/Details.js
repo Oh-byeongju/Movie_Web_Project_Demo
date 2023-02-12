@@ -153,7 +153,7 @@ const Content = styled.div`
   clear: both;
   padding-bottom: 50px;
   position: relative;
-  width: 980px;
+  width: 1050px;
   margin: 0 auto;
 `;
 
