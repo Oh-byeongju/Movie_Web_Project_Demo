@@ -12,6 +12,7 @@ import PrivacyofService from './PrivacyofService';
 import { USER_ID_REQUEST, USER_ID_RESET, USER_JOIN_REQUEST } from '../../reducer/R_user_join';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
+import LoginLoading from '../Common_components/LoginLoading';
 
 const JoinForm = () => {
 
@@ -512,6 +513,9 @@ const JoinForm = () => {
 	// 로그인 상태확인용 리덕스 상태
 	const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
+	
+	// 로딩창 구현을 위한 리덕스 상태
+	const { JOIN_loading } = useSelector((state) => state.R_user_join);
 
 	// 페이지 이동을 위해 선언
 	const location = useLocation();
@@ -616,6 +620,7 @@ const JoinForm = () => {
 
 	return (
 		<div>
+			{ JOIN_loading  ? <LoginLoading/> : null }
 			<Layout>
 				<Title>
 					회원가입

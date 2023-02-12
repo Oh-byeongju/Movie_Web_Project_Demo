@@ -1,5 +1,5 @@
 import React from "react";
-import ClipLoader from "react-spinners/FadeLoader";
+import FadeLoader from "react-spinners/FadeLoader";
 import styled from "styled-components";
 
 const MovieSearchLoading = ({height}) => {
@@ -15,7 +15,7 @@ const MovieSearchLoading = ({height}) => {
           transform: "translate(-50%, -50%)",
         }}
       >
-        <ClipLoader
+        <FadeLoader
           color="#36d7b7"
           height={15}
           width={5}
