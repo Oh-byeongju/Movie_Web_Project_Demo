@@ -10,10 +10,14 @@ import {
   SELECT_DAY_TO_THEATER_REQUEST,
   SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
   SELECT_DAYMOVIE_TO_THEATER_REQUEST,
+  DAY_DATA,
+  RESET_MOVIE_DATA,
+  RESET_THEATER_DATA,
+  RESET_DAY_DATA,
 } from "../../reducer/ticket";
 import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-const AllDayList = ({ movieId, theater, setDay, setDayMore, day }) => {
+const AllDayList = () => {
   const {
     allDay,
     selectDay,
@@ -21,11 +25,12 @@ const AllDayList = ({ movieId, theater, setDay, setDayMore, day }) => {
     select_Theater_To_Day_done,
     choiceMovie,
     choiceTheater,
+    movieData,
+    theaterData,
+    DayData,
   } = useSelector((state) => state.ticket);
   const now = new Date();
-  const [selectedDay, setSelectedDay] = useState("");
   const year = now.getFullYear();
-  const nowTime = moment().format("YYYY-MM-DD");
   const month = now.getMonth() + 1;
   //날짜
   const [weekday, setWeekDay] = useState([
@@ -49,142 +54,202 @@ const AllDayList = ({ movieId, theater, setDay, setDayMore, day }) => {
   //날짜 계산
 
   const Weak = useRef(null);
-
+  //월 구분을 위함 것
+  const [moment, setMoment] = useState(["02", "03"]);
   //요일 표시 평일 검정색, 토요일 파란색, 일요일 빨간색
 
+  //수정필요합니다.
   return (
     <Calender>
       <Header>날짜</Header>
+
       <DayList ticking={false}>
-        <YearMonthList>
-          <p>
-            <span className={cn("Year")}>
-              <Year
-                id="Year"
-                format={"YYYY"}
-                ticking={false}
-                timezone={"KR/Pacific"}
-              >
-                {year}
-              </Year>
-            </span>
-            <span className={cn("Month")}>
-              <Month format={"MMMM"} ticking={false} timezone={"KR/Pacific"}>
-                {month}
-              </Month>
-            </span>
-          </p>
-        </YearMonthList>
-        <DaylistSector>
-          {allDay.map((calendar, index) => {
-            let selectedClassName = "";
-            selectedClassName += allDay.find(
-              (selectedMovie) => selectedMovie.miday === calendar.miday
-            )
-              ? "selectedInfoDarker "
-              : "";
-            let disableClassName = "";
-            if (select_Day_done || select_Theater_To_Day_done) {
-              disableClassName = selectDay.find(
-                (canSelectedMovie) => canSelectedMovie.miday === calendar.miday
-              )
-                ? ""
-                : "disable";
-            }
-            return (
-              <Today
-                today={calendar.miday}
-                day={day}
-                className={selectedClassName + disableClassName}
-                onClick={() => {
-                  //영화 선택
-                  if (choiceMovie && !choiceTheater) {
-                    dispatch({
-                      //영화+날짜
-                      type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
-                      data: {
-                        miday: calendar.miday,
-                        mid: movieId,
-                      },
-                    });
-                    dispatch({
-                      type: SELECT_DAY_TO_MOVIE_REQUEST,
-                      data: calendar.miday,
-                    });
+        {moment.map((moment) => {
+          return (
+            <>
+              <YearMonthList>
+                {" "}
+                <p>
+                  <span className={cn("Year")}>
+                    <Year
+                      id="Year"
+                      format={"YYYY"}
+                      ticking={false}
+                      timezone={"KR/Pacific"}
+                    >
+                      {year}
+                    </Year>
+                  </span>
+                  <span className={cn("Month")}>
+                    <Month
+                      format={"MMMM"}
+                      ticking={false}
+                      timezone={"KR/Pacific"}
+                    >
+                      {moment}
+                    </Month>
+                  </span>
+                </p>
+              </YearMonthList>
+              <DaylistSector>
+                {allDay.map((calendar, index) => {
+                  let disableClassName = "";
+                  if (select_Day_done || select_Theater_To_Day_done) {
+                    disableClassName = selectDay.find(
+                      (canSelectedMovie) =>
+                        canSelectedMovie.miday === calendar.miday
+                    )
+                      ? ""
+                      : "disable";
                   }
-                  //극장 선택
-                  else if (!choiceMovie && choiceTheater) {
-                    dispatch({
-                      type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
-                      data: {
-                        miday: calendar.miday,
-                        tid: theater,
-                      },
-                    });
-                    dispatch({
-                      type: SELECT_DAY_TO_THEATER_REQUEST,
-                      data: calendar.miday,
-                    });
-                  } else if (choiceMovie && choiceTheater) {
-                    //둘다 클릭
-                    dispatch({
-                      //영화+날짜
-                      type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
-                      data: {
-                        miday: calendar.miday,
-                        mid: movieId,
-                      },
-                    });
-                    dispatch({
-                      type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
-                      data: {
-                        miday: calendar.miday,
-                        tid: theater,
-                      },
-                    });
-                  }
-                  if (
-                    //디스에이블 된거, 아무거도 클릭이 안된거
-                    disableClassName === "disable" ||
-                    (!choiceMovie && !choiceTheater)
-                  ) {
-                    dispatch({
-                      type: SELECT_DAY_TO_MOVIE_REQUEST,
-                      data: calendar.miday,
-                    });
-                    dispatch({
-                      type: SELECT_DAY_TO_THEATER_REQUEST,
-                      data: calendar.miday,
-                    });
-                  }
-                  setDay(calendar.miday);
-                  setDayMore({
-                    day: calendar.miday,
-                    week: weekday[new Date(`'${calendar.miday}'`).getDay()],
-                  });
-                }}
-              >
-                <Week
-                  className={cn(
-                    "weak",
-                    weekday[new Date(`'${calendar.miday}'`).getDay()] === "토"
-                      ? "Sun"
-                      : "weak",
-                    weekday[new Date(`'${calendar.miday}'`).getDay()] === "일"
-                      ? "Sat"
-                      : "weak"
-                  )}
-                  ref={Weak}
-                >
-                  {weekday[new Date(`'${calendar.miday}'`).getDay()]}
-                </Week>
-                <div className={cn("day")}>
-                  {calendar.miday.substring(8, 10)}
-                </div>
-              </Today>
-            );
-          })}
-        </DaylistSector>
+                  return (
+                    <>
+                      {moment === calendar.miday.substring(5, 7) ? (
+                        <Today
+                          today={calendar.miday}
+                          DayData={DayData}
+                          className={disableClassName}
+                          onClick={() => {
+                            //영화 선택
+                            if (disableClassName === "disable") {
+                              console.log("disable");
+                              if (
+                                !window.confirm(
+                                  "선택한 영화에 원하시는 상영스케줄이 없습니다. 계속하겠습니까?"
+                                )
+                              ) {
+                                return;
+                              }
+
+                              dispatch({
+                                type: RESET_MOVIE_DATA,
+                              });
+
+                              dispatch({
+                                type: RESET_THEATER_DATA,
+                              });
+
+                              dispatch({
+                                type: RESET_DAY_DATA,
+                              });
+                              dispatch({
+                                type: DAY_DATA,
+                                data: calendar,
+                              });
+
+                              dispatch({
+                                type: SELECT_DAY_TO_MOVIE_REQUEST,
+                                data: calendar.miday,
+                              });
+                              dispatch({
+                                type: SELECT_DAY_TO_THEATER_REQUEST,
+                                data: calendar.miday,
+                              });
+                            } else if (choiceMovie && !choiceTheater) {
+                              dispatch({
+                                type: DAY_DATA,
+                                data: calendar,
+                              });
+                              dispatch({
+                                //영화+날짜
+                                type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
+                                data: {
+                                  miday: calendar.miday,
+                                  mid: movieData.id,
+                                },
+                              });
+                              dispatch({
+                                type: SELECT_DAY_TO_MOVIE_REQUEST,
+                                data: calendar.miday,
+                              });
+                            }
+                            //극장 선택
+                            else if (!choiceMovie && choiceTheater) {
+                              dispatch({
+                                type: DAY_DATA,
+                                data: calendar,
+                              });
+                              dispatch({
+                                type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
+                                data: {
+                                  miday: calendar.miday,
+                                  tid: theaterData.tid,
+                                },
+                              });
+                              dispatch({
+                                type: SELECT_DAY_TO_THEATER_REQUEST,
+                                data: calendar.miday,
+                              });
+                            } else if (choiceMovie && choiceTheater) {
+                              //둘다 클릭
+                              dispatch({
+                                type: DAY_DATA,
+                                data: calendar,
+                              });
+                              dispatch({
+                                //영화+날짜
+                                type: SELECT_DAYMOVIE_TO_THEATER_REQUEST,
+                                data: {
+                                  miday: calendar.miday,
+                                  mid: movieData.id,
+                                },
+                              });
+                              dispatch({
+                                type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
+                                data: {
+                                  miday: calendar.miday,
+                                  tid: theaterData.tid,
+                                },
+                              });
+                            } else if (!choiceMovie && !choiceTheater) {
+                              dispatch({
+                                type: DAY_DATA,
+                                data: calendar,
+                              });
+                              dispatch({
+                                type: SELECT_DAY_TO_MOVIE_REQUEST,
+                                data: calendar.miday,
+                              });
+                              dispatch({
+                                type: SELECT_DAY_TO_THEATER_REQUEST,
+                                data: calendar.miday,
+                              });
+                            }
+                          }}
+                        >
+                          <Week
+                            className={cn(
+                              "weak",
+                              weekday[
+                                new Date(`'${calendar.miday}'`).getDay()
+                              ] === "토"
+                                ? "Sun"
+                                : "weak",
+                              weekday[
+                                new Date(`'${calendar.miday}'`).getDay()
+                              ] === "일"
+                                ? "Sat"
+                                : "weak"
+                            )}
+                            ref={Weak}
+                          >
+                            {" "}
+                            {weekday[new Date(`'${calendar.miday}'`).getDay()]}
+                          </Week>
+                          <div className={cn("day")}>
+                            <div>{calendar.miday.substring(8, 10)}</div>
+                          </div>
+                        </Today>
+                      ) : (
+                        ""
+                      )}
+                    </>
+                  );
+                })}
+              </DaylistSector>
+            </>
+          );
+        })}
       </DayList>
     </Calender>
   );
@@ -236,9 +301,9 @@ const DayList = styled.div`
 const DaylistSector = styled.ul`
   position: relative;
   left: -39px;
+  top: -10px;
   cursor: pointer;
   list-style-type: none;
-  padding-top: 10px;
   .Sun {
     color: red !important;
   }
@@ -266,13 +331,12 @@ const DaylistSector = styled.ul`
 `;
 const Today = styled.li`
 padding-bottom: 10px;
-
 width:73px;
 display:flex;
 float:left;  
 
    background-color: ${(props) =>
-     props.today === props.day ? "gainsboro" : "#f2f0e5"};
+     props.today === props.DayData.miday ? "gainsboro" : "#f2f0e5"};
   }
 `;
 const Week = styled.div`

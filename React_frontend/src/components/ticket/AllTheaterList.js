@@ -1,7 +1,4 @@
-import { style } from "@mui/system";
-import { is, th } from "date-fns/locale";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { act } from "react-dom/test-utils";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
@@ -11,18 +8,13 @@ import {
   SELECT_THEATER_TO_DAY_REQUEST,
   SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
   SELECT_DAY_TO_THEATER_REQUEST,
+  THEATER_DATA,
+  RESET_MOVIE_DATA,
+  RESET_DAY_DATA,
 } from "../../reducer/ticket";
-const AllTheaterList = ({
-  movieId,
-  setTheater,
-  setTheaterMore,
-  day,
-  theater,
-  tabstate,
-  setTabState,
-}) => {
-  const dispatch = useDispatch();
 
+const AllTheaterList = ({ tabstate, setTabState }) => {
+  const dispatch = useDispatch();
   //밑에 4개는 카운트를 위한 변수
   let seoul = 0;
   let busan = 0;
@@ -30,7 +22,6 @@ const AllTheaterList = ({
   let ablebusan = 0;
   //토글을 위한 훅
   const [isWideTab, setIsWideTab] = useState(false);
-
   //메뉴 토클을 위한 함수
   const tabHandler = (e) => {
     if (isWideTab) {
@@ -43,15 +34,16 @@ const AllTheaterList = ({
         ? (newTabState[key] = true)
         : (newTabState[key] = false);
     }
-    console.log(newTabState);
     setTabState(newTabState);
   };
   //기본적으로 alltheater에 모든 극장 데이터를 담음
   const {
     allTheater,
     choiceMovie,
-
     choiceDay,
+    theaterData,
+    movieData,
+    DayData,
   } = useSelector((state) => state.ticket);
 
   useEffect(() => {
@@ -59,12 +51,101 @@ const AllTheaterList = ({
       type: ALLTHEATER_REQUEST,
     });
   }, []);
-  useEffect(() => {
-    console.log(allTheater);
-  }, [allTheater]);
 
-  //select_theater_done 이것은 영화검색BOOLEAN삼항연산자
+  //able된것들 클릭하기
+  const onClickAble = (data) => {
+    //기본
+    dispatch({
+      type: THEATER_DATA,
+      data: data,
+    });
 
+    //영화만 선택
+    if (choiceMovie && !choiceDay) {
+      console.log("영화만 선택");
+      dispatch({
+        type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
+        data: {
+          mid: movieData.id,
+          tid: data.tid,
+        },
+      });
+      dispatch({
+        type: SELECT_THEATER_TO_MOVIE_REQUEST,
+        data: data.tid,
+      });
+    }
+    //날짜 선택 후 극장 클릭
+    else if (choiceDay && !choiceMovie) {
+      console.log("날짜만선택");
+      //이상황은 날짜 클릭 후 극장 클릭
+      dispatch({
+        type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
+        data: {
+          miday: DayData.miday,
+          tid: data.tid,
+        },
+      });
+      dispatch({
+        type: SELECT_THEATER_TO_DAY_REQUEST,
+        data: data.tid,
+      });
+      //극장 클릭 시 극장ㅎ도 함께 바꿔줘야함
+      dispatch({
+        type: SELECT_DAY_TO_THEATER_REQUEST,
+        data: DayData.miday,
+      });
+    }
+    //두개 다 검색완
+    else if (choiceDay && choiceMovie) {
+      console.log("둘다");
+      dispatch({
+        type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
+        data: {
+          miday: DayData.miday,
+          tid: data.tid,
+        },
+      });
+      dispatch({
+        type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
+        data: {
+          mid: movieData.id,
+          tid: data.tid,
+        },
+      });
+    }
+  };
+
+  const onClickDisalbe = (data) => {
+    if (
+      !window.confirm(
+        "선택한 영화에 원하시는 상영스케줄이 없습니다. 계속하겠습니까?"
+      )
+    ) {
+      return;
+    }
+    dispatch({
+      type: THEATER_DATA,
+      data: data,
+    });
+    dispatch({
+      type: RESET_MOVIE_DATA,
+    });
+    dispatch({
+      type: RESET_DAY_DATA,
+    });
+    dispatch({
+      type: ALLTHEATER_REQUEST,
+    });
+    dispatch({
+      type: SELECT_THEATER_TO_MOVIE_REQUEST,
+      data: data.tid,
+    });
+    dispatch({
+      type: SELECT_THEATER_TO_DAY_REQUEST,
+      data: data.tid,
+    });
+  };
   return (
     <TheatersWrapper>
       <TheatersTitle>
@@ -103,70 +184,10 @@ const AllTheaterList = ({
 
                           return (
                             <Theater
-                              theater={theater}
+                              theaterData={theaterData}
                               t={mv.tid}
                               onClick={() => {
-                                //처음으로 영화가 클릭되고 극장 클릭
-
-                                if (choiceMovie && !choiceDay) {
-                                  dispatch({
-                                    type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
-                                    data: {
-                                      mid: movieId,
-                                      tid: mv.tid,
-                                    },
-                                  });
-                                  dispatch({
-                                    type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                                    data: mv.tid,
-                                  });
-                                }
-                                //날짜 선택 후 극장 클릭
-                                else if (choiceDay && !choiceMovie) {
-                                  //이상황은 날짜 클릭 후 극장 클릭
-                                  dispatch({
-                                    type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
-                                    data: {
-                                      miday: day,
-                                      tid: mv.tid,
-                                    },
-                                  });
-                                  dispatch({
-                                    type: SELECT_THEATER_TO_DAY_REQUEST,
-                                    data: mv.tid,
-                                  });
-                                  //극장 클릭 시 극장ㅎ도 함께 바꿔줘야함
-                                  dispatch({
-                                    type: SELECT_DAY_TO_THEATER_REQUEST,
-                                    data: day,
-                                  });
-                                }
-                                //두개 다 검색완
-                                else if (choiceDay && choiceMovie) {
-                                  dispatch({
-                                    type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
-                                    data: {
-                                      miday: day,
-                                      tid: mv.tid,
-                                    },
-                                  });
-                                  dispatch({
-                                    type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
-                                    data: {
-                                      mid: movieId,
-                                      tid: mv.tid,
-                                    },
-                                  });
-                                }
-
-                                //else if(두개다 클릭되어서 같이 검색)
-                                //else if(날짜가 클릭되어있을때)
-                                setTheaterMore({
-                                  id: mv.tid,
-                                  area: mv.tarea,
-                                  name: mv.tname,
-                                });
-                                setTheater(mv.tid);
+                                onClickAble(mv);
                               }}
                             >
                               {mv.tname}
@@ -176,29 +197,11 @@ const AllTheaterList = ({
                           return (
                             //disable된거를 클릭하면은 극장으로 처음부터 다시 검색해야함
                             <Theater
-                              theater={theater}
+                              theaterData={theaterData}
                               t={mv.tid}
                               style={{ opacity: 0.5 }}
                               onClick={() => {
-                                dispatch({
-                                  type: ALLTHEATER_REQUEST,
-                                });
-                                dispatch({
-                                  type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                                  data: mv.tid,
-                                });
-                                dispatch({
-                                  type: SELECT_THEATER_TO_DAY_REQUEST,
-                                  data: mv.tid,
-                                });
-                                //theater로 day 검색
-                                alert("해당하는 데이터가 없습니다.");
-                                setTheaterMore({
-                                  id: mv.tid,
-                                  area: mv.tarea,
-                                  name: mv.tname,
-                                });
-                                setTheater(mv.tid);
+                                onClickDisalbe(mv);
                               }}
                             >
                               {mv.tname}
@@ -207,12 +210,16 @@ const AllTheaterList = ({
                         } else {
                           return (
                             <Theater
-                              theater={theater}
+                              theaterData={theaterData}
                               t={mv.tid}
                               onClick={() => {
                                 //alltheater 상태(첫 상태)
                                 //극장으로 영화 검색 가능
                                 //극장으로 날짜 검색 추가해야함★★★★★★
+                                dispatch({
+                                  type: THEATER_DATA,
+                                  data: mv,
+                                });
                                 dispatch({
                                   type: SELECT_THEATER_TO_MOVIE_REQUEST,
                                   data: mv.tid,
@@ -222,12 +229,6 @@ const AllTheaterList = ({
                                   data: mv.tid,
                                 });
                                 //theater로 day 검색
-                                setTheaterMore({
-                                  id: mv.tid,
-                                  area: mv.tarea,
-                                  name: mv.tname,
-                                });
-                                setTheater(mv.tid);
                               }}
                             >
                               {mv.tname}
@@ -262,70 +263,10 @@ const AllTheaterList = ({
                         if (mv.able === "able") {
                           return (
                             <Theater
-                              theater={theater}
+                              theaterData={theaterData}
                               t={mv.tid}
                               onClick={() => {
-                                //처음으로 영화가 클릭되고 극장 클릭
-
-                                if (choiceMovie && !choiceDay) {
-                                  dispatch({
-                                    type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
-                                    data: {
-                                      mid: movieId,
-                                      tid: mv.tid,
-                                    },
-                                  });
-                                  dispatch({
-                                    type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                                    data: mv.tid,
-                                  });
-                                }
-                                //날짜 선택 후 극장 클릭
-                                else if (choiceDay && !choiceMovie) {
-                                  //이상황은 날짜 클릭 후 극장 클릭
-                                  dispatch({
-                                    type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
-                                    data: {
-                                      miday: day,
-                                      tid: mv.tid,
-                                    },
-                                  });
-                                  dispatch({
-                                    type: SELECT_THEATER_TO_DAY_REQUEST,
-                                    data: mv.tid,
-                                  });
-                                  //극장 클릭 시 극장ㅎ도 함께 바꿔줘야함
-                                  dispatch({
-                                    type: SELECT_DAY_TO_THEATER_REQUEST,
-                                    data: day,
-                                  });
-                                }
-                                //두개 다 검색완
-                                else if (choiceDay && choiceMovie) {
-                                  dispatch({
-                                    type: SELECT_DAYTHEATER_TO_MOVIE_REQUEST,
-                                    data: {
-                                      miday: day,
-                                      tid: mv.tid,
-                                    },
-                                  });
-                                  dispatch({
-                                    type: SELECT_MOVIETHEATER_TO_DAY_REQUEST,
-                                    data: {
-                                      mid: movieId,
-                                      tid: mv.tid,
-                                    },
-                                  });
-                                }
-
-                                //else if(두개다 클릭되어서 같이 검색)
-                                //else if(날짜가 클릭되어있을때)
-                                setTheaterMore({
-                                  id: mv.tid,
-                                  area: mv.tarea,
-                                  name: mv.tname,
-                                });
-                                setTheater(mv.tid);
+                                onClickAble(mv);
                               }}
                             >
                               {mv.tname}
@@ -334,27 +275,11 @@ const AllTheaterList = ({
                         } else if (mv.able === "disable") {
                           return (
                             <Theater
-                              theater={theater}
+                              theaterData={theaterData}
                               t={mv.tid}
                               style={{ opacity: 0.5 }}
                               onClick={() => {
-                                dispatch({
-                                  type: SELECT_THEATER_TO_MOVIE_REQUEST,
-                                  data: mv.tid,
-                                });
-                                dispatch({
-                                  type: SELECT_THEATER_TO_DAY_REQUEST,
-                                  data: mv.tid,
-                                });
-
-                                //theater로 day 검색
-                                alert("해당하는 데이터가 없습니다.");
-                                setTheaterMore({
-                                  id: mv.tid,
-                                  area: mv.tarea,
-                                  name: mv.tname,
-                                });
-                                setTheater(mv.tid);
+                                onClickDisalbe(mv);
                               }}
                             >
                               {mv.tname}
@@ -363,12 +288,16 @@ const AllTheaterList = ({
                         } else {
                           return (
                             <Theater
-                              theater={theater}
+                              theaterData={theaterData}
                               t={mv.tid}
                               onClick={() => {
                                 //alltheater 상태(첫 상태)
                                 //극장으로 영화 검색 가능
                                 //극장으로 날짜 검색 추가해야함★★★★★★
+                                dispatch({
+                                  type: THEATER_DATA,
+                                  data: mv,
+                                });
                                 dispatch({
                                   type: SELECT_THEATER_TO_MOVIE_REQUEST,
                                   data: mv.tid,
@@ -377,13 +306,6 @@ const AllTheaterList = ({
                                   type: SELECT_THEATER_TO_DAY_REQUEST,
                                   data: mv.tid,
                                 });
-                                //theater로 day 검색
-                                setTheaterMore({
-                                  id: mv.tid,
-                                  area: mv.tarea,
-                                  name: mv.tname,
-                                });
-                                setTheater(mv.tid);
                               }}
                             >
                               {mv.tname}
@@ -531,6 +453,7 @@ const TheatersSelectorText = styled.div`
 `;
 const Theater = styled.li`
   background-color: ${(props) =>
-    props.theater === props.t ? "gray" : "#f2f0e5"};
-  color: ${(props) => (props.theater === props.t ? "white" : "#333333")};
+    props.theaterData.tid === props.t ? "gray" : "#f2f0e5"};
+  color: ${(props) =>
+    props.theaterData.tid === props.t ? "white" : "#333333"};
 `;

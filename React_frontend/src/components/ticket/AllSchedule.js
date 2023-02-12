@@ -1,26 +1,28 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { SELECT_SCHEDULE_REQUEST } from "../../reducer/ticket";
-const AllSchedule = ({ movieId, theater, day }) => {
+import {
+  SELECT_SCHEDULE_REQUEST,
+  SCHEDULE_DATA,
+  RESET_SCHEDULE_DATA,
+} from "../../reducer/ticket";
+const AllSchedule = () => {
   const dispatch = useDispatch();
-  const { choiceTheater, choiceMovie, choiceDay, selectSchedule } = useSelector(
-    (state) => state.ticket
-  );
+  const { movieData, theaterData, DayData, selectSchedule, scheduleData } =
+    useSelector((state) => state.ticket);
 
   useEffect(() => {
-    if (choiceTheater && choiceMovie && choiceDay) {
-      console.log("데이터 3개다 투입되어서 영화검색");
+    if (movieData !== "" && theaterData !== "" && DayData !== "") {
       dispatch({
         type: SELECT_SCHEDULE_REQUEST,
         data: {
-          miday: day,
-          mid: movieId,
-          tid: theater,
+          miday: DayData.miday,
+          mid: movieData.id,
+          tid: theaterData.tid,
         },
       });
     }
-  }, [movieId, theater, day, choiceTheater, choiceMovie, choiceDay]);
+  }, [dispatch, movieData, theaterData, DayData]);
   return (
     <Schedule>
       <ScheduleTitle>
@@ -29,34 +31,50 @@ const AllSchedule = ({ movieId, theater, day }) => {
       <ScheduleList>
         <Result>
           <TimeList>
-            {selectSchedule.map((sc) => (
-              <Time>
-                <Button type="button">
-                  <Legend></Legend>
-                  <Hour>
-                    <StartTime>{sc.mistarttime.substring(0, 5)}</StartTime>
-                    <EndTime>{sc.miendtime.substring(0, 5)}</EndTime>
-                  </Hour>
-                  <Title>
-                    <Name>
-                      {sc.movie.mtitle}
-                      <Em>{sc.movie.mgenre}</Em>
-                    </Name>
-                  </Title>
-                  <Info>
-                    <Theater>
-                      {sc.cinema.theater.tarea} {sc.cinema.theater.tname}점
-                      <br />
-                      {sc.cinema.ctype} {sc.cinema.cname}
-                    </Theater>
-                    <Seat>
-                      <Now>{sc.cinema.cseat}</Now>
-                      <All>/{sc.cinema.cseat}</All>
-                    </Seat>
-                  </Info>
-                </Button>
-              </Time>
-            ))}
+            {movieData !== "" && theaterData !== "" && DayData !== "" ? (
+              <>
+                {selectSchedule.map((sc) => (
+                  <Time schedule={sc.miid} scheduleData={scheduleData}>
+                    <Button
+                      type="button"
+                      schedule={sc.miid}
+                      scheduleData={scheduleData}
+                      onClick={() => {
+                        dispatch({
+                          type: SCHEDULE_DATA,
+                          data: sc,
+                        });
+                      }}
+                    >
+                      <Legend></Legend>
+                      <Hour>
+                        <StartTime>{sc.mistarttime.substring(0, 5)}</StartTime>
+                        <EndTime>{sc.miendtime.substring(0, 5)}</EndTime>
+                      </Hour>
+                      <Title>
+                        <Name>
+                          {sc.movie.mtitle}
+                          <Em>{sc.movie.mgenre}</Em>
+                        </Name>
+                      </Title>
+                      <Info>
+                        <Theater>
+                          {sc.cinema.theater.tarea} {sc.cinema.theater.tname}점
+                          <br />
+                          {sc.cinema.ctype} {sc.cinema.cname}
+                        </Theater>
+                        <Seat>
+                          <Now>{sc.cinema.cseat}</Now>
+                          <All>/{sc.cinema.cseat}</All>
+                        </Seat>
+                      </Info>
+                    </Button>
+                  </Time>
+                ))}
+              </>
+            ) : (
+              ""
+            )}
           </TimeList>
         </Result>
       </ScheduleList>
@@ -111,7 +129,10 @@ const TimeList = styled.ul`
   padding: 0;
 `;
 
-const Time = styled.li``;
+const Time = styled.li`
+  background-color: ${(props) =>
+    props.scheduleData.miid === props.schedule ? "gray" : "#f2f0e5"};
+`;
 
 const Button = styled.button`
   overflow: hidden;

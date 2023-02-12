@@ -3,19 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  ALLDAY_REQUEST,
-  T_ALLMOVIE_REQUEST,
-  ALLTHEATER_REQUEST,
-} from "../../reducer/ticket";
-const TopButton = ({
-  setMovieId,
-  setTheater,
-  setMoviePoster,
-  setTheaterMore,
-  setDayMore,
-  setDay,
-}) => {
+import {} from "../../reducer/ticket";
+const TopButton = ({}) => {
   const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
   const onLogout = useCallback(() => {
