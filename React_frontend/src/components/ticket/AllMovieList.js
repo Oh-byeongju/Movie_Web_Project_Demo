@@ -1,5 +1,4 @@
-import { da } from "date-fns/locale";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
@@ -11,6 +10,7 @@ import {
   MOVIE_DATA,
   RESET_DAY_DATA,
   RESET_THEATER_DATA,
+  RESET_MOVIE_DATA,
 } from "../../reducer/ticket";
 const AllMovieList = ({ setDayMore }) => {
   const dispatch = useDispatch();
@@ -30,6 +30,11 @@ const AllMovieList = ({ setDayMore }) => {
       type: T_ALLMOVIE_REQUEST,
       data: LOGIN_data.uid,
     });
+    return () => {
+      dispatch({
+        type: RESET_MOVIE_DATA,
+      });
+    };
   }, [LOGIN_data.uid, dispatch]);
 
   //able된 영화를 선택하는 함수
@@ -146,6 +151,7 @@ const AllMovieList = ({ setDayMore }) => {
                 onClick={() => {
                   onClickMovie(movie);
                 }}
+                key={movie.id}
                 movieData={movieData}
                 movie={movie.id}
               >
@@ -165,6 +171,7 @@ const AllMovieList = ({ setDayMore }) => {
                   //disable된 영화를 선택하면 theater day 모두 영화로 다시 검색
                   onClickDisable(movie);
                 }}
+                key={movie.id}
                 movieData={movieData}
                 movie={movie.id}
               >
@@ -194,6 +201,7 @@ const AllMovieList = ({ setDayMore }) => {
                     data: movie.id,
                   });
                 }}
+                key={movie.id}
                 movieData={movieData}
                 movie={movie.id}
               >
@@ -232,7 +240,7 @@ const MovieTitle = styled.div`
   p {
     display: block;
     position: relative;
-    left: -10px;
+    left: -4px;
   }
 `;
 
@@ -274,7 +282,7 @@ line-height: 35px;
 margin-bottom: 1px;
 position: relative;
 background-color:#f2f0e5;
-  
+cursor:pointer;
     .disable {
       cursor: default;
         opacity:0.5;

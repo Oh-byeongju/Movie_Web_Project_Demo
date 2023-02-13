@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
@@ -11,15 +11,22 @@ import {
   THEATER_DATA,
   RESET_MOVIE_DATA,
   RESET_DAY_DATA,
+  RESET_THEATER_DATA,
 } from "../../reducer/ticket";
+//극장을 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
 
 const AllTheaterList = ({ tabstate, setTabState }) => {
   const dispatch = useDispatch();
   //밑에 4개는 카운트를 위한 변수
   let seoul = 0;
   let busan = 0;
+  let gyeonggi = 0;
+  let incheon = 0;
   let ableseoul = 0;
   let ablebusan = 0;
+  let ablegyeonggi = 0;
+  let ableincheon = 0;
+
   //토글을 위한 훅
   const [isWideTab, setIsWideTab] = useState(false);
   //메뉴 토클을 위한 함수
@@ -50,6 +57,11 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
     dispatch({
       type: ALLTHEATER_REQUEST,
     });
+    return () => {
+      dispatch({
+        type: RESET_THEATER_DATA,
+      });
+    };
   }, []);
 
   //able된것들 클릭하기
@@ -162,13 +174,13 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
               seoul={tabstate.seoul}
               onClick={tabHandler}
             >
-              <a seoul={tabstate.seoul}>서울</a>
+              <a>서울</a>
               <ALLTHEATERLISTSEOUL
                 className="all_theater"
                 seoul={tabstate.seoul}
               >
                 <CONENTSCROLL className="content_scroll">
-                  {allTheater.map((mv) => {
+                  {allTheater.map((mv, index) => {
                     if (mv.tarea === "서울") {
                       seoul++;
                       //count를 위해 만듬
@@ -186,6 +198,7 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
                             <Theater
                               theaterData={theaterData}
                               t={mv.tid}
+                              key={mv.tid}
                               onClick={() => {
                                 onClickAble(mv);
                               }}
@@ -199,6 +212,7 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
                             <Theater
                               theaterData={theaterData}
                               t={mv.tid}
+                              key={mv.tid}
                               style={{ opacity: 0.5 }}
                               onClick={() => {
                                 onClickDisalbe(mv);
@@ -212,6 +226,7 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
                             <Theater
                               theaterData={theaterData}
                               t={mv.tid}
+                              key={mv.tid}
                               onClick={() => {
                                 //alltheater 상태(첫 상태)
                                 //극장으로 영화 검색 가능
@@ -242,29 +257,37 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
               </ALLTHEATERLISTSEOUL>
               ({seoul - ableseoul})
             </TheaterAreaListSeoul>
-            <TheaterAreaListBusan
-              id="busan"
-              busan={tabstate.busan}
+
+            <TheaterAreaListGyonggi
+              id="gyeonggi"
+              gyeonggi={tabstate.gyeonggi}
               onClick={tabHandler}
             >
-              <a busan={tabstate.busan}>부산</a>
-              <ALLTHEATERLISTBUSAN
+              <a>경기</a>
+              <ALLTHEATERLISTGyonggi
                 className="all_theater"
-                busan={tabstate.busan}
+                gyeonggi={tabstate.gyeonggi}
               >
                 <CONENTSCROLL className="content_scroll">
-                  {allTheater.map((mv) => {
-                    if (mv.tarea === "부산") {
-                      busan++;
+                  {allTheater.map((mv, index) => {
+                    if (mv.tarea === "경기") {
+                      gyeonggi++;
+                      //count를 위해 만듬
                       if (mv.able === "disable") {
-                        ablebusan++;
+                        ablegyeonggi++;
                       }
-                      if (tabstate.busan) {
+                      if (tabstate.gyeonggi) {
                         if (mv.able === "able") {
+                          //영화나 날짜를 클릭해서 able이 된 상태
+                          //영화가 클릭이 되어있으면 movietheater_to_day로 날짜 검색, 영화 데이터도 동시에 바꿔줘야함
+                          // 날자가 클릭되어있으면 theaterday_to_movie로 영화검색, 극장클릭시 날짜도 같이 토글 극장에 맞게
+                          //두개다 클릭이 되어있으면 날짜로 영화 데이터 검색
+
                           return (
                             <Theater
                               theaterData={theaterData}
                               t={mv.tid}
+                              key={mv.tid}
                               onClick={() => {
                                 onClickAble(mv);
                               }}
@@ -274,9 +297,11 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
                           );
                         } else if (mv.able === "disable") {
                           return (
+                            //disable된거를 클릭하면은 극장으로 처음부터 다시 검색해야함
                             <Theater
                               theaterData={theaterData}
                               t={mv.tid}
+                              key={mv.tid}
                               style={{ opacity: 0.5 }}
                               onClick={() => {
                                 onClickDisalbe(mv);
@@ -290,6 +315,178 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
                             <Theater
                               theaterData={theaterData}
                               t={mv.tid}
+                              key={mv.tid}
+                              onClick={() => {
+                                //alltheater 상태(첫 상태)
+                                //극장으로 영화 검색 가능
+                                //극장으로 날짜 검색 추가해야함★★★★★★
+                                dispatch({
+                                  type: THEATER_DATA,
+                                  data: mv,
+                                });
+                                dispatch({
+                                  type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                                  data: mv.tid,
+                                });
+                                dispatch({
+                                  type: SELECT_THEATER_TO_DAY_REQUEST,
+                                  data: mv.tid,
+                                });
+                                //theater로 day 검색
+                              }}
+                            >
+                              {mv.tname}
+                            </Theater>
+                          );
+                        }
+                      }
+                    }
+                  })}
+                </CONENTSCROLL>
+              </ALLTHEATERLISTGyonggi>
+              ({gyeonggi - ablegyeonggi})
+            </TheaterAreaListGyonggi>
+
+            <TheaterAreaListIncheon
+              id="incheon"
+              incheon={tabstate.incheon}
+              onClick={tabHandler}
+            >
+              <a>인천</a>
+              <ALLTHEATERLISTIncheon
+                className="all_theater"
+                incheon={tabstate.incheon}
+              >
+                <CONENTSCROLL className="content_scroll">
+                  {allTheater.map((mv, index) => {
+                    if (mv.tarea === "인천") {
+                      incheon++;
+                      //count를 위해 만듬
+                      if (mv.able === "disable") {
+                        ableincheon++;
+                      }
+                      if (tabstate.incheon) {
+                        if (mv.able === "able") {
+                          //영화나 날짜를 클릭해서 able이 된 상태
+                          //영화가 클릭이 되어있으면 movietheater_to_day로 날짜 검색, 영화 데이터도 동시에 바꿔줘야함
+                          // 날자가 클릭되어있으면 theaterday_to_movie로 영화검색, 극장클릭시 날짜도 같이 토글 극장에 맞게
+                          //두개다 클릭이 되어있으면 날짜로 영화 데이터 검색
+
+                          return (
+                            <Theater
+                              theaterData={theaterData}
+                              t={mv.tid}
+                              key={mv.tid}
+                              onClick={() => {
+                                onClickAble(mv);
+                              }}
+                            >
+                              {mv.tname}
+                            </Theater>
+                          );
+                        } else if (mv.able === "disable") {
+                          return (
+                            //disable된거를 클릭하면은 극장으로 처음부터 다시 검색해야함
+                            <Theater
+                              theaterData={theaterData}
+                              t={mv.tid}
+                              key={mv.tid}
+                              style={{ opacity: 0.5 }}
+                              onClick={() => {
+                                onClickDisalbe(mv);
+                              }}
+                            >
+                              {mv.tname}
+                            </Theater>
+                          );
+                        } else {
+                          return (
+                            <Theater
+                              theaterData={theaterData}
+                              t={mv.tid}
+                              key={mv.tid}
+                              onClick={() => {
+                                //alltheater 상태(첫 상태)
+                                //극장으로 영화 검색 가능
+                                //극장으로 날짜 검색 추가해야함★★★★★★
+                                dispatch({
+                                  type: THEATER_DATA,
+                                  data: mv,
+                                });
+                                dispatch({
+                                  type: SELECT_THEATER_TO_MOVIE_REQUEST,
+                                  data: mv.tid,
+                                });
+                                dispatch({
+                                  type: SELECT_THEATER_TO_DAY_REQUEST,
+                                  data: mv.tid,
+                                });
+                                //theater로 day 검색
+                              }}
+                            >
+                              {mv.tname}
+                            </Theater>
+                          );
+                        }
+                      }
+                    }
+                  })}
+                </CONENTSCROLL>
+              </ALLTHEATERLISTIncheon>
+              ({gyeonggi - ablegyeonggi})
+            </TheaterAreaListIncheon>
+
+            <TheaterAreaListBusan
+              id="busan"
+              busan={tabstate.busan}
+              onClick={tabHandler}
+            >
+              <a>부산</a>
+              <ALLTHEATERLISTBUSAN
+                className="all_theater"
+                busan={tabstate.busan}
+              >
+                <CONENTSCROLL className="content_scroll">
+                  {allTheater.map((mv, index) => {
+                    if (mv.tarea === "부산") {
+                      busan++;
+                      if (mv.able === "disable") {
+                        ablebusan++;
+                      }
+                      if (tabstate.busan) {
+                        if (mv.able === "able") {
+                          return (
+                            <Theater
+                              theaterData={theaterData}
+                              t={mv.tid}
+                              key={mv.tid}
+                              onClick={() => {
+                                onClickAble(mv);
+                              }}
+                            >
+                              {mv.tname}
+                            </Theater>
+                          );
+                        } else if (mv.able === "disable") {
+                          return (
+                            <Theater
+                              theaterData={theaterData}
+                              t={mv.tid}
+                              key={mv.tid}
+                              style={{ opacity: 0.5 }}
+                              onClick={() => {
+                                onClickDisalbe(mv);
+                              }}
+                            >
+                              {mv.tname}
+                            </Theater>
+                          );
+                        } else {
+                          return (
+                            <Theater
+                              theaterData={theaterData}
+                              t={mv.tid}
+                              key={mv.tid}
                               onClick={() => {
                                 //alltheater 상태(첫 상태)
                                 //극장으로 영화 검색 가능
@@ -353,7 +550,7 @@ const TheatersTitle = styled.div`
   p {
     display: block;
     position: relative;
-    left: 10px;
+    left: 60px;
   }
 `;
 
@@ -389,6 +586,7 @@ const TheaterAreaListSeoul = styled.li`
   overflow: hidden;
   float: left;
   width: 109px;
+  cursor: pointer;
   height: 31px;
   font-size: 14px;
   line-height: 31px;
@@ -396,11 +594,37 @@ const TheaterAreaListSeoul = styled.li`
   background-color: ${(props) =>
     props.seoul === true ? "gainsboro" : "#f2f0e5"};
 `;
+const TheaterAreaListGyonggi = styled.li`
+  clear: both;
+  overflow: hidden;
+  cursor: pointer;
+  float: left;
+  width: 109px;
+  height: 31px;
+  font-size: 14px;
+  line-height: 31px;
+  margin-bottom: 1px;
+  background-color: ${(props) =>
+    props.gyeonggi === true ? "gainsboro" : "#f2f0e5"};
+`;
+const TheaterAreaListIncheon = styled.li`
+  clear: both;
+  overflow: hidden;
+  cursor: pointer;
+  float: left;
+  width: 109px;
+  height: 31px;
+  font-size: 14px;
+  line-height: 31px;
+  margin-bottom: 1px;
+  background-color: ${(props) =>
+    props.incheon === true ? "gainsboro" : "#f2f0e5"};
+`;
 
 const TheaterAreaListBusan = styled.li`
   clear: both;
   overflow: hidden;
-
+  cursor: pointer;
   float: left;
   width: 109px;
   height: 31px;
@@ -415,20 +639,43 @@ const ALLTHEATERLISTSEOUL = styled.div`
   position: absolute;
   top: 0;
   left: 110px;
+  cursor: pointer;
   width: 160px;
   height: 100%;
   font-weight: bold;
   display: ${(props) => (props.seoul === true ? "block" : "none")};
 `;
+const ALLTHEATERLISTGyonggi = styled.div`
+  position: absolute;
+  font-weight: bold;
+  top: 0;
+  cursor: pointer;
+  left: 110px;
+  width: 160px;
+  height: 100%;
+  display: ${(props) => (props.gyeonggi === true ? "block" : "none")};
+`;
+const ALLTHEATERLISTIncheon = styled.div`
+  position: absolute;
+  font-weight: bold;
+  top: 0;
+  cursor: pointer;
+  left: 110px;
+  width: 160px;
+  height: 100%;
+  display: ${(props) => (props.incheon === true ? "block" : "none")};
+`;
 const ALLTHEATERLISTBUSAN = styled.div`
   position: absolute;
   font-weight: bold;
   top: 0;
+  cursor: pointer;
   left: 110px;
   width: 160px;
   height: 100%;
   display: ${(props) => (props.busan === true ? "block" : "none")};
 `;
+
 const CONENTSCROLL = styled.ul`
   overflow-x: hidden;
 

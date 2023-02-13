@@ -1,16 +1,13 @@
-package com.movie.Spring_backend.distinct;
-
-
+package com.movie.Spring_backend.util;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class DeduplicationUtils {
+public class DeduplicationUtil {
 
    public static <T> List<T> deduplication(final List<T> list , Function<? super T,?> key){
        return list.stream().
