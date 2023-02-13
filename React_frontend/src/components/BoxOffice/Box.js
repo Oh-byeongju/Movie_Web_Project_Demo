@@ -78,7 +78,7 @@ const Box = ({ movie }) => {
           </Link>
           <div className="middle">
           <Link to={`/moviedetail/${movie.id}`}>
-            <Text className="hover_text">{movie.story}</Text>
+            <Text className="hover_text">{"수정 바랍니다."}</Text>
           </Link>
           </div>
         </div>
@@ -91,11 +91,7 @@ const Box = ({ movie }) => {
               {likes > 999 ? getNotRoundDecimalNumber(likes / 1000) + "K" : likes}
             </span>
           </Like>
-          <Ticket
-            onClick={() => {
-              console.log(movie);
-            }}
-          >
+          <Ticket>
             예매
           </Ticket>
         </Button>

@@ -126,12 +126,14 @@ const Details = () => {
                 </Link>
               </Like>
             </BoxContent>
-          </BaseMovie>
-          <ColsContent>
+            <ColsContent>
             <ColsDetails>
-              <Story>{detailMovie.mstory}</Story>
+              <Story>
+                <span dangerouslySetInnerHTML={{__html: detailMovie.mstory}}/>
+              </Story>
             </ColsDetails>
           </ColsContent>
+          </BaseMovie>
         </Wrapper>
       </Content>
     </Container>
@@ -247,7 +249,6 @@ const Ticket = styled.button`
   height: 34.6px;
   border: 1px solid #222222;
   background: #503396;
-
   line-height: 33px;
   text-align: center;
   display: inline-block;
@@ -259,23 +260,25 @@ const Ticket = styled.button`
 `;
 
 const ColsContent = styled.div`
+  margin-right: 30px;
   margin-top: 30px;
+  float: left;
 `;
 
 const ColsDetails = styled.div`
+  margin-right: 30px;
   float: left;
   position: relative;
-  width: 800px;
+  width: 1020px;
 `;
 
 const Story = styled.div`
-  padding-top: 40px;
-  margin-top: 35px;
+  margin-right: 30px;
+  float: left;
   color: #333333;
-  white-space: "pre-wrap";
   font-size: 14px;
   font-weight: 400;
-  line-height: 1.8;
+  line-height: 1;
 `;
 
 export default Details;

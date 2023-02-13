@@ -19,8 +19,6 @@ function* AllMovieLoad(action) {
     id: mv.mid, //영화번호
     dir: mv.mdir, //감독
     date: mv.mdate, //개봉일
-    actor: mv.mactor, //주연
-    supactor: mv.supactor, //조연
     time: mv.mtime, //러닝타임
     genre: mv.mgenre, //장르
     story: mv.mstory,
@@ -68,8 +66,6 @@ function* SearchMovieLoad(action) {
       id: mv.mid, //영화번호
       dir: mv.mdir, //감독
       date: mv.mdate, //개봉일
-      actor: mv.mactor, //주연
-      supactor: mv.supactor, //조연
       time: mv.mtime, //러닝타임
       genre: mv.mgenre, //장르
       story: mv.mstory,

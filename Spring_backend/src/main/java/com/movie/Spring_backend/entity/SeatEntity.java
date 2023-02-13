@@ -30,6 +30,7 @@ public class SeatEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="rid") //조인할 컬럼 이름
     private ReservationEntity rid;
+
     @Builder
     public SeatEntity(Long sid ,String sname, String stype, Boolean suse, CinemaEntity cid, ReservationEntity rid) {
         this.sid=sid;

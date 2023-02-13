@@ -16,7 +16,6 @@ public class MovieDto {
     private Long mid;
     private String mtitle;
     private String mdir;
-    
     private String mgenre;
     private int mtime;
     private Date mdate;
@@ -29,12 +28,11 @@ public class MovieDto {
     private String able;
 
     @Builder
-    public MovieDto(Long mid, String mtitle, String mdir,  String mgenre,
-                    int mtime, Date mdate, String mrating, String mstory , String mimagepath, Integer mlikes, Float mscore, Boolean mlike, String able) {
+    public MovieDto(Long mid, String mtitle, String mdir, String mgenre, int mtime, Date mdate, String mrating,
+                    String mstory , String mimagepath, Integer mlikes, Float mscore, Boolean mlike, String able) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;
-
         this.mgenre=mgenre;
         this.mtime=mtime;
         this.mdate=mdate;

@@ -54,12 +54,11 @@ public class MovieEntity {
     private Float avgScore; // 평점의 평균
 
     @Builder
-    public MovieEntity(Long mid, String mtitle, String mdir, String mgenre,
-                       int mtime, Date mdate, String mrating, String mstory, String mimagepath, Integer cntMovieLike, Float avgScore) {
+    public MovieEntity(Long mid, String mtitle, String mdir, String mgenre, int mtime, Date mdate,
+                       String mrating, String mstory, String mimagepath, Integer cntMovieLike, Float avgScore) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;
-
         this.mgenre=mgenre;
         this.mtime=mtime;
         this.mdate=mdate;

@@ -93,7 +93,7 @@ const Movie = ({ movie }) => {
           <div className="middle">
             <Link to={`/moviedetail/${movie.id}`}>
               <Text className="hover_text">
-                <p>{movie.story}</p>
+                <p>{Parser("수정 바랍니다. (상세보기 이런걸로)")}</p>
               </Text>
             </Link>
           </div>
@@ -193,7 +193,7 @@ const Text = styled.div`
   font-size: 16px;
   padding: 16px 32px;
   cursor: pointer;
-  overflow: hidden;
+  text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
@@ -204,15 +204,17 @@ const Des = styled.div`
     display: block;
     padding-top: 10px;
     span {
+      display: inline-block;
       overflow: hidden;
-      width: 100%;
+      width: 180px;
       font-size: 1.2222em;
       font-weight: 400;
       text-overflow: ellipsis;
+      white-space: nowrap;
       padding: 2px 0 0 1px;
       margin-left: 10px;
       position: relative;
-      top: -6px;
+      top: -3px;
     }
     .infomation {
       span {

@@ -14,14 +14,13 @@ import java.sql.Date;
 
 @Getter
 @NoArgsConstructor
-
 public class ReservationDto {
     private Long rid;
     private Date rdate;
     private Long rpice;
     private MovieInfoEntity miid;
-
     private MemberEntity uid;
+
     @Builder
     public ReservationDto(Long rid ,Date rdate, Long rpice, MovieInfoEntity miid, MemberEntity uid) {
         this.rid=rid;
@@ -30,6 +29,4 @@ public class ReservationDto {
         this.miid=miid;
         this.uid=uid;
     }
-
-
 }
