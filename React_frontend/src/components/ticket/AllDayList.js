@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { now } from "moment/moment";
 import moment from "moment";
 //선언하지 않아도, 디바이스 혹은 locale의 시간을 불러온다.
+//캘린더를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
+//캘린더 able, disable
 import "moment/locale/ko";
 import {
   ALLDAY_REQUEST,
@@ -49,6 +51,11 @@ const AllDayList = () => {
     dispatch({
       type: ALLDAY_REQUEST,
     });
+    return () => {
+      dispatch({
+        type: RESET_DAY_DATA,
+      });
+    };
   }, []);
 
   //날짜 계산
@@ -64,32 +71,29 @@ const AllDayList = () => {
       <Header>날짜</Header>
 
       <DayList ticking={false}>
-        {moment.map((moment) => {
+        {moment.map((moment, index) => {
           return (
-            <>
+            <div key={index}>
               <YearMonthList>
-                {" "}
-                <p>
-                  <span className={cn("Year")}>
-                    <Year
-                      id="Year"
-                      format={"YYYY"}
-                      ticking={false}
-                      timezone={"KR/Pacific"}
-                    >
-                      {year}
-                    </Year>
-                  </span>
-                  <span className={cn("Month")}>
-                    <Month
-                      format={"MMMM"}
-                      ticking={false}
-                      timezone={"KR/Pacific"}
-                    >
-                      {moment}
-                    </Month>
-                  </span>
-                </p>
+                <span className={cn("Year")}>
+                  <Year
+                    id="Year"
+                    format={"YYYY"}
+                    ticking={false}
+                    timezone={"KR/Pacific"}
+                  >
+                    {year}
+                  </Year>
+                </span>
+                <span className={cn("Month")}>
+                  <Month
+                    format={"MMMM"}
+                    ticking={false}
+                    timezone={"KR/Pacific"}
+                  >
+                    {moment}
+                  </Month>
+                </span>
               </YearMonthList>
               <DaylistSector>
                 {allDay.map((calendar, index) => {
@@ -103,10 +107,11 @@ const AllDayList = () => {
                       : "disable";
                   }
                   return (
-                    <>
+                    <div key={calendar.miid}>
                       {moment === calendar.miday.substring(5, 7) ? (
                         <Today
                           today={calendar.miday}
+                          key={calendar.miid}
                           DayData={DayData}
                           className={disableClassName}
                           onClick={() => {
@@ -233,7 +238,6 @@ const AllDayList = () => {
                             )}
                             ref={Weak}
                           >
-                            {" "}
                             {weekday[new Date(`'${calendar.miday}'`).getDay()]}
                           </Week>
                           <div className={cn("day")}>
@@ -243,11 +247,11 @@ const AllDayList = () => {
                       ) : (
                         ""
                       )}
-                    </>
+                    </div>
                   );
                 })}
               </DaylistSector>
-            </>
+            </div>
           );
         })}
       </DayList>

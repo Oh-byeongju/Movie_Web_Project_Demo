@@ -1,12 +1,8 @@
 package com.movie.Spring_backend.service;
 
-import com.movie.Spring_backend.distinct.DeduplicationUtils;
-import com.movie.Spring_backend.dto.MovieDto;
-import com.movie.Spring_backend.dto.MovieInfoDto;
+import com.movie.Spring_backend.util.DeduplicationUtil;
 import com.movie.Spring_backend.dto.TheaterDto;
-import com.movie.Spring_backend.entity.MovieInfoEntity;
 import com.movie.Spring_backend.entity.TheaterEntity;
-import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.mapper.TheaterMapper;
 import com.movie.Spring_backend.repository.TheaterRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -61,7 +55,7 @@ public class TheaterService {
         //IN에 NOT iN 넣기
 
         //중복제거
-        List <TheaterDto> dedupication = DeduplicationUtils.deduplication(DtoIn,TheaterDto::getTname);
+        List <TheaterDto> dedupication = DeduplicationUtil.deduplication(DtoIn,TheaterDto::getTname);
 
         return dedupication;
 

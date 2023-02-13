@@ -5,7 +5,8 @@ const TicketMore = ({ dayMore }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
   );
-
+  //사용자가 선택한 영화 및 정보를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
+  //좌석 페이지로 넘어가야함 데이터와 함께
   return (
     <TicketWrapper>
       <TicketStep>
@@ -18,6 +19,7 @@ const TicketMore = ({ dayMore }) => {
                 alt="영화"
               />
             </Poster>
+
             <Title>
               <span>{movieData.title}</span>
             </Title>
@@ -123,7 +125,20 @@ const MovieTheater = styled.div`
   padding-left: 10px;
 `;
 
-const MovieSeat = styled.div``;
+const MovieSeat = styled.div`
+  background: url(http://img.cgv.co.kr/CGV_RIA/Ticket/image/reservation/tnb/tnb_buttons.png)
+    no-repeat;
+  background-position: 0 0;
+  overflow: hidden;
+  text-indent: -1000px;
+  background-position: 0 -220px;
+  position: absolute;
+  top: 10px;
+  right: 100px;
+  width: 106px;
+  height: 108px;
+  cursor: pointer;
+`;
 
 const Img = styled.img`
   width: 100%;
