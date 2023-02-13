@@ -3,20 +3,17 @@
   23-02-10 영화 세부내용을 위한 메소드 설계(오병주)
 */
 package com.movie.Spring_backend.service;
-import com.movie.Spring_backend.distinct.DeduplicationUtils;
+import com.movie.Spring_backend.util.DeduplicationUtil;
 import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.entity.MovieEntity;
-import com.movie.Spring_backend.entity.MovieInfoEntity;
 import com.movie.Spring_backend.entity.MovieMemberEntity;
 import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.mapper.MovieMapper;
 import com.movie.Spring_backend.repository.MovieMemberRepository;
 import com.movie.Spring_backend.repository.MovieRepository;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -130,7 +127,7 @@ public class MovieService {
             AbleDto.add(mm);
         }
         //객체로 중복제거하면 끝
-        List <MovieDto> dedupication = DeduplicationUtils.deduplication(AbleDto,MovieDto::getMid);
+        List <MovieDto> dedupication = DeduplicationUtil.deduplication(AbleDto,MovieDto::getMid);
 
         //mid 검색을 통해 무비 조회
         return dedupication;

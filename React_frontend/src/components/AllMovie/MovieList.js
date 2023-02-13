@@ -33,7 +33,7 @@ const MovieList = () => {
   useEffect(() => {
     dispatch({
       type: ALLMOVIE_REQUEST,
-      data: LOGIN_data.uid
+      data: LOGIN_data.uid,
     });
   }, [LOGIN_data.uid, dispatch]);
 
@@ -42,15 +42,15 @@ const MovieList = () => {
     dispatch({
       type: MOVIE_SEARCH_REQUEST,
       data: {
-        title : value,
-        uid : LOGIN_data.uid
-      }
+        title: value,
+        uid: LOGIN_data.uid,
+      },
     });
 
     setLimit(L);
     // UL의 높이 갱신
     var UL_Ref_style = window.getComputedStyle(UL_Ref.current);
-    var UL_Ref_height = UL_Ref_style.getPropertyValue('height');
+    var UL_Ref_height = UL_Ref_style.getPropertyValue("height");
     setHeight(parseInt(UL_Ref_height) + 32.4);
   };
 
@@ -81,26 +81,32 @@ const MovieList = () => {
           </div>
         </div>
         {/* 처음 랜더링 될때 로딩화면 */}
-        {allMovie.length === 0 && Height === 962.2 ? <div><MovieSearchLoading height={Height}/></div> : null}
+        {allMovie.length === 0 && Height === 962.2 ? (
+          <div>
+            <MovieSearchLoading height={Height} />
+          </div>
+        ) : null}
         {movie_search_loading ? (
-          <MovieSearchLoading height={Height}/>
+          <MovieSearchLoading height={Height} />
         ) : (
           <div className="movie-list">
             <UL ref={UL_Ref}>
               {/* 영화 검색 결과에 따라 다른 화면을 출력 */}
-              {allMovie.length !== 0 ?
-              allMovie.slice(0, Limit).map((movie) => (
-                <Movie movie={movie} key={movie.id} />
-              )) : 
-              <NoSearch>
-                <p>
-                  현재 상영중인 영화가 없습니다.
-                </p>
-              </NoSearch>}
+              {allMovie.length !== 0 ? (
+                allMovie
+                  .slice(0, Limit)
+                  .map((movie) => <Movie movie={movie} key={movie.id} />)
+              ) : (
+                <NoSearch>
+                  <p>현재 상영중인 영화가 없습니다.</p>
+                </NoSearch>
+              )}
             </UL>
           </div>
         )}
-        {Limit >= allMovie.length ? ("") : (
+        {Limit >= allMovie.length ? (
+          ""
+        ) : (
           <More onClick={onMoreClick}>
             더보기 <DownOutlined />
           </More>
@@ -141,7 +147,7 @@ const InnerWraps = styled.div`
 const SearchWarp = styled(Search)`
   span {
     .ant-input-clear-icon {
-    display: none; 
+      display: none;
     }
     .ant-input-affix-wrapper {
       border-color: #a0a0a0;
@@ -153,11 +159,10 @@ const SearchWarp = styled(Search)`
       border-color: #a0a0a0;
     }
     .ant-input::placeholder {
-        color: #a0a0a0;
+      color: #a0a0a0;
     }
   }
 `;
-
 
 const UL = styled.ul`
   align-items: center;
@@ -178,7 +183,7 @@ const NoSearch = styled.div`
   color: #222;
   text-align: center;
   font-size: 1.3333em;
-  
+
   p {
     margin: 0;
     padding: 50px 0;

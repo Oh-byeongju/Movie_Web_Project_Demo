@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import styled from "styled-components";
 import AllDayList from "../components/ticket/AllDayList";
@@ -7,12 +7,13 @@ import AllSchedule from "../components/ticket/AllSchedule";
 import AllTheaterList from "../components/ticket/AllTheaterList";
 import TicketMore from "../components/ticket/TicketMore";
 import TopButton from "../components/ticket/TopButton";
-
 const Reserve = () => {
   //토글
   const [tabstate, setTabState] = useState({
     seoul: true,
     busan: false,
+    gyeonggi: false,
+    incheon: false,
   });
 
   return (

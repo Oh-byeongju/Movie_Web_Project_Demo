@@ -1,6 +1,6 @@
 package com.movie.Spring_backend.service;
 
-import com.movie.Spring_backend.distinct.DeduplicationUtils;
+import com.movie.Spring_backend.util.DeduplicationUtil;
 import com.movie.Spring_backend.dto.CinemaDto;
 import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.entity.*;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -118,7 +117,7 @@ public class CinemaService {
         for(MovieDto mm : DisAbleDto){
             AbleDto.add(mm);
         }
-        List <MovieDto> dedupication = DeduplicationUtils.deduplication(AbleDto,MovieDto::getMid);
+        List <MovieDto> dedupication = DeduplicationUtil.deduplication(AbleDto,MovieDto::getMid);
 
         //mid 검색을 통해 무비 조회
          return dedupication;

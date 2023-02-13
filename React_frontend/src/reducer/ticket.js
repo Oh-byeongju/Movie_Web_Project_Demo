@@ -163,6 +163,7 @@ export const SCHEDULE_DATA = "SCHEDULE_DATA";
 export const RESET_MOVIE_DATA = "RESET_MOVIE_DATA";
 export const RESET_THEATER_DATA = "RESET_THEATER_DATA";
 export const RESET_DAY_DATA = "RESET_DAY_DATA";
+export const RESET_SCHEDULE_DATA = "RESET_SCHEDULE_DATA";
 const ticket = (state = initalState, action) => {
   switch (action.type) {
     //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
@@ -591,6 +592,11 @@ const ticket = (state = initalState, action) => {
         selectDay: [...copydata],
       };
 
+    case RESET_SCHEDULE_DATA:
+      return {
+        ...state,
+        scheduleData: "",
+      };
     default:
       return state;
   }

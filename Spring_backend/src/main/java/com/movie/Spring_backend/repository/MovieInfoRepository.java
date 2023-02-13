@@ -49,7 +49,9 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
             "JOIN FETCH mi.movie " +
             "Where mi.miday = (:miday) AND " +
             "mi.movie.mid= (:mid) AND "+
-            "mi.cinema.cid IN (:cid)")
+            "mi.cinema.cid IN (:cid) "+
+            "ORDER BY mistarttime asc"
+    )
     @EntityGraph(attributePaths = {"cinema.theater"})
     //페치조인을 해서 영화와 극장 정보까지 함께 보내기
     public List<MovieInfoEntity> findBySchedule(@Param("miday")Date miday,@Param("mid") Long mid, @Param("cid")List<Long> cid);

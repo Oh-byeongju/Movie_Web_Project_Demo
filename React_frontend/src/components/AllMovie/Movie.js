@@ -9,23 +9,27 @@ import { Link } from "react-router-dom";
 import Parser from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
 import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
+import {
+  SELECT_DAY_REQUEST,
+  SELECT_THEATER_REQUEST,
+  MOVIE_DATA,
+} from "../../reducer/ticket";
 
 const Movie = ({ movie }) => {
-
   // 반올림 없이 소수점 생성해주는 함수
   const getNotRoundDecimalNumber = (number, decimalPoint = 1) => {
-  let num = typeof number === "number" ? String(number) : number;
-  const pointPos = num.indexOf(".");
+    let num = typeof number === "number" ? String(number) : number;
+    const pointPos = num.indexOf(".");
 
-  if (pointPos === -1) return Number(num).toFixed(decimalPoint);
+    if (pointPos === -1) return Number(num).toFixed(decimalPoint);
 
-  const splitNumber = num.split(".");
-  const rightNum = splitNumber[1].substring(0, decimalPoint);
-  return Number(`${splitNumber[0]}.${rightNum}`).toFixed(decimalPoint);
+    const splitNumber = num.split(".");
+    const rightNum = splitNumber[1].substring(0, decimalPoint);
+    return Number(`${splitNumber[0]}.${rightNum}`).toFixed(decimalPoint);
   };
 
   // 리덕스 로그인 상태 정보
-  const { LOGIN_data } = useSelector((state) => state.R_user_login)
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
   const dispatch = useDispatch();
 
   // 사용자가 보이는 like UI 변경을 위한 변수
@@ -35,30 +39,45 @@ const Movie = ({ movie }) => {
   useEffect(() => {
     setlike(movie.like);
     setlikes(movie.likes);
-  },[movie]);
+  }, [movie]);
 
+  const OnClickReserve = (data) => {
+    //allmovie(태초상태)
+    //영화 클릭시 날짜 극장 검색해주면 됨
+    dispatch({
+      type: SELECT_THEATER_REQUEST,
+      data: data.id,
+    });
+    dispatch({
+      type: SELECT_DAY_REQUEST,
+      data: data.id,
+    });
+    dispatch({
+      type: MOVIE_DATA,
+      data: data,
+    });
+  };
   // 사용자가 영화의 좋아요를 누를 때 호출되는 함수
   const LikeChange = useCallback(() => {
-    if (LOGIN_data.uid === 'No_login') {
-      alert("로그인이 필요한 서비스입니다.")
+    if (LOGIN_data.uid === "No_login") {
+      alert("로그인이 필요한 서비스입니다.");
       return;
-    }   
-    
+    }
+
     dispatch({
       type: USER_MLIKE_REQUEST,
       data: {
         mid: movie.id,
         mlike: like,
-        uid: LOGIN_data.uid
-      }
-    })
+        uid: LOGIN_data.uid,
+      },
+    });
 
     // 백엔드를 한번 더 호출하지 않고 like와 likes의 변수만 변경하여 사용자가 보고 있는 브라우저 UI를 변경
     if (like) {
       setlike(false);
       setlikes(likes - 1);
-    }
-    else {
+    } else {
       setlike(true);
       setlikes(likes + 1);
     }
@@ -68,21 +87,13 @@ const Movie = ({ movie }) => {
     <LI>
       <div className="Image">
         <div className="banner_img">
-          <Link
-            to={`/moviedetail/${movie.id}`}
-          >
-            <Img
-              className="imggg"
-              src={movie.imagepath}
-              alt="영화"
-            />
+          <Link to={`/moviedetail/${movie.id}`}>
+            <Img className="imggg" src={movie.imagepath} alt="영화" />
           </Link>
           <div className="middle">
-            <Link
-              to={`/moviedetail/${movie.id}`}
-            >
+            <Link to={`/moviedetail/${movie.id}`}>
               <Text className="hover_text">
-                <p>{Parser(movie.story)}</p>
+                <p>{movie.story}</p>
               </Text>
             </Link>
           </div>
@@ -105,14 +116,24 @@ const Movie = ({ movie }) => {
         <Button>
           <Like onClick={LikeChange}>
             <span>
-              {like === true ? <HeartFilled style={{color: "red"}} /> : <HeartOutlined />}
+              {like === true ? (
+                <HeartFilled style={{ color: "red" }} />
+              ) : (
+                <HeartOutlined />
+              )}
             </span>
             <span>
-              {likes > 999 ? getNotRoundDecimalNumber(likes / 1000) + "K" : likes}
+              {likes > 999
+                ? getNotRoundDecimalNumber(likes / 1000) + "K"
+                : likes}
             </span>
           </Like>
           <Link to="/reserve">
-            <Ticket>
+            <Ticket
+              onClick={() => {
+                OnClickReserve(movie);
+              }}
+            >
               예매
             </Ticket>
           </Link>
@@ -150,7 +171,7 @@ const LI = styled.li`
       opacity: 1;
     }
   }
-`; 
+`;
 
 const Img = styled.img`
   opacity: 1;
