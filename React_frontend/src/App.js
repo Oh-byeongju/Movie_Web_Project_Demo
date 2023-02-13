@@ -7,6 +7,7 @@ import UserJoin from "./pages/UserJoin";
 import Reserve from "./pages/Reserve";
 import Movie from "./pages/Movie";
 import MovieDetail from "./pages/MovieDetail";
+import StoryChange from "./pages/StoryChange";
 
 // TopButton과 Footer가 있어야 하는 페이지이면 Layout 사이에 넣고 아니면 따로 빼기
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/Reserve" exact element={<Reserve />}></Route>
         <Route path="/movie" element={<Movie />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
+        <Route path="/StoryChange" element={<StoryChange />}></Route>
       </Route>
     </Routes>
   );
