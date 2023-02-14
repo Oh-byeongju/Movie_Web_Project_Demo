@@ -21,6 +21,7 @@ public class MovieInfoEntity {
 
     @Column(nullable = false,length = 30)
     private Date miday;
+
     @Column(nullable = false,length = 30)
     private String mistarttime;
 

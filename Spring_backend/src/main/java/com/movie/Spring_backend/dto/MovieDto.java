@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -26,10 +27,11 @@ public class MovieDto {
     private Float mscore; // 평점 평균
     private Boolean mlike; // 사용자 개인별 좋아요 여부
     private String able;
+    private List<String> actors;
 
     @Builder
     public MovieDto(Long mid, String mtitle, String mdir, String mgenre, int mtime, Date mdate, String mrating,
-                    String mstory , String mimagepath, Integer mlikes, Float mscore, Boolean mlike, String able) {
+                    String mstory , String mimagepath, Integer mlikes, Float mscore, Boolean mlike, String able, List<String> actors) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir=mdir;
@@ -43,6 +45,7 @@ public class MovieDto {
         this.mscore=mscore;
         this.mlike=mlike;
         this.able=able;
+        this.actors=actors;
     }
 }
 

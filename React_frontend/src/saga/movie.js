@@ -109,6 +109,7 @@ async function SearchMovie(data) {
 // 영화 세부내용 검색을 위한 함수
 function* DetailMovieLoad(action) {
   const result = yield call(DetailMovie, action.data);
+  console.log(result);
   if (result.status === 200) {
     yield put({
       type: DETAIL_MOVIE_SUCCESS,

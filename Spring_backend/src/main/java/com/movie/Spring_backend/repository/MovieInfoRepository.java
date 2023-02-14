@@ -1,6 +1,5 @@
 package com.movie.Spring_backend.repository;
 
-import com.movie.Spring_backend.entity.CinemaEntity;
 import com.movie.Spring_backend.entity.MovieEntity;
 import com.movie.Spring_backend.entity.MovieInfoEntity;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long> {
