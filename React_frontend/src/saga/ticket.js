@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, put, call } from "redux-saga/effects";
+import { all, takeLatest, fork, put, call, delay } from "redux-saga/effects";
 import {
   T_ALLMOVIE_FAILURE,
   T_ALLMOVIE_SUCCESS,
@@ -39,6 +39,8 @@ import {
   SELECT_SCHEDULE_SUCCESS,
   SELECT_SCHEDULE_FAILURE,
   SELECT_SCHEDULE_REQUEST,
+  MOVIE_DATA,
+  MOVIE_DATA_SUCCESS,
 } from "../reducer/ticket";
 import { http } from "../lib/http";
 
@@ -511,6 +513,7 @@ async function selectScheduleApi(data) {
       return error.response;
     });
 }
+
 function* selectSchedule(action) {
   const result = yield call(selectScheduleApi, action.data);
   if (result.status === 200) {
@@ -526,6 +529,7 @@ function* selectSchedule(action) {
     });
   }
 }
+
 function* TallMovieSaga() {
   yield takeLatest(T_ALLMOVIE_REQUEST, allMovieLoad);
 }
@@ -569,6 +573,7 @@ function* selectDayMovieToTheaterSaga() {
 function* selectScheduleSaga() {
   yield takeLatest(SELECT_SCHEDULE_REQUEST, selectSchedule);
 }
+
 export default function* ticketSaga() {
   yield all([
     fork(TallMovieSaga),

@@ -52,18 +52,6 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
     movieData,
     DayData,
   } = useSelector((state) => state.ticket);
-
-  useEffect(() => {
-    dispatch({
-      type: ALLTHEATER_REQUEST,
-    });
-    return () => {
-      dispatch({
-        type: RESET_THEATER_DATA,
-      });
-    };
-  }, []);
-
   //able된것들 클릭하기
   const onClickAble = (data) => {
     //기본
@@ -371,7 +359,6 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
                           //영화가 클릭이 되어있으면 movietheater_to_day로 날짜 검색, 영화 데이터도 동시에 바꿔줘야함
                           // 날자가 클릭되어있으면 theaterday_to_movie로 영화검색, 극장클릭시 날짜도 같이 토글 극장에 맞게
                           //두개다 클릭이 되어있으면 날짜로 영화 데이터 검색
-
                           return (
                             <Theater
                               theaterData={theaterData}
@@ -433,7 +420,7 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
                   })}
                 </CONENTSCROLL>
               </ALLTHEATERLISTIncheon>
-              ({gyeonggi - ablegyeonggi})
+              ({incheon - ableincheon})
             </TheaterAreaListIncheon>
 
             <TheaterAreaListBusan

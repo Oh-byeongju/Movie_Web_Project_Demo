@@ -20,7 +20,7 @@ public class ReservationEntity {
     private Date rdate;
 
     @Column(nullable = false)
-    private Long rpice;
+    private Integer rpice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="miid")

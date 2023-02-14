@@ -46,18 +46,6 @@ const AllDayList = () => {
   ]);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch({
-      type: ALLDAY_REQUEST,
-    });
-    return () => {
-      dispatch({
-        type: RESET_DAY_DATA,
-      });
-    };
-  }, []);
-
   //날짜 계산
 
   const Weak = useRef(null);
