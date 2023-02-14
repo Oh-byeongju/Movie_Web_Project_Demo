@@ -24,11 +24,6 @@ const AllSchedule = () => {
         },
       });
     }
-    return () => {
-      dispatch({
-        type: RESET_SCHEDULE_DATA,
-      });
-    };
   }, [dispatch, movieData, theaterData, DayData]);
   return (
     <Schedule>

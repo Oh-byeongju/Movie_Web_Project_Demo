@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-const TicketMore = ({ dayMore }) => {
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
+const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
   );
@@ -9,7 +11,7 @@ const TicketMore = ({ dayMore }) => {
   //좌석 페이지로 넘어가야함 데이터와 함께
   return (
     <TicketWrapper>
-      <TicketStep>
+      <TicketStep page={page}>
         {movieData !== "" ? (
           <MoviePoster>
             <Poster>
@@ -62,8 +64,56 @@ const TicketMore = ({ dayMore }) => {
             </Screen>
           )}
         </MovieTheater>
-        <MovieSeat></MovieSeat>
       </TicketStep>
+      {page ? (
+        <>
+          <MovieChoice onClick={() => setPage(false)}>
+            <ArrowCircleLeftIcon
+              style={{
+                width: "80px",
+                height: "80px",
+                left: "14px",
+                position: "absolute",
+              }}
+            />
+            <p>영화선택</p>
+          </MovieChoice>
+          <MovieSeat onClick={() => setPage(true)}>
+            <ArrowCircleRightIcon
+              style={{
+                width: "80px",
+                height: "80px",
+                left: "14px",
+                position: "absolute",
+              }}
+            />
+            <p>결제하기</p>
+          </MovieSeat>
+        </>
+      ) : (
+        <MovieSeat
+          onClick={() => {
+            if (
+              movieData !== "" &&
+              theaterData !== "" &&
+              DayData !== "" &&
+              scheduleData !== ""
+            ) {
+              setPage(true);
+            }
+          }}
+        >
+          <ArrowCircleRightIcon
+            style={{
+              width: "80px",
+              height: "80px",
+              left: "14px",
+              position: "absolute",
+            }}
+          />
+          <p>좌석선택</p>
+        </MovieSeat>
+      )}
     </TicketWrapper>
   );
 };
@@ -86,6 +136,8 @@ const TicketStep = styled.div`
   padding-top: 10px;
   padding-left: 50px;
   position: relative;
+
+  left: ${(props) => (props.page === true ? "100px" : "0px")};
 `;
 const MoviePoster = styled.div`
   width: 210px;
@@ -125,19 +177,36 @@ const MovieTheater = styled.div`
   padding-left: 10px;
 `;
 
-const MovieSeat = styled.div`
-  background: url(http://img.cgv.co.kr/CGV_RIA/Ticket/image/reservation/tnb/tnb_buttons.png)
-    no-repeat;
-  background-position: 0 0;
+const MovieChoice = styled.div`
   overflow: hidden;
-  text-indent: -1000px;
-  background-position: 0 -220px;
+  position: absolute;
+  top: 10px;
+  left: 100px;
+  width: 106px;
+  height: 108px;
+  cursor: pointer;
+  p {
+    position: absolute;
+    bottom: -10px;
+    left: 23px;
+    font-weight: bold;
+  }
+`;
+
+const MovieSeat = styled.div`
+  overflow: hidden;
   position: absolute;
   top: 10px;
   right: 100px;
   width: 106px;
   height: 108px;
   cursor: pointer;
+  p {
+    position: absolute;
+    bottom: -10px;
+    left: 23px;
+    font-weight: bold;
+  }
 `;
 
 const Img = styled.img`
