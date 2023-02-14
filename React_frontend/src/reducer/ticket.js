@@ -16,6 +16,7 @@ export const initalState = {
   choiceMovie: false,
   choiceTheater: false,
   choiceDay: false,
+
   select_theater_loading: false,
   select_theater_done: false,
   select_theater_error: null,
@@ -153,7 +154,7 @@ export const SELECT_DAYTHEATER_TO_MOVIE_FAILURE =
 export const SELECT_SCHEDULE_REQUEST = "SELECT_SCHEDULE_REQUEST";
 export const SELECT_SCHEDULE_SUCCESS = "SELECT_SCHEDULE_SUCCESS";
 export const SELECT_SCHEDULE_FAILURE = "SELECT_SCHEDULE_FAILURE";
-
+export const MOVIE_DATA_SUCCESS = "MOVIE_DATA_SUCCESS";
 //검색한 데이터 담아두기 위한 액션
 export const MOVIE_DATA = "MOVIE_DATA";
 export const THEATER_DATA = "THEATER_DATA";
@@ -548,6 +549,7 @@ const ticket = (state = initalState, action) => {
         movieData: action.data,
         choiceMovie: true,
       };
+
     case THEATER_DATA:
       return {
         ...state,

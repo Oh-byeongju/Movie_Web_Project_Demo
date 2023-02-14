@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
@@ -12,7 +12,7 @@ import {
   RESET_THEATER_DATA,
   RESET_MOVIE_DATA,
 } from "../../reducer/ticket";
-const AllMovieList = ({ setDayMore }) => {
+const AllMovieList = ({ setDayMore, page }) => {
   const dispatch = useDispatch();
   const {
     t_allMovie,
@@ -24,18 +24,6 @@ const AllMovieList = ({ setDayMore }) => {
   } = useSelector((state) => state.ticket);
   // 로그인 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
-  // 영화 예매 페이지에 쓸모 없을수도 있지만 Spring boot 메소드가 겹쳐서 로그인 상태도 같이 묶어서 보냄
-  useEffect(() => {
-    dispatch({
-      type: T_ALLMOVIE_REQUEST,
-      data: LOGIN_data.uid,
-    });
-    return () => {
-      dispatch({
-        type: RESET_MOVIE_DATA,
-      });
-    };
-  }, [LOGIN_data.uid, dispatch]);
 
   //able된 영화를 선택하는 함수
   const onClickMovie = (data) => {
