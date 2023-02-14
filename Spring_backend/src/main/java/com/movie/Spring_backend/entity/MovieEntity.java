@@ -1,7 +1,6 @@
 /*
   23-02-06 MovieEntity 좋아요, 평점 추출을 위한 수정(오병주)
  */
-
 package com.movie.Spring_backend.entity;
 import javax.persistence.*;
 

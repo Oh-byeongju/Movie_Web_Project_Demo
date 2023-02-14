@@ -79,6 +79,10 @@ const Details = () => {
     }
   }, [detailMovie.mid, LOGIN_data.uid, like, likes, dispatch]);
 
+  const anchor = (value) => {
+    return "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=" + value;
+  }
+
   return (
     <Container>
       <Content>
@@ -94,16 +98,36 @@ const Details = () => {
               <Spec>
                 <dl>
                   <dt>감독 : &nbsp;</dt>
-                  <dd>{detailMovie.mdir} &nbsp;</dd>
-                  <dd></dd>
-                  <dt>/ 배우 : &nbsp;</dt>
-                  <dd>{detailMovie.mactor} </dd>
+                    <dd>
+                      <a style={{width: "10px"}}
+                      href={anchor(detailMovie.mdir)}
+                      target="_blank"
+                      rel="noreferrer"
+                      >{detailMovie.mdir}</a>
+                    </dd>
+                    <br/>
+                  
+                  <dt> 배우 : &nbsp;</dt>
+                    {detailMovie.actors && detailMovie.actors.map((actor) => (<dd key={actor}> {actor} &nbsp;</dd>))}
                   <br />
-                  <dt>장르 : &nbsp; </dt>
-                  <dd>{detailMovie.mgenre} &nbsp;</dd>
-                  <dt> / 기본 : &nbsp;</dt>
+
+                  <dt>
+                    장르 : &nbsp; 
+                  </dt>
                   <dd>
-                    {detailMovie.mrating}, {detailMovie.mtime}
+                    {detailMovie.mgenre} &nbsp; /
+                  </dd>
+                  <dt>
+                    &nbsp; 상영 시간 : 
+                  </dt>
+                  <dd>
+                    &nbsp; {detailMovie.mtime}분
+                  </dd>
+
+                  <br/>
+                  <dt> 상영 등급 : &nbsp;</dt>
+                  <dd>
+                    {detailMovie.mrating == 0 ? "전체 이용가" : detailMovie.mrating+"세 이용가"}
                   </dd>
                   <br />
                   <dt>개봉일 : &nbsp;</dt>
@@ -200,23 +224,24 @@ const Title = styled.div`
 `;
 
 const Spec = styled.div`
-  padding-top: 18px;
-  line-height: 1.6;
+  padding-top: 12px;
+  line-height: 1.8;
   color: #333333;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   dd {
     white-space: normal;
     text-overflow: clip;
     overflow: visible;
     float: left;
-
     margin: 0;
+    cursor: pointer;
   }
   dt {
     float: left;
   }
 `;
+
 const Like = styled.span`
   margin-top: 30px;
   display: inline-block;

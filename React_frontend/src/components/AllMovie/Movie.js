@@ -57,6 +57,7 @@ const Movie = ({ movie }) => {
       data: data,
     });
   };
+  
   // 사용자가 영화의 좋아요를 누를 때 호출되는 함수
   const LikeChange = useCallback(() => {
     if (LOGIN_data.uid === "No_login") {
