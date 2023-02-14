@@ -20,7 +20,7 @@ public class ReservationEntity {
     private Date rdate;
 
     @Column(nullable = false)
-    private Integer rpice;
+    private Integer rprice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="miid")
@@ -32,10 +32,10 @@ public class ReservationEntity {
 
 
     @Builder
-    public ReservationEntity(Long rid ,Date rdate, Integer rpice, MovieInfoEntity miid, MemberEntity uid) {
+    public ReservationEntity(Long rid ,Date rdate, Integer rprice, MovieInfoEntity miid, MemberEntity uid) {
         this.rid=rid;
         this.rdate=rdate;
-        this.rpice=rpice;
+        this.rprice=rprice;
         this.miid=miid;
         this.uid=uid;
     }}
