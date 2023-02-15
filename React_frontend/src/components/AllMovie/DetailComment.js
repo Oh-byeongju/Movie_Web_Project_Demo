@@ -16,6 +16,7 @@ const DetailComment = () => {
 	const [comment, setcomment] = useState("");
 	const handleCommentChange = e => {
     setcomment(e.target.value);
+		console.log(comment);
   };
 
 	// 로그인 상태확인용 리덕스 상태
@@ -91,7 +92,7 @@ const Layout = styled.div`
 	border: 0;
 	vertical-align: baseline;
 	word-break: break-all;
-	margin-top: 100px;
+	margin-top: 50px;
 `;
 
 const Form = styled.div`
