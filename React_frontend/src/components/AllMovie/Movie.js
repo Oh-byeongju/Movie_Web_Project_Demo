@@ -1,12 +1,12 @@
 /*
  23-02-02 css 수정 및 Like수 적용(오병주)
  23-02-08 사용자가 누른 Like 적용(오병주)
+ 23-02-15 페이지 css 수정(오병주)
 */
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import Parser from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
 import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
 import {
@@ -94,8 +94,11 @@ const Movie = ({ movie }) => {
           <div className="middle">
             <Link to={`/moviedetail/${movie.id}`}>
               <Text className="hover_text">
-                <p>{Parser("수정 바랍니다. (상세보기 이런걸로)")}</p>
+                상세정보
               </Text>
+              <TextScore>
+                관람평 : &nbsp;<span>{movie.score ? movie.score.toFixed(1) : 0.0.toFixed(1)}</span>
+              </TextScore> 
             </Link>
           </div>
         </div>
@@ -107,11 +110,18 @@ const Movie = ({ movie }) => {
               alt="rating"
               style={{ width: "30px", height: "30px" }}
             />
-            <span>{movie.title}</span>
+            <span>
+              {movie.title}
+            </span>
           </div>
           <div className="infomation">
-            <span>예매율 {}%</span>
-            <span>개봉일 {movie.date}</span>
+            <span className="rate">
+              예매율 7.2% 
+              {/* 추후변경 */}
+            </span>
+            <span className="date">
+              개봉일 {movie.date}
+            </span>
           </div>
         </Des>
         <Button>
@@ -165,7 +175,7 @@ const LI = styled.li`
     }
 
     &:hover .imggg {
-      filter: brightness(0.5);
+      filter: brightness(0.3);
     }
 
     &:hover .middle {
@@ -187,17 +197,32 @@ const Img = styled.img`
 const Text = styled.div`
   position: absolute;
   width: 200px;
-  top: -160px;
-  left: -133px;
-  height: 150px;
+  top: -45px;
+  left: -127px;
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   padding: 16px 32px;
   cursor: pointer;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 7;
-  -webkit-box-orient: vertical;
+  border-color: #fff;
+  text-decoration : underline;
+`;
+
+const TextScore = styled.div`
+  position: absolute;
+  width: 200px;
+  top: -10px;
+  left: -130px;
+  color: white;
+  font-size: 1em;
+  padding: 16px 32px;
+  cursor: pointer;
+  border-color: #fff;
+  font-weight: 500;
+
+  span {  
+    font-size: 1.5em;
+    color: #00CCCC;
+  }
 `;
 
 const Des = styled.div`
@@ -215,14 +240,38 @@ const Des = styled.div`
       padding: 2px 0 0 1px;
       margin-left: 10px;
       position: relative;
-      top: -3px;
+      top: -2px;
     }
-    .infomation {
-      span {
+  }
+  .infomation {
+    display: block;
+
+    .rate {
+      position: relative;
+      display: inline-block;
+      font-size: 14.5px;
+      font-weight: 400;
+      margin: 0 7px 0 0;
+      padding: 0 8px 0 0;
+
+      ::after {
+        content: '';
         display: block;
-        float: left;
-        font-size: 15px;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 1px;
+        height: 13px;
+        margin: -6px 0 0 0;
+        background-color: #d8d9db;
       }
+    }
+
+    .date {
+      position: relative;
+      display: inline-block;
+      font-size: 14.5px;
+      font-weight: 400;
     }
   }
 `;

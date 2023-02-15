@@ -30,7 +30,6 @@ public class ReservationEntity {
     @JoinColumn(name="uid")
     private MemberEntity uid;
 
-
     @Builder
     public ReservationEntity(Long rid ,Date rdate, Integer rprice, MovieInfoEntity miid, MemberEntity uid) {
         this.rid=rid;

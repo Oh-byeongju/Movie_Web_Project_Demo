@@ -1,6 +1,7 @@
 /*
  23-02-02 css 수정 및 Like수 적용(오병주)
  23-02-08 사용자가 누른 Like 적용(오병주)
+ 23-02-15 페이지 css 수정(오병주)
 */
 import React from "react";
 import styled from "styled-components";
@@ -77,9 +78,14 @@ const Box = ({ movie }) => {
             />
           </Link>
           <div className="middle">
-          <Link to={`/moviedetail/${movie.id}`}>
-            <Text className="hover_text">{"수정 바랍니다."}</Text>
-          </Link>
+            <Link to={`/moviedetail/${movie.id}`}>
+              <Text className="hover_text">
+                상세정보
+              </Text>
+              <TextScore>
+                관람평 : &nbsp;<span>{movie.score ? movie.score.toFixed(1) : 0.0.toFixed(1)}</span>
+              </TextScore> 
+            </Link>
           </div>
         </div>
         <Button>
@@ -121,7 +127,7 @@ const LI = styled.li`
     }
 
     &:hover .imggg {
-      filter: brightness(0.5);
+      filter: brightness(0.2);
     }
 
     &:hover .middle {
@@ -144,12 +150,32 @@ const Img = styled.img`
 const Text = styled.div`
   position: absolute;
   width: 200px;
-  top: -180px;
-  left: -134px;
+  top: -42px;
+  left: -127px;
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   padding: 16px 32px;
   cursor: pointer;
+  border-color: #fff;
+  text-decoration : underline;
+`;
+
+const TextScore = styled.div`
+  position: absolute;
+  width: 200px;
+  top: -7px;
+  left: -130px;
+  color: white;
+  font-size: 1em;
+  padding: 16px 32px;
+  cursor: pointer;
+  border-color: #fff;
+  font-weight: 500;
+
+  span {  
+    font-size: 1.5em;
+    color: #00CCCC;
+  }
 `;
 
 const Button = styled.div`
@@ -192,4 +218,5 @@ const Ticket = styled.button`
   background-color: white;
   cursor: pointer;
 `; //예매하기 버튼
+
 export default Box;

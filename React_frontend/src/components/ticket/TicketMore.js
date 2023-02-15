@@ -21,7 +21,6 @@ const TicketMore = ({ setPage, page }) => {
                 alt="영화"
               />
             </Poster>
-
             <Title>
               <span>{movieData.title}</span>
             </Title>
