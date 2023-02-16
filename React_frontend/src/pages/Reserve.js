@@ -7,6 +7,7 @@ import AllTheaterList from "../components/ticket/AllTheaterList";
 import TicketMore from "../components/ticket/TicketMore";
 import TopButton from "../components/ticket/TopButton";
 import Seat from "../components/ticket/Seat";
+import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -16,6 +17,7 @@ import {
   ALLTHEATER_REQUEST,
   RESET_THEATER_DATA,
   RESET_MOVIE_DATA,
+  MOVIE_DATA,
   RESET_SCHEDULE_DATA,
 } from "../reducer/ticket";
 const Reserve = () => {
@@ -33,10 +35,6 @@ const Reserve = () => {
   //리덕스 초기화를 위한 useEffect
   //영화 검색
   useEffect(() => {
-    dispatch({
-      type: T_ALLMOVIE_REQUEST,
-      data: LOGIN_data.uid,
-    });
     //극장검색
     dispatch({
       type: ALLTHEATER_REQUEST,
@@ -45,19 +43,20 @@ const Reserve = () => {
     dispatch({
       type: ALLDAY_REQUEST,
     });
-    //리셋
+    //전체 조회 내역 초기화
     dispatch({
       type: RESET_DAY_DATA,
     });
     dispatch({
       type: RESET_THEATER_DATA,
     });
-    dispatch({
-      type: RESET_MOVIE_DATA,
-    });
+
     dispatch({
       type: RESET_SCHEDULE_DATA,
     });
+    return () => {
+      console.log("초기화 해보자");
+    };
     //페이지에서 컴포넌트가 사라질때 return()을 사용하면 실행시킬수있다 페이지 뒤로가기나 다른페이지에서 다시 올 때 사용하면 좋을거같다.
   }, [LOGIN_data.uid, dispatch]);
 
