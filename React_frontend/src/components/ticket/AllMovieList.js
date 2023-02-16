@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
@@ -12,6 +12,8 @@ import {
   RESET_THEATER_DATA,
   RESET_MOVIE_DATA,
 } from "../../reducer/ticket";
+import { useLocation } from "react-router-dom";
+
 const AllMovieList = ({ setDayMore, page }) => {
   const dispatch = useDispatch();
   const {
@@ -24,6 +26,17 @@ const AllMovieList = ({ setDayMore, page }) => {
   } = useSelector((state) => state.ticket);
   // 로그인 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
+  const { state } = useLocation();
+
+  useEffect(() => {
+    dispatch({
+      type: RESET_MOVIE_DATA,
+    });
+    dispatch({
+      type: T_ALLMOVIE_REQUEST,
+      data: LOGIN_data.uid,
+    });
+  }, []);
 
   //able된 영화를 선택하는 함수
   const onClickMovie = (data) => {

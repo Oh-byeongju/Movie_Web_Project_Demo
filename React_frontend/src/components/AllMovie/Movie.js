@@ -1,12 +1,11 @@
 /*
  23-02-02 css 수정 및 Like수 적용(오병주)
  23-02-08 사용자가 누른 Like 적용(오병주)
- 23-02-15 페이지 css 수정(오병주)
 */
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
 import {
@@ -57,7 +56,6 @@ const Movie = ({ movie }) => {
       data: data,
     });
   };
-  
   // 사용자가 영화의 좋아요를 누를 때 호출되는 함수
   const LikeChange = useCallback(() => {
     if (LOGIN_data.uid === "No_login") {
@@ -94,11 +92,8 @@ const Movie = ({ movie }) => {
           <div className="middle">
             <Link to={`/moviedetail/${movie.id}`}>
               <Text className="hover_text">
-                상세정보
+                <p>{movie.story}</p>
               </Text>
-              <TextScore>
-                관람평 : &nbsp;<span>{movie.score ? movie.score.toFixed(1) : 0.0.toFixed(1)}</span>
-              </TextScore> 
             </Link>
           </div>
         </div>
@@ -110,18 +105,11 @@ const Movie = ({ movie }) => {
               alt="rating"
               style={{ width: "30px", height: "30px" }}
             />
-            <span>
-              {movie.title}
-            </span>
+            <span>{movie.title}</span>
           </div>
           <div className="infomation">
-            <span className="rate">
-              예매율 7.2% 
-              {/* 추후변경 */}
-            </span>
-            <span className="date">
-              개봉일 {movie.date}
-            </span>
+            <span>예매율 {}%</span>
+            <span>개봉일 {movie.date}</span>
           </div>
         </Des>
         <Button>
@@ -139,7 +127,7 @@ const Movie = ({ movie }) => {
                 : likes}
             </span>
           </Like>
-          <Link to="/reserve">
+          <Link to="/reserve" state={{ data: movie.id }}>
             <Ticket
               onClick={() => {
                 OnClickReserve(movie);
@@ -175,7 +163,7 @@ const LI = styled.li`
     }
 
     &:hover .imggg {
-      filter: brightness(0.3);
+      filter: brightness(0.5);
     }
 
     &:hover .middle {
@@ -197,32 +185,17 @@ const Img = styled.img`
 const Text = styled.div`
   position: absolute;
   width: 200px;
-  top: -45px;
-  left: -127px;
+  top: -160px;
+  left: -133px;
+  height: 150px;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   padding: 16px 32px;
   cursor: pointer;
-  border-color: #fff;
-  text-decoration : underline;
-`;
-
-const TextScore = styled.div`
-  position: absolute;
-  width: 200px;
-  top: -10px;
-  left: -130px;
-  color: white;
-  font-size: 1em;
-  padding: 16px 32px;
-  cursor: pointer;
-  border-color: #fff;
-  font-weight: 500;
-
-  span {  
-    font-size: 1.5em;
-    color: #00CCCC;
-  }
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
 `;
 
 const Des = styled.div`
@@ -230,48 +203,22 @@ const Des = styled.div`
     display: block;
     padding-top: 10px;
     span {
-      display: inline-block;
       overflow: hidden;
-      width: 180px;
+      width: 100%;
       font-size: 1.2222em;
       font-weight: 400;
       text-overflow: ellipsis;
-      white-space: nowrap;
       padding: 2px 0 0 1px;
       margin-left: 10px;
       position: relative;
-      top: -2px;
+      top: -6px;
     }
-  }
-  .infomation {
-    display: block;
-
-    .rate {
-      position: relative;
-      display: inline-block;
-      font-size: 14.5px;
-      font-weight: 400;
-      margin: 0 7px 0 0;
-      padding: 0 8px 0 0;
-
-      ::after {
-        content: '';
+    .infomation {
+      span {
         display: block;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        width: 1px;
-        height: 13px;
-        margin: -6px 0 0 0;
-        background-color: #d8d9db;
+        float: left;
+        font-size: 15px;
       }
-    }
-
-    .date {
-      position: relative;
-      display: inline-block;
-      font-size: 14.5px;
-      font-weight: 400;
     }
   }
 `;
