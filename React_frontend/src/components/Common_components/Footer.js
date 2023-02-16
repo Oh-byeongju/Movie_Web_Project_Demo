@@ -159,7 +159,7 @@ const FooterLinkListItemHide = styled.li`
 
 const Content = styled.div`
   position: relative;
-  padding: 8px 0px 16px 0px;
+  padding: 8px 0px 8px 0px;
   max-width: 1044px;
   margin: 0 auto;
   height: 212px;

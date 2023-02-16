@@ -2518,24 +2518,22 @@ BEGIN
     END WHILE;
 END $$
 
-
 -- 유령 회원 가입시키는 프로시저 실행
 CALL clone_member();
-/*
 
--- 영화 좋아요를 늘리는 프로시저 실행(아바타)
+-- 영화 좋아요를 늘리는 프로시저 실행(타이타닉)
 CALL clone_member_like1();
 
--- 영화 좋아요를 늘리는 프로시저 실행(슬램덩크)
+-- 영화 좋아요를 늘리는 프로시저 실행(카운트)
 CALL clone_member_like2();
 
--- 영화 좋아요를 늘리는 프로시저 실행(영웅)
+-- 영화 좋아요를 늘리는 프로시저 실행(상견니)
 CALL clone_member_like3();
 
 -- 영화 좋아요를 늘리는 프로시저 실행(젠틀맨)
 CALL clone_member_like4();
 
-
+/*
 SELECT *
 FROM movie_member;
 
