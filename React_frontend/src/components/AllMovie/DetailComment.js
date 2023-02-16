@@ -96,7 +96,7 @@ const Layout = styled.div`
 `;
 
 const Form = styled.div`
-	padding: 35px;
+	padding: 15px 35px 15px 35px;
 	background: #f8f8f8;
 	margin: 0 auto;
 	width: 980px;
@@ -127,7 +127,7 @@ const RateLine = styled.div`
 
 const ReviewBox = styled.div`
 	margin-left: 38px;
-	margin-top: 50px;
+	margin-top: 25px;
 	height: 100px;
 	margin-bottom: 20px;
 	box-sizing: border-box;
