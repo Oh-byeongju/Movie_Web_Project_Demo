@@ -1,3 +1,6 @@
+/*
+ 23-02-16 영화 상세정보 댓글창 구현(오병주)
+*/
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Rate } from 'antd';
@@ -78,9 +81,7 @@ const DetailCommentList = () => {
 								<DeleteOutlined/>
 							</ButtonCustom>
 							
-
 						</div>
-
 					</CommentElement>
 					<CommentElement>
 						2
@@ -217,7 +218,6 @@ const ButtonCustom = styled.button`
   content: "";
   cursor: pointer;
   background-color: white;
-  
   border: 0;
 	margin-right: 5px;
 `;
