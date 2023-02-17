@@ -3,7 +3,9 @@ import styled from "styled-components";
 import { Button, Space } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { style } from "@mui/system";
+import { useSelector, useDispatch } from "react-redux";
 import { set } from "date-fns";
+import { SEAT_CHOICE, SEAT_REMOVE } from "../../reducer/seat";
 import SeatButton from "./SeatButton";
 
 const ButtonGroup = Button.Group;
@@ -11,42 +13,14 @@ const Seat = () => {
   const [numAdult, setNumAdult] = useState(0); //어른
   const [numTeenager, setNumTeenager] = useState(0); //학생
   const [numKid, setNumKid] = useState(0); //애기
-  const [selectedUser, setSelectedUser] = useState([0]); //선택한 값
-  const [priceInfo, setPriceInfo] = useState([0]); //값 더하기 //여기 배열로 값을 저장
-  const [rows, setRows] = useState([
-    "A1",
-    "A2",
-    "A3",
-    "A4",
-    "A5",
-    "A6",
-    "A7",
-    "A8",
-    "A9",
-    "A10",
-    "B1",
-    "B2",
-    "B3",
-    "B4",
-    "B5",
-    "B6",
-    "B7",
-    "B8",
-    "B9",
-    "B10",
-    "C1",
-    "C2",
-    "C3",
-    "C4",
-    "C5",
-    "C6",
-    "C7",
-    "C8",
-    "C9",
-    "C10",
-  ]); //결국 데이터를 받아오려면 한번에 다 받아와야함 A1,A2,A3,A4,A5,A6~B1,B2,B3,B4,B5,B6 이런식
-  // 열의 차이를 줘야함
-
+  const [selectedUser, setSelectedUser] = useState([]); //선택한 값
+  const [priceInfo, setPriceInfo] = useState([]); //값 더하기 //여기 배열로 값을 저장
+  const [selected, setSelected] = useState([]); //선택한 자리
+  const [selectedRows, setSelectedRows] = useState([]);
+  const { rows, choiceSeat } = useSelector((state) => state.seat);
+  //결국 데이터를 받아오려면 한번에 다 받아와야함{location: A1,A id:2}2,A3,A4,A5,A6~B1,B2,B3,B4,B5,B6 이런식
+  // 열의 차이를 줘야함 그리고 점유 확인, id값을 받아오고
+  const dispatch = useDispatch();
   const [userType, setUserType] = useState([
     //어른 학생 유아별로 가격나눔
     { ADULT: 10000 },
@@ -60,8 +34,6 @@ const Seat = () => {
       setNumAdult((prev) => prev + 1);
       setSelectedUser((prev) => [...prev, "ADULT"]);
       setPriceInfo((prev) => [...prev, userType[0].ADULT]);
-      console.log(priceInfo);
-      console.log(selectedUser);
     }
   };
 
@@ -70,8 +42,6 @@ const Seat = () => {
       setNumTeenager((prev) => prev + 1);
       setSelectedUser((prev) => [...prev, "TEENAGER"]);
       setPriceInfo((prev) => [...prev, userType[1].TEENAGER]);
-      console.log(priceInfo);
-      console.log(selectedUser);
     }
   };
 
@@ -80,31 +50,78 @@ const Seat = () => {
       setNumKid((prev) => prev + 1);
       setSelectedUser((prev) => [...prev, "KID"]);
       setPriceInfo((prev) => [...prev, userType[2].KID]);
-      console.log(priceInfo);
-      console.log(selectedUser);
     }
   };
 
   const minusHandlerAdult = () => {
-    if (numAdult) {
+    if (totalNumber <= choiceSeat.length) {
+      alert("오류");
+    } else if (numAdult) {
       setNumAdult((prev) => prev - 1);
     }
   };
   const minusHandlerTeenager = () => {
-    if (numTeenager) {
+    if (totalNumber <= choiceSeat.length) {
+      alert("오류");
+    } else if (numTeenager) {
       setNumTeenager((prev) => prev - 1);
     }
   };
 
   const minusHandlerKid = () => {
-    if (numKid) {
+    if (totalNumber <= choiceSeat.length) {
+      alert("오류");
+    } else if (numKid) {
       setNumKid((prev) => prev - 1);
     }
+  };
+
+  const addSeats = (row) => {
+    if (totalNumber > selectedRows.length) {
+      setSelectedRows((prev) => [...prev, row]);
+
+      dispatch({
+        type: SEAT_CHOICE,
+        data: {
+          user_id: 1,
+          type: selectedUser[0],
+          price: priceInfo[0],
+          seat_id: row.id,
+          location: row.location,
+        },
+      });
+
+      const copyUser = selectedUser;
+      const copyPrice = priceInfo;
+      copyUser.shift();
+
+      copyPrice.shift();
+      setSelectedUser(copyUser);
+      console.log("selected: " + selected);
+      setPriceInfo(copyPrice);
+      console.log("price : " + priceInfo);
+    }
+  };
+
+  const removeSeats = (seat) => {
+    setSelectedRows((prev) => prev.filter((row) => row.id !== seat));
+    dispatch({
+      type: SEAT_REMOVE,
+      data: seat,
+    });
+    console.log(seat);
   };
   return (
     <SeatWrapper>
       <SeatContent>
-        <Title>인원 / 좌석</Title>
+        <Title
+          onClick={() => {
+            console.log("selecteduser : " + selectedUser);
+            console.log("princeinfo : " + priceInfo);
+          }}
+        >
+          인원 / 좌석
+        </Title>
         <PersonScreen>
           <NumberOfPeople>
             <NumberContainer>
@@ -189,25 +206,22 @@ const Seat = () => {
           </MovieInfo>
         </PersonScreen>
         <ScreenSelect>
-          {rows.map((row, index) => {
-            if (row.includes("A")) {
-              return <SeatButton row={row} key={index} id={row} />;
-            }
-          })}
-        </ScreenSelect>
-        <ScreenSelect>
-          {rows.map((row, index) => {
-            if (row.includes("B")) {
-              return <SeatButton row={row} key={index} id={row} />;
-            }
-          })}
-        </ScreenSelect>{" "}
-        <ScreenSelect>
-          {rows.map((row, index) => {
-            if (row.includes("C")) {
-              return <SeatButton row={row} key={index} id={row} />;
-            }
-          })}
+          <Screen></Screen>
+
+          <SeetReserve>
+            {rows.map((row, index) => (
+              <div>
+                <SeatButton
+                  row={row}
+                  key={row.id}
+                  addSeats={addSeats}
+                  totalNumber={totalNumber}
+                  selectedRows={selectedRows}
+                  removeSeats={removeSeats}
+                />
+              </div>
+            ))}
+          </SeetReserve>
         </ScreenSelect>
       </SeatContent>
     </SeatWrapper>
@@ -218,8 +232,9 @@ export default Seat;
 
 const SeatWrapper = styled.div`
   display: block;
-  min-height: 530px;
+  min-height: 710px;
   width: 100%;
+  height: 100%;
 `;
 const SeatContent = styled.div`
   float: none;
@@ -246,6 +261,26 @@ const Title = styled.div`
 
 const ScreenSelect = styled.div`
   display: flex;
+  min-height: 600px;
+  width: 100%;
+`;
+
+const SeetReserve = styled.div`
+  width: 460px;
+  height: 100%;
+  padding-left: 250px;
+  position: absolute;
+  top: 250px;
+`;
+const Screen = styled.div`
+  background-color: #fff;
+  position: absolute;
+  margin-top: 30px;
+  left: 250px;
+  width: 450px;
+  height: 80px;
+  transform: rotateX(-20deg);
+  box-shadow: 0 3px 10px rgb(255 255 255 / 70%);
 `;
 
 const PersonScreen = styled.div`
@@ -257,12 +292,7 @@ const PersonScreen = styled.div`
 const MovieInfo = styled.div`
   width: 100%;
 `;
-const Movie = styled.div`
-  min-height: 100px;
-  padding: 10px 0 10px 20px;
-  background-color: #f2f4f5;
-  border: 1px solid #d8d9db;
-`;
+const Movie = styled.div``;
 const NumberOfPeople = styled.div`
   width: 100%;
 `;
