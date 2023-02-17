@@ -7,6 +7,8 @@ const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
   );
+  const { choiceSeat } = useSelector((state) => state.seat);
+  let sum;
   //사용자가 선택한 영화 및 정보를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
   //좌석 페이지로 넘어가야함 데이터와 함께
   return (
@@ -63,6 +65,15 @@ const TicketMore = ({ setPage, page }) => {
             </Screen>
           )}
         </MovieTheater>
+        <SeatMore>
+          <Seat>
+            좌석 :
+            {choiceSeat.map((seat) => {
+              return <span>&nbsp;{seat.location} </span>;
+            })}
+          </Seat>
+          <Price>가격 : {sum}</Price>
+        </SeatMore>
       </TicketStep>
       {page ? (
         <>
@@ -191,12 +202,35 @@ const MovieChoice = styled.div`
     font-weight: bold;
   }
 `;
-
+const SeatMore = styled.div`
+  width: 185px;
+  float: left;
+  height: 108px;
+  padding-right: 2px;
+  background: url(http://img.cgv.co.kr/CGV_RIA/Ticket/image/reservation/tnb/split.png)
+    no-repeat right;
+  position: relative;
+  color: #cccccc;
+  font-size: 12px;
+  padding-left: 10px;
+`;
+const Seat = styled.div`
+  display: block;
+  margin-top: 14px;
+  height: 10px;
+  line-height: 20px;
+`;
+const Price = styled.div`
+  display: block;
+  margin-top: 14px;
+  height: 10px;
+  line-height: 20px;
+`;
 const MovieSeat = styled.div`
   overflow: hidden;
   position: absolute;
   top: 10px;
-  right: 100px;
+  right: 300px;
   width: 106px;
   height: 108px;
   cursor: pointer;

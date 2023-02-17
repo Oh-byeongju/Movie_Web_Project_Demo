@@ -34,8 +34,14 @@ const Reserve = () => {
 
   //리덕스 초기화를 위한 useEffect
   //영화 검색
+  //페이지 접속 시 실행
   useEffect(() => {
+    console.log("reserve 페이지 실행");
     //극장검색
+    dispatch({
+      type: T_ALLMOVIE_REQUEST,
+      data: LOGIN_data.uid,
+    });
     dispatch({
       type: ALLTHEATER_REQUEST,
     });
@@ -43,19 +49,23 @@ const Reserve = () => {
     dispatch({
       type: ALLDAY_REQUEST,
     });
-    //전체 조회 내역 초기화
-    dispatch({
-      type: RESET_DAY_DATA,
-    });
-    dispatch({
-      type: RESET_THEATER_DATA,
-    });
 
-    dispatch({
-      type: RESET_SCHEDULE_DATA,
-    });
+    //페이지 나갈 시 초기화 시켜야 하는 것들
     return () => {
-      console.log("초기화 해보자");
+      console.log("reserve out");
+      dispatch({
+        type: RESET_MOVIE_DATA,
+      });
+      dispatch({
+        type: RESET_DAY_DATA,
+      });
+      dispatch({
+        type: RESET_THEATER_DATA,
+      });
+
+      dispatch({
+        type: RESET_SCHEDULE_DATA,
+      });
     };
     //페이지에서 컴포넌트가 사라질때 return()을 사용하면 실행시킬수있다 페이지 뒤로가기나 다른페이지에서 다시 올 때 사용하면 좋을거같다.
   }, [LOGIN_data.uid, dispatch]);

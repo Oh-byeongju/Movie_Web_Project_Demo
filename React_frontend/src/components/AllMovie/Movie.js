@@ -57,7 +57,7 @@ const Movie = ({ movie }) => {
       data: data,
     });
   };
-  
+
   // 사용자가 영화의 좋아요를 누를 때 호출되는 함수
   const LikeChange = useCallback(() => {
     if (LOGIN_data.uid === "No_login") {
@@ -93,12 +93,13 @@ const Movie = ({ movie }) => {
           </Link>
           <div className="middle">
             <Link to={`/moviedetail/${movie.id}`}>
-              <Text className="hover_text">
-                상세정보
-              </Text>
+              <Text className="hover_text">상세정보</Text>
               <TextScore>
-                관람평 : &nbsp;<span>{movie.score ? movie.score.toFixed(1) : 0.0.toFixed(1)}</span>
-              </TextScore> 
+                관람평 : &nbsp;
+                <span>
+                  {movie.score ? movie.score.toFixed(1) : (0.0).toFixed(1)}
+                </span>
+              </TextScore>
             </Link>
           </div>
         </div>
@@ -110,18 +111,14 @@ const Movie = ({ movie }) => {
               alt="rating"
               style={{ width: "30px", height: "30px" }}
             />
-            <span>
-              {movie.title}
-            </span>
+            <span>{movie.title}</span>
           </div>
           <div className="infomation">
             <span className="rate">
-              예매율 7.2% 
+              예매율 7.2%
               {/* 추후변경 */}
             </span>
-            <span className="date">
-              개봉일 {movie.date}
-            </span>
+            <span className="date">개봉일 {movie.date}</span>
           </div>
         </Des>
         <Button>
@@ -201,7 +198,7 @@ const Text = styled.div`
   padding: 16px 32px;
   cursor: pointer;
   border-color: #fff;
-  text-decoration : underline;
+  text-decoration: underline;
 `;
 
 const TextScore = styled.div`
@@ -215,9 +212,9 @@ const TextScore = styled.div`
   cursor: pointer;
   border-color: #fff;
   font-weight: 500;
-  span {  
+  span {
     font-size: 1.5em;
-    color: #00CCCC;
+    color: #00cccc;
   }
 `;
 
@@ -249,7 +246,7 @@ const Des = styled.div`
       margin: 0 7px 0 0;
       padding: 0 8px 0 0;
       ::after {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         right: 0;
