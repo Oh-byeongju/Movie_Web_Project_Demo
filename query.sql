@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `Movie_infoseat`;
 DROP TABLE IF EXISTS `Movie_seat`;
 DROP TABLE IF EXISTS `Movie_reservation`;
 DROP TABLE IF EXISTS `Movie_information`;
@@ -66,13 +67,13 @@ CREATE TABLE `Movie_actor` (
 );
 
 CREATE TABLE `Movie_member` (
-	`umid`	int	NOT NULL AUTO_INCREMENT,
+	`umid`	INT	NOT NULL AUTO_INCREMENT,
 	`umlike`	BOOLEAN 	NULL,
 	`umscore`	INT 	NULL,
 	`umcomment`	VARCHAR(200) NULL,
 	`umcommenttime` DATE NULL,
 	`umcommentup`	INT	NULL,
-	`mid`	int	NOT NULL,
+	`mid`	INT	NOT NULL,
 	`uid`	VARCHAR(20)	NOT NULL,
 	PRIMARY KEY (`umid`),
 	FOREIGN KEY (`mid`) REFERENCES `Movie` (`mid`),
@@ -81,7 +82,7 @@ CREATE TABLE `Movie_member` (
 
 CREATE TABLE `CommentUp_Info` (
 	`uid`	varchar(20)	NOT NULL,
-	`umid`	int	NOT NULL,
+	`umid`	INT	NOT NULL,
 	FOREIGN KEY (`umid`) REFERENCES `Movie_member` (`umid`),
 	PRIMARY KEY (`uid`)
 );
@@ -90,23 +91,24 @@ CREATE TABLE `Movie_cinema` (
 	`cid`	INT AUTO_INCREMENT NOT NULL,
 	`cname`	varchar(20)	NULL,
 	`ctype`	varchar(10)	NULL,
-	`cseat`	int	NULL,
-	`tid`	int	NOT NULL,
+	`cseat`	INT	NULL,
+	`tid`	INT	NOT NULL,
 	PRIMARY KEY (`cid`),
 	FOREIGN KEY (`tid`) REFERENCES `Movie_theater` (`tid`)
 );
 
 
 CREATE TABLE `Movie_information` (
-	`miid`	int	NOT NULL AUTO_INCREMENT,
+	`miid`	INT NOT NULL AUTO_INCREMENT,
 	`miday`	DATE NULL,
 	`mistarttime`	time	NULL,
 	`miendtime`	time NULL,
-	`mid`	int	NOT NULL,
-	`cid`	int	NOT NULL,
+	`mid`	INT	NOT NULL,
+	`cid` INT NOT NULL,
 	PRIMARY KEY (`miid`),
 	FOREIGN KEY (`mid`) REFERENCES `Movie` (`mid`),
 	FOREIGN KEY (`cid`) REFERENCES `Movie_cinema` (`cid`)
+
 );
 
 CREATE TABLE `Movie_reservation` (
@@ -123,15 +125,18 @@ CREATE TABLE `Movie_reservation` (
 CREATE TABLE `Movie_seat` (
 	`sid`	INT AUTO_INCREMENT NOT NULL,
 	`sname`	varchar(20)	NULL,
-	`stype`	varchar(20)	NULL,
-	`suse`	boolean	NULL,
-	`cid`	int	NOT NULL,
-	`rid` 	int          NULL ,
+	`cid`	INT	NOT NULL,
 	PRIMARY KEY (`sid`),
-	FOREIGN KEY (`cid`) REFERENCES `Movie_cinema` (`cid`),
-	FOREIGN KEY (`rid`) REFERENCES `Movie_reservation` (`rid`)
+	FOREIGN KEY (`cid`) REFERENCES `Movie_cinema` (`cid`)
 );
-
+CREATE TABLE `Movie_infoseat` (
+	`misid` INT AUTO_INCREMENT NOT NULL,
+	`sid` INT  NOT NULL,
+	`miid` INT  NOT NULL,
+	 PRIMARY KEY (`misid`),
+	 FOREIGN KEY (`sid`) REFERENCES `Movie_seat` (`sid`),
+    FOREIGN KEY (`miid`) REFERENCES `Movie_information` (`miid`)
+);
 
 INSERT INTO `movie` (`mtitle`, `mdir`, `mgenre`, `mtime`, `mdate`, `mrating`, `mstory`, `mimagepath`)
 VALUES ('타이타닉', '제임스 카메론', '로맨스', 195, '2023-02-08', '15', '<h2><span style="color: rgb(51, 51, 51);">"내 인생의 가장 큰 행운은 당신을 만난 거야"</span></h2><p><br></p><p><span style="color: rgb(51, 51, 51);">우연한 기회로 티켓을 구해 타이타닉호에 올라탄 자유로운 영혼을 가진 화가 ‘잭’(레오나르도 디카프리오)은</span></p><p><span style="color: rgb(51, 51, 51);">막강한 재력의 약혼자와 함께 1등실에 승선한 ‘로즈’(케이트 윈슬렛)에게 한눈에 반한다.</span></p><p><span style="color: rgb(51, 51, 51);">진실한 사랑을 꿈꾸던 ‘로즈’ 또한 생애 처음 황홀한 감정에 휩싸이고, 둘은 운명 같은 사랑에 빠지는데…</span></p><p><br></p><p><span style="color: rgb(51, 51, 51);">가장 차가운 곳에서 피어난 뜨거운 사랑!</span></p><p><span style="color: rgb(51, 51, 51);">영원히 가라앉지 않는 세기의 사랑이 펼쳐진다!</span></p>', 'img/ranking/5.jpg');
@@ -2442,6 +2447,1365 @@ VALUES("2023-02-16","15:30:00","18:00:00","4","65");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-22","10:50:00","13:10:00","4","65");
 
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A1","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A2","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A3","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A4","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A5","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A6","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A7","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A8","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A9","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A10","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B1","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B2","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B3","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B4","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B5","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B6","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B7","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B8","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B9","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B10","1");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C1","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C2","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C3","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C4","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C5","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C6","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C7","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C8","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C9","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C10","1");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A1","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A2","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A3","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A4","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A5","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A6","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A7","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A8","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A9","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A10","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B1","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B2","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B3","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B4","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B5","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B6","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B7","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B8","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B9","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B10","2");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C1","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C2","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C3","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C4","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C5","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C6","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C7","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C8","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C9","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C10","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D1","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D2","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D3","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D4","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D5","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D6","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D7","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D8","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D9","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D10","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E1","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E2","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E3","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E4","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E5","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E6","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E7","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E8","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E9","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E10","2");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A1","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A2","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A3","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A4","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A5","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A6","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A7","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A8","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A9","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A10","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B1","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B2","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B3","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B4","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B5","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B6","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B7","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B8","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B9","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B10","3");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C1","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C2","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C3","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C4","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C5","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C6","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C7","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C8","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C9","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C10","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D1","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D2","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D3","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D4","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D5","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D6","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D7","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D8","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D9","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D10","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E1","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E2","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E3","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E4","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E5","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E6","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E7","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E8","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E9","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E10","3");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A1","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A2","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A3","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A4","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A5","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A6","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A7","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A8","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A9","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A10","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B1","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B2","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B3","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B4","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B5","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B6","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B7","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B8","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B9","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B10","4");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C1","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C2","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C3","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C4","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C5","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C6","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C7","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C8","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C9","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C10","4");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A1","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A2","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A3","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A4","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A5","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A6","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A7","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A8","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A9","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A10","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B1","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B2","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B3","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B4","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B5","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B6","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B7","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B8","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B9","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B10","5");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C1","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C2","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C3","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C4","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C5","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C6","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C7","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C8","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C9","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C10","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D1","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D2","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D3","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D4","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D5","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D6","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D7","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D8","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D9","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D10","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E1","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E2","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E3","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E4","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E5","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E6","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E7","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E8","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E9","5");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E10","5");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A1","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A2","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A3","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A4","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A5","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A6","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A7","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A8","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A9","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A10","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B1","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B2","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B3","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B4","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B5","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B6","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B7","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B8","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B9","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B10","6");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C1","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C2","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C3","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C4","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C5","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C6","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C7","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C8","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C9","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C10","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D1","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D2","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D3","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D4","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D5","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D6","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D7","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D8","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D9","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D10","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E1","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E2","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E3","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E4","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E5","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E6","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E7","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E8","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E9","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E10","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F1","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F2","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F3","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F4","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F5","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F6","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F7","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F8","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F9","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F10","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G1","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G2","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G3","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G4","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G5","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G6","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G7","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G8","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G9","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G10","6");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A1","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A2","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A3","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A4","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A5","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A6","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A7","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A8","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A9","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A10","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B1","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B2","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B3","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B4","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B5","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B6","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B7","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B8","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B9","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B10","7");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C1","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C2","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C3","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C4","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C5","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C6","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C7","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C8","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C9","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C10","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D1","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D2","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D3","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D4","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D5","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D6","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D7","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D8","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D9","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D10","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E1","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E2","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E3","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E4","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E5","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E6","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E7","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E8","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E9","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E10","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F1","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F2","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F3","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F4","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F5","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F6","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F7","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F8","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F9","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("F10","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G1","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G2","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G3","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G4","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G5","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G6","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G7","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G8","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G9","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("G10","7");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A1","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A2","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A3","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A4","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A5","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A6","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A7","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A8","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A9","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A10","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B1","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B2","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B3","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B4","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B5","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B6","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B7","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B8","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B9","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B10","8");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C1","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C2","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C3","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C4","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C5","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C6","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C7","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C8","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C9","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C10","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D1","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D2","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D3","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D4","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D5","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D6","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D7","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D8","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D9","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D10","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E1","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E2","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E3","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E4","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E5","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E6","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E7","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E8","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E9","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E10","8");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A1","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A2","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A3","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A4","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A5","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A6","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A7","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A8","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A9","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("A10","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B1","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B2","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B3","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B4","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B5","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B6","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B7","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B8","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B9","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("B10","9");
+
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C1","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C2","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C3","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C4","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C5","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C6","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C7","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C8","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C9","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("C10","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D1","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D2","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D3","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D4","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D5","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D6","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D7","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D8","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D9","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("D10","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E1","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E2","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E3","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E4","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E5","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E6","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E7","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E8","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E9","9");
+
+INSERT INTO `movie_seat`(`sname`,`cid`)
+VALUES("E10","9");
 
 
 -- 유령 회원을 가입시키는 프로시저

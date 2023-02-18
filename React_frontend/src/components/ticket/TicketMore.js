@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
+import { SELECT_SEAT_REQUEST } from "../../reducer/ticket";
 const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
   );
   const { choiceSeat } = useSelector((state) => state.seat);
+  const dispatch = useDispatch();
   let sum;
   //사용자가 선택한 영화 및 정보를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
   //좌석 페이지로 넘어가야함 데이터와 함께
@@ -110,6 +112,10 @@ const TicketMore = ({ setPage, page }) => {
               scheduleData !== ""
             ) {
               setPage(true);
+              dispatch({
+                type: SELECT_SEAT_REQUEST,
+                data: theaterData.tid,
+              });
             }
           }}
         >
