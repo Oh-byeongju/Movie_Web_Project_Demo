@@ -1,7 +1,7 @@
 /*
 	23-02-18 영화 상세정보 댓글창 분리(오병주)
 */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Rate } from 'antd';
 import { SmileFilled, MehFilled, FrownFilled, DeleteOutlined, LikeOutlined  } from '@ant-design/icons';
