@@ -1,181 +1,163 @@
 /*
- 23-02-12 유저 관람평 작성 구현(오병주)
+	23-02-18 영화 상세정보 댓글창 분리(오병주)
 */
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Rate } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { SmileFilled, MehFilled, FrownFilled, DeleteOutlined, LikeOutlined  } from '@ant-design/icons';
 
-const DetailComment = () => {
+const DetailComment = ({ data }) => {
 
-	// 별점 표시를 위한 배열
-	const [value, setValue] = useState(5);
-	const desc = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+	// 사용자가 보이는 like UI 변경을 위한 변수
+  const [like, setlike] = useState(false);
+  const [likes, setlikes] = useState(7);
 
-	// textarea 내용 변수
-	const [comment, setcomment] = useState("");
-	const handleCommentChange = e => {
-    setcomment(e.target.value);
-		console.log(comment);
-  };
+	// like true 색깔 먹이기
 
-	// 로그인 상태확인용 리덕스 상태
-  const dispatch = useDispatch();
-  const { LOGIN_data } = useSelector((state) => state.R_user_login);
-
-	// 관람평 작성 버튼을 누르면 실행되는 함수
-	const onSubmit = useCallback(() => {
-
-		// 로그인 상태 확인
-		if (LOGIN_data.uid === 'No_login') {
-      alert("로그인이 필요한 서비스입니다.")
-      return;
-    }
-
-		// 관람평이 빈칸인지 확인
-		if (comment === '') {
-			alert("관람평을 작성해 주세요!")
-			return;
-		}
-
-
-		console.log(comment);
-		console.log(value * 2);
-
-
-	},[LOGIN_data.uid, comment, value])
+  // useEffect(() => {
+  //   setlike(movie.like);
+  //   setlikes(movie.likes);
+  // }, [movie]);
 
 	return (
-		<Layout>
-			<Form>
-				<StarForm>
-					<h4 style={{paddingTop: "8px"}}>
-						평점 및 관람평 작성
-					</h4>
-					<RateLine>
-						<Rate allowHalf onChange={setValue} value={value} style={{fontSize: "50px"}}/>
-						{value ? <span className="rate-text">{desc[(value * 2) - 1]}</span> : ''}
-					</RateLine>
-				</StarForm>
-				<ReviewBox>
-					<TextBox>
-						<textarea placeholder='로그인 한 회원분들 중에서 예매하신 영화가 끝난 이후 평점 및 관람평을 작성하실 수 있습니다.' 
-						spellCheck={false} maxLength="149" value={comment} onChange={handleCommentChange}>
-						</textarea>
-						<span className='text_info'>
-							<strong style={{marginRight: "2px"}}>
-								{comment.length}
-							</strong>
-							/
-							<em>
-								150
-							</em>
+		<>
+			{data ? <CommentElement>
+				<span className='img'>
+					{data.score > 6 ? <SmileFilled style={{fontSize: "40px", color: "#4a4321"}}/> 
+					: data.score > 3 ? <MehFilled style={{fontSize: "40px", color: "#4a4321"}} /> : <FrownFilled style={{fontSize: "40px", color: "#4a4321"}}/>}
+				</span>
+				<div className='top'>
+					<span className='name'>
+						{data.id}
+					</span>
+					<span className='score'>
+						<RateCustom allowHalf value={data.score/2}/> 
+						<span className='score_num'>
+							{data.score}
 						</span>
-					</TextBox>
-					<ReviewSubmit onClick={onSubmit}>
-						관람평 작성
-					</ReviewSubmit>
-				</ReviewBox>		
-			</Form>
-		</Layout>
-	)
+					</span>
+					<span className='date'>
+						{data.date}
+					</span>
+				</div>
+				<div className='middle'>
+					{data.comment}
+				</div>
+				<div className='bottom'>
+					{/* 공백을 넣어줘서 간격을 벌림 */}
+					<span>
+						&nbsp;
+					</span>
+					<span className='cnt'>
+						{data.up_cnt}
+					</span>
+					<ButtonCustom style={{paddingLeft: "2px"}}>
+						<LikeOutlined/>
+					</ButtonCustom>			
+					{data.id === 'temp2' && <ButtonCustom>
+						<DeleteOutlined/>
+					</ButtonCustom>}
+				</div>
+			</CommentElement> : <NoElement>작성된 관람평이 없습니다.</NoElement>}
+		</>
+	);
 };
 
 export default DetailComment;
 
-const Layout = styled.div`
-	overflow: hidden;
+const NoElement = styled.li`
 	position: relative;
-	width: 100%;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	vertical-align: baseline;
-	word-break: break-all;
-	margin-top: 50px;
-`;
-
-const Form = styled.div`
-	padding: 15px 35px 15px 35px;
-	background: #f8f8f8;
-	margin: 0 auto;
-	width: 980px;
-`;
-
-const StarForm = styled.div`
-	display: block;
-	h4{
-    font-size: 20px;
-    text-align: center;
-		margin:0;
-	}
-`;
-
-const RateLine = styled.div`
-	margin-right: 35px;
-	position: relative;
+	border-top: 1px solid #eee;
+	list-style: none;
+	padding: 140px 0;
 	text-align: center;
-	
-	.rate-text{
-		position: absolute;
-		display: inline-block;
-		line-height: normal;
-		font-size: 40px;
-  	padding: 13px;
+	font-size: 15px;
+`;
+
+const CommentElement = styled.li`
+	position: relative;
+	padding: 20px 0 17px 68px;
+	border-top: 1px solid #eee;
+	list-style: none;
+
+	.img {
+		display: block;
+    position: absolute;
+    top: 22px;
+    left: 10px;
+    width: 42px;
+    height: 42px;
 	}
-`;
 
-const ReviewBox = styled.div`
-	margin-left: 38px;
-	margin-top: 25px;
-	height: 100px;
-	margin-bottom: 20px;
-	box-sizing: border-box;
-`;
+	.top {
+		position: relative;
+    margin-bottom: 10px;
 
-const TextBox = styled.div`
-	width: 799px;
-	background: #fff;
-	border: 1px solid #ccc;
-	float: left;
-	height: 100px;
+		.name {
+			display: block;
+			font-size: 14px;
+			margin-bottom: 1px;
+			font-weight: 600;
+		}
 
-	textarea {
-		height: 78px;
-    border: none !important;
-		width: 100%;
-    line-height: 1.5;
-    box-sizing: border-box;
-    padding: 13px 18px;
-    border: 1px solid #DDD;
-    resize: none;
-    font-size: 14px;
-		font-family: 'Raleway', sans-serif;
-		font-weight: 700;
-		color: #000;
-		:focus {
-  		outline: none;
+		.score {
+			position: relative;
+			font-size: 14px;
+    	margin-right: 11px;
+
+			.score_num {
+				margin-left: 5px;
+				font-weight: 600;
+				vertical-align: bottom;
+			}
+		}
+
+		.date {
+			position: absolute;
+			top: 0;
+			right: 10px;
+			font-family: "Roboto";
+			font-size: 14px;
+			color: #999;
 		}
 	}
 
-	.text_info {
-		display: block;
-    margin: 0 10px 10px 0;
-    text-align: right;
-    color: #666;
-		font-size: 12px;
+	.middle {
+		margin-bottom: 0;
+    line-height: 20px;
+		font-size: 13px;
+	}
+
+	.bottom {
+		margin-top: 12px;
+		margin-bottom: 0;
+    line-height: 20px;
+    font-size: 13px;
+
+		.cnt {
+			float: right;
+			padding-right: 7px;
+			vertical-align: top;
+			line-height: 14px;
+		}
 	}
 `;
 
-const ReviewSubmit = styled.button`
-	background: #414141;
-	float: left;
-	width: 115px;
-	height: 103px;
-	border: none;
-	margin: -1px -1px 0 0;
-	padding: 0;
-	color: #fff;
-	font-size: 15px;
-	cursor: pointer;
+const RateCustom = styled(Rate)`
+	pointer-events: none;
+	color: #fea408;
+	font-size: 16px;
+
+	.ant-rate-star{
+		margin-inline-end: 2px !important;
+	}
+`;
+
+const ButtonCustom = styled.button`
+	float: right;
+  content: "";
+  cursor: pointer;
+  background-color: white;
+  border: 0;
+	margin-right: 3px;
 `;

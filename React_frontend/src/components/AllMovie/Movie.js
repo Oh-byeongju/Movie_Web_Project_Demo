@@ -1,7 +1,7 @@
-/*
- 23-02-02 css 수정 및 Like수 적용(오병주)
- 23-02-08 사용자가 누른 Like 적용(오병주)
- 23-02-15 페이지 css 수정(오병주)
+/* 
+  23-02-02 css 수정 및 Like수 적용(오병주)
+  23-02-08 사용자가 누른 Like 적용(오병주)
+  23-02-15 페이지 css 수정(오병주)
 */
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
