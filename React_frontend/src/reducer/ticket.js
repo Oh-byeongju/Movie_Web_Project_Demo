@@ -65,6 +65,11 @@ export const initalState = {
   select_schedule_done: false,
   select_schedule_error: null,
 
+  select_seat_loading: false,
+  select_seat_done: false,
+  select_seat_error: null,
+  selectseat: [],
+
   selectSchedule: [],
   disableTheater: [],
 
@@ -154,6 +159,11 @@ export const SELECT_DAYTHEATER_TO_MOVIE_FAILURE =
 export const SELECT_SCHEDULE_REQUEST = "SELECT_SCHEDULE_REQUEST";
 export const SELECT_SCHEDULE_SUCCESS = "SELECT_SCHEDULE_SUCCESS";
 export const SELECT_SCHEDULE_FAILURE = "SELECT_SCHEDULE_FAILURE";
+
+export const SELECT_SEAT_REQUEST = "SELECT_SEAT_REQUEST";
+export const SELECT_SEAT_SUCCESS = "SELECT_SEAT_SUCCESS";
+export const SELECT_SEAT_FAILURE = "SELECT_SEAT_FAILURE";
+
 export const MOVIE_DATA_SUCCESS = "MOVIE_DATA_SUCCESS";
 //검색한 데이터 담아두기 위한 액션
 export const MOVIE_DATA = "MOVIE_DATA";
@@ -165,6 +175,7 @@ export const RESET_MOVIE_DATA = "RESET_MOVIE_DATA";
 export const RESET_THEATER_DATA = "RESET_THEATER_DATA";
 export const RESET_DAY_DATA = "RESET_DAY_DATA";
 export const RESET_SCHEDULE_DATA = "RESET_SCHEDULE_DATA";
+
 const ticket = (state = initalState, action) => {
   switch (action.type) {
     //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
@@ -541,6 +552,28 @@ const ticket = (state = initalState, action) => {
         select_schedule_loading: false,
         select_schedule_done: false,
         select_schedule_error: null,
+      };
+    case SELECT_SEAT_REQUEST:
+      return {
+        ...state,
+        select_seat_loading: true,
+        select_seat_done: false,
+        select_seat_error: null,
+      };
+    case SELECT_SEAT_SUCCESS:
+      return {
+        ...state,
+        select_seat_loading: false,
+        select_seat_done: true,
+        select_seat_error: null,
+        selectseat: action.data,
+      };
+    case SELECT_SEAT_FAILURE:
+      return {
+        ...state,
+        select_seat_loading: false,
+        select_seat_done: false,
+        select_seat_error: null,
       };
 
     case MOVIE_DATA:

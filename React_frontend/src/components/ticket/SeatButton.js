@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 const SeatButton = ({
-  row,
+  seat,
   addSeats,
   totalNumber,
   selectedRows,
@@ -20,16 +20,16 @@ const SeatButton = ({
   return (
     <>
       <SeatNumber
-        is_reserved={row.is_reserved}
+        is_reserved={seat.is_reserved}
         isChecked={isChecked}
-        disabled={row.is_reserved}
-        seatnum={row.id}
+        disabled={seat.is_reserved}
+        seatnum={seat.id}
         onClick={() => {
           checkedSeat();
-          isChecked ? addSeats(row) : removeSeats(row.id);
+          isChecked ? addSeats(seat) : removeSeats(seat.sid);
         }}
       >
-        {row.location}
+        {seat.sname}
       </SeatNumber>
     </>
   );

@@ -41,6 +41,9 @@ import {
   SELECT_SCHEDULE_REQUEST,
   MOVIE_DATA,
   MOVIE_DATA_SUCCESS,
+  SELECT_SEAT_SUCCESS,
+  SELECT_SEAT_FAILURE,
+  SELECT_SEAT_REQUEST,
 } from "../reducer/ticket";
 import { http } from "../lib/http";
 
@@ -530,6 +533,37 @@ function* selectSchedule(action) {
   }
 }
 
+async function selectSeatApi(data) {
+  return await http
+    .get("/seat/normal/infoseat", {
+      params: {
+        id: data,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
+function* selectSeat(action) {
+  const result = yield call(selectSeatApi, action.data);
+  if (result.status === 200) {
+    yield put({
+      type: SELECT_SEAT_SUCCESS,
+      data: result.data,
+    });
+  } else {
+    alert("실패");
+    yield put({
+      type: SELECT_SEAT_FAILURE,
+      data: result.status,
+    });
+  }
+}
+
 function* TallMovieSaga() {
   yield takeLatest(T_ALLMOVIE_REQUEST, allMovieLoad);
 }
@@ -573,7 +607,9 @@ function* selectDayMovieToTheaterSaga() {
 function* selectScheduleSaga() {
   yield takeLatest(SELECT_SCHEDULE_REQUEST, selectSchedule);
 }
-
+function* selectSeatSaga() {
+  yield takeLatest(SELECT_SEAT_REQUEST, selectSeat);
+}
 export default function* ticketSaga() {
   yield all([
     fork(TallMovieSaga),
@@ -589,5 +625,6 @@ export default function* ticketSaga() {
     fork(selectDayTheaterToMovieSaga),
     fork(selectDayMovieToTheaterSaga),
     fork(selectScheduleSaga),
+    fork(selectSeatSaga),
   ]);
 }
