@@ -16,28 +16,16 @@ public class SeatEntity {
 
     @Column(nullable = false, length = 20)
     private String sname;
-
-    @Column(nullable = false, length = 20)
-    private String stype;
-
-    @Column(nullable = false)
-    private Boolean suse;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cid") //조인할 컬럼 이름
-    private CinemaEntity cid;
+    private CinemaEntity cinema;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="rid") //조인할 컬럼 이름
-    private ReservationEntity rid;
 
     @Builder
-    public SeatEntity(Long sid ,String sname, String stype, Boolean suse, CinemaEntity cid, ReservationEntity rid) {
+    public SeatEntity(Long sid ,String sname,  CinemaEntity cinema) {
         this.sid=sid;
         this.sname=sname;
-        this.stype=stype;
-        this.suse= suse;
-        this.cid=cid;
-        this.rid=rid;
+        this.cinema=cinema;
+
     }
 }

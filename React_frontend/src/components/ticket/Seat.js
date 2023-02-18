@@ -18,6 +18,7 @@ const Seat = () => {
   const [selected, setSelected] = useState([]); //선택한 자리
   const [selectedRows, setSelectedRows] = useState([]);
   const { rows, choiceSeat } = useSelector((state) => state.seat);
+  const { selectseat } = useSelector((state) => state.ticket);
   //결국 데이터를 받아오려면 한번에 다 받아와야함{location: A1,A id:2}2,A3,A4,A5,A6~B1,B2,B3,B4,B5,B6 이런식
   // 열의 차이를 줘야함 그리고 점유 확인, id값을 받아오고
   const dispatch = useDispatch();
@@ -28,7 +29,6 @@ const Seat = () => {
     { KID: 3000 },
   ]);
   const totalNumber = numTeenager + numAdult + numKid; //셋이 더해 8 이 넘으면 안됨
-
   const plusHandlerAdult = () => {
     if (totalNumber < rows.length) {
       setNumAdult((prev) => prev + 1);
@@ -86,30 +86,31 @@ const Seat = () => {
           user_id: 1,
           type: selectedUser[0],
           price: priceInfo[0],
-          seat_id: row.id,
-          location: row.location,
+          seat_id: row.sid,
+          location: row.sname,
         },
       });
-
       const copyUser = selectedUser;
-      const copyPrice = priceInfo;
-      copyUser.shift();
 
+      const copyPrice = priceInfo;
+      console.log(copyUser);
+      console.log(copyPrice);
+      copyUser.shift();
       copyPrice.shift();
+
       setSelectedUser(copyUser);
-      console.log("selected: " + selected);
       setPriceInfo(copyPrice);
-      console.log("price : " + priceInfo);
     }
   };
 
   const removeSeats = (seat) => {
-    setSelectedRows((prev) => prev.filter((row) => row.id !== seat));
+    setSelectedRows((prev) =>
+      prev.filter((choiceSeat) => choiceSeat.sid !== seat)
+    );
     dispatch({
       type: SEAT_REMOVE,
       data: seat,
     });
-    console.log(seat);
   };
   return (
     <SeatWrapper>
@@ -175,7 +176,7 @@ const Seat = () => {
                 </ButtonGroup>
               </People>
               <People>
-                <span>노인</span>
+                <span>어른</span>
                 <ButtonGroup style={{ marginLeft: "15px" }}>
                   <Button
                     onClick={minusHandlerAdult}
@@ -209,11 +210,11 @@ const Seat = () => {
           <Screen></Screen>
 
           <SeetReserve>
-            {rows.map((row, index) => (
+            {selectseat.map((seat, index) => (
               <div>
                 <SeatButton
-                  row={row}
-                  key={row.id}
+                  seat={seat}
+                  key={seat.sid}
                   addSeats={addSeats}
                   totalNumber={totalNumber}
                   selectedRows={selectedRows}
@@ -266,7 +267,7 @@ const ScreenSelect = styled.div`
 `;
 
 const SeetReserve = styled.div`
-  width: 460px;
+  width: 420px;
   height: 100%;
   padding-left: 250px;
   position: absolute;
@@ -277,7 +278,7 @@ const Screen = styled.div`
   position: absolute;
   margin-top: 30px;
   left: 250px;
-  width: 450px;
+  width: 420px;
   height: 80px;
   transform: rotateX(-20deg);
   box-shadow: 0 3px 10px rgb(255 255 255 / 70%);
