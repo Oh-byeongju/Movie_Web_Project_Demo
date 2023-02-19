@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 public class MovieActorEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long maid;

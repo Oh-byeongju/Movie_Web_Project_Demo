@@ -82,7 +82,7 @@ public class MovieMemberService {
         // MovieMember table에 튜플의 존재 여부를 먼저 파악
         MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
 
-        // 현재 날짜 구하기 (yyyy-mm-dd) 날짜 가공부터 하면 될듯 내일
+        // 현재 날짜 구하기 (yyyy-mm-dd) 날짜 가공부터 하면 될듯 내일 ((( 예매 끝나거 수정해라우)))
         String pattern = "yyyy-mm-dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
