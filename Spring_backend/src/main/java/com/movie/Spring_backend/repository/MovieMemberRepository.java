@@ -37,4 +37,7 @@ public interface MovieMemberRepository extends JpaRepository<MovieMemberEntity, 
             "SET mm.umlike = true " +
             "WHERE mm.member = :member AND mm.movie = :movie")
     void MovieLikeChangeTrue(@Param("member") MemberEntity member, @Param("movie") MovieEntity movie);
+
+    // 특정 영화의 MovieMember 정보를 모두 들고오는 메소드
+    List<MovieMemberEntity> findByMovie(MovieEntity movie);
 }

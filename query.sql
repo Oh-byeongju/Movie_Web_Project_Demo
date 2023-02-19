@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS `Movie_seat`;
 DROP TABLE IF EXISTS `Movie_reservation`;
 DROP TABLE IF EXISTS `Movie_information`;
 DROP TABLE IF EXISTS `Movie_cinema`;
-DROP TABLE IF EXISTS `CommentUp_Info`;
+DROP TABLE IF EXISTS `Comment_Info`;
 DROP TABLE IF EXISTS `Movie_member`;
 DROP TABLE IF EXISTS `Movie_actor`;
 DROP TABLE IF EXISTS `Actor`;
@@ -15,13 +15,14 @@ DROP PROCEDURE IF EXISTS clone_member_like1;
 DROP PROCEDURE IF EXISTS clone_member_like2;
 DROP PROCEDURE IF EXISTS clone_member_like3;
 DROP PROCEDURE IF EXISTS clone_member_like4;
+DROP PROCEDURE IF EXISTS clone_member_like5;
 
 CREATE TABLE `Member` (
 	`uid`	varchar(20)	NOT NULL,
 	`upw`	varchar(255) NOT NULL,
-	`uname`	varchar(20)	NOT NULL,
+	`uname`	varchar(15)	NOT NULL,
 	`uemail` varchar(50) NOT NULL,
-	`utel`	varchar(20)	NOT NULL,
+	`utel`	varchar(15)	NOT NULL,
 	`uaddr`	varchar(50)	NOT NULL,
 	`ubirth`	date	NOT NULL,
 	`uauthority` VARCHAR(20) NOT NULL,
@@ -72,19 +73,20 @@ CREATE TABLE `Movie_member` (
 	`umscore`	INT 	NULL,
 	`umcomment`	VARCHAR(200) NULL,
 	`umcommenttime` DATE NULL,
-	`umcommentup`	INT	NULL,
-	`mid`	INT	NOT NULL,
-	`uid`	VARCHAR(20)	NOT NULL,
+	`mid` INT NOT NULL,
+	`uid` VARCHAR(20) NOT NULL,
 	PRIMARY KEY (`umid`),
 	FOREIGN KEY (`mid`) REFERENCES `Movie` (`mid`),
 	FOREIGN KEY (`uid`) REFERENCES `Member` (`uid`)
 );
 
-CREATE TABLE `CommentUp_Info` (
+CREATE TABLE `Comment_Info` (
+	`cuid` INT NOT NULL AUTO_INCREMENT,
 	`uid`	varchar(20)	NOT NULL,
 	`umid`	INT	NOT NULL,
+	FOREIGN KEY (`uid`) REFERENCES `Member` (`uid`),
 	FOREIGN KEY (`umid`) REFERENCES `Movie_member` (`umid`),
-	PRIMARY KEY (`uid`)
+	PRIMARY KEY (`cuid`)
 );
 
 CREATE TABLE `Movie_cinema` (
@@ -96,7 +98,6 @@ CREATE TABLE `Movie_cinema` (
 	PRIMARY KEY (`cid`),
 	FOREIGN KEY (`tid`) REFERENCES `Movie_theater` (`tid`)
 );
-
 
 CREATE TABLE `Movie_information` (
 	`miid`	INT NOT NULL AUTO_INCREMENT,
@@ -129,6 +130,7 @@ CREATE TABLE `Movie_seat` (
 	PRIMARY KEY (`sid`),
 	FOREIGN KEY (`cid`) REFERENCES `Movie_cinema` (`cid`)
 );
+
 CREATE TABLE `Movie_infoseat` (
 	`misid` INT AUTO_INCREMENT NOT NULL,
 	`sid` INT  NOT NULL,
@@ -3832,7 +3834,7 @@ BEGIN
    WHILE (i <= 1500) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
    	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
    	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
-      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `mid`, `uid`) VALUES(1, 9, "좋아요 개수를 위한  유령 투표", 1, val);
+      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 9, "관람평을 위한 유령 관람평", NOW(), 1, val);
       SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
     END WHILE;
 END $$
@@ -3844,10 +3846,10 @@ CREATE PROCEDURE clone_member_like2()
 BEGIN
    DECLARE i INT DEFAULT 1; -- i변수 선언, defalt값 설정
    DECLARE val VARCHAR(20); -- 임시로 사용할 변수 선언
-   WHILE (i <= 500) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
+   WHILE (i <= 999) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
    	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
    	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
-      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `mid`, `uid`) VALUES(1, 8, "좋아요 개수를 위한  유령 투표", 2, val);
+      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 8, "관람평을 위한 유령 관람평", NOW(), 2, val);
       SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
     END WHILE;
 END $$
@@ -3859,10 +3861,10 @@ CREATE PROCEDURE clone_member_like3()
 BEGIN
    DECLARE i INT DEFAULT 1; -- i변수 선언, defalt값 설정
    DECLARE val VARCHAR(20); -- 임시로 사용할 변수 선언
-   WHILE (i <= 50) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
+   WHILE (i <= 80) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
    	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
    	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
-      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `mid`, `uid`) VALUES(1, 7, "좋아요 개수를 위한  유령 투표", 3, val);
+      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 7, "관람평을 위한 유령 관람평", NOW(), 3, val);
       SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
     END WHILE;
 END $$
@@ -3874,10 +3876,25 @@ CREATE PROCEDURE clone_member_like4()
 BEGIN
    DECLARE i INT DEFAULT 1; -- i변수 선언, defalt값 설정
    DECLARE val VARCHAR(20); -- 임시로 사용할 변수 선언
-   WHILE (i <= 999) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
+   WHILE (i <= 30) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
    	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
    	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
-      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `mid`, `uid`) VALUES(1, 5, "좋아요 개수를 위한  유령 투표", 4, val);
+      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 6, "관람평을 위한 유령 관람평", NOW(), 4, val);
+      SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
+    END WHILE;
+END $$
+
+-- 유령 회원을 통한 영화 좋아요 수 늘리는 프로시저(젠틀맨)
+-- 평점 소수점 생성을 위한 프로시저
+DELIMITER $$
+CREATE PROCEDURE clone_member_like5()
+BEGIN
+   DECLARE i INT DEFAULT 31; -- i변수 선언, defalt값 설정
+   DECLARE val VARCHAR(31); -- 임시로 사용할 변수 선언
+   WHILE (i <= 52) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
+   	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
+   	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
+      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 3, "관람평을 위한 유령 관람평", NOW(), 4, val);
       SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
     END WHILE;
 END $$
@@ -3897,13 +3914,7 @@ CALL clone_member_like3();
 -- 영화 좋아요를 늘리는 프로시저 실행(젠틀맨)
 CALL clone_member_like4();
 
-/*
-SELECT *
-FROM movie_member;
+-- 영화 좋아요를 늘리는 프로시저 실행(젠틀맨)2
+CALL clone_member_like5();
 
-
-INSERT INTO `movie_member` (`umscore`, `mid`, `uid`) VALUES(5, 1, 'temp1');
-INSERT INTO `movie_member` (`umlike`, `umscore`, `mid`, `uid`) VALUES(1, 5, 1, 'temp2'); 
-INSERT INTO `member` VALUE('123asz', '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '오병주', 'dhqudwn0@naver.com', '01012341234', '충남 당진시 합덕읍 감자마을1길 12 101', '1998-11-11', 'ROLE_USER');
-*/
-
+SELECT * FROM movie_member;

@@ -2,8 +2,10 @@
   23-02-07 전체영화 조회 및 사용자 영화 검색 메소드 수정(오병주)
   23-02-10 영화 세부내용을 위한 메소드 설계(오병주)
   23-02-14 영화 세부내용 메소드 수정(오병주)
+  23-02-20 영화 관람평 메소드 구현(오병주)
 */
 package com.movie.Spring_backend.service;
+import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.repository.ActorRepository;
 import com.movie.Spring_backend.repository.MovieActorRepository;
@@ -160,4 +162,25 @@ public class MovieService {
         return dedupication;
     }
 
+    // 영화 세부내용 관람평 메소드(수정 바람 오름차순도 생각해야함 일단 임시 + @Formula 추가도 해야할듯, 쓰기전에 Formula가 적합한지 생각 최적화에 대해)
+    @Transactional
+    public List<CommentInfoDto> getMovieDetailComment(Long mid, String uid) {
+
+        // 받은 영화 id 정보를 entity 형으로 변환
+        MovieEntity movie = MovieEntity.builder()
+                .mid(mid).build();
+
+        // 영화 id를 기반으로 MovieMember table 검색
+        List<MovieMemberEntity> MovieMember = movieMemberRepository.findByMovie(movie);
+
+
+        return MovieMember.stream().map(data -> CommentInfoDto.builder()
+                .umid(data.getUmid())
+                .umscore(data.getUmscore())
+                .umcomment(data.getUmcomment())
+                .umcommenttime(data.getUmcommenttime())
+                .uid(data.getMember().getUid())
+                .mid(data.getMovie().getMid())
+                .build()).collect(Collectors.toList());
+    }
 }

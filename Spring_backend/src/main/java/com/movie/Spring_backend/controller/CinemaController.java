@@ -42,8 +42,4 @@ public class CinemaController {
 
     //극장 선택 시 영화 목록 전송
     //able, disable
-
-
-
-
 }

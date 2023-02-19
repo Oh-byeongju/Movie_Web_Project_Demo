@@ -1,5 +1,6 @@
 package com.movie.Spring_backend.controller;
 
+import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.service.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,11 @@ public class MovieController {
     @GetMapping("/normal/moviedetail/{mid}")
     public ResponseEntity<MovieDto> MovieDetail(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
         return ResponseEntity.ok().body(movieService.getMovieDetail(mid, uid));
+    }
+
+    // 영화 세부내용의 관람평을 가져오는 메소드 (임시로 해둠 --> 이거 보낼때 최신순, 추천순 해야해서 내림차순 이랑 cnt sql 생각해보기)
+    @GetMapping("/normal/moviedetailcomment/{mid}")
+    public ResponseEntity<List<CommentInfoDto>> MovieDetailComment(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
+        return ResponseEntity.ok().body(movieService.getMovieDetailComment(mid, uid));
     }
 }
