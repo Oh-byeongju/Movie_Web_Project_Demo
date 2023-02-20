@@ -3809,6 +3809,24 @@ VALUES("E9","9");
 INSERT INTO `movie_seat`(`sname`,`cid`)
 VALUES("E10","9");
 
+INSERT INTO `movie_infoseat`(`sid`,`miid`)
+VALUES("1","1");
+INSERT INTO `movie_infoseat`(`sid`,`miid`)
+VALUES("2","1");
+INSERT INTO `movie_infoseat`(`sid`,`miid`)
+VALUES("3","1");
+
+
+INSERT INTO `movie_infoseat`(`sid`,`miid`)
+VALUES("11","1");
+INSERT INTO `movie_infoseat`(`sid`,`miid`)
+VALUES("14","1");
+INSERT INTO `movie_infoseat`(`sid`,`miid`)
+VALUES("20","1");
+INSERT INTO `movie_infoseat`(`sid`,`miid`)
+VALUES("22","1");
+
+
 
 -- 유령 회원을 가입시키는 프로시저
 DELIMITER $$
