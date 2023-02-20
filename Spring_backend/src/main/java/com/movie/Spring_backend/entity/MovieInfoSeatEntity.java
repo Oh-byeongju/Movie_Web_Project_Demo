@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Table(name="Movie_infoseat")
 @Entity
 @Getter
 @NoArgsConstructor
-public class MovieInfoSeatEntitiy {
+public class MovieInfoSeatEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long misid;
@@ -26,7 +25,7 @@ public class MovieInfoSeatEntitiy {
 
 
     @Builder
-    public MovieInfoSeatEntitiy(Long misid,SeatEntity seat,MovieInfoEntity info) {
+    public MovieInfoSeatEntity(Long misid, SeatEntity seat, MovieInfoEntity info) {
         this.misid= misid;
         this.seat=seat;
         this.info=info;

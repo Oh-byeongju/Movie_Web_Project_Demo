@@ -3,12 +3,15 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
-import { SELECT_SEAT_REQUEST } from "../../reducer/ticket";
+import {
+  SELECT_SEAT_REQUEST,
+  SELECT_INFOSEAT_REQUEST,
+} from "../../reducer/seat";
 const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
   );
-  const { choiceSeat } = useSelector((state) => state.seat);
+  const { choiceSeat, price } = useSelector((state) => state.seat);
   const dispatch = useDispatch();
   let sum;
   //사용자가 선택한 영화 및 정보를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
@@ -71,10 +74,11 @@ const TicketMore = ({ setPage, page }) => {
           <Seat>
             좌석 :
             {choiceSeat.map((seat) => {
+              sum += seat.price;
               return <span>&nbsp;{seat.location} </span>;
             })}
           </Seat>
-          <Price>가격 : {sum}</Price>
+          <Price>총금액 : {price}</Price>
         </SeatMore>
       </TicketStep>
       {page ? (
@@ -114,7 +118,11 @@ const TicketMore = ({ setPage, page }) => {
               setPage(true);
               dispatch({
                 type: SELECT_SEAT_REQUEST,
-                data: theaterData.tid,
+                data: scheduleData.cinema.cid,
+              });
+              dispatch({
+                type: SELECT_INFOSEAT_REQUEST,
+                data: scheduleData.miid,
               });
             }
           }}

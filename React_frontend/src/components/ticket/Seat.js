@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button, Space } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { style } from "@mui/system";
 import { useSelector, useDispatch } from "react-redux";
 import { set } from "date-fns";
-import { SEAT_CHOICE, SEAT_REMOVE } from "../../reducer/seat";
+import {
+  SEAT_CHOICE,
+  SEAT_REMOVE,
+  USER_CHOICE,
+  USER_REMOVE,
+  PAGE_RESET,
+} from "../../reducer/seat";
 import SeatButton from "./SeatButton";
 
 const ButtonGroup = Button.Group;
@@ -17,39 +23,52 @@ const Seat = () => {
   const [priceInfo, setPriceInfo] = useState([]); //값 더하기 //여기 배열로 값을 저장
   const [selected, setSelected] = useState([]); //선택한 자리
   const [selectedRows, setSelectedRows] = useState([]);
-  const { rows, choiceSeat } = useSelector((state) => state.seat);
-  const { selectseat } = useSelector((state) => state.ticket);
+  const { rows, choiceSeat, selectseat, selectinfoseat } = useSelector(
+    (state) => state.seat
+  );
   //결국 데이터를 받아오려면 한번에 다 받아와야함{location: A1,A id:2}2,A3,A4,A5,A6~B1,B2,B3,B4,B5,B6 이런식
   // 열의 차이를 줘야함 그리고 점유 확인, id값을 받아오고
   const dispatch = useDispatch();
-  const [userType, setUserType] = useState([
-    //어른 학생 유아별로 가격나눔
-    { ADULT: 10000 },
-    { TEENAGER: 5000 },
-    { KID: 3000 },
-  ]);
+  let is_reserved;
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: PAGE_RESET,
+      });
+    };
+  }, []);
   const totalNumber = numTeenager + numAdult + numKid; //셋이 더해 8 이 넘으면 안됨
   const plusHandlerAdult = () => {
-    if (totalNumber < rows.length) {
+    if (totalNumber < selectseat.length - selectinfoseat.length) {
       setNumAdult((prev) => prev + 1);
-      setSelectedUser((prev) => [...prev, "ADULT"]);
-      setPriceInfo((prev) => [...prev, userType[0].ADULT]);
+      dispatch({
+        type: USER_CHOICE,
+        data: "ADULT",
+        price: 12000,
+      });
     }
   };
 
   const plusHandlerTeenager = () => {
-    if (totalNumber < rows.length) {
+    if (totalNumber < selectseat.length - selectinfoseat.length) {
       setNumTeenager((prev) => prev + 1);
-      setSelectedUser((prev) => [...prev, "TEENAGER"]);
-      setPriceInfo((prev) => [...prev, userType[1].TEENAGER]);
+      dispatch({
+        type: USER_CHOICE,
+        data: "TEENAGER",
+        price: 8000,
+      });
     }
   };
 
   const plusHandlerKid = () => {
-    if (totalNumber < rows.length) {
+    if (totalNumber < selectseat.length - selectinfoseat.length) {
       setNumKid((prev) => prev + 1);
-      setSelectedUser((prev) => [...prev, "KID"]);
-      setPriceInfo((prev) => [...prev, userType[2].KID]);
+      dispatch({
+        type: USER_CHOICE,
+        data: "KID",
+        price: 6000,
+      });
     }
   };
 
@@ -58,6 +77,11 @@ const Seat = () => {
       alert("오류");
     } else if (numAdult) {
       setNumAdult((prev) => prev - 1);
+      dispatch({
+        type: USER_REMOVE,
+        data: "ADULT",
+        price: 12000,
+      });
     }
   };
   const minusHandlerTeenager = () => {
@@ -65,6 +89,11 @@ const Seat = () => {
       alert("오류");
     } else if (numTeenager) {
       setNumTeenager((prev) => prev - 1);
+      dispatch({
+        type: USER_REMOVE,
+        data: "TEENAGER",
+        price: 8000,
+      });
     }
   };
 
@@ -73,33 +102,25 @@ const Seat = () => {
       alert("오류");
     } else if (numKid) {
       setNumKid((prev) => prev - 1);
+      dispatch({
+        type: USER_REMOVE,
+        data: "KID",
+        price: 6000,
+      });
     }
   };
 
   const addSeats = (row) => {
     if (totalNumber > selectedRows.length) {
       setSelectedRows((prev) => [...prev, row]);
-
       dispatch({
         type: SEAT_CHOICE,
         data: {
           user_id: 1,
-          type: selectedUser[0],
-          price: priceInfo[0],
           seat_id: row.sid,
           location: row.sname,
         },
       });
-      const copyUser = selectedUser;
-
-      const copyPrice = priceInfo;
-      console.log(copyUser);
-      console.log(copyPrice);
-      copyUser.shift();
-      copyPrice.shift();
-
-      setSelectedUser(copyUser);
-      setPriceInfo(copyPrice);
     }
   };
 
@@ -210,18 +231,27 @@ const Seat = () => {
           <Screen></Screen>
 
           <SeetReserve>
-            {selectseat.map((seat, index) => (
-              <div>
-                <SeatButton
-                  seat={seat}
-                  key={seat.sid}
-                  addSeats={addSeats}
-                  totalNumber={totalNumber}
-                  selectedRows={selectedRows}
-                  removeSeats={removeSeats}
-                />
-              </div>
-            ))}
+            {selectseat.map((seat, index) => {
+              is_reserved = false;
+              selectinfoseat.find((info) => {
+                if (info.seat.sid === seat.sid) {
+                  is_reserved = true;
+                }
+              });
+              return (
+                <div>
+                  <SeatButton
+                    seat={seat}
+                    key={seat.sid}
+                    addSeats={addSeats}
+                    is_reserved={is_reserved}
+                    totalNumber={totalNumber}
+                    selectedRows={selectedRows}
+                    removeSeats={removeSeats}
+                  />
+                </div>
+              );
+            })}
           </SeetReserve>
         </ScreenSelect>
       </SeatContent>
