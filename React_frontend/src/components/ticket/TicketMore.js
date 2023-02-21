@@ -11,11 +11,13 @@ const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
   );
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
   const { choiceSeat, price } = useSelector((state) => state.seat);
   const dispatch = useDispatch();
-  let sum;
   //사용자가 선택한 영화 및 정보를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
   //좌석 페이지로 넘어가야함 데이터와 함께
+
   return (
     <TicketWrapper>
       <TicketStep page={page}>
@@ -60,7 +62,7 @@ const TicketMore = ({ setPage, page }) => {
             <Screen>
               <span>상영관</span>&nbsp;&nbsp;&nbsp;
               <span>
-                {scheduleData.cinema.ctype} {scheduleData.cinema.cname}
+                {scheduleData.type} {scheduleData.name}
               </span>
             </Screen>
           ) : (
@@ -74,7 +76,6 @@ const TicketMore = ({ setPage, page }) => {
           <Seat>
             좌석 :
             {choiceSeat.map((seat) => {
-              sum += seat.price;
               return <span>&nbsp;{seat.location} </span>;
             })}
           </Seat>
@@ -94,7 +95,14 @@ const TicketMore = ({ setPage, page }) => {
             />
             <p>영화선택</p>
           </MovieChoice>
-          <MovieSeat onClick={() => setPage(true)}>
+          <MovieSeat
+            onClick={() => {
+              if (LOGIN_data.uid === "No_login") {
+                alert("로그인이 필요한 서비스입니다.");
+                return;
+              }
+            }}
+          >
             <ArrowCircleRightIcon
               style={{
                 width: "80px",
@@ -158,7 +166,7 @@ const TicketStep = styled.div`
   width: 996px;
   height: 108px;
   padding-top: 10px;
-  padding-left: 50px;
+  padding-left: 150px;
   position: relative;
 
   left: ${(props) => (props.page === true ? "100px" : "0px")};
@@ -209,6 +217,7 @@ const MovieChoice = styled.div`
   width: 106px;
   height: 108px;
   cursor: pointer;
+  margin-left: 180px;
   p {
     position: absolute;
     bottom: -10px;
@@ -248,6 +257,7 @@ const MovieSeat = styled.div`
   width: 106px;
   height: 108px;
   cursor: pointer;
+
   p {
     position: absolute;
     bottom: -10px;

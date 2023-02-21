@@ -20,11 +20,11 @@ public class CinemaDto { //값을 가공 후 전달.
         private Long cid;
         private String cname;
         private String ctype;
-        private String cseat;
+        private Integer cseat;
         private TheaterEntity theater;
 
         @Builder
-        public CinemaDto(Long cid, String cname, String ctype, String cseat ,TheaterEntity theater) {
+        public CinemaDto(Long cid, String cname, String ctype, Integer cseat ,TheaterEntity theater) {
             this.cid = cid;
             this.cname = cname;
             this.ctype = ctype;
