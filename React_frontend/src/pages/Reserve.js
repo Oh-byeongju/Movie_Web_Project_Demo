@@ -15,10 +15,7 @@ import {
   RESET_DAY_DATA,
   ALLDAY_REQUEST,
   ALLTHEATER_REQUEST,
-  RESET_THEATER_DATA,
-  RESET_MOVIE_DATA,
-  MOVIE_DATA,
-  RESET_SCHEDULE_DATA,
+  RESET_RESERVE_PAGE,
 } from "../reducer/ticket";
 const Reserve = () => {
   //토글
@@ -54,17 +51,7 @@ const Reserve = () => {
     return () => {
       console.log("reserve out");
       dispatch({
-        type: RESET_MOVIE_DATA,
-      });
-      dispatch({
-        type: RESET_DAY_DATA,
-      });
-      dispatch({
-        type: RESET_THEATER_DATA,
-      });
-
-      dispatch({
-        type: RESET_SCHEDULE_DATA,
+        type: RESET_RESERVE_PAGE,
       });
     };
     //페이지에서 컴포넌트가 사라질때 return()을 사용하면 실행시킬수있다 페이지 뒤로가기나 다른페이지에서 다시 올 때 사용하면 좋을거같다.

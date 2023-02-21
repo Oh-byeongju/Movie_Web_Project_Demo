@@ -264,12 +264,13 @@ export default Seat;
 const SeatWrapper = styled.div`
   display: block;
   min-height: 710px;
-  width: 100%;
+  width: 930px;
   height: 100%;
+  padding-left: 10px;
 `;
 const SeatContent = styled.div`
   float: none;
-  width: 992px;
+  width: 100%;
   min-height: 528px;
   position: relative;
   float: left;

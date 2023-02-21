@@ -24,15 +24,23 @@ public class MovieInfoDto {
 
     private CinemaEntity cinema;
 
+    private String type;
+    private String name;
+    private Integer allcount; //전체 좌석
+    private Integer count;   // 점유 좌석
     @Builder
-    public MovieInfoDto(Long miid, Date miday, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema
-                        ) {
+    public MovieInfoDto(Long miid, Date miday, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema,
+                        String name,      String type,  Integer allcount,  Integer count) {
         this.miid= miid;
         this.miday=miday;
         this.mistarttime=mistarttime;
         this.miendtime=miendtime;
         this.movie=movie;
         this.cinema=cinema;
+        this.name=name;
+        this.type=type;
+        this.allcount=allcount;
+        this.count=count;
     }
 
 

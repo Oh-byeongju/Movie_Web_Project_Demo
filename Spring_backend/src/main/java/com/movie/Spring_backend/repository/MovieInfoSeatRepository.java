@@ -13,6 +13,9 @@ import java.util.List;
 public interface MovieInfoSeatRepository  extends JpaRepository<MovieInfoSeatEntity,Long> {
     @Query(value = "SELECT mis from MovieInfoSeatEntity as mis where mis.info.miid=(:miid)")
     @EntityGraph(attributePaths = {"seat","info", "seat.cinema","seat.cinema.theater","info.movie"})
-
     List<MovieInfoSeatEntity> findByInfoMovie(@Param("miid") Long miid);
+
+
+    @Query(value = "SELECT count(mis) from MovieInfoSeatEntity as mis where mis.info.miid=(:miid)")
+   List<Long> findByCount(@Param("miid") List<Long> miid);
 }
