@@ -1,12 +1,9 @@
 package com.movie.Spring_backend.service;
 
-import com.movie.Spring_backend.dto.CinemaDto;
-import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.dto.MovieInfoDto;
-import com.movie.Spring_backend.entity.CinemaEntity;
-import com.movie.Spring_backend.entity.MovieEntity;
-import com.movie.Spring_backend.entity.MovieInfoEntity;
+import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
+import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.mapper.MovieInfoMapper;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
 import com.movie.Spring_backend.repository.MovieInfoSeatRepository;
@@ -16,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -32,10 +26,12 @@ public class MovieInfoService {
     private final MovieInfoSeatRepository movieInfoSeatRepository;
     private final MovieInfoMapper movieInfoMapper;
 
+    private final JwtValidCheck jwtValidCheck;
     @Transactional
-    public List<MovieInfoEntity> findAllMiday() {
+    public List<MovieInfoDto> findAllMiday() {
             List<MovieInfoEntity> datas = movieInfoRepository.findAll();
-return datas;   }
+        return datas.stream().map(data -> MovieInfoDto.builder().miid(data.getMiid()).miday(data.getMiday()).mistarttime(data.getMistarttime()).miendtime(data.getMiendtime()).build()).collect(Collectors.toList());
+    }
 
 
     //movieinfo에서 movie 데이터를 받아서 cid 추출하는 서비스
@@ -143,12 +139,13 @@ return datas;   }
     public List<MovieInfoDto> findBySchedule(Date miday, Long mid, List<Long> cid) {
         List<MovieInfoEntity> datas = movieInfoRepository.findBySchedule(miday, mid, cid);
 
-        return datas.stream().map(data -> movieInfoMapper.CountDto(data,data.getCinema().getCname(),data.getCinema().getCtype(),data.getCntSeatInfo(),data.getCinema().getCseat())).collect(Collectors.toList());
+        return datas.stream().map(data -> movieInfoMapper.CountDto(data,data.getCinema().getCid(),data.getCinema().getCname(),data.getCinema().getCtype(),data.getCntSeatInfo(),data.getCinema().getCseat())).collect(Collectors.toList());
 
     }
     /*
         return Movies.stream().map(movie ->
                     movieMapper.toDto(movie, MovieLikeNum.contains(movie.getMid()))).collect(Collectors.toList());
         }*/
+
 
 }

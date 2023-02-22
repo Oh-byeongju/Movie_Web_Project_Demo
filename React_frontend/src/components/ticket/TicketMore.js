@@ -6,6 +6,7 @@ import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
 import {
   SELECT_SEAT_REQUEST,
   SELECT_INFOSEAT_REQUEST,
+  CHECK_SEAT_REQUEST,
 } from "../../reducer/seat";
 const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
@@ -100,6 +101,16 @@ const TicketMore = ({ setPage, page }) => {
               if (LOGIN_data.uid === "No_login") {
                 alert("로그인이 필요한 서비스입니다.");
                 return;
+              } else {
+                let seatnumber = "";
+                choiceSeat.map((seat) => (seatnumber += seat.seat_id + ","));
+                dispatch({
+                  type: CHECK_SEAT_REQUEST,
+                  data: {
+                    name: scheduleData.miid,
+                    age: seatnumber,
+                  },
+                });
               }
             }}
           >
@@ -117,6 +128,7 @@ const TicketMore = ({ setPage, page }) => {
       ) : (
         <MovieSeat
           onClick={() => {
+            console.log("hh");
             if (
               movieData !== "" &&
               theaterData !== "" &&
@@ -126,7 +138,7 @@ const TicketMore = ({ setPage, page }) => {
               setPage(true);
               dispatch({
                 type: SELECT_SEAT_REQUEST,
-                data: scheduleData.cinema.cid,
+                data: scheduleData.cid,
               });
               dispatch({
                 type: SELECT_INFOSEAT_REQUEST,

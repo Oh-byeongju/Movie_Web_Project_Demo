@@ -12,17 +12,14 @@ import java.util.stream.Collectors;
 @Component
 public class MovieInfoMapper {
 
-    public MovieInfoDto CountDto(MovieInfoEntity entity,String name, String type,Integer count,Integer allcount) {
-
+    public MovieInfoDto CountDto(MovieInfoEntity entity,Long cid,String name, String type,Integer count,Integer allcount) {
         // 예외처리
         if (entity == null) {
             return null;
         }
-
-        return  MovieInfoDto.builder().miid(entity.getMiid()).miday(entity.getMiday()).mistarttime(entity.getMistarttime()).miendtime(entity.getMiendtime())
-                .name(name).type(type)  .count(count).allcount(allcount)
+        return  MovieInfoDto.builder().miid(entity.getMiid()).miday(entity.getMiday()).mistarttime(entity.getMistarttime()).miendtime(entity.getMiendtime()).
+        cid(cid).name(name).type(type)  .count(count).allcount(allcount)
                 .build();
-
     }
 
 

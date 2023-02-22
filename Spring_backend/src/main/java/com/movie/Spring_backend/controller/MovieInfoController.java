@@ -36,7 +36,7 @@ public class MovieInfoController {
     private final MovieInfoRepository movieInfoRepository;
 
     @GetMapping("/normal/movieinfo")
-    public List<MovieInfoEntity> getData() {
+    public List<MovieInfoDto> getData() {
         return movieInfoService.findAllMiday();
     }
 

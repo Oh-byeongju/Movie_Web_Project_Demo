@@ -25,9 +25,10 @@ public enum ErrorCode {
     INVALID_TOKEN(400, "S003", "로그인 정보가 불일치합니다."),
     SECURITY_ACCESS_DENIED(403, "S004", "권한이 필요합니다."),
     CSRF_ERROR(400, "S005", "인증에 실패하였습니다."),
-    
+
     // Movie
-    SELECT_IS_NONE(400, "MV001", "검색결과가 존재하지 않습니다.");
+    SELECT_IS_NONE(400, "MV001", "검색결과가 존재하지 않습니다."),
+    OCCUPY_SEAT_NONE(600, "ST001", "점유된 좌석입니다");
 
 
     private final String code;
