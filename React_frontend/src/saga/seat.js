@@ -5,6 +5,9 @@ import {
   SELECT_INFOSEAT_FAILURE,
   SELECT_INFOSEAT_REQUEST,
   SELECT_INFOSEAT_SUCCESS,
+  CHECK_SEAT_REQUEST,
+  CHECK_SEAT_SUCCESS,
+  CHECK_SEAT_FAILURE,
 } from "../reducer/seat";
 import { all, takeLatest, fork, put, call } from "redux-saga/effects";
 import { http } from "../lib/http";
@@ -69,6 +72,33 @@ function* selectInfoSeat(action) {
     });
   }
 }
+
+async function checkSeatApi(data) {
+  return await http
+    .post("/redis/normal/rediss", data)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
+function* checkSeat(action) {
+  console.log(action.data);
+  const result = yield call(checkSeatApi, action.data);
+
+  if (result.status === 200) {
+    yield put({
+      type: CHECK_SEAT_SUCCESS,
+    });
+  } else {
+    alert("점유된 좌석입니다.");
+    yield put({
+      type: CHECK_SEAT_FAILURE,
+    });
+  }
+}
 function* selectSeatSaga() {
   yield takeLatest(SELECT_SEAT_REQUEST, selectSeat);
 }
@@ -76,6 +106,13 @@ function* selectSeatSaga() {
 function* selectInfoSeatSaga() {
   yield takeLatest(SELECT_INFOSEAT_REQUEST, selectInfoSeat);
 }
+function* checkSeatSaga() {
+  yield takeLatest(CHECK_SEAT_REQUEST, checkSeat);
+}
 export default function* seatSaga() {
-  yield all([fork(selectSeatSaga), fork(selectInfoSeatSaga)]);
+  yield all([
+    fork(selectSeatSaga),
+    fork(selectInfoSeatSaga),
+    fork(checkSeatSaga),
+  ]);
 }

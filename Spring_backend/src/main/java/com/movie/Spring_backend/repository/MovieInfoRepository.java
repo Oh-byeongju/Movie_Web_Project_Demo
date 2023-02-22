@@ -16,8 +16,6 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
 
 
     @Query("SELECT mi From MovieInfoEntity as mi Group by mi.miday Order by mi.miday ASC")
-    @EntityGraph(attributePaths = {"cinema.theater", "movie"})
-
     List<MovieInfoEntity> findAll();
 
     public List<MovieInfoEntity> findByMovie(MovieEntity id);

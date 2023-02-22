@@ -9,6 +9,10 @@ export const initalState = {
   select_infoseat_done: false,
   select_infoseat_error: null,
   selectinfoseat: [],
+
+  check_seat_loading: false,
+  check_seat_done: false,
+  check_seat_error: null,
   price: 0,
 };
 
@@ -27,6 +31,10 @@ export const SELECT_SEAT_FAILURE = "SELECT_SEAT_FAILURE";
 export const SELECT_INFOSEAT_REQUEST = "SELECT_INFOSEAT_REQUEST";
 export const SELECT_INFOSEAT_SUCCESS = "SELECT_INFOSEAT_SUCCESS";
 export const SELECT_INFOSEAT_FAILURE = "SELECT_INFOSEAT_FAILURE";
+
+export const CHECK_SEAT_REQUEST = "CHECK_SEAT_REQUEST";
+export const CHECK_SEAT_SUCCESS = "CHECK_SEAT_SUCCESS";
+export const CHECK_SEAT_FAILURE = "CHECK_SEAT_FAILURE";
 
 const seat = (state = initalState, action) => {
   switch (action.type) {
@@ -115,6 +123,28 @@ const seat = (state = initalState, action) => {
         select_infoseat_loading: false,
         select_infoseat_done: false,
         select_infoseat_error: null,
+      };
+
+    case CHECK_SEAT_REQUEST:
+      return {
+        ...state,
+        check_seat_loading: true,
+        check_seat_done: false,
+        check_seat_error: null,
+      };
+    case CHECK_SEAT_SUCCESS:
+      return {
+        ...state,
+        check_seat_loading: false,
+        check_seat_done: true,
+        check_seat_error: null,
+      };
+    case CHECK_SEAT_FAILURE:
+      return {
+        ...state,
+        check_seat_loading: false,
+        check_seat_done: false,
+        check_seat_error: null,
       };
     default:
       return state;
