@@ -170,11 +170,13 @@ const Hour = styled.span`
   font-family: Roboto, Dotum, "돋움", sans-serif !important;
   font-weight: 300;
 `;
-const StartTime = styled.strong`display: block;
-font-size: 1.2em;
-font-weight: 700;
-}
+
+const StartTime = styled.strong`
+  display: block;
+  font-size: 1.2em;
+  font-weight: 700;
 `;
+
 const EndTime = styled.em`
   display: block;
   padding: 3px 0 0 0;

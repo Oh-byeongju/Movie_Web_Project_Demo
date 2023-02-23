@@ -3,6 +3,7 @@ package com.movie.Spring_backend.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -35,8 +36,6 @@ public class MovieInfoEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cid")
     private CinemaEntity cinema;
-
-
 
     @Builder
     public MovieInfoEntity(Long miid, Date miday,String mistarttime, String miendtime , MovieEntity movie, CinemaEntity cinema) {
