@@ -1,57 +1,74 @@
 /*
-  23-02-16 영화 상세정보 댓글창 구현(오병주)
-	23-02-18 영화 상세정보 댓글창 분리(오병주)
+  23-02-16 영화 상세정보 관람평 css 구현(오병주)
+	23-02-18 영화 상세정보 관람평 분리(오병주)
+	23-02-23 영화 상세정보 관람평 백엔드 연결(오병주)
 */
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import styled from 'styled-components';
-import { StarFilled, UnorderedListOutlined, LikeOutlined } from "@ant-design/icons";
+import { StarFilled, UnorderedListOutlined, LikeOutlined, DownOutlined  } from "@ant-design/icons";
 import DetailComment from './DetailComment';
-import { useCallback } from 'react';
+import { DETAIL_COMMENT_RECENT_REQUEST, DETAIL_COMMENT_LIKE_REQUEST } from '../../reducer/movie';
 
 const DetailCommentList = () => {
+	const location = useLocation();  
+	const dispatch = useDispatch();
 
-	// const datas = ['']
-	const datas = [
-		{
-			id: 'temp1',
-			comment: '너무 재밌네요 너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요',
-			date: '2023-02-16',
-			score: '7',
-			up_cnt: '7',
-		},
-		{
-			id: 'temp2',
-			comment: '너무 재밌네요 너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요',
-			date: '2023-02-16',
-			score: '3',
-			up_cnt: '5',
-		},
-		{
-			id: 'temp3',
-			comment: '너무 재밌네요 너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌123123123네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요너무 재밌네요',
-			date: '2023-02-16',
-			score: '5',
-			up_cnt: '1',
-		}
-	];
+	// 로그인 리덕스 상태
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
-	// 관람평 더보기 limit 이거 조금 더 고민해보기
-	const [limit, setlimit] = useState(6); 
-	const L = 8;
+  // 로그인 상태에 따라 전체 검색이 다름(관람평 좋아요 표시 때문)
+  useEffect(() => {
+    dispatch({
+      type: DETAIL_COMMENT_RECENT_REQUEST,
+      data: {
+        pathname: location.pathname,
+        uid: LOGIN_data.uid
+      }
+    });
+  }, [LOGIN_data.uid, location.pathname, dispatch]);
+
+	// 현재 페이지 관람평 리덕스 상태
+	const { detailComment } = useSelector((state) => state.movie);
+
+	// 관람평 더보기 limit
+	const [limit, setlimit] = useState(10);
 
 	// 정렬 버튼 css 변수
 	const [newbutton, setnewbutton] = useState(true);
 	const [likebutton, setlikebutton] = useState(false);
 
+	// 최신순 버튼을 누를 때
 	const clicknew = useCallback(()=> {
+		dispatch({
+      type: DETAIL_COMMENT_RECENT_REQUEST,
+      data: {
+        pathname: location.pathname,
+        uid: LOGIN_data.uid
+      }
+    });
 		setnewbutton(true);
 		setlikebutton(false);
-	}, [])
+	}, [LOGIN_data.uid, location.pathname, dispatch])
 
+	// 공감순 버튼을 누를 때
 	const clicklike = useCallback(()=> {
+		dispatch({
+      type: DETAIL_COMMENT_LIKE_REQUEST,
+      data: {
+        pathname: location.pathname,
+        uid: LOGIN_data.uid
+      }
+    });
 		setlikebutton(true);
 		setnewbutton(false);
-	}, [])
+	}, [LOGIN_data.uid, location.pathname, dispatch])
+
+	// 더보기 버튼을 누를 때
+	const onMoreClick = useCallback(() => {
+    setlimit(limit + 10);
+  }, [limit]);
 
 	return (
 		<Layout>
@@ -68,7 +85,7 @@ const DetailCommentList = () => {
 					<div className='right'>
 						<span className='cnt_num'>
 							관람평
-							<strong> 178</strong>
+							<strong> {detailComment.length}</strong>
 							개
 						</span>
 						<ButtonList>
@@ -86,16 +103,25 @@ const DetailCommentList = () => {
 					</div>
 				</CommentHeader>
 				<CommentList>
-					{datas.map((data, index) => (
-    				<DetailComment data={data} key={index} />
-  				))}
+					{/* 관람평 존재 유무에 따라 다른화면 출력 */}
+					{detailComment.length !== 0 ? 
+					detailComment.slice(0, limit).map((comment, index) => <DetailComment comment={comment} key={index}/>) : 
+					<NoElement>
+						작성된 관람평이 없습니다.
+					</NoElement>
+          }		
 				</CommentList>
 			</CommentSection>
+			<SubSection>
+				{limit >= detailComment.length ? null : 
+          <More onClick={onMoreClick}>
+            더 보기 <DownOutlined />
+          </More>
+        }
+			</SubSection>
 		</Layout>
 	);
 };
-
-export default DetailCommentList;
 
 const Layout = styled.div`
 	overflow: hidden;
@@ -209,3 +235,38 @@ const CommentList = styled.ul`
 		border-color: #ccc;
 	}
 `;
+
+const NoElement = styled.li`
+	position: relative;
+	border-top: 1px solid #eee;
+	list-style: none;
+	padding: 140px 0;
+	text-align: center;
+	font-size: 15px;
+`;
+
+const SubSection = styled.div`
+	background: #f8f8f8;
+	margin: 0 auto;
+	width: 1050px;
+	margin-top: 35px;
+	margin-bottom: 25px;
+	background-color: #fff;
+`;
+
+const More = styled.button`
+	margin-top: -10px !important;
+  width: 1050px;
+  height: 40px;
+  background-color: transparent;
+  border: 1px solid #cccccc;
+  color: #666;
+  cursor: pointer;
+  font-size: 1em;
+  line-height: 1.15;
+  &:hover {
+    border: 1px solid black;
+  }
+`;
+
+export default DetailCommentList;

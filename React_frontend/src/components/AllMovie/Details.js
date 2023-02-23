@@ -3,10 +3,9 @@
  23-02-15 페이지 css 수정(오병주)
 */
 import React, { useState, useEffect, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import styled from "styled-components";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { DETAIL_MOVIE_REQUEST } from "../../reducer/movie";
 import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";

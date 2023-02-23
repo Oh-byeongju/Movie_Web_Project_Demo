@@ -53,4 +53,17 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
     @EntityGraph(attributePaths = {"cinema.theater"})
     //페치조인을 해서 영화와 극장 정보까지 함께 보내기
     public List<MovieInfoEntity> findBySchedule(@Param("miday")Date miday,@Param("mid") Long mid, @Param("cid")List<Long> cid);
+
+    /*
+    @Query(value = "SELECT a.miid, COALESCE(b.CNT,0) AS cnt " +
+            "FROM Movie_Information AS a " +
+            "LEFT OUTER JOIN( " +
+            "SELECT miid, COUNT(*) AS CNT " +
+            "FROM Movie_infoseat  " +
+            "GROUP BY miid " +
+            ") AS b " +
+            "ON a.miid = b.miid " +
+            "WHERE a.miid IN (1,2,3,4) " +
+            "ORDER BY a.miid ",nativeQuery = true)
+    public List<MovieInfoEntity> findCount();*/
     }

@@ -65,19 +65,14 @@ export const initalState = {
   select_schedule_done: false,
   select_schedule_error: null,
 
-  select_seat_loading: false,
-  select_seat_done: false,
-  select_seat_error: null,
-  selectseat: [],
-
   selectSchedule: [],
   disableTheater: [],
 
   //검색한 데이터들을 담아두기
-  movieData: "",
-  theaterData: "",
-  DayData: "",
-  scheduleData: "",
+  movieData: "", //영화데이터
+  theaterData: "", //극장데이터
+  DayData: "", //날짜 데이터
+  scheduleData: "", //영화Info 데이터
 };
 
 export const T_ALLMOVIE_REQUEST = "T_ALLMOVIE_REQUEST";
@@ -160,10 +155,6 @@ export const SELECT_SCHEDULE_REQUEST = "SELECT_SCHEDULE_REQUEST";
 export const SELECT_SCHEDULE_SUCCESS = "SELECT_SCHEDULE_SUCCESS";
 export const SELECT_SCHEDULE_FAILURE = "SELECT_SCHEDULE_FAILURE";
 
-export const SELECT_SEAT_REQUEST = "SELECT_SEAT_REQUEST";
-export const SELECT_SEAT_SUCCESS = "SELECT_SEAT_SUCCESS";
-export const SELECT_SEAT_FAILURE = "SELECT_SEAT_FAILURE";
-
 export const MOVIE_DATA_SUCCESS = "MOVIE_DATA_SUCCESS";
 //검색한 데이터 담아두기 위한 액션
 export const MOVIE_DATA = "MOVIE_DATA";
@@ -176,6 +167,7 @@ export const RESET_THEATER_DATA = "RESET_THEATER_DATA";
 export const RESET_DAY_DATA = "RESET_DAY_DATA";
 export const RESET_SCHEDULE_DATA = "RESET_SCHEDULE_DATA";
 
+export const RESET_RESERVE_PAGE = "RESET_RESERVE_PAGE";
 const ticket = (state = initalState, action) => {
   switch (action.type) {
     //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
@@ -553,28 +545,6 @@ const ticket = (state = initalState, action) => {
         select_schedule_done: false,
         select_schedule_error: null,
       };
-    case SELECT_SEAT_REQUEST:
-      return {
-        ...state,
-        select_seat_loading: true,
-        select_seat_done: false,
-        select_seat_error: null,
-      };
-    case SELECT_SEAT_SUCCESS:
-      return {
-        ...state,
-        select_seat_loading: false,
-        select_seat_done: true,
-        select_seat_error: null,
-        selectseat: action.data,
-      };
-    case SELECT_SEAT_FAILURE:
-      return {
-        ...state,
-        select_seat_loading: false,
-        select_seat_done: false,
-        select_seat_error: null,
-      };
 
     case MOVIE_DATA:
       return {
@@ -631,6 +601,20 @@ const ticket = (state = initalState, action) => {
       return {
         ...state,
         scheduleData: "",
+      };
+
+    case RESET_RESERVE_PAGE:
+      const copydatare = [...state.allDay];
+      return {
+        ...state,
+        movieData: "",
+        theaterData: "",
+        choiceTheater: false,
+        DayData: "",
+        scheduleData: "",
+        choiceDay: false,
+        selectDay: [...copydatare],
+        choiceMovie: false,
       };
     default:
       return state;

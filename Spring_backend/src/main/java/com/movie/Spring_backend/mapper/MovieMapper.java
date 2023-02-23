@@ -18,7 +18,7 @@ public class MovieMapper {
     public MovieDto toDto(MovieEntity entity, boolean like) {
 
         // 예외처리
-        if (entity == null) {
+        if (entity == null) { 
             return null;
         }
 

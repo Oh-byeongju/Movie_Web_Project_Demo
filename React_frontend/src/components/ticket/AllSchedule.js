@@ -55,19 +55,19 @@ const AllSchedule = () => {
                       </Hour>
                       <Title>
                         <Name>
-                          {sc.movie.mtitle}
-                          <Em>{sc.movie.mgenre}</Em>
+                          {movieData.title}
+                          <Em>{movieData.genre}</Em>
                         </Name>
                       </Title>
                       <Info>
                         <Theater>
-                          {sc.cinema.theater.tarea} {sc.cinema.theater.tname}점
+                          {theaterData.tarea} {theaterData.tname}점
                           <br />
-                          {sc.cinema.ctype} {sc.cinema.cname}
+                          {sc.type} {sc.name}
                         </Theater>
                         <Seat>
-                          <Now>{sc.cinema.cseat}</Now>
-                          <All>/{sc.cinema.cseat}</All>
+                          <Now>{sc.count}/</Now>
+                          <All>{sc.allcount}</All>
                         </Seat>
                       </Info>
                     </Button>
@@ -83,8 +83,6 @@ const AllSchedule = () => {
     </Schedule>
   );
 };
-
-export default AllSchedule;
 
 const Schedule = styled.div`
   display: flex;
@@ -224,6 +222,7 @@ const Seat = styled.span`
   width: 60px;
   height: 20px;
   padding: 0;
+  padding-left: 25px;
   letter-spacing: 0;
   text-align: center;
   border: 1px solid #f2f4f5;
@@ -234,10 +233,16 @@ const Now = styled.strong`
   line-height: 20px;
   vertical-align: middle;
   font-weight: 700;
+  position: absolute;
+  right: 45px;
 `;
 const All = styled.em`
   display: inline-block;
   color: #666;
   line-height: 20px;
   vertical-align: middle;
+  position: absolute;
+  right: 30px;
 `;
+
+export default AllSchedule;

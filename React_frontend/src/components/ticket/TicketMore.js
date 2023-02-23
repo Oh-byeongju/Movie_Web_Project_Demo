@@ -3,16 +3,22 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
-import { SELECT_SEAT_REQUEST } from "../../reducer/ticket";
+import {
+  SELECT_SEAT_REQUEST,
+  SELECT_INFOSEAT_REQUEST,
+  CHECK_SEAT_REQUEST,
+} from "../../reducer/seat";
 const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
   );
-  const { choiceSeat } = useSelector((state) => state.seat);
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+  const { choiceSeat, price } = useSelector((state) => state.seat);
   const dispatch = useDispatch();
-  let sum;
   //사용자가 선택한 영화 및 정보를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
   //좌석 페이지로 넘어가야함 데이터와 함께
+
   return (
     <TicketWrapper>
       <TicketStep page={page}>
@@ -57,7 +63,7 @@ const TicketMore = ({ setPage, page }) => {
             <Screen>
               <span>상영관</span>&nbsp;&nbsp;&nbsp;
               <span>
-                {scheduleData.cinema.ctype} {scheduleData.cinema.cname}
+                {scheduleData.type} {scheduleData.name}
               </span>
             </Screen>
           ) : (
@@ -74,7 +80,7 @@ const TicketMore = ({ setPage, page }) => {
               return <span>&nbsp;{seat.location} </span>;
             })}
           </Seat>
-          <Price>가격 : {sum}</Price>
+          <Price>총금액 : {price}</Price>
         </SeatMore>
       </TicketStep>
       {page ? (
@@ -90,7 +96,24 @@ const TicketMore = ({ setPage, page }) => {
             />
             <p>영화선택</p>
           </MovieChoice>
-          <MovieSeat onClick={() => setPage(true)}>
+          <MovieSeat
+            onClick={() => {
+              if (LOGIN_data.uid === "No_login") {
+                alert("로그인이 필요한 서비스입니다.");
+                return;
+              } else {
+                let seatnumber = "";
+                choiceSeat.map((seat) => (seatnumber += seat.seat_id + ","));
+                dispatch({
+                  type: CHECK_SEAT_REQUEST,
+                  data: {
+                    name: scheduleData.miid,
+                    age: seatnumber,
+                  },
+                });
+              }
+            }}
+          >
             <ArrowCircleRightIcon
               style={{
                 width: "80px",
@@ -105,6 +128,7 @@ const TicketMore = ({ setPage, page }) => {
       ) : (
         <MovieSeat
           onClick={() => {
+            console.log("hh");
             if (
               movieData !== "" &&
               theaterData !== "" &&
@@ -114,7 +138,11 @@ const TicketMore = ({ setPage, page }) => {
               setPage(true);
               dispatch({
                 type: SELECT_SEAT_REQUEST,
-                data: theaterData.tid,
+                data: scheduleData.cid,
+              });
+              dispatch({
+                type: SELECT_INFOSEAT_REQUEST,
+                data: scheduleData.miid,
               });
             }
           }}
@@ -134,8 +162,6 @@ const TicketMore = ({ setPage, page }) => {
   );
 };
 
-export default TicketMore;
-
 const TicketWrapper = styled.div`
   position: relative;
   width: 100%;
@@ -150,7 +176,7 @@ const TicketStep = styled.div`
   width: 996px;
   height: 108px;
   padding-top: 10px;
-  padding-left: 50px;
+  padding-left: 150px;
   position: relative;
 
   left: ${(props) => (props.page === true ? "100px" : "0px")};
@@ -201,6 +227,7 @@ const MovieChoice = styled.div`
   width: 106px;
   height: 108px;
   cursor: pointer;
+  margin-left: 180px;
   p {
     position: absolute;
     bottom: -10px;
@@ -240,6 +267,7 @@ const MovieSeat = styled.div`
   width: 106px;
   height: 108px;
   cursor: pointer;
+
   p {
     position: absolute;
     bottom: -10px;
@@ -272,3 +300,5 @@ const Screen = styled.div`
   height: 10px;
   line-height: 20px;
 `;
+
+export default TicketMore;

@@ -7,6 +7,7 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.sql.Date;
+import org.hibernate.annotations.Formula;
 
 @Table(name="movie_information")
 @Entity
@@ -37,13 +38,18 @@ public class MovieInfoEntity {
     @JoinColumn(name="cid")
     private CinemaEntity cinema;
 
+    @Formula("(select count(mis.misid) from movie_infoseat mis where mis.miid = miid)")
+    private Integer cntSeatInfo;
+
     @Builder
-    public MovieInfoEntity(Long miid, Date miday,String mistarttime, String miendtime , MovieEntity movie, CinemaEntity cinema) {
+    public MovieInfoEntity(Long miid, Date miday, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema,
+                           Integer cntSeatInfo) {
        this.miid= miid;
        this.miday=miday;
        this.mistarttime=mistarttime;
        this.miendtime=miendtime;
        this.movie=movie;
        this.cinema=cinema;
+       this.cntSeatInfo=cntSeatInfo;
     }
 }

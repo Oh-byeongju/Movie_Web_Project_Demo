@@ -2,9 +2,9 @@
 // 23-01-16 회원가입 및 로그인 메소드구현(오병주)
 package com.movie.Spring_backend.controller;
 
+import com.movie.Spring_backend.service.MemberService;
 import com.movie.Spring_backend.util.SecurityUtil;
 import com.movie.Spring_backend.dto.MemberDto;
-import com.movie.Spring_backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

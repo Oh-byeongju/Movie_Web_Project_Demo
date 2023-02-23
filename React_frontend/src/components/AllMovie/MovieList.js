@@ -206,4 +206,5 @@ const More = styled.button`
     border: 1px solid black;
   }
 `;
+
 export default MovieList;

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+
 const SeatButton = ({
   seat,
   addSeats,
@@ -9,7 +11,9 @@ const SeatButton = ({
   removeSeats,
 }) => {
   const [isChecked, setIschecked] = useState(true);
-
+  const { rows, choiceSeat, selectseat, selectinfoseat } = useSelector(
+    (state) => state.seat
+  );
   const checkedSeat = () => {
     if (totalNumber > selectedRows.length && isChecked) {
       setIschecked((prev) => !prev);
@@ -20,10 +24,12 @@ const SeatButton = ({
   return (
     <>
       <SeatNumber
-        is_reserved={seat.is_reserved}
+        is_reserved={is_reserved}
         isChecked={isChecked}
         disabled={seat.is_reserved}
         seatnum={seat.id}
+        sid={seat.sid}
+        selectinfoseat={selectinfoseat}
         onClick={() => {
           checkedSeat();
           isChecked ? addSeats(seat) : removeSeats(seat.sid);
@@ -34,8 +40,6 @@ const SeatButton = ({
     </>
   );
 };
-
-export default SeatButton;
 
 const SeatNumber = styled.button`
   width: 40px;
@@ -49,3 +53,5 @@ const SeatNumber = styled.button`
   border: none;
   cursor: ${(props) => (props.is_reserved ? "default" : "pointer")};
 `;
+
+export default SeatButton;

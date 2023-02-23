@@ -889,8 +889,6 @@ const JoinForm = () => {
 	);
 };
 
-export default JoinForm;
-
 const Layout = styled.div`
 	min-width: 1050px;
 	margin-top: 50px;
@@ -1145,3 +1143,5 @@ const ErrorText = styled.p`
 	padding: 0;
 	margin-left: 5px;
 `;
+
+export default JoinForm;

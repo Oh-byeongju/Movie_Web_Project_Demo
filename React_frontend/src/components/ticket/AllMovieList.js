@@ -208,7 +208,6 @@ const AllMovieList = ({ setDayMore, page }) => {
   );
 };
 
-export default AllMovieList;
 const MovieWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -278,7 +277,6 @@ cursor:pointer;
         opacity:0.5;
       
     }
-  }
   background-color: ${(props) =>
     props.movieData.id === props.movie ? "gray" : "#f2f0e5"};
 `;
@@ -296,3 +294,5 @@ const Img = styled.img`
   top: 3px;
   padding-right: 10px;
 `;
+
+export default AllMovieList;

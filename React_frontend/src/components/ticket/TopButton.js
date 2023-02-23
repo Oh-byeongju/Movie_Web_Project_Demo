@@ -1,5 +1,4 @@
-import React, { useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,7 +12,7 @@ const TopButton = ({}) => {
     }
 
     window.location.replace("/reserve");
-  }, [window]);
+  }, []);
   return (
     <Nav>
       <Right>
@@ -31,8 +30,6 @@ const TopButton = ({}) => {
     </Nav>
   );
 };
-
-export default TopButton;
 
 const Nav = styled.div`
   position: relative;
@@ -76,3 +73,5 @@ const Rereserve = styled.a`
   background-position: 0 -120px;
   width: 130px;
 `;
+
+export default TopButton;

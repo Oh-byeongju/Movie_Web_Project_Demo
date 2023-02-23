@@ -7,18 +7,13 @@ import AllTheaterList from "../components/ticket/AllTheaterList";
 import TicketMore from "../components/ticket/TicketMore";
 import TopButton from "../components/ticket/TopButton";
 import Seat from "../components/ticket/Seat";
-import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   T_ALLMOVIE_REQUEST,
-  RESET_DAY_DATA,
   ALLDAY_REQUEST,
   ALLTHEATER_REQUEST,
-  RESET_THEATER_DATA,
-  RESET_MOVIE_DATA,
-  MOVIE_DATA,
-  RESET_SCHEDULE_DATA,
+  RESET_RESERVE_PAGE,
 } from "../reducer/ticket";
 const Reserve = () => {
   //토글
@@ -54,17 +49,7 @@ const Reserve = () => {
     return () => {
       console.log("reserve out");
       dispatch({
-        type: RESET_MOVIE_DATA,
-      });
-      dispatch({
-        type: RESET_DAY_DATA,
-      });
-      dispatch({
-        type: RESET_THEATER_DATA,
-      });
-
-      dispatch({
-        type: RESET_SCHEDULE_DATA,
+        type: RESET_RESERVE_PAGE,
       });
     };
     //페이지에서 컴포넌트가 사라질때 return()을 사용하면 실행시킬수있다 페이지 뒤로가기나 다른페이지에서 다시 올 때 사용하면 좋을거같다.
@@ -92,7 +77,7 @@ const Reserve = () => {
   );
 };
 //예매 페이지
-export default Reserve;
+
 const Container = styled.div`
   width: 100%;
   background: #fff;
@@ -111,3 +96,5 @@ const BookinWrapper = styled.div`
       <Calendar />
       <MovieInfo />
       */
+
+export default Reserve;
