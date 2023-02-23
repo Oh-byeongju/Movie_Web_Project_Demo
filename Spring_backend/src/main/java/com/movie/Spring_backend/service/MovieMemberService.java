@@ -75,6 +75,8 @@ public class MovieMemberService {
         String Movie_comment = requestMap.get("mcomment");
         String Movie_score = requestMap.get("mscore");
 
+        // dlrj 이거 깔끔하게 받으려면 CommentInfoDto에 영화 mid 넣고 dto로 받기
+
         // JPA를 사용하기 위해 Movie_id 와 User_id 를 entity형으로 변환
         MovieEntity movie = MovieEntity.builder().mid(Long.valueOf(Movie_id)).build();
         MemberEntity member = MemberEntity.builder().uid(User_id).build();
@@ -82,7 +84,7 @@ public class MovieMemberService {
         // MovieMember table에 튜플의 존재 여부를 먼저 파악
         MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
 
-        // 현재 날짜 구하기 (yyyy-mm-dd) 날짜 가공부터 하면 될듯 내일 ((( 예매 끝나거 수정해라우)))
+        // 현재 날짜 구하기 (yyyy-mm-dd) 날짜 가공부터 하면 될듯 내일 ((( 예매 끝나거 수정해라우 )))
         String pattern = "yyyy-mm-dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
@@ -115,6 +117,7 @@ public class MovieMemberService {
 //            }
 //        }
     }
+
 
 }
 

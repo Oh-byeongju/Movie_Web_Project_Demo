@@ -41,8 +41,6 @@ const SeatButton = ({
   );
 };
 
-export default SeatButton;
-
 const SeatNumber = styled.button`
   width: 40px;
   height: 40px;
@@ -55,3 +53,5 @@ const SeatNumber = styled.button`
   border: none;
   cursor: ${(props) => (props.is_reserved ? "default" : "pointer")};
 `;
+
+export default SeatButton;

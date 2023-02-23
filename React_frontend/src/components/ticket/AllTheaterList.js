@@ -512,7 +512,6 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
   );
 };
 
-export default AllTheaterList;
 const TheatersWrapper = styled.div`
   width: 265px;
   position: relative;
@@ -522,8 +521,8 @@ const TheatersWrapper = styled.div`
   background-color: #f2f0e5;
   overflow: hidden;
   padding-right:120px;
-}
 `;
+
 const TheatersTitle = styled.div`
   color: #222;
   position: relative;
@@ -691,3 +690,5 @@ const Theater = styled.li`
   color: ${(props) =>
     props.theaterData.tid === props.t ? "white" : "#333333"};
 `;
+
+export default AllTheaterList;

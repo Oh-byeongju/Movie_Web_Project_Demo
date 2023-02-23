@@ -7,12 +7,10 @@ import AllTheaterList from "../components/ticket/AllTheaterList";
 import TicketMore from "../components/ticket/TicketMore";
 import TopButton from "../components/ticket/TopButton";
 import Seat from "../components/ticket/Seat";
-import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   T_ALLMOVIE_REQUEST,
-  RESET_DAY_DATA,
   ALLDAY_REQUEST,
   ALLTHEATER_REQUEST,
   RESET_RESERVE_PAGE,
@@ -37,7 +35,7 @@ const Reserve = () => {
     //극장검색
     dispatch({
       type: T_ALLMOVIE_REQUEST,
-      data: LOGIN_data.uxid,
+      data: LOGIN_data.uid,
     });
     dispatch({
       type: ALLTHEATER_REQUEST,
@@ -79,7 +77,7 @@ const Reserve = () => {
   );
 };
 //예매 페이지
-export default Reserve;
+
 const Container = styled.div`
   width: 100%;
   background: #fff;
@@ -98,3 +96,5 @@ const BookinWrapper = styled.div`
       <Calendar />
       <MovieInfo />
       */
+
+export default Reserve;

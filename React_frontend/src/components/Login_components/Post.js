@@ -42,8 +42,6 @@ const Post = ({setAddress, M_address, InsertAddress}) => {
   );
 };
 
-export default Post;
-
 const Modal = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
@@ -93,3 +91,5 @@ const Close = styled.button`
   border: 0;
   cursor: pointer;
 `;
+
+export default Post;

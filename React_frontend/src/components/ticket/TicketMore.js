@@ -165,8 +165,6 @@ const TicketMore = ({ setPage, page }) => {
   );
 };
 
-export default TicketMore;
-
 const TicketWrapper = styled.div`
   position: relative;
   width: 100%;
@@ -304,3 +302,5 @@ const Screen = styled.div`
   height: 10px;
   line-height: 20px;
 `;
+
+export default TicketMore;

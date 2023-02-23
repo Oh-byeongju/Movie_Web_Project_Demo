@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, put, call, delay } from "redux-saga/effects";
+import { all, takeLatest, fork, put, call } from "redux-saga/effects";
 import {
   T_ALLMOVIE_FAILURE,
   T_ALLMOVIE_SUCCESS,

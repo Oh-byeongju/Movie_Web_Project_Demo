@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { now } from "moment/moment";
-import moment from "moment";
 //선언하지 않아도, 디바이스 혹은 locale의 시간을 불러온다.
 //캘린더를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
 //캘린더 able, disable
@@ -19,6 +17,7 @@ import {
 } from "../../reducer/ticket";
 import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
+
 const AllDayList = () => {
   const {
     allDay,
@@ -322,14 +321,13 @@ const DaylistSector = styled.ul`
   }
 `;
 const Today = styled.li`
-padding-bottom: 10px;
-width:73px;
-display:flex;
-float:left;  
+  padding-bottom: 10px;
+  width:73px;
+  display:flex;
+  float:left;  
 
    background-color: ${(props) =>
      props.today === props.DayData.miday ? "gainsboro" : "#f2f0e5"};
-  }
 `;
 const Week = styled.div`
   padding-left: 20px;

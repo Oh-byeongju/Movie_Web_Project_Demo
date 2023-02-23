@@ -1,12 +1,16 @@
-// 23-02-05 영화 좋아요 기능을 위한 entity 분리(오병주)
+/*
+  23-02-05 영화 좋아요 기능을 위한 entity 분리(오병주)
+  23-02-23 관람평 formula 생성(오병주)
+*/
 package com.movie.Spring_backend.entity;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 
 @Table(name="Movie_member")
 @Entity
@@ -25,6 +29,11 @@ public class MovieMemberEntity {
 
     private Date umcommenttime;
 
+    // 관람평 좋아요 개수 추출
+    // 테이블에는 존재하지 않고 Formula 어노테이션으로 테이블을 join 시켜서 들고옴
+    @Formula("(select count(ci.cuid) from Comment_info ci where ci.umid = umid)")
+    private Integer cntCommentLike;
+
     // 다대일 관계 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="mid")
@@ -36,12 +45,14 @@ public class MovieMemberEntity {
     private MemberEntity member;
 
     @Builder
-    public MovieMemberEntity(Long umid, Boolean umlike, Integer umscore , String umcomment, Date umcommenttime, MovieEntity movie, MemberEntity member) {
+    public MovieMemberEntity(Long umid, Boolean umlike, Integer umscore , String umcomment, Date umcommenttime,
+                             Integer cntCommentLike, MovieEntity movie, MemberEntity member) {
         this.umid = umid;
         this.umlike = umlike;
         this.umscore = umscore;
         this.umcomment = umcomment;
         this.umcommenttime = umcommenttime;
+        this.cntCommentLike = cntCommentLike;
         this.movie = movie;
         this.member = member;
     }

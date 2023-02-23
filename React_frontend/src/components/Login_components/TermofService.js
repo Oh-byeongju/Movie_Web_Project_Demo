@@ -247,9 +247,6 @@ const TermofService = () => {
 	);
 };
 
-export default TermofService;
-
-
 const TextArea = styled.textarea`
 	padding: 10px 20px 20px 20px;
 	width: 420px;
@@ -265,3 +262,5 @@ const TextArea = styled.textarea`
 	font-family: 'Noto Sans KR', sans-serif;
 	white-space: pre-wrap;
 `;
+
+export default TermofService;
