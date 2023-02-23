@@ -6,7 +6,7 @@ import {} from "../../reducer/ticket";
 const TopButton = ({}) => {
   const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
-  const onLogout = useCallback(() => {
+  const onReset = useCallback(() => {
     if (!window.confirm("예매 페이지를 초기화합니다.")) {
       return;
     }
@@ -17,14 +17,14 @@ const TopButton = ({}) => {
     <Nav>
       <Right>
         <Schedule>
-          <span style={{ display: "none" }}>상영 시간표</span>
+          <span>상영 시간표</span>
         </Schedule>
         <Rereserve
           onClick={() => {
-            onLogout();
+            onReset();
           }}
         >
-          <span style={{ display: "none" }}>예매 다시하기</span>
+          <span>예매 다시하기</span>
         </Rereserve>
       </Right>
     </Nav>
@@ -44,34 +44,40 @@ const Right = styled.span`
   top: 30px;
 `;
 
-const Schedule = styled.a`
+const Schedule = styled.button`
   position: relative;
-  cursor: pointer;
-  display: block;
-  float: left;
-  margin-left: 5px;
-  width: 81px;
-  height: 30px;
-  overflow: hidden;
-  background-image: url(http://img.cgv.co.kr/CGV_RIA/Ticket/image/reservation/top_buttons.png);
-  background-repeat: no-repeat;
-  background-position: 0 -90px;
-  width: 101px;
-`;
-const Rereserve = styled.a`
-  position: relative;
-  display: block;
+  right: 60px;
+  bottom: 10px;
+  border: none;
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 15px;
   cursor: pointer;
 
-  float: left;
-  margin-left: 5px;
-  width: 81px;
-  height: 30px;
-  overflow: hidden;
-  background-image: url(http://img.cgv.co.kr/CGV_RIA/Ticket/image/reservation/top_buttons.png);
-  background-repeat: no-repeat;
-  background-position: 0 -120px;
-  width: 130px;
+  font-family: "paybooc-Light", sans-serif;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  background-color: #f8e6e0;
+  color: #6e6e6e;
+`;
+const Rereserve = styled.button`
+  position: relative;
+  right: 50px;
+  bottom: 10px;
+  cursor: pointer;
+  border: none;
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-family: "paybooc-Light", sans-serif;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  background-color: #f8e6e0;
+  color: #6e6e6e;
 `;
 
 export default TopButton;

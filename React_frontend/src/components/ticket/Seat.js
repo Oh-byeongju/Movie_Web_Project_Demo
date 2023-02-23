@@ -74,7 +74,7 @@ const Seat = () => {
 
   const minusHandlerAdult = () => {
     if (totalNumber <= choiceSeat.length) {
-      alert("오류");
+      alert("선택한 좌석이 예매 인원 보다 많습니다.");
     } else if (numAdult) {
       setNumAdult((prev) => prev - 1);
       dispatch({
@@ -86,7 +86,7 @@ const Seat = () => {
   };
   const minusHandlerTeenager = () => {
     if (totalNumber <= choiceSeat.length) {
-      alert("오류");
+      alert("선택한 좌석이 예매 인원 보다 많습니다.");
     } else if (numTeenager) {
       setNumTeenager((prev) => prev - 1);
       dispatch({
@@ -99,7 +99,7 @@ const Seat = () => {
 
   const minusHandlerKid = () => {
     if (totalNumber <= choiceSeat.length) {
-      alert("오류");
+      alert("선택한 좌석이 예매 인원 보다 많습니다.");
     } else if (numKid) {
       setNumKid((prev) => prev - 1);
       dispatch({
