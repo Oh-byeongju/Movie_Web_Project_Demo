@@ -28,7 +28,7 @@ public enum ErrorCode {
 
     // Movie
     SELECT_IS_NONE(400, "MV001", "검색결과가 존재하지 않습니다."),
-    OCCUPY_SEAT_NONE(600, "ST001", "점유된 좌석입니다");
+    OCCUPY_SEAT_NONE(406, "ST001", "점유된 좌석입니다");
 
 
     private final String code;

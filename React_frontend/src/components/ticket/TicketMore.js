@@ -14,7 +14,7 @@ const TicketMore = ({ setPage, page }) => {
   );
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
-  const { choiceSeat, price } = useSelector((state) => state.seat);
+  const { choiceSeat, choiceUser, price } = useSelector((state) => state.seat);
   const dispatch = useDispatch();
   //사용자가 선택한 영화 및 정보를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
   //좌석 페이지로 넘어가야함 데이터와 함께
@@ -101,9 +101,12 @@ const TicketMore = ({ setPage, page }) => {
               if (LOGIN_data.uid === "No_login") {
                 alert("로그인이 필요한 서비스입니다.");
                 return;
+              } else if (choiceUser.length > choiceSeat.length) {
+                alert("관람인원과 선택 좌석 수가 동일하지 않습니다.");
+                return;
               } else {
                 let seatnumber = "";
-                choiceSeat.map((seat) => (seatnumber += seat.seat_id + ","));
+                choiceSeat.map((seat) => (seatnumber += seat.seat_id + ",")); //레디스
                 dispatch({
                   type: CHECK_SEAT_REQUEST,
                   data: {
@@ -184,7 +187,7 @@ const TicketStep = styled.div`
   left: ${(props) => (props.page === true ? "100px" : "0px")};
 `;
 const MoviePoster = styled.div`
-  width: 210px;
+  width: 180px;
   float: left;
   height: 108px;
   padding-right: 2px;
@@ -192,9 +195,8 @@ const MoviePoster = styled.div`
   position: relative;
   color: #cccccc;
   font-size: 12px;
-
-  background: url(http://img.cgv.co.kr/CGV_RIA/Ticket/image/reservation/tnb/split.png)
-    no-repeat right;
+  font-weight: bold;
+  border-right: 1px solid grey;
 `;
 const Poster = styled.span`
   float: left;
@@ -209,16 +211,16 @@ const Title = styled.div`
   color: white;
 `;
 const MovieTheater = styled.div`
-  width: 185px;
+  width: 150px;
   float: left;
   height: 108px;
-  padding-right: 2px;
-  background: url(http://img.cgv.co.kr/CGV_RIA/Ticket/image/reservation/tnb/split.png)
-    no-repeat right;
+  padding-left: 20px;
+  border-right: 1px solid grey;
+  font-weight: bold;
+
   position: relative;
   color: #cccccc;
   font-size: 12px;
-  padding-left: 10px;
 `;
 
 const MovieChoice = styled.div`
@@ -242,8 +244,8 @@ const SeatMore = styled.div`
   float: left;
   height: 108px;
   padding-right: 2px;
-  background: url(http://img.cgv.co.kr/CGV_RIA/Ticket/image/reservation/tnb/split.png)
-    no-repeat right;
+  border-right: 1px solid grey;
+  font-weight: bold;
   position: relative;
   color: #cccccc;
   font-size: 12px;
