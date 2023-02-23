@@ -37,7 +37,7 @@ const Reserve = () => {
     //극장검색
     dispatch({
       type: T_ALLMOVIE_REQUEST,
-      data: LOGIN_data.uid,
+      data: LOGIN_data.uxid,
     });
     dispatch({
       type: ALLTHEATER_REQUEST,
