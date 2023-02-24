@@ -41,7 +41,6 @@ public class MemberController {
         return ResponseEntity.ok().body(result);
     }
 
-
     // 로그인 상태를 확인하는 메소드
     @GetMapping("/normal/login_status")
     public ResponseEntity<MemberDto> getMyInfoBySecurity(HttpServletRequest request) {

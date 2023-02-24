@@ -11,6 +11,8 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name="Movie_member")
 @Entity
@@ -44,9 +46,15 @@ public class MovieMemberEntity {
     @JoinColumn(name="uid")
     private MemberEntity member;
 
+    // 일대다 관계 매핑
+    @OneToMany(mappedBy = "moviemember",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
+    private List<CommentInfoEntity> commentInfos = new ArrayList<>();
+
     @Builder
     public MovieMemberEntity(Long umid, Boolean umlike, Integer umscore , String umcomment, Date umcommenttime,
-                             Integer cntCommentLike, MovieEntity movie, MemberEntity member) {
+                             Integer cntCommentLike, MovieEntity movie, MemberEntity member, List<CommentInfoEntity> commentInfos) {
         this.umid = umid;
         this.umlike = umlike;
         this.umscore = umscore;
@@ -55,6 +63,7 @@ public class MovieMemberEntity {
         this.cntCommentLike = cntCommentLike;
         this.movie = movie;
         this.member = member;
+        this.commentInfos = commentInfos;
     }
 }
 

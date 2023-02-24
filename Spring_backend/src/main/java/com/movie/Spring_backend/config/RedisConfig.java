@@ -1,3 +1,4 @@
+// 23-01-17 Redis 사용을 위한 기본적인 설정 구현(오병주)
 package com.movie.Spring_backend.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -6,12 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-
 
     @Value("${spring.redis.host}")
     private String host;
@@ -21,7 +20,7 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(host,port);
+        return new LettuceConnectionFactory(host, port);
     }
 
     @Bean
@@ -32,6 +31,4 @@ public class RedisConfig {
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
     }
-
-
 }

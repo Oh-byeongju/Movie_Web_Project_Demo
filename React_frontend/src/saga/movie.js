@@ -147,10 +147,7 @@ async function DetailMovie(data) {
 // 영화 관람평을 최신순으로 들고오는 함수
 function* DetailCommentRecentLoad(action) {
   const result = yield call(CommentRecent, action.data);
-
-  console.log(action.data)
-  console.log(result)
-
+  
   if (result.status === 200) {
     const allComment = result.data.map((cm) => ({
       umid: cm.umid,
@@ -177,7 +174,7 @@ function* DetailCommentRecentLoad(action) {
 // 관람평 최신순 백엔드 호출
 async function CommentRecent(data) {
   return await http
-    .get(`/movie/normal/moviedetailcomment/recent/${data.pathname.charAt(data.pathname.length-1)}`, {
+    .get(`/movie/normal/recentcomment${data.pathname}`, {
       params: {
         uid: data.uid
       }
@@ -220,7 +217,7 @@ function* DetailCommentLikeLoad(action) {
 // 관람평 공감순 백엔드 호출
 async function CommentLike(data) {
   return await http
-    .get(`/movie/normal/moviedetailcomment/like/${data.pathname.charAt(data.pathname.length-1)}`, {
+    .get(`/movie/normal/likecomment${data.pathname}`, {
       params: {
         uid: data.uid
       }
