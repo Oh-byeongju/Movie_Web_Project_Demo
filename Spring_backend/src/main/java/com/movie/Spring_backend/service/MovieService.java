@@ -173,7 +173,7 @@ public class MovieService {
                 .mid(mid).build();
 
         // 영화 id를 기반으로 MovieMember table 검색(최신순)
-        List<MovieMemberEntity> MovieMembers = movieMemberRepository.findByMovieOrderByUmidDesc(movie);
+        List<MovieMemberEntity> MovieMembers = movieMemberRepository.findByMovieAndUmcommentIsNotNullOrderByUmidDesc(movie);
 
         // 영화 관람평이 없는경우 예외처리
         if (MovieMembers.isEmpty()) {

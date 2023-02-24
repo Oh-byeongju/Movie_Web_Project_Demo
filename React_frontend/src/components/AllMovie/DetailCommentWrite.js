@@ -43,7 +43,7 @@ const DetailCommentWrite = () => {
 		console.log(value * 2);
 
 
-	},[LOGIN_data.uid, comment, value])
+	}, [LOGIN_data.uid, comment, value])
 
 	return (
 		<Layout>
@@ -53,7 +53,7 @@ const DetailCommentWrite = () => {
 						평점 및 관람평 작성
 					</h4>
 					<RateLine>
-						<Rate allowHalf onChange={setValue} value={value} style={{fontSize: "50px"}}/>
+						<Rate allowHalf onChange={setValue} value={value} style={{fontSize: "50px"}} allowClear={false}/>
 						{value ? <span className="rate-text">{desc[(value * 2) - 1]}</span> : ''}
 					</RateLine>
 				</StarForm>

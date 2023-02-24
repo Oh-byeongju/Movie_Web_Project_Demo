@@ -616,7 +616,7 @@ const JoinForm = () => {
 			alert('예기치 못한 오류가 발생하였습니다. 다시 회원가입 해주십시오.');
 			document.location.assign('http://localhost:3000/');
 		}
-	}, [dispatch, JOIN_status])
+	}, [JOIN_status])
 
 	return (
 		<div>

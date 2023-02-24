@@ -19,6 +19,7 @@ const initalState = {
   JOIN_loading: false,
   JOIN_done: false,
   JOIN_error: null,
+  JOIN_status: ''
 };
 
 const R_user_join = (state = initalState, action) => {
