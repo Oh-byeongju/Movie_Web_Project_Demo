@@ -168,6 +168,9 @@ export const RESET_DAY_DATA = "RESET_DAY_DATA";
 export const RESET_SCHEDULE_DATA = "RESET_SCHEDULE_DATA";
 
 export const RESET_RESERVE_PAGE = "RESET_RESERVE_PAGE";
+
+export const RESERVE_LOGIN_PAGE = "RESERVE_LOGIN_PAGE";
+
 const ticket = (state = initalState, action) => {
   switch (action.type) {
     //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
@@ -608,14 +611,15 @@ const ticket = (state = initalState, action) => {
       return {
         ...state,
         movieData: "",
+        choiceMovie: false,
         theaterData: "",
         choiceTheater: false,
         DayData: "",
-        scheduleData: "",
         choiceDay: false,
         selectDay: [...copydatare],
-        choiceMovie: false,
+        scheduleData: "",
       };
+
     default:
       return state;
   }

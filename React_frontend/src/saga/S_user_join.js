@@ -10,41 +10,41 @@ import {
   USER_ID_REQUEST,
   USER_JOIN_REQUEST,
   USER_JOIN_SUCCESS,
-  USER_JOIN_FAILURE
+  USER_JOIN_FAILURE,
 } from "../reducer/R_user_join";
 import { http } from "../lib/http";
 
 // 아이디 중복검사 함수
 function* IDcheck(action) {
-  const result = yield call(idexsits, action.data);  // idexsits(action.data); 이런 것
+  const result = yield call(idexsits, action.data); // idexsits(action.data); 이런 것
   if (result.status === 204) {
     yield put({
       type: USER_ID_SUCCESS,
-      data: result.status
+      data: result.status,
     });
-  }
-  else {
+  } else {
     yield put({
       type: USER_ID_FAILURE,
-      data: result.status
+      data: result.status,
     });
   }
 }
 
 // 디비에서 데이터 select 하고 바로 리턴해줌(아이디 중복 검사)
 async function idexsits(data) {
-	return await http.get("/member/normal/id",{
-    params: {
-      uid: data
-    }
-  })
-  .then((response) => {
-    return response;
-  })
-  .catch((error)=>{
-    return error.response;
-  })
-};
+  return await http
+    .get("/member/normal/id", {
+      params: {
+        uid: data,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
 
 // 회원가입 함수
 function* UserSignUp(action) {
@@ -52,34 +52,34 @@ function* UserSignUp(action) {
   if (result.status === 204) {
     yield put({
       type: USER_JOIN_SUCCESS,
-      data: result.status
+      data: result.status,
     });
-  }
-  else {
+  } else {
     yield put({
       type: USER_JOIN_FAILURE,
-      data: result.status
+      data: result.status,
     });
   }
 }
 
 // 디비에 회원정보를 전달하고 저장
 async function SignUp(data) {
-	return await http.post("/member/normal/signup", data)
-  .then((response) => {
-    return response;
-  })
-  .catch((error)=>{
-    return error.response;
-  })
-};
+  return await http
+    .post("/member/normal/signup", data)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
 
 function* USER_ID() {
   yield takeLatest(USER_ID_REQUEST, IDcheck);
 }
 
 function* USER_JOIN() {
-  yield takeLatest(USER_JOIN_REQUEST, UserSignUp)
+  yield takeLatest(USER_JOIN_REQUEST, UserSignUp);
 }
 
 export default function* S_user_join() {
