@@ -24,18 +24,18 @@ public class ReservationEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="miid")
-    private MovieInfoEntity miid;
+    private MovieInfoEntity movieInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="uid")
-    private MemberEntity uid;
+    private MemberEntity member;
 
     @Builder
-    public ReservationEntity(Long rid ,Date rdate, Integer rprice, MovieInfoEntity miid, MemberEntity uid) {
+    public ReservationEntity(Long rid ,Date rdate, Integer rprice, MovieInfoEntity movieInfo, MemberEntity member) {
         this.rid=rid;
         this.rdate=rdate;
         this.rprice=rprice;
-        this.miid=miid;
-        this.uid=uid;
+        this.movieInfo=movieInfo;
+        this.member=member;
     }
 }

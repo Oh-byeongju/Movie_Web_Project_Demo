@@ -2,6 +2,7 @@ package com.movie.Spring_backend.repository;
 
 import com.movie.Spring_backend.entity.MovieEntity;
 import com.movie.Spring_backend.entity.MovieInfoEntity;
+import com.movie.Spring_backend.entity.MovieMemberEntity;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,6 @@ import java.util.List;
 
 @Repository
 public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long> {
-
 
     @Query("SELECT mi From MovieInfoEntity as mi Group by mi.miday Order by mi.miday ASC")
     List<MovieInfoEntity> findAll();
@@ -33,7 +33,6 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
 
     //극장 영화로 day 검색
     public List<MovieInfoEntity> findByCinemaCidInAndMovieMid(List<Long> cid, Long mid);
-
 
     //miday로 영화or극장 검색하려고 만듬
     public List<MovieInfoEntity> findByMiday(Date miday);
@@ -66,4 +65,14 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
             "WHERE a.miid IN (1,2,3,4) " +
             "ORDER BY a.miid ",nativeQuery = true)
     public List<MovieInfoEntity> findCount();*/
-    }
+
+    // 오늘 이전에 상영이 끝난 모든 영화 정보를 들고오는 메소드(날짜만 기준으로 확인)
+    @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
+            "WHERE mi.movie = :movie AND mi.miday < :day")
+    List<MovieInfoEntity> findInfoBeforeToday(@Param("movie") MovieEntity movie, @Param("day") Date day);
+
+    // 오늘 상영이 끝난 영화 정보를 들고오는 메소드(현재 시간이 추가됨)
+    @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
+            "WHERE mi.movie = :movie AND mi.miday = :day AND mi.miendtime < :hour")
+    List<MovieInfoEntity> findInfoToday(@Param("movie") MovieEntity movie, @Param("day") Date day, @Param("hour") String hour);
+}

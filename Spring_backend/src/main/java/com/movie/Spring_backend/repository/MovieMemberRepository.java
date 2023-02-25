@@ -46,4 +46,14 @@ public interface MovieMemberRepository extends JpaRepository<MovieMemberEntity, 
             "WHERE mm.movie = :movie AND mm.umcomment is not null " +
             "ORDER BY mm.cntCommentLike DESC")
     List<MovieMemberEntity> findAllCommentLikeDESC(@Param("movie") MovieEntity movie);
+
+    // 영화 관람평에 대한 기록을 지우는 메소드
+    @Modifying
+    @Query("UPDATE MovieMemberEntity mm " +
+            "SET mm.umscore = null, mm.umcomment = null, mm.umcommenttime = null " +
+            "WHERE mm.member = :member AND mm.movie = :movie")
+    void MovieCommentNull(@Param("member") MemberEntity member, @Param("movie") MovieEntity movie);
+
+    // 영화 id와 사용자 id를 이용해 영화 관람평 삭제하는 메소드
+    void deleteByMovieAndMember(MovieEntity movie, MemberEntity member);
 }
