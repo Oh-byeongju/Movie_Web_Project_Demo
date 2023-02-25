@@ -7,14 +7,9 @@ import AllTheaterList from "../components/ticket/AllTheaterList";
 import TicketMore from "../components/ticket/TicketMore";
 import TopButton from "../components/ticket/TopButton";
 import Seat from "../components/ticket/Seat";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-
-import {
-  T_ALLMOVIE_REQUEST,
-  ALLDAY_REQUEST,
-  ALLTHEATER_REQUEST,
-  RESET_RESERVE_PAGE,
-} from "../reducer/ticket";
+import { RESET_RESERVE_PAGE } from "../reducer/ticket";
 const Reserve = () => {
   //토글
   const [tabstate, setTabState] = useState({
@@ -25,29 +20,17 @@ const Reserve = () => {
   });
   const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+  const location = useLocation();
   // 영화 예매 페이지에 쓸모 없을수도 있지만 Spring boot 메소드가 겹쳐서 로그인 상태도 같이 묶어서 보냄
 
   //리덕스 초기화를 위한 useEffect
   //영화 검색
   //페이지 접속 시 실행
   useEffect(() => {
-    console.log("reserve 페이지 실행");
-    //극장검색
-    dispatch({
-      type: T_ALLMOVIE_REQUEST,
-      data: LOGIN_data.uid,
-    });
-    dispatch({
-      type: ALLTHEATER_REQUEST,
-    });
-    // 날짜검색
-    dispatch({
-      type: ALLDAY_REQUEST,
-    });
-
-    //페이지 나갈 시 초기화 시켜야 하는 것들
+    console.log(location);
     return () => {
-      console.log("reserve out");
+      console.log("페이지 나가니까 초기화 시키기");
       dispatch({
         type: RESET_RESERVE_PAGE,
       });
@@ -57,6 +40,7 @@ const Reserve = () => {
 
   //좌석 페이지에 가려면 URL이 바뀌지않고 컴포넌트만 이동시켜줘야함.
   const [page, setPage] = useState(false);
+
   return (
     <Container>
       <TopButton />

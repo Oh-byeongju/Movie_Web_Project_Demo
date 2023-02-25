@@ -8,6 +8,10 @@ import {
   SELECT_INFOSEAT_REQUEST,
   CHECK_SEAT_REQUEST,
 } from "../../reducer/seat";
+import { Login } from "@mui/icons-material";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import { RESERVE_LOGIN_PAGE } from "../../reducer/ticket";
+
 const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
@@ -16,6 +20,8 @@ const TicketMore = ({ setPage, page }) => {
 
   const { choiceSeat, choiceUser, price } = useSelector((state) => state.seat);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   //사용자가 선택한 영화 및 정보를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
   //좌석 페이지로 넘어가야함 데이터와 함께
 
@@ -98,10 +104,7 @@ const TicketMore = ({ setPage, page }) => {
           </MovieChoice>
           <MovieSeat
             onClick={() => {
-              if (LOGIN_data.uid === "No_login") {
-                alert("로그인이 필요한 서비스입니다.");
-                return;
-              } else if (choiceUser.length > choiceSeat.length) {
+              if (choiceUser.length > choiceSeat.length) {
                 alert("관람인원과 선택 좌석 수가 동일하지 않습니다.");
                 return;
               } else {
@@ -131,8 +134,29 @@ const TicketMore = ({ setPage, page }) => {
       ) : (
         <MovieSeat
           onClick={() => {
-            console.log("hh");
-            if (
+            if (LOGIN_data.uid === "No_login") {
+              if (
+                !window.confirm(
+                  "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?"
+                )
+              ) {
+                return;
+              } else {
+                navigate(`/UserLogin`, {
+                  state: {
+                    pathname: pathname,
+                    movie: movieData,
+                    theater: theaterData,
+                    Day: DayData,
+                    schedule: scheduleData,
+                  },
+                });
+                dispatch({
+                  type: RESERVE_LOGIN_PAGE,
+                });
+              }
+            } else if (
+              LOGIN_data !== "" &&
               movieData !== "" &&
               theaterData !== "" &&
               DayData !== "" &&

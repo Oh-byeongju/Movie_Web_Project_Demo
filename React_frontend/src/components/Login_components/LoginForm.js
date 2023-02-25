@@ -2,29 +2,33 @@
  23-01-19 로그인 구현(오병주)
  23-01-25 페이지 이동 구현(오병주)
 */
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { USER_LOGIN_REQUEST, USER_LOGIN_RESET } from '../../reducer/R_user_login';
+import {
+  USER_LOGIN_REQUEST,
+  USER_LOGIN_RESET,
+} from "../../reducer/R_user_login";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import LoginLoading from "../Common_components/LoginLoading";
+import * as ReserveLogin from "../Common_components/Function";
 
 const LoginForm = () => {
-	// useDispatch를 dispatch로 선언
+  // useDispatch를 dispatch로 선언
   const dispatch = useDispatch();
 
-	// 페이지 이동을 위해 선언
-	const location = useLocation();
-	const navigate = useNavigate();	
+  // 페이지 이동을 위해 선언
+  const location = useLocation();
+  const navigate = useNavigate();
 
-	//input창 두개 관리를 위해 만든것
-	const [inputs, setInputs] = useState({
+  //input창 두개 관리를 위해 만든것
+  const [inputs, setInputs] = useState({
     id: "",
     pw: "",
-  }); 
+  });
 
-	// 비구조화 할당을 통해 값 추출
-  const { id, pw } = inputs; 
+  // 비구조화 할당을 통해 값 추출
+  const { id, pw } = inputs;
 
   const onChange = (e) => {
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
@@ -43,31 +47,30 @@ const LoginForm = () => {
   };
 
   // 체크박스 체크 유무 확인(로그인 상태 유지)
-	const [check, setcheck] = useState(false);
+  const [check, setcheck] = useState(false);
   const [check_type, setcheck_type] = useState("");
 
   // 체크박스 상태 변경
-	const Clickcheck = (check) => {
-		setcheck(!check);
-	}
+  const Clickcheck = (check) => {
+    setcheck(!check);
+  };
 
   // 로그인 유지하기 체크박스를 변경 할때 마다 check_type 변수의 내용을 변경
   useEffect(() => {
     if (check === true) {
       setcheck_type("유지");
-    }
-    else {
+    } else {
       setcheck_type("");
     }
-  },[check])
+  }, [check]);
 
   // 로그인 상태확인용 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
   const { LOGIN_loading } = useSelector((state) => state.R_user_login);
 
   // enter키를 누르면 로그인이 실행되게 하는 함수
-  const handleOnKeyPress = e => {
-    if (e.key === 'Enter' && !isActive) {
+  const handleOnKeyPress = (e) => {
+    if (e.key === "Enter" && !isActive) {
       submit();
     }
   };
@@ -77,112 +80,129 @@ const LoginForm = () => {
     const datas = {
       uid: id,
       upw: pw,
-      uname: check_type
+      uname: check_type,
     };
     dispatch({
       type: USER_LOGIN_REQUEST,
-			data: datas
+      data: datas,
     });
   }, [id, pw, check_type, dispatch]);
 
   // 로그인의 성공 여부를 알리는 useEffect
-  useEffect(()=> {
+
+  useEffect(() => {
+    console.log("login 페이지");
+    console.log(location);
+
     if (LOGIN_data.uname === "error!!") {
-      alert("존재하지 않는 회원입니다.")
-      dispatch({type: USER_LOGIN_RESET});
+      alert("존재하지 않는 회원입니다.");
+      dispatch({ type: USER_LOGIN_RESET });
       return;
     }
     // 로그인에 성공했을 경우 메인페이지 또는 이전 페이지로 넘어가게 함
-    if (LOGIN_data.uname !== '' && LOGIN_data.uname !== "error!!" ) {
+    if (LOGIN_data.uname !== "" && LOGIN_data.uname !== "error!!") {
       if (location.state === null || location.state.url === "/UserJoin") {
-        	navigate(`/`);
+        console.log("ㄹㄹ :" + location);
+        navigate(`/`);
+      } else if (location.state.pathname === "/reserve") {
+        console.log("reserve에서 왔니?");
+        if (
+          location.state.Day !== "" &&
+          location.state.mvie !== "" &&
+          location.state.schedule !== "" &&
+          location.state.theater !== ""
+        ) {
+          ReserveLogin.f1(location.state, dispatch);
         }
-        else {
-        	navigate(`${location.state.url}`);
-        }
+        navigate(location.state.pathname, { state: location.pathname });
+      } else {
+        navigate(`${location.state.url}`);
+      }
     }
-  },[LOGIN_data, location.state, navigate, dispatch]);
+  }, [LOGIN_data, location.state, navigate, dispatch]);
 
-	return (
-		<div>
-      { LOGIN_loading  ? <LoginLoading/> : null }
-			<Layout>
-				<Title>
-					회원 로그인
-				</Title>
-				<Form>
-					<CheckText>
-					</CheckText>
-					<LoginId name="id"
-					type="text"
-					placeholder="아이디"
-					onChange={onChange}
-					value={id}
-					onKeyUp={ActiveIsPassedLogin}
-          onKeyPress={handleOnKeyPress}
-					>
-					</LoginId>
+  return (
+    <div>
+      {LOGIN_loading ? <LoginLoading /> : null}
+      <Layout>
+        <Title>회원 로그인</Title>
+        <Form>
+          <CheckText></CheckText>
+          <LoginId
+            name="id"
+            type="text"
+            placeholder="아이디"
+            onChange={onChange}
+            value={id}
+            onKeyUp={ActiveIsPassedLogin}
+            onKeyPress={handleOnKeyPress}
+          ></LoginId>
           <LoginPw
-					name="pw"
-					type="password"
-					placeholder="비밀번호"
-					onChange={onChange}
-					value={pw}
-					onKeyUp={ActiveIsPassedLogin}
-          onKeyPress={handleOnKeyPress}
-					>
-					</LoginPw>
-					<LoginMid>
-						<label className="autoLogin" htmlFor="hint">
-							{" "}
-							<input type="checkbox" id="hint" value={check} onClick={() => Clickcheck(check)}/> 로그인 유지하기
-						</label>
+            name="pw"
+            type="password"
+            placeholder="비밀번호"
+            onChange={onChange}
+            value={pw}
+            onKeyUp={ActiveIsPassedLogin}
+            onKeyPress={handleOnKeyPress}
+          ></LoginPw>
+          <LoginMid>
+            <label className="autoLogin" htmlFor="hint">
+              {" "}
+              <input
+                type="checkbox"
+                id="hint"
+                value={check}
+                onClick={() => Clickcheck(check)}
+              />{" "}
+              로그인 유지하기
+            </label>
           </LoginMid>
-					<LoginButton onClick={submit} disabled={isActive}>
+          <LoginButton onClick={submit} disabled={isActive}>
             로그인
           </LoginButton>
-					<Links>
-						<Link to="/UserJoin">회원가입</Link>
-						<Link to="/">아이디 찾기(미구현)</Link>
-						<Link to="/">비밀번호 찾기(미구현)</Link>
-					</Links>
-				</Form>
-			</Layout>
-		</div>
-	);
+          <Links>
+            <Link to="/UserJoin">회원가입</Link>
+            <Link to="/">아이디 찾기(미구현)</Link>
+            <Link to="/">비밀번호 찾기(미구현)</Link>
+          </Links>
+        </Form>
+      </Layout>
+    </div>
+  );
 };
 
 const Layout = styled.div`
-	min-width: 1050px;
-	margin-top: 50px;
-	margin-bottom: 7px;
-	background-color: #fff;
+  min-width: 1050px;
+  margin-top: 50px;
+  margin-bottom: 7px;
+  background-color: #fff;
 `;
 
 const Title = styled.div`
-	margin-bottom: 30px;
-	font-size: 28px;
-	line-height: 35px;
-	font-weight: 550;
-	text-align: center;
-	letter-spacing: -1px;
-	color: rgb(51, 51, 51);
+  margin-bottom: 30px;
+  font-size: 28px;
+  line-height: 35px;
+  font-weight: 550;
+  text-align: center;
+  letter-spacing: -1px;
+  color: rgb(51, 51, 51);
 `;
 
 const Form = styled.div`
-	width: 640px;
+  width: 640px;
   margin: 0px auto;
 `;
 
 const CheckText = styled.div`
-	position: inline-block;
-	padding-bottom: 10px;
-	border-bottom: 2px solid rgb(51, 51, 51);
-	font-size: 13px;
-	color: rgb(102, 102, 102);
-	line-height: 17px;
-	width: 70%;
-	margin: auto;
+  position: inline-block;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgb(51, 51, 51);
+  font-size: 13px;
+  color: rgb(102, 102, 102);
+  line-height: 17px;
+  width: 70%;
+  margin: auto;
   display: block;
 `;
 
@@ -195,9 +215,9 @@ const LoginId = styled.input`
   padding: 9px 12px;
   outline: none;
   box-sizing: border-box;
-	margin: auto;
+  margin: auto;
   display: block;
-	font-size: 14px;
+  font-size: 14px;
 `;
 
 const LoginPw = styled.input`
@@ -209,17 +229,17 @@ const LoginPw = styled.input`
   padding: 9px 12px;
   outline: none;
   box-sizing: border-box;
-	margin: auto;
-	display: block;
-	width: 60%;
-	font-size: 14px;
+  margin: auto;
+  display: block;
+  width: 60%;
+  font-size: 14px;
 `;
 
 const LoginMid = styled.div`
   display: flex;
   align-items: center;
   margin-top: 4px;
-	margin-left: 128px;
+  margin-left: 128px;
 
   .autoLogin {
     font-size: 14px;
@@ -256,7 +276,7 @@ const LoginButton = styled.button`
   color: #fff;
   border: 0;
   height: 50px;
-	margin: auto;
+  margin: auto;
   display: block;
 
   &:disabled {
@@ -269,9 +289,9 @@ const Links = styled.div`
   padding: 20px 0 30px 0;
   text-align: center;
   line-height: 1.1;
-	margin-top: 5px;
-	margin-bottom: 53px;
-	margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 53px;
+  margin-left: 5px;
 
   a:first-child {
     margin-left: 0;

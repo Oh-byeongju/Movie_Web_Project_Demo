@@ -11,9 +11,7 @@ const SeatButton = ({
   removeSeats,
 }) => {
   const [isChecked, setIschecked] = useState(true);
-  const { rows, choiceSeat, selectseat, selectinfoseat } = useSelector(
-    (state) => state.seat
-  );
+  const { selectinfoseat } = useSelector((state) => state.seat);
   const checkedSeat = () => {
     if (totalNumber > selectedRows.length && isChecked) {
       setIschecked((prev) => !prev);

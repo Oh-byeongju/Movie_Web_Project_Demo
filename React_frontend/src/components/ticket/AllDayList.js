@@ -30,6 +30,11 @@ const AllDayList = () => {
     theaterData,
     DayData,
   } = useSelector((state) => state.ticket);
+  useEffect(() => {
+    dispatch({
+      type: ALLDAY_REQUEST,
+    });
+  }, []);
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
@@ -322,12 +327,12 @@ const DaylistSector = styled.ul`
 `;
 const Today = styled.li`
   padding-bottom: 10px;
-  width:73px;
-  display:flex;
-  float:left;  
+  width: 73px;
+  display: flex;
+  float: left;
 
-   background-color: ${(props) =>
-     props.today === props.DayData.miday ? "gainsboro" : "#f2f0e5"};
+  background-color: ${(props) =>
+    props.today === props.DayData.miday ? "gainsboro" : "#f2f0e5"};
 `;
 const Week = styled.div`
   padding-left: 20px;
