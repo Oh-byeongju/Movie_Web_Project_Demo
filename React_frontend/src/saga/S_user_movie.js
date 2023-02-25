@@ -2,6 +2,7 @@
  23-01-19 유저 좋아요 toggle 구현(오병주)
  23-02-12 유저 관람평 작성 구현(오병주)
  23-02-24 유저 관람평 좋아요 구현(오병주)
+ 23-02-25 유저 관람평 작성 수정(오병주)
 */
 import { call, all, takeLatest, fork, put } from "redux-saga/effects";
 import {
@@ -46,24 +47,26 @@ async function CallMovieLikeToggle(data) {
     });
 }
 
-// 관람평 작성 함수(이거 중복검사도 해야하네 공사가 클듯?  내일 사가랑 스프링 받는곳 부터 하면됨)
+// 관람평 작성 함수
 function* CommentInsert(action) {
   const result = yield call(CallCommentInsert, action.data);
   if (result.status === 204) {
     yield put({
       type: USER_COMMENT_WRITE_SUCCESS,
+      data: result.status
     });
   } 
   else {
     yield put({
       type: USER_COMMENT_WRITE_FAILURE,
+      data: result.data.code
     });
   }
 }
 
 // 유저 정보를 전달한 뒤 좋아요 기록 변경(백엔드 연결)
 async function CallCommentInsert(data) {
-  return await http.post("/MovieMember/auth/LikeToggle", data)
+  return await http.post("/MovieMember/auth/InsertComment", data)
     .then((response) => {
       return response;
     })

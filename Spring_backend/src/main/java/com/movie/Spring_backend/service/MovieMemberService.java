@@ -1,32 +1,36 @@
 /*
   23-02-09 로그인한 유저가 영화에 관련된 행위를 할때 사용되는 Service 구현(오병주)
   23-02-13 관람평 작성 메소드 구현(오병주)
+  23-02-25 관람평 작성 메소드 수정(오병주)
 */
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.CommentInfoDto;
-import com.movie.Spring_backend.entity.CommentInfoEntity;
-import com.movie.Spring_backend.entity.MemberEntity;
-import com.movie.Spring_backend.entity.MovieEntity;
-import com.movie.Spring_backend.entity.MovieMemberEntity;
+import com.movie.Spring_backend.entity.*;
+import com.movie.Spring_backend.error.exception.BusinessException;
+import com.movie.Spring_backend.error.exception.EntityNotFoundException;
+import com.movie.Spring_backend.error.exception.ErrorCode;
 import com.movie.Spring_backend.exceptionlist.MovieCommentNotFoundException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.repository.CommentInfoRepository;
+import com.movie.Spring_backend.repository.MovieInfoRepository;
 import com.movie.Spring_backend.repository.MovieMemberRepository;
+import com.movie.Spring_backend.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
 public class MovieMemberService {
 
     private final MovieMemberRepository movieMemberRepository;
+    private final MovieInfoRepository movieInfoRepository;
+    private final ReservationRepository reservationRepository;
     private final CommentInfoRepository commentInfoRepository;
     private final JwtValidCheck jwtValidCheck;
 
@@ -68,9 +72,9 @@ public class MovieMemberService {
         }
     }
 
-    // 사용자가 관람평 작성을 할 때 실행되는 메소드
+    // 사용자가 관람평 작성할 때 실행되는 메소드
     @Transactional
-    public void MovieCommentInsert(Map<String, String> requestMap, HttpServletRequest request) {
+    public void CommentInsert(Map<String, String> requestMap, HttpServletRequest request) {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
 
@@ -87,42 +91,65 @@ public class MovieMemberService {
         // MovieMember table에 튜플의 존재 여부를 먼저 파악
         MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
 
-        // 현재 날짜 구하기 (yyyy-mm-dd) 날짜 가공부터 하면 될듯 내일 ((( 예매 끝나거 수정해라우 )))
-        String pattern = "yyyy-mm-dd";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        // MovieMember table에 이미 작성한 관람평이 존재할 경우 예외처리
+        if (MovieMember != null && MovieMember.getUmcomment() != null) {
+            throw new BusinessException("작성된 관람평이 존재합니다.", ErrorCode.COMMENT_IS_EXIST);
+        }
 
+        // 현재 시간변수(이거 추후에 고정날짜로 해야 할수도 있음)
+        Date nowDate = new Date();
 
+        // 현재 시간을 sql에 사용할 수 있게 매핑
+        SimpleDateFormat DateFormatYMD = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat DateFormatHMS = new SimpleDateFormat("HH:mm:ss");
+        String day = DateFormatYMD.format(nowDate);
+        String hour = DateFormatHMS.format(nowDate);
 
+        // 상영이 끝난 영화정보 튜플 검색(조건 때문에 2번 검색)
+        List<MovieInfoEntity> MovieInfos = movieInfoRepository.findInfoBeforeToday(movie, java.sql.Date.valueOf(day));
+        List<MovieInfoEntity> MovieInfos2 = movieInfoRepository.findInfoToday(movie, java.sql.Date.valueOf(day), hour);
 
+        // 두개의 영화 정보를 결합
+        List<MovieInfoEntity> MovieInfoAll = new ArrayList<>();
+        MovieInfoAll.addAll(MovieInfos);
+        MovieInfoAll.addAll(MovieInfos2);
 
+        // 상영이 끝난 영화들 중 사용자가 영화를 관람한 기록이 있는지 조회
+        List<ReservationEntity> Reservations = reservationRepository.findByMemberAndMovieInfoIn(member, MovieInfoAll);
 
-//        if (MovieMember == null) {
-//            MovieMember = MovieMemberEntity.builder()
-//                    .umcomment(Movie_comment)
-//                    .umscore(Integer.valueOf(Movie_score))
-//                    .movie(movie)
-//                    .member(member).build();
-//            movieMemberRepository.save(MovieMember);
-//        }
-//        else {
-//
-//        }
-//
-//
-//        // like가 true면 이미 튜플이 존재하므로 update 쿼리 실행
-//        if (like.equals("true")) {
-//            movieMemberRepository.MovieLikeChangeFalse(member, movie);
-//        }
-//        else {
-//
-//
-//            // 튜플이 존재하지 않는 경우 entity를 가공 후 insert 쿼리 실행
-//
-//            // 튜플이 존재하는 경우 좋아요 기록을 바꾸는 update 쿼리 실행
-//            else {
-//                movieMemberRepository.MovieLikeChangeTrue(member, movie);
-//            }
-//        }
+        // 관람기록이 존재하지 않을경우 예외처리
+        if (Reservations.isEmpty()) {
+            throw new EntityNotFoundException("영화 관람기록이 없습니다.", ErrorCode.WATCHING_IS_NONE);
+        }
+        // 관람기록이 존재하지는 경우
+        else {
+            // 관람평을 쓰는 사용자가 영화에 대한 좋아요 기록이 있을 경우
+            if (MovieMember != null && MovieMember.getUmlike() != null) {
+                // 사용자 좋아요 기록을 그대로 entity 생성
+                MovieMemberEntity Data = MovieMemberEntity.builder()
+                        .umlike(MovieMember.getUmlike())
+                        .umcomment(Movie_comment)
+                        .umscore(Integer.valueOf(Movie_score))
+                        .umcommenttime(java.sql.Date.valueOf(day))
+                        .movie(movie)
+                        .member(member).build();
+                // 관람평 최신순 검색을 위해 튜플을 제거 후
+                movieMemberRepository.deleteByMovieAndMember(movie, member);
+                // 튜플을 다시 삽입
+                movieMemberRepository.save(Data);
+            }
+            // 관람평을 쓰는 사용자가 영화에 대한 좋아요 기록이 없을 경우
+            else {
+                // 튜플 생성 후 삽입
+                MovieMember = MovieMemberEntity.builder()
+                        .umcomment(Movie_comment)
+                        .umscore(Integer.valueOf(Movie_score))
+                        .umcommenttime(java.sql.Date.valueOf(day))
+                        .movie(movie)
+                        .member(member).build();
+                movieMemberRepository.save(MovieMember);
+            }
+        }
     }
 
     // 사용자가 관람평 좋아요를 누를 때 실행되는 메소드
@@ -176,19 +203,14 @@ public class MovieMemberService {
             throw new MovieCommentNotFoundException("정보가 존재하지 않습니다.");
         }
 
-        // 사용자가 영화에 대한 좋아요 기록이 있을 경우 MovieMember 테이블의 튜플을 제거 한 뒤
-        // 영화 좋아요 기록을 다시 insert
-        if (MovieMember.getUmlike()) {
-            // 튜플 insert 시 필요한 entity 생성
+        // 영화에 대한 좋아요 기록이 있으면 튜플 update
+        if (MovieMember.getUmlike() != null && MovieMember.getUmlike()) {
+            // 튜플 update 시 필요한 entity 생성
             MemberEntity Member = MemberEntity.builder().uid(MovieMember.getMember().getUid()).build();
             MovieEntity Movie = MovieEntity.builder().mid(MovieMember.getMovie().getMid()).build();
 
-            // 튜플 제거 후 튜플 insert
-            movieMemberRepository.deleteById(umid);
-            movieMemberRepository.save(MovieMemberEntity.builder()
-                    .umlike(true)
-                    .member(Member)
-                    .movie(Movie).build());
+            // 관람평에 대한 내용을 모두 null 로 교체
+            movieMemberRepository.MovieCommentNull(Member, Movie);
         }
         // 영화에 대한 좋아요 기록이 없을경우 바로 MovieMember 튜플 제거
         else {

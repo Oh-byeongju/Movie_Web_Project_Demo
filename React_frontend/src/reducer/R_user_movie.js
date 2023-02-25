@@ -2,6 +2,7 @@
  23-01-19 유저 좋아요 toggle 구현(오병주)
  23-02-12 유저 관람평 작성 구현(오병주)
  23-02-24 유저 관람평 좋아요 구현(오병주)
+ 23-02-25 유저 관람평 작성 수정(오병주)
 */
 export const USER_MLIKE_REQUEST = "USER_MLIKE_REQUEST"
 export const USER_MLIKE_SUCCESS = "USER_MLIKE_SUCCESS"
@@ -9,6 +10,7 @@ export const USER_MLIKE_FAILURE = "USER_MLIKE_FAILURE"
 export const USER_COMMENT_WRITE_REQUEST = "USER_COMMENT_WRITE_REQUEST"
 export const USER_COMMENT_WRITE_SUCCESS = "USER_COMMENT_WRITE_SUCCESS"
 export const USER_COMMENT_WRITE_FAILURE = "USER_COMMENT_WRITE_FAILURE"
+export const USER_COMMENT_WRITE_RESET = "USER_COMMENT_WRITE_RESET"
 export const USER_COMMENT_LIKE_REQUEST = "USER_COMMENT_LIKE_REQUEST"
 export const USER_COMMENT_LIKE_SUCCESS = "USER_COMMENT_LIKE_SUCCESS"
 export const USER_COMMENT_LIKE_FAILURE = "USER_COMMENT_LIKE_FAILURE"
@@ -22,7 +24,8 @@ const initalState = {
   MLIKE_error: false,
 	COMMENT_WRITE_loading: false,
   COMMENT_WRITE_done: false,
-  COMMENT_WRITE_error: null,
+  COMMENT_WRITE_error: false,
+	WRITE_code: '',
 	COMMENT_LIKE_loading: false,
   COMMENT_LIKE_done: false,
   COMMENT_LIKE_error: false,
@@ -61,21 +64,31 @@ const R_user_movie = (state = initalState, action) => {
 				...state,
 				COMMENT_WRITE_loading: true,
 				COMMENT_WRITE_done: false,
-				COMMENT_WRITE_error: null
+				COMMENT_WRITE_error: false
 			};
 		case USER_COMMENT_WRITE_SUCCESS:
 			return {
 				...state,
 				COMMENT_WRITE_loading: false,
 				COMMENT_WRITE_done: true,
-				COMMENT_WRITE_error: null,
+				COMMENT_WRITE_error: false,
+				WRITE_code: action.data
 			};
 		case USER_COMMENT_WRITE_FAILURE:
 			return {
 				...state,
 				COMMENT_WRITE_loading: false,
 				COMMENT_WRITE_done: false,
-				COMMENT_WRITE_error: action.data,
+				COMMENT_WRITE_error: true,
+				WRITE_code: action.data
+			};
+		case USER_COMMENT_WRITE_RESET:
+			return {
+				...state,
+				COMMENT_WRITE_loading: false,
+				COMMENT_WRITE_done: false,
+				COMMENT_WRITE_error: false,
+				WRITE_code: ''
 			};
 		// 영화 관람평 좋아요 케이스들
 		case USER_COMMENT_LIKE_REQUEST:

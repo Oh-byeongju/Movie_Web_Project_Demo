@@ -533,6 +533,7 @@ INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
 VALUES("불광","서울","서울특별시 은평구 불광로 20 (대조동, 팜스퀘어 11층)");
 INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
 VALUES("송파","서울","서울특별시 송파구 충민로 66 (문정동, 가든파이브 라이프 영관 10층)");
+
 INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
 VALUES("광교","경기","경기도 수원시 영통구 광교호수공원로 320(하동) 갤러리아백화점 광교점 10층");
 INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
@@ -543,6 +544,7 @@ INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
 VALUES("동탄","경기","경기도 화성시 동탄중앙로 220 (반송동, 메타폴리스 A블럭 3층)");
 INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
 VALUES("야탑","경기","경기도 성남시 분당구 성남대로925번길 16 (야탑동, 테마폴리스빌딩 지하2층)");
+
 INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
 VALUES("계양","인천","인천광역시 계양구 장제로 738 (작전동, 메트로몰 8층)");
 INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
@@ -2187,11 +2189,13 @@ VALUES("2023-02-26","12:50:00","15:10:00","3","49");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-27","12:50:00","15:10:00","3","50");
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-28","15:30:00","18:00:00","3","51");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-19","12:50:00","15:10:00","3","52");
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-20","12:50:00","15:10:00","3","53");
 
@@ -4064,8 +4068,9 @@ INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 2, 'temp1110');
 INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 3, 'temp1110');
 
 -- 영화 예매기록 임시 추가
-INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-02-13', '10000', 
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-02-13', '10000', '1', 'temp1');
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-02-13', '10000', '84', 'temp1');
+-- 아래꺼 상견니인데 이거 일부로 28일 영화로 해둠(관람평 안적어지는지 확인 바람) 나중에 temp1만 영화 본 기록 다 넣기
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-02-13', '10000', '531', 'temp1');
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-02-13', '10000', '236', 'temp1');
 
-
-SELECT COUNT(*)
-FROM movie_member

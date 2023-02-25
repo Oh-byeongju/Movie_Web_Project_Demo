@@ -29,7 +29,9 @@ public enum ErrorCode {
     // Movie
     SELECT_IS_NONE(400, "MV001", "검색결과가 존재하지 않습니다."),
     OCCUPY_SEAT_NONE(406, "ST001", "점유된 좌석입니다"),
-    COMMENT_IS_NONE(400, "MC001", "관람평이 존재하지 않습니다.");
+    COMMENT_IS_NONE(400, "MC001", "관람평이 존재하지 않습니다."),
+    COMMENT_IS_EXIST(400, "MC002", "작성된 관람평이 존재합니다."),
+    WATCHING_IS_NONE(400, "MC003", "영화 관람기록이 없습니다.");
 
     private final String code;
     private final String message;

@@ -1,12 +1,18 @@
 /*
  23-02-12 유저 관람평 작성 구현(오병주)
+ 23-02-25 유저 관람평 작성 수정(오병주)
 */
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { Rate } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import { USER_COMMENT_WRITE_REQUEST, USER_COMMENT_WRITE_RESET } from '../../reducer/R_user_movie';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const DetailCommentWrite = () => {
+	const dispatch = useDispatch();
+	const location = useLocation();
 
 	// 별점 표시를 위한 배열
 	const [value, setValue] = useState(5);
@@ -20,8 +26,11 @@ const DetailCommentWrite = () => {
   };
 
 	// 로그인 상태확인용 리덕스 상태
-  const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+	// 관람평 작성에 필요한 리덕스 상태
+	const { detailMovie } = useSelector((state) => state.movie);
+	const { WRITE_code } = useSelector((state) => state.R_user_movie);
 
 	// 관람평 작성 버튼을 누르면 실행되는 함수
 	const onSubmit = useCallback(() => {
@@ -38,12 +47,46 @@ const DetailCommentWrite = () => {
 			return;
 		}
 
+		if (!window.confirm("관람평을 작성하시겠습니까?")) {
+      return;
+    };
 
-		console.log(comment);
-		console.log(value * 2);
+		// 관람평 작성 요청
+		dispatch({
+			type: USER_COMMENT_WRITE_REQUEST,
+			data: {
+				uid: LOGIN_data.uid,
+				mid: detailMovie.mid,
+				mcomment: comment,
+				mscore: (value*2)
+			}
+		})
 
+	}, [dispatch, LOGIN_data.uid, detailMovie.mid, comment, value]);
 
-	}, [LOGIN_data.uid, comment, value])
+	// 관람평 작성 결과에 따른 alert을 위한 useEffect
+	useEffect(()=> {
+		if (WRITE_code === 204) {
+			window.location.replace(location.pathname);
+			return;
+		}
+
+		if (WRITE_code === "MC002") {
+			alert("이미 작성된 관람평이 존재합니다.");
+			dispatch({
+				type: USER_COMMENT_WRITE_RESET
+			})
+			return;
+		}
+
+		if (WRITE_code === "MC003") {
+			alert("영화 관람기록이 존재하지 않습니다.");
+			dispatch({
+				type: USER_COMMENT_WRITE_RESET
+			});
+		}
+
+	}, [WRITE_code, location.pathname, dispatch]);
 
 	return (
 		<Layout>
