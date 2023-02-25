@@ -3,6 +3,7 @@ package com.movie.Spring_backend.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -40,9 +41,8 @@ public class MovieInfoEntity {
     @Formula("(select count(mis.misid) from movie_infoseat mis where mis.miid = miid)")
     private Integer cntSeatInfo;
 
-
     @Builder
-    public MovieInfoEntity(Long miid, Date miday,String mistarttime, String miendtime , MovieEntity movie, CinemaEntity cinema,
+    public MovieInfoEntity(Long miid, Date miday, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema,
                            Integer cntSeatInfo) {
        this.miid= miid;
        this.miday=miday;

@@ -8,7 +8,13 @@ import {
   MOVIE_SEARCH_SUCCESS,
   DETAIL_MOVIE_REQUEST,
   DETAIL_MOVIE_SUCCESS,
-  DETAIL_MOVIE_FAILURE
+  DETAIL_MOVIE_FAILURE,
+  DETAIL_COMMENT_RECENT_REQUEST,
+  DETAIL_COMMENT_RECENT_SUCCESS,
+  DETAIL_COMMENT_RECENT_FAILURE,
+  DETAIL_COMMENT_LIKE_REQUEST,
+  DETAIL_COMMENT_LIKE_SUCCESS,
+  DETAIL_COMMENT_LIKE_FAILURE
 } from "../reducer/movie";
 import { http } from "../lib/http";
 
@@ -138,6 +144,92 @@ async function DetailMovie(data) {
     });
 }
 
+// 영화 관람평을 최신순으로 들고오는 함수
+function* DetailCommentRecentLoad(action) {
+  const result = yield call(CommentRecent, action.data);
+  
+  if (result.status === 200) {
+    const allComment = result.data.map((cm) => ({
+      umid: cm.umid,
+      umscore: cm.umscore,
+      umcomment: cm.umcomment,
+      umcommenttime: cm.umcommenttime,
+      uid: cm.uid,
+      upcnt: cm.upcnt,
+      like: cm.like
+    }));
+    yield put({
+      type: DETAIL_COMMENT_RECENT_SUCCESS,
+      data: allComment,
+    });
+  } 
+  else {
+    yield put({
+      type: DETAIL_COMMENT_RECENT_FAILURE,
+      data: result.data
+    });
+  }
+}
+
+// 관람평 최신순 백엔드 호출
+async function CommentRecent(data) {
+  return await http
+    .get(`/movie/normal/recentcomment${data.pathname}`, {
+      params: {
+        uid: data.uid
+      }
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
+// 영화 관람평을 공감순으로 들고오는 함수
+function* DetailCommentLikeLoad(action) {
+  const result = yield call(CommentLike, action.data);
+
+  if (result.status === 200) {
+    const allComment = result.data.map((cm) => ({
+      umid: cm.umid,
+      umscore: cm.umscore,
+      umcomment: cm.umcomment,
+      umcommenttime: cm.umcommenttime,
+      uid: cm.uid,
+      upcnt: cm.upcnt,
+      like: cm.like
+    }));
+    yield put({
+      type: DETAIL_COMMENT_LIKE_SUCCESS,
+      data: allComment,
+    });
+  } 
+  else {
+    yield put({
+      type: DETAIL_COMMENT_LIKE_FAILURE,
+      data: result.data
+    });
+  }
+}
+
+// 관람평 공감순 백엔드 호출
+async function CommentLike(data) {
+  return await http
+    .get(`/movie/normal/likecomment${data.pathname}`, {
+      params: {
+        uid: data.uid
+      }
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
 function* allMovie() {
   yield takeLatest(ALLMOVIE_REQUEST, AllMovieLoad);
 }
@@ -150,6 +242,14 @@ function* detailMovie() {
   yield takeLatest(DETAIL_MOVIE_REQUEST, DetailMovieLoad);
 }
 
+function* detailCommentRecent() {
+  yield takeLatest(DETAIL_COMMENT_RECENT_REQUEST, DetailCommentRecentLoad);
+}
+
+function* detailCommentLike() {
+  yield takeLatest(DETAIL_COMMENT_LIKE_REQUEST, DetailCommentLikeLoad);
+}
+
 export default function* movieSaga() {
-  yield all([fork(allMovie), fork(selectedMovie), fork(detailMovie)]);
+  yield all([fork(allMovie), fork(selectedMovie), fork(detailMovie), fork(detailCommentRecent), fork(detailCommentLike)]);
 }

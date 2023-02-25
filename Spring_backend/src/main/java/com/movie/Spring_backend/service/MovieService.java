@@ -7,14 +7,14 @@
 package com.movie.Spring_backend.service;
 import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.entity.*;
-import com.movie.Spring_backend.repository.ActorRepository;
-import com.movie.Spring_backend.repository.MovieActorRepository;
+import com.movie.Spring_backend.exceptionlist.MovieCommentNotFoundException;
+import com.movie.Spring_backend.mapper.MovieCommentMapper;
+import com.movie.Spring_backend.mapper.MovieInfoMapper;
+import com.movie.Spring_backend.repository.*;
 import com.movie.Spring_backend.util.DeduplicationUtil;
 import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.mapper.MovieMapper;
-import com.movie.Spring_backend.repository.MovieMemberRepository;
-import com.movie.Spring_backend.repository.MovieRepository;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,7 +34,9 @@ public class MovieService {
     private final MovieMemberRepository movieMemberRepository;
     private final MovieActorRepository movieActorRepository;
     private final ActorRepository actorRepository;
+    private final CommentInfoRepository commentInfoRepository;
     private final MovieMapper movieMapper;
+    private final MovieCommentMapper movieCommentMapper;
 
     // 전체 영화 조회 메소드
     @Transactional
@@ -66,27 +68,27 @@ public class MovieService {
         // 사용자가 입력한 제목으로 영화 검색(제목의 일부분 검색도 지원)
         List<MovieEntity> Movies = movieRepository.findSearchDESC(title);
 
+        // 검색된 영화가 없을경우 예외처리
+        if (Movies.isEmpty()) {
+            throw new MovieNotFoundException("검색 결과 없습니다.");
+        }
+
         // 받은 id 정보를 entity 형으로 변환(로그인 정보가 없으면 전달받은 매개변수 uid가 No_login 으로 설정)
         MemberEntity member = MemberEntity.builder()
                 .uid(uid).build();
 
         // 사용자가 좋아요 누른 영화 목록 검색
-        List<MovieMemberEntity> MovieLike = movieMemberRepository.findByUmlikeTrueAndMember(member);
+        List<MovieMemberEntity> MovieLikes = movieMemberRepository.findByUmlikeTrueAndMember(member);
 
-        // 좋아요 누른 영화 목록의 중복제거를 위해 HashSet 으로 변환
-        Set<Long> MovieLikeNum = new HashSet<>();
-        for (MovieMemberEntity mm : MovieLike) {
-            MovieLikeNum.add(mm.getMovie().getMid());
+        // 좋아요 누른 영화 목록을 HashSet 으로 변환
+        Set<Long> MovieLikeSet = new HashSet<>();
+        for (MovieMemberEntity mm : MovieLikes) {
+            MovieLikeSet.add(mm.getMovie().getMid());
         }
 
-        // 검색된 영화가 없을경우 예외처리, 아닐 경우 영화 목록과 좋아요 기록을 mapping 후 리턴
-        if(!Movies.isEmpty()) {
-            return Movies.stream().map(movie ->
-                    movieMapper.toDto(movie, MovieLikeNum.contains(movie.getMid()))).collect(Collectors.toList());
-        }
-        else {
-            throw new MovieNotFoundException("검색 결과 없습니다.");
-        }
+        // 영화 목록과 좋아요 기록을 mapping 후 리턴
+        return Movies.stream().map(movie ->
+                movieMapper.toDto(movie, MovieLikeSet.contains(movie.getMid()))).collect(Collectors.toList());
     }
 
     // 영화 세부내용 메소드
@@ -162,25 +164,71 @@ public class MovieService {
         return dedupication;
     }
 
-    // 영화 세부내용 관람평 메소드(수정 바람 오름차순도 생각해야함 일단 임시 + @Formula 추가도 해야할듯, 쓰기전에 Formula가 적합한지 생각 최적화에 대해)
+    // 영화 세부내용 관람평 메소드(최신순)
     @Transactional
-    public List<CommentInfoDto> getMovieDetailComment(Long mid, String uid) {
+    public List<CommentInfoDto> getMovieDetailCommentRecent(Long mid, String uid) {
 
-        // 받은 영화 id 정보를 entity 형으로 변환
+        // 영화 id 정보를 entity 형으로 변환
         MovieEntity movie = MovieEntity.builder()
                 .mid(mid).build();
 
-        // 영화 id를 기반으로 MovieMember table 검색
-        List<MovieMemberEntity> MovieMember = movieMemberRepository.findByMovie(movie);
+        // 영화 id를 기반으로 MovieMember table 검색(최신순)
+        List<MovieMemberEntity> MovieMembers = movieMemberRepository.findByMovieAndUmcommentIsNotNullOrderByUmidDesc(movie);
 
+        // 영화 관람평이 없는경우 예외처리
+        if (MovieMembers.isEmpty()) {
+            throw new MovieCommentNotFoundException("관람평이 없습니다.");
+        }
 
-        return MovieMember.stream().map(data -> CommentInfoDto.builder()
-                .umid(data.getUmid())
-                .umscore(data.getUmscore())
-                .umcomment(data.getUmcomment())
-                .umcommenttime(data.getUmcommenttime())
-                .uid(data.getMember().getUid())
-                .mid(data.getMovie().getMid())
-                .build()).collect(Collectors.toList());
+        // 사용자 id 정보를 entity 형으로 변환
+        MemberEntity member = MemberEntity.builder()
+                .uid(uid).build();
+
+        // 사용자가 좋아요 누른 영화 관람평 검색
+        List<CommentInfoEntity> CommentLikes = commentInfoRepository.findByMember(member);
+
+        // 좋아요 누른 관람평 목록을 HashSet 으로 변환
+        Set<Long> CommentLikeSet = new HashSet<>();
+        for (CommentInfoEntity CI : CommentLikes) {
+            CommentLikeSet.add(CI.getMoviemember().getUmid());
+        }
+
+        // 관람평 목록과 좋아요 기록을 mapping 후 리턴
+        return MovieMembers.stream().map(MovieMember ->
+                movieCommentMapper.toDto(MovieMember, CommentLikeSet.contains(MovieMember.getUmid()))).collect(Collectors.toList());
+    }
+
+    // 영화 세부내용 관람평 메소드(공감순)
+    @Transactional
+    public List<CommentInfoDto> getMovieDetailCommentLike(Long mid, String uid) {
+
+        // 영화 id 정보를 entity 형으로 변환
+        MovieEntity movie = MovieEntity.builder()
+                .mid(mid).build();
+
+        // 영화 id를 기반으로 MovieMember table 검색(공감순)
+        List<MovieMemberEntity> MovieMembers = movieMemberRepository.findAllCommentLikeDESC(movie);
+
+        // 영화 관람평이 없는경우 예외처리
+        if (MovieMembers.isEmpty()) {
+            throw new MovieCommentNotFoundException("관람평이 없습니다.");
+        }
+
+        // 사용자 id 정보를 entity 형으로 변환
+        MemberEntity member = MemberEntity.builder()
+                .uid(uid).build();
+
+        // 사용자가 좋아요 누른 영화 관람평 검색
+        List<CommentInfoEntity> CommentLikes = commentInfoRepository.findByMember(member);
+
+        // 좋아요 누른 관람평 목록을 HashSet 으로 변환
+        Set<Long> CommentLikeSet = new HashSet<>();
+        for (CommentInfoEntity CI : CommentLikes) {
+            CommentLikeSet.add(CI.getMoviemember().getUmid());
+        }
+
+        // 관람평 목록과 좋아요 기록을 mapping 후 리턴
+        return MovieMembers.stream().map(MovieMember ->
+                movieCommentMapper.toDto(MovieMember, CommentLikeSet.contains(MovieMember.getUmid()))).collect(Collectors.toList());
     }
 }

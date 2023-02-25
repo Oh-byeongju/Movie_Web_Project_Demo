@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import {
   ALLTHEATER_REQUEST,
@@ -12,6 +13,7 @@ import {
   RESET_MOVIE_DATA,
   RESET_DAY_DATA,
   RESET_THEATER_DATA,
+  SELECT_THEATER_REQUEST,
 } from "../../reducer/ticket";
 //극장을 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
 
@@ -53,6 +55,21 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
     DayData,
   } = useSelector((state) => state.ticket);
   //able된것들 클릭하기
+  const location = useLocation();
+  useEffect(() => {
+    //새로고침 감지하는 if문
+    if (location.state === null) {
+      dispatch({
+        type: ALLTHEATER_REQUEST,
+      });
+    }
+    //기본적으로 페이지를 나가거나 첫 불러오기시 데이터를 다
+    return () => {
+      dispatch({
+        type: ALLTHEATER_REQUEST,
+      });
+    };
+  }, []);
   const onClickAble = (data) => {
     //기본
     dispatch({
@@ -512,7 +529,6 @@ const AllTheaterList = ({ tabstate, setTabState }) => {
   );
 };
 
-export default AllTheaterList;
 const TheatersWrapper = styled.div`
   width: 265px;
   position: relative;
@@ -521,9 +537,9 @@ const TheatersWrapper = styled.div`
   margin-left: 2px;
   background-color: #f2f0e5;
   overflow: hidden;
-  padding-right:120px;
-}
+  padding-right: 120px;
 `;
+
 const TheatersTitle = styled.div`
   color: #222;
   position: relative;
@@ -691,3 +707,5 @@ const Theater = styled.li`
   color: ${(props) =>
     props.theaterData.tid === props.t ? "white" : "#333333"};
 `;
+
+export default AllTheaterList;

@@ -17,8 +17,6 @@ const LoginLoading = () => {
 	);
 };
 
-export default LoginLoading;
-
 const Background = styled.div`
   position: fixed;
   width: 100%;
@@ -39,3 +37,5 @@ const Background = styled.div`
 //   text-align: center;
 //   margin-top: 7px !important;
 // `;
+
+export default LoginLoading;

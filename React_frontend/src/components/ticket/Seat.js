@@ -259,8 +259,6 @@ const Seat = () => {
   );
 };
 
-export default Seat;
-
 const SeatWrapper = styled.div`
   display: block;
   min-height: 710px;
@@ -342,3 +340,5 @@ const People = styled.div`
   top: 10px;
   padding-right: 30px;
 `;
+
+export default Seat;

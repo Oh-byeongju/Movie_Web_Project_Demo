@@ -11,6 +11,7 @@ import {
 } from "../../reducer/R_user_login";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import LoginLoading from "../Common_components/LoginLoading";
+import * as ReserveLogin from "../Common_components/Function";
 
 const LoginForm = () => {
   // useDispatch를 dispatch로 선언
@@ -90,7 +91,9 @@ const LoginForm = () => {
   // 로그인의 성공 여부를 알리는 useEffect
 
   useEffect(() => {
-    console.log("로그인페이지 :" + location);
+    console.log("login 페이지");
+    console.log(location);
+
     if (LOGIN_data.uname === "error!!") {
       alert("존재하지 않는 회원입니다.");
       dispatch({ type: USER_LOGIN_RESET });
@@ -101,8 +104,17 @@ const LoginForm = () => {
       if (location.state === null || location.state.url === "/UserJoin") {
         console.log("ㄹㄹ :" + location);
         navigate(`/`);
-      } else if (location !== "") {
-        navigate(location.state);
+      } else if (location.state.pathname === "/reserve") {
+        console.log("reserve에서 왔니?");
+        if (
+          location.state.Day !== "" &&
+          location.state.mvie !== "" &&
+          location.state.schedule !== "" &&
+          location.state.theater !== ""
+        ) {
+          ReserveLogin.f1(location.state, dispatch);
+        }
+        navigate(location.state.pathname, { state: location.pathname });
       } else {
         navigate(`${location.state.url}`);
       }

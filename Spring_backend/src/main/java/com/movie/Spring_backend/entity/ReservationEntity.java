@@ -37,4 +37,5 @@ public class ReservationEntity {
         this.rprice=rprice;
         this.miid=miid;
         this.uid=uid;
-    }}
+    }
+}

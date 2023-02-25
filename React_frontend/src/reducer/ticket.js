@@ -73,6 +73,7 @@ export const initalState = {
   theaterData: "", //극장데이터
   DayData: "", //날짜 데이터
   scheduleData: "", //영화Info 데이터
+  reservepage: false,
 };
 
 export const T_ALLMOVIE_REQUEST = "T_ALLMOVIE_REQUEST";
@@ -168,7 +169,6 @@ export const RESET_DAY_DATA = "RESET_DAY_DATA";
 export const RESET_SCHEDULE_DATA = "RESET_SCHEDULE_DATA";
 
 export const RESET_RESERVE_PAGE = "RESET_RESERVE_PAGE";
-
 export const RESERVE_LOGIN_PAGE = "RESERVE_LOGIN_PAGE";
 
 const ticket = (state = initalState, action) => {
@@ -620,6 +620,11 @@ const ticket = (state = initalState, action) => {
         scheduleData: "",
       };
 
+    case RESERVE_LOGIN_PAGE:
+      return {
+        ...state,
+        reservepage: true,
+      };
     default:
       return state;
   }

@@ -24,6 +24,26 @@ const AllMovieList = ({ setDayMore, page }) => {
     theaterData,
     DayData,
   } = useSelector((state) => state.ticket);
+  const location = useLocation();
+  useEffect(() => {
+    //첫 로딩
+    if (location.state === null) {
+      console.log("보통 페이지에서 넘어오면 state에 데이터가 없다.");
+      dispatch({
+        type: T_ALLMOVIE_REQUEST,
+        data: LOGIN_data.uid,
+      });
+    }
+    //새로고침 감지
+    //기본적으로 페이지를 나가거나 첫 불러오기시 데이터를 다불러옴
+
+    return () => {
+      dispatch({
+        type: T_ALLMOVIE_REQUEST,
+        data: LOGIN_data.uid,
+      });
+    };
+  }, []);
   // 로그인 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
@@ -208,7 +228,6 @@ const AllMovieList = ({ setDayMore, page }) => {
   );
 };
 
-export default AllMovieList;
 const MovieWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -264,20 +283,18 @@ const MovieListWrapper = styled.div`
 `;
 
 const MovieList = styled.div`
-clear: both;
-float: left;
-width: 244px;
-height: 35px;
-line-height: 35px;
-margin-bottom: 1px;
-position: relative;
-background-color:#f2f0e5;
-cursor:pointer;
-    .disable {
-      cursor: default;
-        opacity:0.5;
-      
-    }
+  clear: both;
+  float: left;
+  width: 244px;
+  height: 35px;
+  line-height: 35px;
+  margin-bottom: 1px;
+  position: relative;
+  background-color: #f2f0e5;
+  cursor: pointer;
+  .disable {
+    cursor: default;
+    opacity: 0.5;
   }
   background-color: ${(props) =>
     props.movieData.id === props.movie ? "gray" : "#f2f0e5"};
@@ -296,3 +313,5 @@ const Img = styled.img`
   top: 3px;
   padding-right: 10px;
 `;
+
+export default AllMovieList;

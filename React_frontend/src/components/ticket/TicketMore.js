@@ -10,6 +10,7 @@ import {
 } from "../../reducer/seat";
 import { Login } from "@mui/icons-material";
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import { RESERVE_LOGIN_PAGE } from "../../reducer/ticket";
 
 const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
@@ -141,7 +142,18 @@ const TicketMore = ({ setPage, page }) => {
               ) {
                 return;
               } else {
-                navigate(`/UserLogin`, { state: pathname });
+                navigate(`/UserLogin`, {
+                  state: {
+                    pathname: pathname,
+                    movie: movieData,
+                    theater: theaterData,
+                    Day: DayData,
+                    schedule: scheduleData,
+                  },
+                });
+                dispatch({
+                  type: RESERVE_LOGIN_PAGE,
+                });
               }
             } else if (
               LOGIN_data !== "" &&
@@ -176,8 +188,6 @@ const TicketMore = ({ setPage, page }) => {
     </TicketWrapper>
   );
 };
-
-export default TicketMore;
 
 const TicketWrapper = styled.div`
   position: relative;
@@ -316,3 +326,5 @@ const Screen = styled.div`
   height: 10px;
   line-height: 20px;
 `;
+
+export default TicketMore;

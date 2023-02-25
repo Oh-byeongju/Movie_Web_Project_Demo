@@ -33,9 +33,15 @@ public class MovieController {
         return ResponseEntity.ok().body(movieService.getMovieDetail(mid, uid));
     }
 
-    // 영화 세부내용의 관람평을 가져오는 메소드 (임시로 해둠 --> 이거 보낼때 최신순, 추천순 해야해서 내림차순 이랑 cnt sql 생각해보기)
-    @GetMapping("/normal/moviedetailcomment/{mid}")
-    public ResponseEntity<List<CommentInfoDto>> MovieDetailComment(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
-        return ResponseEntity.ok().body(movieService.getMovieDetailComment(mid, uid));
+    // 영화 세부내용의 관람평을 가져오는 메소드 (최신순)
+    @GetMapping("/normal/recentcomment/moviedetail/{mid}")
+    public ResponseEntity<List<CommentInfoDto>> MovieDetailCommentRecent(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
+        return ResponseEntity.ok().body(movieService.getMovieDetailCommentRecent(mid, uid));
+    }
+
+    // 영화 세부내용의 관람평을 가져오는 메소드 (공감순)
+    @GetMapping("/normal/likecomment/moviedetail/{mid}")
+    public ResponseEntity<List<CommentInfoDto>> MovieDetailCommentLike(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
+        return ResponseEntity.ok().body(movieService.getMovieDetailCommentLike(mid, uid));
     }
 }

@@ -146,9 +146,6 @@ const PrivacyofService = () => {
 	);
 };
 
-export default PrivacyofService;
-
-
 const TextArea = styled.textarea`
 	padding: 10px 20px 20px 20px;
 	width: 420px;
@@ -164,3 +161,5 @@ const TextArea = styled.textarea`
 	font-family: 'Noto Sans KR', sans-serif;
 	white-space: pre-wrap;
 `;
+
+export default PrivacyofService;

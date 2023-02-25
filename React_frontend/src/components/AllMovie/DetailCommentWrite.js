@@ -43,7 +43,7 @@ const DetailCommentWrite = () => {
 		console.log(value * 2);
 
 
-	},[LOGIN_data.uid, comment, value])
+	}, [LOGIN_data.uid, comment, value])
 
 	return (
 		<Layout>
@@ -53,13 +53,13 @@ const DetailCommentWrite = () => {
 						평점 및 관람평 작성
 					</h4>
 					<RateLine>
-						<Rate allowHalf onChange={setValue} value={value} style={{fontSize: "50px"}}/>
+						<Rate allowHalf onChange={setValue} value={value} style={{fontSize: "50px"}} allowClear={false}/>
 						{value ? <span className="rate-text">{desc[(value * 2) - 1]}</span> : ''}
 					</RateLine>
 				</StarForm>
 				<ReviewBox>
 					<TextBox>
-						<textarea placeholder='로그인 한 회원분들 중에서 예매하신 영화가 끝난 이후 평점 및 관람평을 작성하실 수 있습니다.' 
+						<textarea placeholder='예매하신 영화가 끝난 이후 1회의 한해서 평점 및 관람평을 작성하실 수 있습니다.' 
 						spellCheck={false} maxLength="149" value={comment} onChange={handleCommentChange}>
 						</textarea>
 						<span className='text_info'>
@@ -80,8 +80,6 @@ const DetailCommentWrite = () => {
 		</Layout>
 	)
 };
-
-export default DetailCommentWrite;
 
 const Layout = styled.div`
 	overflow: hidden;
@@ -179,3 +177,5 @@ const ReviewSubmit = styled.button`
 	font-size: 15px;
 	cursor: pointer;
 `;
+
+export default DetailCommentWrite;

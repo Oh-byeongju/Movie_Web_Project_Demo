@@ -9,6 +9,8 @@ import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import {
   SELECT_DAY_REQUEST,
   SELECT_THEATER_REQUEST,
@@ -83,7 +85,7 @@ const Movie = ({ movie }) => {
       setlikes(likes + 1);
     }
   }, [movie.id, LOGIN_data.uid, like, likes, dispatch]);
-
+  const location = useLocation();
   return (
     <LI>
       <div className="Image">
@@ -136,14 +138,8 @@ const Movie = ({ movie }) => {
                 : likes}
             </span>
           </Like>
-          <Link to="/reserve" state={{ data: movie.id }}>
-            <Ticket
-              onClick={() => {
-                OnClickReserve(movie);
-              }}
-            >
-              예매
-            </Ticket>
+          <Link to="/reserve" state={{ state: location.pathname }}>
+            <Ticket onClick={(e) => OnClickReserve(movie)}>예매</Ticket>
           </Link>
         </Button>
       </div>
