@@ -75,7 +75,7 @@ function* selectInfoSeat(action) {
 
 async function checkSeatApi(data) {
   return await http
-    .post("/redis/normal/rediss", data)
+    .post("/seat/normal/rediss", data)
     .then((response) => {
       return response;
     })
@@ -85,15 +85,23 @@ async function checkSeatApi(data) {
 }
 
 function* checkSeat(action) {
-  console.log(action.data);
   const result = yield call(checkSeatApi, action.data);
+  console.log(result);
+  if (result.data.length === 0) {
+    console.log("문제없음");
+  } else if (result.data.length > 0) {
+    alert("점유된 좌석입니다.");
+    console.log("문제있음");
+  }
 
   if (result.status === 200) {
     yield put({
       type: CHECK_SEAT_SUCCESS,
+      data: result.data,
     });
   } else {
     alert("점유된 좌석입니다.");
+    console.log(action.data);
     yield put({
       type: CHECK_SEAT_FAILURE,
     });

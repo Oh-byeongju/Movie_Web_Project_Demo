@@ -9,15 +9,23 @@ const SeatButton = ({
   selectedRows,
   is_reserved,
   removeSeats,
+  setSelectedRows,
 }) => {
   const [isChecked, setIschecked] = useState(true);
-  const { selectinfoseat } = useSelector((state) => state.seat);
+  const { selectinfoseat, choiceSeat, choiceUser } = useSelector(
+    (state) => state.seat
+  );
   const checkedSeat = () => {
-    if (totalNumber > selectedRows.length && isChecked) {
+    if (choiceUser.length > choiceSeat.length && isChecked) {
       setIschecked((prev) => !prev);
+      console.log(totalNumber);
     } else if (!isChecked) {
       setIschecked((prev) => !prev);
     }
+    console.log(selectedRows);
+    // // choiceSeat: state.choiceSeat.filter(
+    //   (seat) => seat.seat_id !== action.data
+    //   ),
   };
   return (
     <>

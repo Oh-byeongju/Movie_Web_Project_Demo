@@ -162,15 +162,17 @@ const TicketMore = ({ setPage, page }) => {
               DayData !== "" &&
               scheduleData !== ""
             ) {
+              // setPage(true);
+              // dispatch({
+              //   type: SELECT_SEAT_REQUEST,
+              //   data: scheduleData.cid,
+              // });
+              // dispatch({
+              //   type: SELECT_INFOSEAT_REQUEST,
+              //   data: scheduleData.miid,
+              // });
               setPage(true);
-              dispatch({
-                type: SELECT_SEAT_REQUEST,
-                data: scheduleData.cid,
-              });
-              dispatch({
-                type: SELECT_INFOSEAT_REQUEST,
-                data: scheduleData.miid,
-              });
+              console.log("gg");
             }
           }}
         >
