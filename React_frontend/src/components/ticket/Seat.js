@@ -11,8 +11,11 @@ import {
   USER_CHOICE,
   USER_REMOVE,
   PAGE_RESET,
+  SELECT_SEAT_REQUEST,
+  SELECT_INFOSEAT_REQUEST,
 } from "../../reducer/seat";
 import SeatButton from "./SeatButton";
+import { Schedule } from "@mui/icons-material";
 
 const ButtonGroup = Button.Group;
 const Seat = () => {
@@ -21,10 +24,14 @@ const Seat = () => {
   const [numKid, setNumKid] = useState(0); //애기
   const [selectedUser, setSelectedUser] = useState([]); //선택한 값
   const [priceInfo, setPriceInfo] = useState([]); //값 더하기 //여기 배열로 값을 저장
-  const [selected, setSelected] = useState([]); //선택한 자리
   const [selectedRows, setSelectedRows] = useState([]);
-  const { rows, choiceSeat, selectseat, selectinfoseat } = useSelector(
-    (state) => state.seat
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+  const [isChecked, setIschecked] = useState(true);
+
+  const { rows, choiceSeat, selectseat, selectinfoseat, ocuppyseat } =
+    useSelector((state) => state.seat);
+  const { movieData, theaterData, DayData, scheduleData } = useSelector(
+    (state) => state.ticket
   );
   //결국 데이터를 받아오려면 한번에 다 받아와야함{location: A1,A id:2}2,A3,A4,A5,A6~B1,B2,B3,B4,B5,B6 이런식
   // 열의 차이를 줘야함 그리고 점유 확인, id값을 받아오고
@@ -32,6 +39,22 @@ const Seat = () => {
   let is_reserved;
 
   useEffect(() => {
+    if (
+      LOGIN_data !== "" &&
+      movieData !== "" &&
+      theaterData !== "" &&
+      DayData !== "" &&
+      scheduleData !== ""
+    ) {
+      dispatch({
+        type: SELECT_SEAT_REQUEST,
+        data: scheduleData.cid,
+      });
+      dispatch({
+        type: SELECT_INFOSEAT_REQUEST,
+        data: scheduleData.miid,
+      });
+    }
     return () => {
       dispatch({
         type: PAGE_RESET,
@@ -238,6 +261,18 @@ const Seat = () => {
                   is_reserved = true;
                 }
               });
+              ocuppyseat.find((ocuppy) => {
+                if (
+                  scheduleData.miid === ocuppy.miid &&
+                  seat.sid === ocuppy.seatid
+                ) {
+                  console.log(ocuppy.miid);
+                  is_reserved = true;
+
+                  //초기화시키기 점유된 영화가있을경우
+                }
+              });
+
               return (
                 <div>
                   <SeatButton
@@ -247,7 +282,9 @@ const Seat = () => {
                     is_reserved={is_reserved}
                     totalNumber={totalNumber}
                     selectedRows={selectedRows}
+                    setSelectedRows={setSelectedRows}
                     removeSeats={removeSeats}
+                    choiceSeat={choiceSeat}
                   />
                 </div>
               );
