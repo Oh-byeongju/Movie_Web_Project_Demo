@@ -1,16 +1,13 @@
 package com.movie.Spring_backend.controller;
 
-import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.dto.SeatDto;
-import com.movie.Spring_backend.entity.CinemaEntity;
+import com.movie.Spring_backend.mapper.OcuppyMapper;
 import com.movie.Spring_backend.service.SeatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -24,4 +21,17 @@ public class SeatController {
     public List<SeatDto> findBySeat(@RequestParam Long id) {
         return seatService.findBySeat(id);
     }
+
+    @PostMapping("/normal/rediss")
+    public List<OcuppyMapper> startRedis(@RequestBody HashMap<String, String> body, HttpServletRequest request) {
+        return seatService.setValues(body.get("name"), body.get("age"), request);
+    }
+
+    @GetMapping("/normal/rediss")
+    public String startRedis() {
+
+         return seatService.getValues();
+    }
 }
+
+

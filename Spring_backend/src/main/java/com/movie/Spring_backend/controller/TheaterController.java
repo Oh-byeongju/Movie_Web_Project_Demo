@@ -34,11 +34,6 @@ public class TheaterController {
     public List<TheaterDto> getData() {
         return theaterService.getInfo();
     }
-
-
-
-
-
 }
 
 
