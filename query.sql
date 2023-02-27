@@ -795,8 +795,7 @@ VALUES("2023-02-15","12:50:00","16:10:00","1","17");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","17:50:00","20:10:00","1","18");
 
-INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
-VALUES("2023-02-15","12:50:00","15:10:00","2","19");
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","1","20");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
@@ -916,6 +915,9 @@ VALUES("2023-02-15","17:50:00","20:10:00","1","60");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","2","61");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
+VALUES("2023-02-15","12:50:00","15:10:00","2","19");
+
+INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","1","62");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","15:30:00","18:00:00","1","63");
@@ -936,6 +938,8 @@ VALUES("2023-02-15","13:50:00","16:00:00","1","26");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:30:00","16:10:00","1","27");
+
+/*
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","2","1");
@@ -969,6 +973,7 @@ VALUES("2023-02-15","12:50:00","15:10:00","2","5");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","2","6");
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","15:30:00","18:00:00","2","6");
 
@@ -1150,6 +1155,7 @@ VALUES("2023-02-15","15:30:00","18:00:00","2","65");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","10:50:00","13:10:00","2","65");
+*/
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","3","1");
@@ -1669,8 +1675,15 @@ VALUES("2023-02-17","12:50:00","16:10:00","1","17");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-16","17:50:00","20:10:00","1","18");
 
+
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-17","12:50:00","15:10:00","2","19");
+
+
+
+
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-17","12:50:00","15:10:00","1","20");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
@@ -1810,7 +1823,7 @@ VALUES("2023-02-18","13:50:00","16:00:00","1","26");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-18","12:30:00","16:10:00","1","27");
-
+/*
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-20","12:50:00","15:10:00","2","1");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
@@ -2021,7 +2034,7 @@ VALUES("2023-02-20","15:30:00","18:00:00","2","65");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-18","10:50:00","13:10:00","2","65");
-
+*/
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-19","12:50:00","15:10:00","3","1");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
@@ -4073,4 +4086,5 @@ INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-0
 -- 아래꺼 상견니인데 이거 일부로 28일 영화로 해둠(관람평 안적어지는지 확인 바람) 나중에 temp1만 영화 본 기록 다 넣기
 INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-02-13', '10000', '531', 'temp1');
 INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-02-13', '10000', '236', 'temp1');
+
 

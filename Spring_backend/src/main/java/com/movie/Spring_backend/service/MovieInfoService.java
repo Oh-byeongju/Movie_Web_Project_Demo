@@ -10,6 +10,7 @@ import com.movie.Spring_backend.repository.MovieInfoSeatRepository;
 import com.movie.Spring_backend.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
@@ -142,10 +143,4 @@ public class MovieInfoService {
         return datas.stream().map(data -> movieInfoMapper.CountDto(data,data.getCinema().getCid(),data.getCinema().getCname(),data.getCinema().getCtype(),data.getCntSeatInfo(),data.getCinema().getCseat())).collect(Collectors.toList());
 
     }
-    /*
-        return Movies.stream().map(movie ->
-                    movieMapper.toDto(movie, MovieLikeNum.contains(movie.getMid()))).collect(Collectors.toList());
-        }*/
-
-
 }
