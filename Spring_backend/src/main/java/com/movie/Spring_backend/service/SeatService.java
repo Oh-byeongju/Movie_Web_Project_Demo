@@ -51,7 +51,6 @@ public class SeatService {
                 System.out.println("key 가 없습니다.");
                 //키 set                  values.set(keys, "hello", Duration.ofMinutes(1)); // 1분 뒤 메모리에서 삭제된다.
             }
-                String data = redisTemplate.
             else {
                 throw new SeatOccupyException("점유된 좌석입니다."); //키가 있으면 종료 시킴
             }
