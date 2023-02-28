@@ -67,14 +67,14 @@ public class SeatService {
                 disableDatas.add(s);  //점유된 좌석이 아닌것
             }
         }
-            List<SeatDto> able = ableDatas.stream().map((seat) -> seatMapper.toAble(seat, "able")).collect(Collectors.toList());
-            List<SeatDto> disable = disableDatas.stream().map((seat) -> seatMapper.toAble(seat, "disable")).collect(Collectors.toList());
-            //able과 disalbe로 dto 매핑후 합침
-            for (SeatDto seat : disable) {
-                able.add(seat);
-            }
+        List<SeatDto> able = ableDatas.stream().map((seat) -> seatMapper.toAble(seat, "able")).collect(Collectors.toList());
+        List<SeatDto> disable = disableDatas.stream().map((seat) -> seatMapper.toAble(seat, "disable")).collect(Collectors.toList());
+        //able과 disalbe로 dto 매핑후 합침
+        for (SeatDto seat : disable) {
+            able.add(seat);
+        }
         Collections.sort(able, new SortUtil()); //이 함수는 뒤죽박죽인 자리를 순서대로 되돌려둠
-            return able;
+        return able;
 
     }
 
@@ -125,10 +125,10 @@ public class SeatService {
                 abcd.add(r.getMiid());
                 System.out.println(abcd);
             }
-            }
-
-            return datad;
         }
+
+        return datad;
+    }
 
     // 데이터 가져오기
     public String getValues(){

@@ -74,11 +74,4 @@ const BookinWrapper = styled.div`
   padding-right: 290px;
 `;
 
-/*  
-      <AllMovieList />
-      <AllTheaterList />
-      <Calendar />
-      <MovieInfo />
-      */
-
 export default Reserve;

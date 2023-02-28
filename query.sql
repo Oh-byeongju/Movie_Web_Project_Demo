@@ -1,15 +1,15 @@
-DROP TABLE IF EXISTS `Movie_infoseat`;
-DROP TABLE IF EXISTS `Movie_seat`;
-DROP TABLE IF EXISTS `Movie_reservation`;
-DROP TABLE IF EXISTS `Movie_information`;
-DROP TABLE IF EXISTS `Movie_cinema`;
-DROP TABLE IF EXISTS `Comment_Info`;
-DROP TABLE IF EXISTS `Movie_member`;
-DROP TABLE IF EXISTS `Movie_actor`;
-DROP TABLE IF EXISTS `Actor`;
-DROP TABLE IF EXISTS `Movie_theater`;
-DROP TABLE IF EXISTS `Member`;
-DROP TABLE IF EXISTS `Movie`;
+DROP TABLE IF EXISTS `movie_infoseat`;
+DROP TABLE IF EXISTS `movie_seat`;
+DROP TABLE IF EXISTS `movie_reservation`;
+DROP TABLE IF EXISTS `movie_information`;
+DROP TABLE IF EXISTS `movie_cinema`;
+DROP TABLE IF EXISTS `comment_info`;
+DROP TABLE IF EXISTS `movie_member`;
+DROP TABLE IF EXISTS `movie_actor`;
+DROP TABLE IF EXISTS `actor`;
+DROP TABLE IF EXISTS `movie_theater`;
+DROP TABLE IF EXISTS `member`;
+DROP TABLE IF EXISTS `movie`;
 DROP PROCEDURE IF EXISTS clone_member;
 DROP PROCEDURE IF EXISTS clone_member_like1;
 DROP PROCEDURE IF EXISTS clone_member_like2;
@@ -17,7 +17,7 @@ DROP PROCEDURE IF EXISTS clone_member_like3;
 DROP PROCEDURE IF EXISTS clone_member_like4;
 DROP PROCEDURE IF EXISTS clone_member_like5;
 
-CREATE TABLE `Member` (
+CREATE TABLE `member` (
 	`uid`	varchar(20)	NOT NULL,
 	`upw`	varchar(255) NOT NULL,
 	`uname`	varchar(15)	NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE `Member` (
 	PRIMARY KEY (`uid`)
 );
 
-CREATE TABLE `Movie` (
+CREATE TABLE `movie` (
 	`mid`	int AUTO_INCREMENT NOT NULL,
 	`mtitle`	varchar(30)	NULL,
 	`mdir`	VARCHAR(20)	NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `Movie` (
 	PRIMARY KEY (`mid`)
 );
 
-CREATE TABLE `Movie_theater` (
+CREATE TABLE `movie_theater` (
 	`tid`	INT AUTO_INCREMENT NOT NULL,
 	`tname`	varchar(30)	NULL,
 	`tarea`	varchar(30)	NULL,
@@ -50,24 +50,24 @@ CREATE TABLE `Movie_theater` (
 	PRIMARY KEY (`tid`)
 );
 
-CREATE TABLE `Actor` (
+CREATE TABLE `actor` (
 	`aid` INT AUTO_INCREMENT NOT NULL,
 	`aname` VARCHAR(20) NULL,
 	`abirthplace` VARCHAR(20) NULL,
 	PRIMARY KEY (`aid`)
 );
 
-CREATE TABLE `Movie_actor` (
+CREATE TABLE `movie_actor` (
 	`maid` INT  AUTO_INCREMENT NOT NULL,
 	`marole` VARCHAR(10) NULL,
 	`aid` INT NOT NULL,
 	`mid` INT NOT NULL,
 	PRIMARY KEY (`maid`),
-	FOREIGN KEY (`aid`) REFERENCES `Actor` (`aid`),
-	FOREIGN KEY (`mid`) REFERENCES `Movie` (`mid`)
+	FOREIGN KEY (`aid`) REFERENCES `actor` (`aid`),
+	FOREIGN KEY (`mid`) REFERENCES `movie` (`mid`)
 );
 
-CREATE TABLE `Movie_member` (
+CREATE TABLE `movie_member` (
 	`umid`	INT	NOT NULL AUTO_INCREMENT,
 	`umlike`	BOOLEAN 	NULL,
 	`umscore`	INT 	NULL,
@@ -76,30 +76,30 @@ CREATE TABLE `Movie_member` (
 	`mid` INT NOT NULL,
 	`uid` VARCHAR(20) NOT NULL,
 	PRIMARY KEY (`umid`),
-	FOREIGN KEY (`mid`) REFERENCES `Movie` (`mid`),
-	FOREIGN KEY (`uid`) REFERENCES `Member` (`uid`)
+	FOREIGN KEY (`mid`) REFERENCES `movie` (`mid`),
+	FOREIGN KEY (`uid`) REFERENCES `member` (`uid`)
 );
 
-CREATE TABLE `Comment_Info` (
+CREATE TABLE `comment_info` (
 	`cuid` INT NOT NULL AUTO_INCREMENT,
 	`uid`	varchar(20)	NOT NULL,
 	`umid`	INT	NOT NULL,
-	FOREIGN KEY (`uid`) REFERENCES `Member` (`uid`),
-	FOREIGN KEY (`umid`) REFERENCES `Movie_member` (`umid`),
+	FOREIGN KEY (`uid`) REFERENCES `member` (`uid`),
+	FOREIGN KEY (`umid`) REFERENCES `movie_member` (`umid`),
 	PRIMARY KEY (`cuid`)
 );
 
-CREATE TABLE `Movie_cinema` (
+CREATE TABLE `movie_cinema` (
 	`cid`	INT AUTO_INCREMENT NOT NULL,
 	`cname`	varchar(20)	NULL,
 	`ctype`	varchar(10)	NULL,
 	`cseat`	INT	NULL,
 	`tid`	INT	NOT NULL,
 	PRIMARY KEY (`cid`),
-	FOREIGN KEY (`tid`) REFERENCES `Movie_theater` (`tid`)
+	FOREIGN KEY (`tid`) REFERENCES `movie_theater` (`tid`)
 );
 
-CREATE TABLE `Movie_information` (
+CREATE TABLE `movie_information` (
 	`miid`	INT NOT NULL AUTO_INCREMENT,
 	`miday`	DATE NULL,
 	`mistarttime`	time	NULL,
@@ -107,37 +107,37 @@ CREATE TABLE `Movie_information` (
 	`mid`	INT	NOT NULL,
 	`cid` INT NOT NULL,
 	PRIMARY KEY (`miid`),
-	FOREIGN KEY (`mid`) REFERENCES `Movie` (`mid`),
-	FOREIGN KEY (`cid`) REFERENCES `Movie_cinema` (`cid`)
+	FOREIGN KEY (`mid`) REFERENCES `movie` (`mid`),
+	FOREIGN KEY (`cid`) REFERENCES `movie_cinema` (`cid`)
 
 );
 
-CREATE TABLE `Movie_reservation` (
+CREATE TABLE `movie_reservation` (
 	`rid`	INT AUTO_INCREMENT NOT NULL,
 	`rdate`	date	NULL,
 	`rprice`	int	NULL,
 	`miid`	int	NOT NULL,
 	`uid`	varchar(20)	NOT NULL,
 	PRIMARY KEY (`rid`),
-	FOREIGN KEY (`miid`) REFERENCES `Movie_information` (`miid`),
-	FOREIGN KEY (`uid`) REFERENCES `Member` (`uid`)
+	FOREIGN KEY (`miid`) REFERENCES `movie_information` (`miid`),
+	FOREIGN KEY (`uid`) REFERENCES `member` (`uid`)
 );
 
-CREATE TABLE `Movie_seat` (
+CREATE TABLE `movie_seat` (
 	`sid`	INT AUTO_INCREMENT NOT NULL,
 	`sname`	varchar(20)	NULL,
 	`cid`	INT	NOT NULL,
 	PRIMARY KEY (`sid`),
-	FOREIGN KEY (`cid`) REFERENCES `Movie_cinema` (`cid`)
+	FOREIGN KEY (`cid`) REFERENCES `movie_cinema` (`cid`)
 );
 
-CREATE TABLE `Movie_infoseat` (
+CREATE TABLE `movie_infoseat` (
 	`misid` INT AUTO_INCREMENT NOT NULL,
 	`sid` INT  NOT NULL,
 	`miid` INT  NOT NULL,
 	 PRIMARY KEY (`misid`),
-	 FOREIGN KEY (`sid`) REFERENCES `Movie_seat` (`sid`),
-    FOREIGN KEY (`miid`) REFERENCES `Movie_information` (`miid`)
+	 FOREIGN KEY (`sid`) REFERENCES `movie_seat` (`sid`),
+    FOREIGN KEY (`miid`) REFERENCES `movie_information` (`miid`)
 );
 
 INSERT INTO `movie` (`mtitle`, `mdir`, `mgenre`, `mtime`, `mdate`, `mrating`, `mstory`, `mimagepath`)
@@ -795,8 +795,7 @@ VALUES("2023-02-15","12:50:00","16:10:00","1","17");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","17:50:00","20:10:00","1","18");
 
-INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
-VALUES("2023-02-15","12:50:00","15:10:00","2","19");
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","1","20");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
@@ -916,6 +915,9 @@ VALUES("2023-02-15","17:50:00","20:10:00","1","60");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","2","61");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
+VALUES("2023-02-15","12:50:00","15:10:00","2","19");
+
+INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","1","62");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","15:30:00","18:00:00","1","63");
@@ -936,6 +938,8 @@ VALUES("2023-02-15","13:50:00","16:00:00","1","26");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:30:00","16:10:00","1","27");
+
+/*
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","2","1");
@@ -969,6 +973,7 @@ VALUES("2023-02-15","12:50:00","15:10:00","2","5");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","2","6");
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","15:30:00","18:00:00","2","6");
 
@@ -1150,6 +1155,7 @@ VALUES("2023-02-15","15:30:00","18:00:00","2","65");
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","10:50:00","13:10:00","2","65");
+*/
 
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-15","12:50:00","15:10:00","3","1");
@@ -1669,8 +1675,15 @@ VALUES("2023-02-17","12:50:00","16:10:00","1","17");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-16","17:50:00","20:10:00","1","18");
 
+
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-17","12:50:00","15:10:00","2","19");
+
+
+
+
+
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
 VALUES("2023-02-17","12:50:00","15:10:00","1","20");
 INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`)
@@ -3941,124 +3954,124 @@ CALL clone_member_like4();
 CALL clone_member_like5();
 
 -- 관람평 좋아요 기록 남기는 query
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 1);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 1);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 1);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp4", 1);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 1119);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 1119);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 1119);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp4", 1119);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 1118);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 1118);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 1118);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 1120);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 1120);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 1120);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp4", 1120);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 1122);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 1122);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2116);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2116);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 2116);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp4", 2116);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2117);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2117);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 2117);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2120);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2120);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 2120);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp4", 2120);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2118);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2118);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2205);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2205);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 2205);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp4", 2205);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2206);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2206);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 2206);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2207);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2207);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 2207);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp4", 2207);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2209);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2209);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2255);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2255);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 2255);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp4", 2255);
 
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp1", 2256);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp2", 2256);
-INSERT INTO `Comment_Info`(`uid`, `umid`)
+INSERT INTO `comment_info`(`uid`, `umid`)
 VALUES("temp3", 2256);
 
 -- 영화 좋아요 예외 추가
@@ -4073,4 +4086,5 @@ INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-0
 -- 아래꺼 상견니인데 이거 일부로 28일 영화로 해둠(관람평 안적어지는지 확인 바람) 나중에 temp1만 영화 본 기록 다 넣기
 INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-02-13', '10000', '531', 'temp1');
 INSERT INTO `movie_reservation`(`rdate`, `rprice`, `miid`, `uid`) VALUES('2023-02-13', '10000', '236', 'temp1');
+
 
