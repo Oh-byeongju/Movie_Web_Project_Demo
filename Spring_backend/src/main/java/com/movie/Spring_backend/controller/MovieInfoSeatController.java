@@ -22,7 +22,8 @@ public class MovieInfoSeatController {
 
     @GetMapping("/normal/movieinfoseat")
     public List<MovieInfoSeatDto> findByInfoSeat( @RequestParam Long miid) {
-        return movieInfoSeatService.findByInfoMovie(miid);
+        List<MovieInfoSeatDto> dataseat= movieInfoSeatService.findByInfoMovie(miid);
+        return dataseat;
     }
 /*
     @GetMapping("/normal/seatedRow")
