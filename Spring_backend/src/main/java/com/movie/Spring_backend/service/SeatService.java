@@ -84,14 +84,19 @@ public class SeatService {
                 disableDatas.add(s);  //점유된 좌석이 아닌것
             }
         }
-            List<SeatDto> able = ableDatas.stream().map((seat) -> seatMapper.toAble(seat, "able")).collect(Collectors.toList());
-            List<SeatDto> disable = disableDatas.stream().map((seat) -> seatMapper.toAble(seat, "disable")).collect(Collectors.toList());
-            //able과 disalbe로 dto 매핑후 합침
-            for (SeatDto seat : disable) {
-                able.add(seat);
-            }
+        List<SeatDto> able = ableDatas.stream().map((seat) -> seatMapper.toAble(seat, "able")).collect(Collectors.toList());
+        List<SeatDto> disable = disableDatas.stream().map((seat) -> seatMapper.toAble(seat, "disable")).collect(Collectors.toList());
+        //able과 disalbe로 dto 매핑후 합침
+        for (SeatDto seat : disable) {
+            able.add(seat);
+        }
         Collections.sort(able, new SortUtil()); //이 함수는 뒤죽박죽인 자리를 순서대로 되돌려둠
+<<<<<<< HEAD
             return able;
+=======
+        return able;
+
+>>>>>>> cefa61fcccad1d3408023ff1d68f4d5acab19883
     }
     @Transactional
     public void setValues(String name, String age , HttpServletRequest request) {
@@ -123,9 +128,25 @@ public class SeatService {
                     redisSeatRepository.save(redisSeatEntity);
             }
         }
+<<<<<<< HEAD
         else {
             throw new SeatOccupyException("점유된 좌석입니다.");
+=======
+
+        //키 전체 검색
+        List<RedisSeatEntity> datad = redisSeatRepository.findAll();
+        System.out.println(datad);
+        List<String> abcd= new ArrayList<>();
+        for (RedisSeatEntity r : datad) {
+            if (r != null) {//null 값 제외하고 받아옴
+                abcd.add(r.getMiid());
+                System.out.println(abcd);
+            }
+>>>>>>> cefa61fcccad1d3408023ff1d68f4d5acab19883
         }
+    }
+
+        return datad;
     }
 
     // 데이터 가져오기
