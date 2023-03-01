@@ -118,14 +118,13 @@ const MovieList = () => {
 
 const Container = styled.div`
   padding: 0;
-  width: 1250px;
-  margin-left: 170px;
+  width: 90%;
+  margin: 0 auto !important;
   box-sizing: border-box;
-  margin-bottom: 0;
 `;
 
 const InnerWraps = styled.div`
-  width: 100%;
+  width: 90%;
 
   .titleMenu {
     position: relative;
