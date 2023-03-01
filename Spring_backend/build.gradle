@@ -10,6 +10,7 @@ sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -18,7 +19,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation  'mysql:mysql-connector-java'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
+	implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 

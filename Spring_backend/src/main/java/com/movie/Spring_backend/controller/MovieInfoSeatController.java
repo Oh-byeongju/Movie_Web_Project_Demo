@@ -17,18 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/seat")
 public class MovieInfoSeatController {
-
     private final MovieInfoSeatService movieInfoSeatService;
 
-    @GetMapping("/normal/movieinfoseat")
-    public List<MovieInfoSeatDto> findByInfoSeat( @RequestParam Long miid) {
-        List<MovieInfoSeatDto> dataseat= movieInfoSeatService.findByInfoMovie(miid);
-        return dataseat;
-    }
-/*
-    @GetMapping("/normal/seatedRow")
-    public List<MovieInfoDto> findCount (){
-
-        return movieInfoSeatService.findCount();
-    }*/
 }

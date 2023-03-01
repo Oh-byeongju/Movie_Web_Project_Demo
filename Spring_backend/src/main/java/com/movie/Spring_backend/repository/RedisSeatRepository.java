@@ -8,6 +8,4 @@ public interface RedisSeatRepository extends CrudRepository<RedisSeatEntity, Str
     @Override
     List<RedisSeatEntity> findAll();
 
-    List<RedisSeatEntity> findAllById(String miid);
-
 }

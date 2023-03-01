@@ -20,9 +20,5 @@ public class OcuppyMapper {
         this.miid=miid;
         this.seatid=seatid;
     }
-    @Builder
-    public OcuppyMapper (List<MovieInfoSeatDto> infoseat,List<OcuppyMapper> ocuppyseat){
-        this.infoseat=infoseat;
-        this.ocuppyseat=ocuppyseat;
-    }
+
 }

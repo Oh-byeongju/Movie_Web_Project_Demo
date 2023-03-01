@@ -133,4 +133,6 @@ public class MovieInfoController {
         return movieInfoService.findBySchedule(miday,mid,cid);
     }
 
+
+
 }

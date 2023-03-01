@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 
+@CrossOrigin(origins = "${spring.cors.origins}", allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/seat")
@@ -24,8 +25,8 @@ public class SeatController {
     }
 
     @PostMapping("/normal/rediss")
-    public   List<RedisSeatEntity> startRedis(@RequestBody HashMap<String, String> body, HttpServletRequest request) {
-        return seatService.setValues(body.get("name"), body.get("age"), request);
+    public void startRedis(@RequestBody HashMap<String, String> body, HttpServletRequest request) {
+        seatService.setValues(body.get("name"), body.get("age"), request);
     }
 
     @GetMapping("/normal/rediss")

@@ -17,6 +17,7 @@ import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 import java.util.Collections;
@@ -34,24 +35,30 @@ public class SeatService {
     private final MovieInfoSeatRepository movieInfoSeatRepository;
     private final SeatMapper seatMapper;
 
+    @Transactional
+
     public List<SeatDto> findBySeat(Long id,Long miid) {
 
         List<SeatEntity> allDatas = seatRepository.findByCinemaCid(id);  //전체 시트
         List<MovieInfoSeatEntity> ocuppyDatas = movieInfoSeatRepository.findByInfoMovie(miid);
         //인포 시트 //점유된 좌석
-        List<SeatEntity> ableDatas = new ArrayList<>();
-        List<SeatEntity> disableDatas = new ArrayList<>();
+        List<SeatEntity> ableDatas = new ArrayList<>();  //able 된 좌석 저장할 list
+        List<SeatEntity> disableDatas = new ArrayList<>();  //disable된 좌석 저장할 list
 
 
         List<RedisSeatEntity> datad = redisSeatRepository.findAll();
-        System.out.println(datad);
-        List<String> abcd= new ArrayList<>();
+        //레디스의 점유 좌석을 확인 하기 위한 list
+        List<OcuppyMapper> ocuppyMappers = new ArrayList<>();
+        //레디스의 점유 좌석을 매핑해줌
         for (RedisSeatEntity r : datad) {
             if (r != null) {//null 값 제외하고 받아옴
-                abcd.add(r.getMiid());
-                System.out.println(abcd);
+                String[] SeatNumber = r.getMiid().split(",");
+                ocuppyMappers.add(new OcuppyMapper( Long.parseLong(SeatNumber[0]),  Long.parseLong(SeatNumber[1])));
             }
+            //miid seatid로 추출해서 매핑
         }
+
+
         //try catch대신 bollean으로 for문돌림
         for (SeatEntity s : allDatas) {
             boolean check=false;
@@ -60,6 +67,16 @@ public class SeatService {
                     ableDatas.add(s);
                     check=true;
                     break;
+                }
+
+            }
+            for(OcuppyMapper oc : ocuppyMappers){
+                if(miid==oc.getMiid()){ //occupymapper의 miid와 먼저 비교
+                    if(s.getSid()==oc.getSeatid()){ //seatid 로 비교
+                        ableDatas.add(s);
+                        check=true;
+                        break;
+                    }
                 }
 
             }
@@ -74,13 +91,18 @@ public class SeatService {
             able.add(seat);
         }
         Collections.sort(able, new SortUtil()); //이 함수는 뒤죽박죽인 자리를 순서대로 되돌려둠
+<<<<<<< HEAD
+            return able;
+=======
         return able;
 
+>>>>>>> cefa61fcccad1d3408023ff1d68f4d5acab19883
     }
-
-    public   List<RedisSeatEntity> setValues(String name, String age , HttpServletRequest request) {
+    @Transactional
+    public void setValues(String name, String age , HttpServletRequest request) {
+        //name : miid , age : seatid
         jwtValidCheck.JwtCheck(request, "ATK");
-        List<OcuppyMapper> array2 = new ArrayList<>();
+        boolean check =false;
         String[] SeatNumber = age.split(",");
         for (String k : SeatNumber) {
             String keys = "";
@@ -88,33 +110,28 @@ public class SeatService {
             try {
                 if (!redisTemplate.hasKey(keys)) { //키가 있는지 없는지 검사를 한다. 키가 있으면 예외처리를 통해 종료.
                     System.out.println("key 가 없습니다.");
-                    //키 set                  values.set(keys, "hello", Duration.ofMinutes(1)); // 1분 뒤 메모리에서 삭제된다.
                 } else {
                     throw new SeatOccupyException("점유된 좌석입니다."); //키가 있으면 종료 시킴
                 }
             } catch (SeatOccupyException e) {
-                System.out.println("에러메세지:" + keys);
                 e.printStackTrace();
-                array2.add(new OcuppyMapper(Long.parseLong(name), Long.parseLong(k)));
+                check=true;
             }
-
-
         }
-        if (array2.isEmpty() == true) {
+        //점유된 좌석이 없으면 키 삽입 시작
+        if (check==false) {
             for (String k : SeatNumber) {
                 String keys = "";
                 keys = name + "," + k;
-                if (!redisTemplate.hasKey(keys)) { //키가 있는지 없는지 검사를 한다. 키가 있으면 예외처리를 통해 종료.
-                    System.out.println("key 삽입");
+                    System.out.println("안에 겹치는 데이터가 없으므로 key 삽입");
                     RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, k);
                     redisSeatRepository.save(redisSeatEntity);
-                } else {
-                    throw new SeatOccupyException("점유된 좌석입니다."); //한번더 검사
-                }
             }
-        } else {
-            System.out.println("비었다");
         }
+<<<<<<< HEAD
+        else {
+            throw new SeatOccupyException("점유된 좌석입니다.");
+=======
 
         //키 전체 검색
         List<RedisSeatEntity> datad = redisSeatRepository.findAll();
@@ -125,7 +142,9 @@ public class SeatService {
                 abcd.add(r.getMiid());
                 System.out.println(abcd);
             }
+>>>>>>> cefa61fcccad1d3408023ff1d68f4d5acab19883
         }
+    }
 
         return datad;
     }
