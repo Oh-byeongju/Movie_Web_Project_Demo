@@ -140,47 +140,42 @@ const TopButtons = () => {
           </Button>
           </div>
           <div className="menu_pan">
-            <div className="test">
-
-            
-
-
-                <div className="menu_category">
-                  <div className="title_category">영화</div>
-                  <div className="category">
-                    <Link to="/movie">전체영화</Link>
-                  </div>
-                  <div className="category">큐레이션</div>
-                  <div className="category">무비포스트</div>
+            <div className="layout">
+              <div className="menu_category">
+                <div className="title_category">영화</div>
+                <div className="category">
+                  <Link to="/movie">전체영화</Link>
                 </div>
-                <div className="menu_category">
-                  <div className="title_category">예매</div>
-                  <div className="category">
-                    {" "}
-                    <Link to="/reserve">빠른예매</Link>
-                  </div>
-                  <div className="category">상영시간표</div>
+                <div className="category">현재상영작</div>
+                <div className="category">상영예정작</div>
+              </div>
+              <div className="menu_category">
+                <div className="title_category">예매</div>
+                <div className="category">
+                  {" "}
+                  <Link to="/reserve">빠른예매</Link>
                 </div>
-                <div className="menu_category">
-                  <div className="title_category">극장</div>
-                  <div className="category">전체극장</div>
-                  <div className="category">특별관</div>
-                </div>
-                <div className="menu_category">
-                  <div className="title_category">이벤트</div>
-                  <div className="category">진행 이벤트</div>
-                  <div className="category">종료된 이벤트</div>
-                </div>
-                <div className="menu_category">
-                  <div className="title_category">혜택</div>
-                  <div className="category">맴버쉽</div>
-                  <div className="category">제휴할인</div>
-                </div>
-                <div className="menu_category">
-                  <div className="title_category">개발진</div>
-                  <div className="category">개발진</div>
-                </div>
-
+                <div className="category">상영시간표</div>
+              </div>
+              <div className="menu_category">
+                <div className="title_category">극장</div>
+                <div className="category">전체극장</div>
+                <div className="category">특별관</div>
+              </div>
+              <div className="menu_category">
+                <div className="title_category">이벤트</div>
+                <div className="category">진행 이벤트</div>
+                <div className="category">종료된 이벤트</div>
+              </div>
+              <div className="menu_category">
+                <div className="title_category">혜택</div>
+                <div className="category">맴버쉽</div>
+                <div className="category">제휴할인</div>
+              </div>
+              <div className="menu_category">
+                <div className="title_category">개발진</div>
+                <div className="category">개발진</div>
+              </div>
             </div>
           </div>
         </div>
@@ -297,18 +292,18 @@ const NavBar = styled.div`
     display: flex;
     position: absolute;
     top: 75%;
-    left : 10%;
+    left : 10.5%;
     width: 36px;
-    transform: translate(-10%, -75%);
+    transform: translate(-10.5%, -75%);
   }
 
   .RightIcon {
     display: flex;
     position: absolute;
     top: 75%;
-    right : 10%;
+    right : 13%;
     width: 36px;
-    transform: translate(10%, -75%);
+    transform: translate(13%, -75%);
   }
 
   .MenuListLeft {
@@ -378,7 +373,7 @@ const NavBar = styled.div`
     }
   }
 
-  .test {
+  .layout {
     position: relative;
     height: 204px;
   }
@@ -397,14 +392,14 @@ const NavBar = styled.div`
 
   .menu_category:nth-child(1) {
     position: absolute;
-    left: 20%;
-    transform: translate(-20%);
+    left: 22%;
+    transform: translate(-22%);
   }
 
   .menu_category:nth-child(2) {
     position: absolute;
-    left: 34%;
-    transform: translate(-34%);
+    left: 35%;
+    transform: translate(-35%);
   }
 
   .menu_category:nth-child(3) {
@@ -415,14 +410,14 @@ const NavBar = styled.div`
 
   .menu_category:nth-child(4) {
     position: absolute;
-    left: 61%;
-    transform: translate(-61%);
+    left: 60%;
+    transform: translate(-60%);
   }
 
   .menu_category:nth-child(5) {
     position: absolute;
-    left: 74%;
-    transform: translate(-74%);
+    left: 73%;
+    transform: translate(-73%);
   }
 
   .menu_category:nth-child(6) {

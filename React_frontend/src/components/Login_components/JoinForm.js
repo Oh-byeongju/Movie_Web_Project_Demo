@@ -609,12 +609,12 @@ const JoinForm = () => {
 	useEffect(() => {
 		if (JOIN_status == 204) {
 			alert('회원가입이 완료 되었습니다.');
-			document.location.assign('http://localhost:3000/');
+			window.location.assign('/');
 		}
 
 		if (JOIN_status == 400 || JOIN_status == 500) {
 			alert('예기치 못한 오류가 발생하였습니다. 다시 회원가입 해주십시오.');
-			document.location.assign('http://localhost:3000/');
+			window.location.assign('/');
 		}
 	}, [JOIN_status])
 

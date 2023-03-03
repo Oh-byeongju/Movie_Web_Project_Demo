@@ -163,8 +163,8 @@ const LoginForm = () => {
           </LoginButton>
           <Links>
             <Link to="/UserJoin">회원가입</Link>
-            <Link to="/">아이디 찾기(미구현)</Link>
-            <Link to="/">비밀번호 찾기(미구현)</Link>
+            <Link to="/">아이디 찾기</Link>
+            <Link to="/">비밀번호 찾기</Link>
           </Links>
         </Form>
       </Layout>
@@ -190,7 +190,7 @@ const Title = styled.div`
 `;
 
 const Form = styled.div`
-  width: 47%;
+  width: 640px;
   margin: 0px auto;
 `;
 
@@ -223,7 +223,6 @@ const LoginId = styled.input`
 const LoginPw = styled.input`
   margin-top: 20px !important;
   border-radius: 2px;
-  width: 100%;
   height: 50px;
   border: 1px solid #e5e5e5;
   padding: 9px 12px;
@@ -238,7 +237,7 @@ const LoginPw = styled.input`
 const LoginMid = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 4px;
+  margin-top: 5px;
   margin-left: 128px;
 
   .autoLogin {
@@ -267,7 +266,7 @@ const LoginButton = styled.button`
   cursor: pointer;
   line-height: 48px;
   padding: 0 20px;
-  margin-top: 25px !important;
+  margin-top: 20px !important;
   width: 60%;
   font-size: 16px;
   border-radius: 3px;
@@ -319,10 +318,10 @@ const Links = styled.div`
     position: absolute;
     left: -15px;
     top: 50%;
-    width: 2px;
+    width: 0.05rem;
     height: 16px;
     margin-top: -8px;
-    background-color: #d8d9db;
+    background-color: #7e7e7e;
     pointer-events: none;
   }
 `;
