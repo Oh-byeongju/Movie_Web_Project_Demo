@@ -1,6 +1,6 @@
 // 이거 사용 다하고 없애야함
 import React, {useRef, useMemo, useState} from 'react';
-import ReactQuill, {Quill} from 'react-quill';
+import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from "styled-components";
 
