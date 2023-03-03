@@ -23,12 +23,15 @@ public class MovieInfoSeatEntity {
     @JoinColumn(name="miid") //조인할 컬럼 이름
     private MovieInfoEntity info;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="rid") //조인할 컬럼 이름
+    private ReservationEntity reserve;
     @Builder
-    public MovieInfoSeatEntity(Long misid, SeatEntity seat, MovieInfoEntity info) {
+    public MovieInfoSeatEntity(Long misid, SeatEntity seat, MovieInfoEntity info, ReservationEntity reserve) {
         this.misid= misid;
         this.seat=seat;
         this.info=info;
+        this.reserve=reserve;
     }
 
 }

@@ -22,7 +22,6 @@ const Seat = () => {
   const [numKid, setNumKid] = useState(0); //애기
   const [selectedUser, setSelectedUser] = useState([]); //선택한 값
   const [priceInfo, setPriceInfo] = useState([]); //값 더하기 //여기 배열로 값을 저장
-  const [selectedRows, setSelectedRows] = useState([]);
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
   const {
@@ -261,8 +260,6 @@ const Seat = () => {
                     addSeats={addSeats}
                     is_reserved={seat.able}
                     totalNumber={total}
-                    selectedRows={selectedRows}
-                    setSelectedRows={setSelectedRows}
                     removeSeats={removeSeats}
                   />
                 </div>

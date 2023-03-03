@@ -35,6 +35,8 @@ public class SeatService {
     private final MovieInfoSeatRepository movieInfoSeatRepository;
     private final SeatMapper seatMapper;
 
+
+
     @Transactional
 
     public List<SeatDto> findBySeat(Long id,Long miid) {

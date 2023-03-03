@@ -11,6 +11,7 @@ import {
 import { Login } from "@mui/icons-material";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { PAYMENT_REQUEST, RESERVE_LOGIN_PAGE } from "../../reducer/ticket";
+import * as Payment from "../Common_components/Function";
 
 const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
@@ -39,55 +40,28 @@ const TicketMore = ({ setPage, page }) => {
   }, []);
 
   //
-  const onClickPayment = () => {
-    const { IMP } = window;
-    IMP.init([["imp57612323"]]); // 결제 데이터 정의
+  function paymentRecord() {
     const date = new window.Date().getTime();
-    IMP.request_pay(
-      {
-        pg: "kcp",
-        pay_method: "card",
-        merchant_uid: "merchant_" + date,
-        name: "상품1", //결제창에서 보여질 이름
-        amount: 100, //실제 결제되는 가격
-        buyer_email: "iamport@siot.do",
-        buyer_name: "구매자이름",
-        buyer_tel: "010-1234-5678",
-        buyer_addr: "서울 강남구 도곡동",
-        buyer_postcode: "123-456",
-      },
-      function (rsp) {
-        if (rsp.success) {
-          //[1] 서버단에서 결제정보 조회를 위해 imp_uid 전달하기
 
-          dispatch({
-            type: PAYMENT_REQUEST,
-            data: rsp.imp_uid,
-          }).done(function (data) {
-            //[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
-            if (rsp.success) {
-              var msg = "결제가 완료되었습니다.";
-              msg += "\n고유ID : " + rsp.imp_uid;
-              msg += "\n상점 거래ID : " + rsp.merchant_uid;
-              msg += "결제 금액 : " + rsp.paid_amount;
-              msg += "카드 승인번호 : " + rsp.apply_num;
-
-              alert(msg);
-            } else {
-              //[3] 아직 제대로 결제가 되지 않았습니다.
-              //[4] 결제된 금액이 요청한 금액과 달라 결제를 자동취소처리하였습니다.
-            }
-          });
-        } else {
-          var msg = "결제에 실패하였습니다.";
-          msg += "에러내용 : " + rsp.error_msg;
-
-          alert(msg);
-        }
-      }
+    const data = {
+      pg: "html5_inicis.INIpayTest", //pg사
+      payMethod: "card", //결제수단
+      oderNum: Payment.createOrderNum(), //주문번호
+      name: "결제 테스트", //결제이름
+      buyerEmail: "testemail@test.com", //구매자 이메일
+      buyerName: "홍길동", //구매자 이름
+      buyerTel: "010-1234-1234", //구매자 번호
+      buyerAddr: "부산광역시 ", //구매자 주소
+      amount: "100",
+    };
+    Payment.paymentCard(
+      data,
+      dispatch,
+      LOGIN_data.uid,
+      choiceSeat,
+      scheduleData.miid
     );
-  };
-
+  }
   return (
     <TicketWrapper>
       <TicketStep page={page}>
@@ -180,7 +154,7 @@ const TicketMore = ({ setPage, page }) => {
                     age: seatnumber,
                   },
                 });
-                onClickPayment();
+                paymentRecord();
               }
             }}
           >
