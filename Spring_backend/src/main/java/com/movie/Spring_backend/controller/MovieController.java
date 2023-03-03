@@ -33,13 +33,13 @@ public class MovieController {
         return ResponseEntity.ok().body(movieService.getMovieDetail(mid, uid));
     }
 
-    // 영화 세부내용의 관람평을 가져오는 메소드 (최신순)
+    // 영화 세부내용의 관람평을 가져오는 메소드(최신순)
     @GetMapping("/normal/recentcomment/moviedetail/{mid}")
     public ResponseEntity<List<CommentInfoDto>> MovieDetailCommentRecent(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
         return ResponseEntity.ok().body(movieService.getMovieDetailCommentRecent(mid, uid));
     }
 
-    // 영화 세부내용의 관람평을 가져오는 메소드 (공감순)
+    // 영화 세부내용의 관람평을 가져오는 메소드(공감순)
     @GetMapping("/normal/likecomment/moviedetail/{mid}")
     public ResponseEntity<List<CommentInfoDto>> MovieDetailCommentLike(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
         return ResponseEntity.ok().body(movieService.getMovieDetailCommentLike(mid, uid));
