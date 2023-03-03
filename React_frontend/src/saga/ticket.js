@@ -533,12 +533,9 @@ function* selectSchedule(action) {
 
 async function paymentApi(data) {
   return await http
-    .post("/v2/normal/verifyIamport/", {
-      params: {
-        imp_uid: data,
-      },
-    })
+    .post("/v2/auth/payment", data)
     .then((response) => {
+      console.log(response);
       return response;
     })
     .catch((error) => {

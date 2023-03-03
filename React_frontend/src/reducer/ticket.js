@@ -68,7 +68,7 @@ export const initalState = {
   payment_loading: false,
   payment_done: false,
   payment_error: null,
-
+  payment: "",
   selectSchedule: [],
   disableTheater: [],
 
@@ -565,6 +565,7 @@ const ticket = (state = initalState, action) => {
         payment_loading: true,
         payment_done: false,
         payment_error: null,
+        payment: action.data,
       };
     case PAYMENT_SUCCESS:
       return {

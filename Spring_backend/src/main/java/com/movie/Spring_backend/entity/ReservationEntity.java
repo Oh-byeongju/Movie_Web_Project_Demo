@@ -22,6 +22,13 @@ public class ReservationEntity {
     @Column(nullable = false)
     private Integer rprice;
 
+    @Column(nullable = false)
+    private String rtoken;
+
+    @Column(nullable = false)
+    private String rpayid;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="miid")
     private MovieInfoEntity movieInfo;
@@ -31,10 +38,12 @@ public class ReservationEntity {
     private MemberEntity member;
 
     @Builder
-    public ReservationEntity(Long rid ,Date rdate, Integer rprice, MovieInfoEntity movieInfo, MemberEntity member) {
+    public ReservationEntity(Long rid ,Date rdate, Integer rprice,String rtoken,String rpayid, MovieInfoEntity movieInfo, MemberEntity member) {
         this.rid=rid;
         this.rdate=rdate;
         this.rprice=rprice;
+        this.rtoken=rtoken;
+        this.rpayid=rpayid;
         this.movieInfo=movieInfo;
         this.member=member;
     }
