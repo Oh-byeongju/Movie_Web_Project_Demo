@@ -1,6 +1,8 @@
 export const initalState = {
   choiceSeat: [],
-  choiceUser: [],
+  어른: 0,
+  학생: 0,
+  아이: 0,
   select_seat_loading: false,
   select_seat_done: false,
   select_seat_error: null,
@@ -60,9 +62,22 @@ const seat = (state = initalState, action) => {
       };
 
     case USER_CHOICE:
+      let 어른 = state.어른;
+      let 학생 = state.학생;
+      let 아이 = state.아이;
+      if (action.data === "어른") {
+        어른 = state.어른 + 1;
+      } else if (action.data === "학생") {
+        학생 = state.학생 + 1;
+      } else if (action.data === "아이") {
+        아이 = state.아이 + 1;
+      } else {
+      }
       return {
         ...state,
-        choiceUser: [...state.choiceUser, action.data],
+        어른: 어른,
+        학생: 학생,
+        아이: 아이,
         price: state.price + action.price,
         total: state.total + 1,
       };

@@ -11,14 +11,21 @@ const SeatButton = ({
   removeSeats,
 }) => {
   const [isChecked, setIschecked] = useState(true);
-  const { selectinfoseat, choiceSeat, choiceUser, check_seat_error } =
-    useSelector((state) => state.seat);
+  const {
+    selectinfoseat,
+    choiceSeat,
+    choiceUser,
+    check_seat_error,
+    어른,
+    학생,
+    아이,
+  } = useSelector((state) => state.seat);
 
   useEffect(() => {
     setIschecked(true);
   }, [check_seat_error]);
   const checkedSeat = () => {
-    if (choiceUser.length > choiceSeat.length && isChecked) {
+    if (어른 + 아이 + 학생 > choiceSeat.length && isChecked) {
       setIschecked((prev) => !prev);
       console.log(totalNumber);
     } else if (!isChecked) {

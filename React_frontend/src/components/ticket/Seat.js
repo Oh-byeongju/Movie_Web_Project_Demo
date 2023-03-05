@@ -58,7 +58,7 @@ const Seat = () => {
       setNumAdult((prev) => prev + 1);
       dispatch({
         type: USER_CHOICE,
-        data: "ADULT",
+        data: "어른",
         price: 12000,
       });
     }
@@ -69,7 +69,7 @@ const Seat = () => {
       setNumTeenager((prev) => prev + 1);
       dispatch({
         type: USER_CHOICE,
-        data: "TEENAGER",
+        data: "학생",
         price: 8000,
       });
     }
@@ -80,7 +80,7 @@ const Seat = () => {
       setNumKid((prev) => prev + 1);
       dispatch({
         type: USER_CHOICE,
-        data: "KID",
+        data: "아이",
         price: 6000,
       });
     }
@@ -93,7 +93,7 @@ const Seat = () => {
       setNumAdult((prev) => prev - 1);
       dispatch({
         type: USER_REMOVE,
-        data: "ADULT",
+        data: "어른",
         price: 12000,
       });
     }
@@ -105,7 +105,7 @@ const Seat = () => {
       setNumTeenager((prev) => prev - 1);
       dispatch({
         type: USER_REMOVE,
-        data: "TEENAGER",
+        data: "학생",
         price: 8000,
       });
     }
@@ -117,7 +117,7 @@ const Seat = () => {
       setNumKid((prev) => prev - 1);
       dispatch({
         type: USER_REMOVE,
-        data: "KID",
+        data: "유아",
         price: 6000,
       });
     }
