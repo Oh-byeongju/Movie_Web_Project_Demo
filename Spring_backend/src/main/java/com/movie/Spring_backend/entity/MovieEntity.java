@@ -43,29 +43,33 @@ public class MovieEntity {
     private String mimagepath;
 
     // 좋아요 개수 추출
-    // 테이블에는 존재하지 않고 Formula 어노테이션으로 테이블을 join 시켜서 들고옴
-    @Formula("(select count(mm.umlike) from movie_member mm where mm.umlike = true and mm.mid = mid)")
+    @Formula("(select count(*) from movie_member mm where mm.umlike = true and mm.mid = mid)")
     private Integer cntMovieLike;
 
     // 평점 추출
-    // 테이블에는 존재하지 않고 Formula 어노테이션으로 테이블을 join 시켜서 들고옴
     @Formula("(select avg(mm.umscore) from movie_member mm where mm.mid = mid)")
     private Float avgScore; // 평점의 평균
 
+    // 영화의 예매기록 갯수
+    @Formula("(select count(*) from movie_reservation mr where mr.miid in " +
+             "(select mi.miid from movie_information mi where mi.mid = mid))")
+    private Integer cntReserve;
+
     @Builder
-    public MovieEntity(Long mid, String mtitle, String mdir, String mgenre, int mtime, Date mdate,
-                       String mrating, String mstory, String mimagepath, Integer cntMovieLike, Float avgScore) {
+    public MovieEntity(Long mid, String mtitle, String mdir, String mgenre, int mtime, Date mdate, String mrating,
+                       String mstory, String mimagepath, Integer cntMovieLike, Float avgScore, Integer cntReserve) {
         this.mid = mid;
         this.mtitle = mtitle;
-        this.mdir=mdir;
-        this.mgenre=mgenre;
-        this.mtime=mtime;
-        this.mdate=mdate;
-        this.mrating=mrating;
-        this.mstory=mstory;
-        this.mimagepath=mimagepath;
+        this.mdir = mdir;
+        this.mgenre = mgenre;
+        this.mtime = mtime;
+        this.mdate = mdate;
+        this.mrating = mrating;
+        this.mstory = mstory;
+        this.mimagepath = mimagepath;
         this.cntMovieLike = cntMovieLike;
         this.avgScore = avgScore;
+        this.cntReserve= cntReserve;
     }
 }
 

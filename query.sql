@@ -11,14 +11,11 @@ DROP TABLE IF EXISTS `movie_theater`;
 DROP TABLE IF EXISTS `member`;
 DROP TABLE IF EXISTS `movie`;
 DROP PROCEDURE IF EXISTS clone_member;
-DROP PROCEDURE IF EXISTS clone_member_like1;
-DROP PROCEDURE IF EXISTS clone_member_like2;
-DROP PROCEDURE IF EXISTS clone_member_like3;
-DROP PROCEDURE IF EXISTS clone_member_like4;
-DROP PROCEDURE IF EXISTS clone_member_like5;
 DROP PROCEDURE IF EXISTS seat_add;
 DROP PROCEDURE IF EXISTS movieinfo_insert;
 DROP PROCEDURE IF EXISTS reservation_insert;
+DROP PROCEDURE IF EXISTS clone_member_like;
+DROP PROCEDURE IF EXISTS comment_like_insert;
 
 CREATE TABLE `member` (
 	`uid`	varchar(20)	NOT NULL,
@@ -535,7 +532,7 @@ INSERT INTO `movie_actor` (`marole`, `aid`, `mid`)
 VALUES('주연', '72', '19');
 
 INSERT INTO `movie`(`mtitle`, `mdir`, `mgenre`, `mtime`, `mdate`, `mrating`, `mstory`, `mimagepath`)
-VALUES("멍뭉이", "김주환" , "드라마", "100", DATE_ADD(NOW(), INTERVAL 20 DAY), "0", '<h2>"루니의 새 집사를 찾아라!"</h2><p><br></p><p><span style="color: rgb(51, 51, 51);">동생 같은 반려견 ‘루니’를 위해 정시 퇴근에 진심인 ‘민수’</span></p><p><span style="color: rgb(51, 51, 51);">결혼을 앞둔 그에게 닥친 집사 인생 조기 로그아웃 위기!</span></p><p><br></p><p><span style="color: rgb(51, 51, 51);">야심 차게 오픈한 카페는 말아먹고 인생 자체가 위기인 사촌형 진국,</span></p><p><span style="color: rgb(51, 51, 51);">민수의 다급한 SOS에 고심하다 새 집사 면접을 제안하게 되고.</span></p><p><span style="color: rgb(51, 51, 51);">&nbsp;</span></p><p><span style="color: rgb(51, 51, 51);">완벽한 집사를 찾기 위해 제주도로 향하는 두 형제의 여정에</span></p><p><span style="color: rgb(51, 51, 51);">느닷없는 멍뭉이들의 등장이 이어지는데!</span></p><p><br></p><p>뜻밖의 ‘견’명적인 만남</p><p>함께 하면 개신나고! 개따뜻한!</p><p>개귀엽 버라이어티 무비!</p>',"img/ranking/20.jpg");
+VALUES("멍뭉이", "김주환" , "드라마", "100", DATE_ADD(NOW(), INTERVAL 25 DAY), "0", '<h2>"루니의 새 집사를 찾아라!"</h2><p><br></p><p><span style="color: rgb(51, 51, 51);">동생 같은 반려견 ‘루니’를 위해 정시 퇴근에 진심인 ‘민수’</span></p><p><span style="color: rgb(51, 51, 51);">결혼을 앞둔 그에게 닥친 집사 인생 조기 로그아웃 위기!</span></p><p><br></p><p><span style="color: rgb(51, 51, 51);">야심 차게 오픈한 카페는 말아먹고 인생 자체가 위기인 사촌형 진국,</span></p><p><span style="color: rgb(51, 51, 51);">민수의 다급한 SOS에 고심하다 새 집사 면접을 제안하게 되고.</span></p><p><span style="color: rgb(51, 51, 51);">&nbsp;</span></p><p><span style="color: rgb(51, 51, 51);">완벽한 집사를 찾기 위해 제주도로 향하는 두 형제의 여정에</span></p><p><span style="color: rgb(51, 51, 51);">느닷없는 멍뭉이들의 등장이 이어지는데!</span></p><p><br></p><p>뜻밖의 ‘견’명적인 만남</p><p>함께 하면 개신나고! 개따뜻한!</p><p>개귀엽 버라이어티 무비!</p>',"img/ranking/20.jpg");
 
 INSERT INTO `actor` (`aname`, `abirthplace`)
 VALUES ('유연석', '한국');
@@ -561,7 +558,7 @@ INSERT INTO `movie_actor` (`marole`, `aid`, `mid`)
 VALUES('주연', '76', '21');
 
 INSERT INTO `movie`(`mtitle`, `mdir`, `mgenre`, `mtime`, `mdate`, `mrating`, `mstory`, `mimagepath`)
-VALUES("나의 연인에게", "앤 조라 베라치드" , "드라마", "120", DATE_ADD(NOW(), INTERVAL 25 DAY), "15", '<h2><span style="color: rgb(68, 68, 68);">사랑하는 나의 연인에게</span></h2><p><span style="color: rgb(68, 68, 68);">언제나 내 곁에 있어 줘</span></p><p><span style="color: rgb(68, 68, 68);">내 비밀을 지켜 줘</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">독일에서 유학 중인 튀르키예 출신의 의대생 아슬리(카난 키르)와,</span></p><p><span style="color: rgb(68, 68, 68);">파일럿을 꿈꾸는 레바논 출신의 치의대생 사이드(로저 아자르)는 사랑에 빠지게 된다.</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">90년대 중반, 사회적, 정치적으로도 불안정했던 시기,</span></p><p><span style="color: rgb(68, 68, 68);">아슬리는 사랑만을 믿고 사이드와 결혼하게 된다.</span></p><p><span style="color: rgb(68, 68, 68);">하지만 사이드는 홀연히 자취를 감추게 되고, 자신이 떠난 것조차 비밀로 해달라고 하는데…</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">사이드를 변함없이 사랑하고 그를 믿지만, 불길함에 휩싸이게 되는 아슬리.</span></p><p><span style="color: rgb(68, 68, 68);">이해할 수 없는 사이드의 행동은 계속되지만,</span></p><p><span style="color: rgb(68, 68, 68);">그의 비밀을 알지 못한 채 사랑하는 마음만을 간직하며 힘든 나날을 보내게 되던 어느 날,</span></p><p><span style="color: rgb(68, 68, 68);">충격적인 사실과 마주하게 된다….</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">첫눈에 반했던 순간부터, 5년의 시간이 흐르고 2001년.</span></p><p><span style="color: rgb(68, 68, 68);">아슬리의 모든 신념이 흔들리는 사건이 벌어지게 되는데…</span></p>',"img/ranking/22.jpg");
+VALUES("나의 연인에게", "앤 조라 베라치드" , "드라마", "120", DATE_ADD(NOW(), INTERVAL 24 DAY), "15", '<h2><span style="color: rgb(68, 68, 68);">사랑하는 나의 연인에게</span></h2><p><span style="color: rgb(68, 68, 68);">언제나 내 곁에 있어 줘</span></p><p><span style="color: rgb(68, 68, 68);">내 비밀을 지켜 줘</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">독일에서 유학 중인 튀르키예 출신의 의대생 아슬리(카난 키르)와,</span></p><p><span style="color: rgb(68, 68, 68);">파일럿을 꿈꾸는 레바논 출신의 치의대생 사이드(로저 아자르)는 사랑에 빠지게 된다.</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">90년대 중반, 사회적, 정치적으로도 불안정했던 시기,</span></p><p><span style="color: rgb(68, 68, 68);">아슬리는 사랑만을 믿고 사이드와 결혼하게 된다.</span></p><p><span style="color: rgb(68, 68, 68);">하지만 사이드는 홀연히 자취를 감추게 되고, 자신이 떠난 것조차 비밀로 해달라고 하는데…</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">사이드를 변함없이 사랑하고 그를 믿지만, 불길함에 휩싸이게 되는 아슬리.</span></p><p><span style="color: rgb(68, 68, 68);">이해할 수 없는 사이드의 행동은 계속되지만,</span></p><p><span style="color: rgb(68, 68, 68);">그의 비밀을 알지 못한 채 사랑하는 마음만을 간직하며 힘든 나날을 보내게 되던 어느 날,</span></p><p><span style="color: rgb(68, 68, 68);">충격적인 사실과 마주하게 된다….</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">첫눈에 반했던 순간부터, 5년의 시간이 흐르고 2001년.</span></p><p><span style="color: rgb(68, 68, 68);">아슬리의 모든 신념이 흔들리는 사건이 벌어지게 되는데…</span></p>',"img/ranking/22.jpg");
 
 INSERT INTO `actor` (`aname`, `abirthplace`)
 VALUES ('카난 키르', '영국');
@@ -601,8 +598,7 @@ INSERT INTO `movie_actor` (`marole`, `aid`, `mid`)
 VALUES('주연', '82', '24');
 -- 상영을 했으나 상영 종료한 영화 확인을  위한 영화 
 
-
-/*  영화 및 배우 절취선  */
+-- 극장 컬럼 추가
 INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
 VALUES("강남","서울","서울특별시 강남구 강남대로 438 (역삼동, 스타플렉스)");
 INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
@@ -659,7 +655,7 @@ VALUES("센텀","부산","부산광역시 해운대구 센텀남대로 35 (우�
 INSERT INTO `movie_theater`(`tname`,`tarea`,`taddr`)
 VALUES("화명","부산","부산광역시 북구 화명대로 16 (화명동, 센추리빌딩)");
 
-
+-- 상영관 컬럼 추가
 INSERT INTO `movie_cinema`(`cname`,`ctype`,`cseat`,`tid`)
 VALUES("1관","2D","70","1");
 INSERT INTO `movie_cinema`(`cname`,`ctype`,`cseat`,`tid`)
@@ -842,7 +838,6 @@ VALUES("3관","2D","50","26");
 INSERT INTO `movie_cinema`(`cname`,`ctype`,`cseat`,`tid`)
 VALUES("5관","2D","30","26");
 
-
 DELIMITER $$
 CREATE PROCEDURE movieinfo_insert()
 BEGIN
@@ -859,7 +854,7 @@ BEGIN
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 9 DAY), "10:20:00", "12:00:00", "3", 5);
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 9 DAY), "14:00:00", "16:00:00", "4", 5);
    -- 타이타닉, 카운트, 상견니, 젠틀맨은 이것들 기록으로 관람평 적을 수 있게 만드는거
-	-- 오늘 이전의 상영기록(이거는 예매에 나오면 안되는 애들임)
+	
    WHILE (i1 <= 78) DO
    	-- 이거 아래꺼 예매 기록 넣기 (70개 전부) --> 아이디 넣을때 좀 섞어서 넣기
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "10:30:00", "13:30:00", "1", i1);
@@ -877,15 +872,6 @@ BEGIN
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "15:50:00", "17:30:00", "3", i1);
    	-- 아래꺼 예매기록 넣기(15자리)
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "18:00:00", "20:00:00", "4", i1);
-   	
-   	
-   	
-   	-- 이거 기준으로 한거 위로 올리기
-   	
-   	-- 1,2,3,4 네임드 영화 넣을때는 다른 아이디 쓰는데 이제 5,6,7,8,9는 제일 앞 아이디 먼저 쓰기(temp1부터)
-   	-- 그리고 네임드 영화는 인원수 안적혀있는데 그건 메모장에 있는거 쓰면됨
-   	
-   	
   		-- 이거 아래꺼 예매 기록 넣기
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "20:30:00", "23:30:00", "5", i1);
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "07:00:00", "10:00:00", "1", i1);
@@ -935,9 +921,7 @@ BEGIN
       SET i1 = i1 + 3;
    END WHILE;
    
-   WHILE (i2 <= 78) DO
-   	-- 이거 아래꺼 예매기록 넣기(30개)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "18:00:00", "21:00:00", "1", i2);
+   WHILE (i2 <= 78) DO   	   
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "10:30:00", "12:30:00", "2", i2);
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "15:20:00", "17:00:00", "3", i2);
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "21:30:00", "23:30:00", "8", i2);
@@ -998,9 +982,9 @@ BEGIN
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 13 DAY), "13:20:00", "15:00:00", "19", i2);
       SET i2 = i2 + 6;
    END WHILE;
-   
+	   
    WHILE (i3 <= 78) DO
-   	-- 이거 아래꺼 예매기록 넣기(30개)
+   	-- 이거 아래꺼 예매기록 넣기(20개)
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "19:30:00", "22:30:00", "1", i3);
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "17:00:00", "19:00:00", "7", i3);
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "14:40:00", "16:20:00", "3", i3);
@@ -1054,6 +1038,16 @@ BEGIN
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "15:20:00", "17:00:00", "19", i3);
       SET i3 = i3 + 9;
    END WHILE;
+   -- 예외적으로 넣어주는 영화
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "09:20:00", "11:00:00", "19", 1);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "12:00:00", "13:40:00", "19", 1);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "14:20:00", "16:00:00", "19", 1);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "07:20:00", "09:00:00", "19", 2);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "18:00:00", "19:40:00", "19", 2);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "21:20:00", "23:00:00", "19", 2);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "08:20:00", "10:00:00", "19", 3);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "11:00:00", "12:40:00", "19", 3);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "19:20:00", "21:00:00", "19", 3);
 END $$
 
 -- 유령 회원을 가입시키는 프로시저
@@ -1264,6 +1258,78 @@ BEGIN
       SET i = i + 1;
    END WHILE;
    
+   -- 아바타 (현재 상영중인 영화 예매 기록 추가(하루지남))
+   SET i = 1;
+   WHILE (i <= 38) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '10000', '성인 1명', 'temporary_value', 'temporary_value', '14', val);      
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 유령 (현재 상영중인 영화 예매 기록 추가(3일지남 -> 개봉직후))
+   SET i = 1;
+   WHILE (i <= 48) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '10000', '성인 1명', 'temporary_value', 'temporary_value', '26', val);      
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 장화신은 고양이 (현재 상영중인 영화 예매 기록 추가(4일지남 -> 개봉직후))
+   SET i = 1;
+   WHILE (i <= 43) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '10000', '성인 1명', 'temporary_value', 'temporary_value', '28', val);      
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 (현재 상영중인 영화 예매 기록 추가(하루지남)) -> 30자리
+   SET i = 501;
+   WHILE (i <= 530) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '10000', '성인 1명', 'temporary_value', 'temporary_value', '1335', val); 
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 어메이징 모리스 (현재 상영중인 영화 예매 기록 추가(하루지남))
+   SET i = 1;
+   WHILE (i <= 35) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '10000', '성인 1명', 'temporary_value', 'temporary_value', '1339', val);      
+      SET i = i + 1;
+   END WHILE;
+
+   -- 타이타닉 (현재 상영중인 영화 예매 기록 추가(오늘))
+   SET i = 901;
+   WHILE (i <= 920) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '10000', '성인 1명', 'temporary_value', 'temporary_value', '2060', val);      
+      SET i = i + 1;
+   END WHILE;
+  
+  	-- 영웅 (현재 상영중인 영화 예매 기록 추가(하루지남))
+   SET i = 1;
+   WHILE (i <= 27) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(NOW(), '10000', '성인 1명', 'temporary_value', 'temporary_value', '2065', val);      
+      SET i = i + 1;
+   END WHILE;
+  
+  	-- 오늘밤, 세계에서 (현재 상영중인 영화 예매 기록 추가(하루지남))
+   SET i = 1;
+   WHILE (i <= 24) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(NOW(), '10000', '성인 1명', 'temporary_value', 'temporary_value', '2066', val);      
+      SET i = i + 1;
+   END WHILE;
+  
+  	-- 교섭 (현재 상영중인 영화 예매 기록 추가(하루지남))
+   SET i = 1;
+   WHILE (i <= 17) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(NOW(), '10000', '성인 1명', 'temporary_value', 'temporary_value', '2067', val);      
+      SET i = i + 1;
+   END WHILE;
+  
    -- 똑똑똑 A1 ~ C10
    SET i = 1;
    WHILE (j1 <= 88) DO 
@@ -1494,9 +1560,414 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
    
+   -- 아바타 A1 ~ C10
+   SET j1 = 1;
+   WHILE (j1 <= 88) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "14", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
    
+   -- 아바타 D1 ~ D8
+   SET j2 = 91;
+   WHILE (j2 <= 105) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "14", i);
+   	SET j2 = j2 + 2;
+   	SET i = i + 1;
+   END WHILE;
+      
+   -- 유령 A1 ~ C10
+   SET j1 = 1;
+   WHILE (j1 <= 88) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "26", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 유령 D1 ~ E8
+   SET j2 = 91;
+   WHILE (j2 <= 125) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "26", i);
+   	SET j2 = j2 + 2;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 장화신은 고양이 A1 ~ C10
+   SET j1 = 1;
+   WHILE (j1 <= 88) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "28", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 장화신은 고양이 D1 ~ E3
+   SET j2 = 91;
+   WHILE (j2 <= 115) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "28", i);
+   	SET j2 = j2 + 2;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 A1 ~ C5
+   SET j1 = 2;
+   WHILE (j1 <= 74) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "1335", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 D1 ~ D5
+   SET j2 = 92;
+   WHILE (j2 <= 100) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "1335", i);
+   	SET j2 = j2 + 2;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 어메이징 모리스 B1 ~ C10
+   SET j1 = 32;
+   WHILE (j1 <= 89) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "1339", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 어메이징 모리스 D1 ~ E5
+   SET j2 = 92;
+   WHILE (j2 <= 120) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "1339", i);
+   	SET j2 = j2 + 2;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 A1 ~ B10
+   SET j1 = 3;
+   WHILE (j1 <= 60) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2060", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 영웅 A1 ~ C7
+   SET j1 = 3;
+   WHILE (j1 <= 81) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2065", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 오늘밤, 세계에서 A1 ~ C4
+   SET j1 = 3;
+   WHILE (j1 <= 72) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2066", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+
+	-- 교섭 A1 ~ B7
+   SET j1 = 3;
+   WHILE (j1 <= 51) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2067", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;   
 END $$
 
+
+-- 유령 회원을 통한 영화 좋아요와 관람평 늘리는 프로시저
+DELIMITER $$
+CREATE PROCEDURE clone_member_like()
+BEGIN
+   DECLARE i INT DEFAULT 2;
+   DECLARE val VARCHAR(20);
+   
+   -- 타이타닉 관람평 45개 추가
+   WHILE (i <= 46) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 9, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 6 DAY), 1, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 관람평 23개 추가
+   WHILE (i <= 69) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 10, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 6 DAY), 1, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 좋아요 추가
+   WHILE (i <= 1120) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 1, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 카운트 관람평 30개 추가
+   SET i = 2;
+   WHILE (i <= 31) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 8, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 3 DAY), 2, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 카운트 관람평 27개 추가
+   WHILE (i <= 58) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 10, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 3 DAY), 2, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 카운트 좋아요 추가
+   WHILE (i <= 1000) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 2, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 상견니 관람평 30개 추가
+   SET i = 2;
+   WHILE (i <= 31) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 10, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 3, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 상견니 관람평 12개 추가
+   WHILE (i <= 43) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 7, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 3, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 상견니 좋아요 추가
+   WHILE (i <= 251) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 3, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 젠틀맨 관람평 20개 추가
+   SET i = 1;
+   WHILE (i <= 20) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 9, "관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 4, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 젠틀맨 관람평 10개 추가
+   WHILE (i <= 30) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 7, "관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 4, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 젠틀맨 좋아요 추가
+   WHILE (i <= 190) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 4, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 아바타 좋아요 추가
+   SET i = 1;
+   WHILE (i <= 350) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 5, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 어메이징 모리스 좋아요 추가
+   SET i = 1;
+   WHILE (i <= 180) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 6, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 영웅 좋아요 추가
+   SET i = 1;
+   WHILE (i <= 150) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 7, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 오늘밤, 세계에서 좋아요 추가
+   SET i = 1;
+   WHILE (i <= 90) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 8, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 교섭 좋아요 추가
+   SET i = 1;
+   WHILE (i <= 80) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 9, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 유령 좋아요 추가
+   SET i = 1;
+   WHILE (i <= 300) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 15, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 장화신은 고양이 좋아요 추가
+   SET i = 1;
+   WHILE (i <= 280) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 16, val);
+      SET i = i + 1; 
+   END WHILE;
+END $$
+
+-- 관람평에 좋아요 추가하는 프로시저
+DELIMITER $$
+CREATE PROCEDURE comment_like_insert()
+BEGIN
+   DECLARE i INT DEFAULT 1;
+   DECLARE val VARCHAR(20);
+   
+   -- 타이타닉 관람평 좋아요 추가(temp69 작성)
+   WHILE (i <= 5) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 68);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 관람평 좋아요 추가(temp67 작성)
+   SET i = 1;
+   WHILE (i <= 8) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 66);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 관람평 좋아요 추가(temp31 작성)
+   SET i = 1;
+   WHILE (i <= 13) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 30);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 관람평 좋아요 추가(temp13 작성)
+   SET i = 1;
+   WHILE (i <= 15) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 12);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 타이타닉 관람평 좋아요 추가(temp22 작성)
+   SET i = 1;
+   WHILE (i <= 17) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 21);
+      SET i = i + 1;
+   END WHILE;
+
+   -- 카운트 관람평 좋아요 추가(temp58 작성)
+   SET i = 1;
+   WHILE (i <= 3) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 1176);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 카운트 관람평 좋아요 추가(temp57 작성)
+   SET i = 1;
+   WHILE (i <= 4) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 1175);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 카운트 관람평 좋아요 추가(temp20 작성)
+   SET i = 1;
+   WHILE (i <= 7) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 1138);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 카운트 관람평 좋아요 추가(temp2 작성)
+   SET i = 1;
+   WHILE (i <= 10) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 1120);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 상견니 관람평 좋아요 추가(temp42 작성)
+   SET i = 1;
+   WHILE (i <= 10) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2159);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 상견니 관람평 좋아요 추가(temp41 작성)
+   SET i = 1;
+   WHILE (i <= 7) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2158);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 상견니 관람평 좋아요 추가(temp3 작성)
+   SET i = 1;
+   WHILE (i <= 9) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2120);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 상견니 관람평 좋아요 추가(temp17 작성)
+   SET i = 1;
+   WHILE (i <= 6) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2134);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 젠틀맨 관람평 좋아요 추가(temp30 작성)
+   SET i = 1;
+   WHILE (i <= 5) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2398);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 젠틀맨 관람평 좋아요 추가(temp27 작성)
+   SET i = 1;
+   WHILE (i <= 3) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2395);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 젠틀맨 관람평 좋아요 추가(temp15 작성)
+   SET i = 1;
+   WHILE (i <= 8) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2383);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 젠틀맨 관람평 좋아요 추가(temp1 작성)
+   SET i = 2;
+   WHILE (i <= 16) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2369);
+      SET i = i + 1;
+   END WHILE;
+END $$
+   
 -- movie_information 추가
 CALL movieinfo_insert();
 
@@ -1509,13 +1980,14 @@ CALL seat_add();
 -- 예매기록 추가 프로시저 실행
 CALL reservation_insert();
 
+-- 영화 좋아요 및 관람평 추가 프로시저 실행
+CALL clone_member_like();
 
-SELECT *
-FROM movie_seat
-WHERE cid = 1;
-
+-- 관람평에 좋아요 추가하는 프로시저 실행
+CALL comment_like_insert();
 
 /*
+
 -- 현재 상영작 (오늘 이전의 개봉했으면서, 오늘 이후의 예매가 가능한 영화들)
 SELECT *
 FROM movie
@@ -1540,17 +2012,10 @@ WHERE MID not IN (SELECT distinct mid
 						FROM movie_information);
 -- 여기서 어느 시점 영화를 삭제했다고 생각도 해봐야혀
 -- 메인에 4개 영화는 아래 쿼리문 쓰면 상영중인 애들만 나오니깐 거기서 예매율 순으로 orderby
--- SELECT DISTINCT MID
--- FROM movie_information
--- WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d')
-*/
+SELECT DISTINCT MID
+FROM movie_information
+WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d')
 
-
-
-
-
-
-/*
 
 
 -- 예매가 가능한 영화의 reservation 갯수
@@ -1561,257 +2026,52 @@ WHERE miid IN (SELECT miid
 					WHERE MID IN (SELECT DISTINCT mid
 									  FROM movie_information
 									  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d')));
+
+
+					(SELECT miid
+					FROM movie_information
+					WHERE MID IN (SELECT DISTINCT mid
+									  FROM movie_information
+									  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d')));
 							
+							
+						
+SELECT COUNT(*)
+FROM movie_reservation
+WHERE miid IN (SELECT miid
+					FROM movie_information
+					WHERE MID = 1);						
+						
+						
 -- 특정 영화의 reservation 갯수
 SELECT COUNT(*)
 FROM movie_reservation
 WHERE miid IN (SELECT miid
 					FROM movie_information
-					WHERE MID = 1);
+					WHERE MID = 2);
+					
+					
+-- 지금 예매가 가능한 것들
+
+SELECT *
+FROM movie
+WHERE MID IN (SELECT DISTINCT MID
+				  FROM movie_information
+				  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d'))
+ORDER BY mtime;
+
+
+SELECT COUNT(*)
+FROM movie_reservation
+GROUP BY miid;
 
 
 
 
-
--- 유령 회원을 통한 영화 좋아요 수 늘리는 프로시저(아바타)
--- 영화 종류와 필요한 인원수에 따라 변수만 변경 후 사용
-DELIMITER $$
-CREATE PROCEDURE clone_member_like1()
-BEGIN
-   DECLARE i INT DEFAULT 2; -- i변수 선언, defalt값 설정
-   DECLARE val VARCHAR(20); -- 임시로 사용할 변수 선언
-   WHILE (i <= 1120) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
-   	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
-   	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
-      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 9, "관람평을 위한 유령 관람평(작성예시는 temp1 계정으로)", NOW(), 1, val);
-      SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
-    END WHILE;
-END $$
-
--- 유령 회원을 통한 영화 좋아요 수 늘리는 프로시저(슬램덩크)
--- 영화 종류와 필요한 인원수에 따라 변수만 변경 후 사용
-DELIMITER $$
-CREATE PROCEDURE clone_member_like2()
-BEGIN
-   DECLARE i INT DEFAULT 2; -- i변수 선언, defalt값 설정
-   DECLARE val VARCHAR(20); -- 임시로 사용할 변수 선언
-   WHILE (i <= 999) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
-   	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
-   	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
-      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 8, "관람평을 위한 유령 관람평(작성예시는 temp1 계정으로)", NOW(), 2, val);
-      SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
-    END WHILE;
-END $$
-
--- 유령 회원을 통한 영화 좋아요 수 늘리는 프로시저(영웅)
--- 영화 종류와 필요한 인원수에 따라 변수만 변경 후 사용
-DELIMITER $$
-CREATE PROCEDURE clone_member_like3()
-BEGIN
-   DECLARE i INT DEFAULT 2; -- i변수 선언, defalt값 설정
-   DECLARE val VARCHAR(20); -- 임시로 사용할 변수 선언
-   WHILE (i <= 90) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
-   	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
-   	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
-      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 7, "관람평을 위한 유령 관람평(작성예시는 temp1 계정으로)", NOW(), 3, val);
-      SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
-    END WHILE;
-END $$
-
--- 유령 회원을 통한 영화 좋아요 수 늘리는 프로시저(젠틀맨)
--- 영화 종류와 필요한 인원수에 따라 변수만 변경 후 사용
-DELIMITER $$
-CREATE PROCEDURE clone_member_like4()
-BEGIN
-   DECLARE i INT DEFAULT 2; -- i변수 선언, defalt값 설정
-   DECLARE val VARCHAR(20); -- 임시로 사용할 변수 선언
-   WHILE (i <= 30) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
-   	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
-   	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
-      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 6, "관람평을 위한 유령 관람평, 관람평을 위한 유령 관람평, 관람평을 위한 유령 관람평, 관람평을 위한 유령 관람평, 관람평을 위한 유령 관람평, 관람평을 위한 유령 관람평, 관람평을 위한 유령 관람평", NOW(), 4, val);
-      SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
-    END WHILE;
-END $$
-
--- 유령 회원을 통한 영화 좋아요 수 늘리는 프로시저(젠틀맨)
--- 평점 소수점 생성을 위한 프로시저
-DELIMITER $$
-CREATE PROCEDURE clone_member_like5()
-BEGIN
-   DECLARE i INT DEFAULT 31; -- i변수 선언, defalt값 설정
-   DECLARE val VARCHAR(31); -- 임시로 사용할 변수 선언
-   WHILE (i <= 52) DO -- for문 작성(필요한 좋아요 수 만큼 반복)
-   	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
-   	-- 유령계정의 이름으로 영화에 대한 좋아요와 평점 데이터를 추가
-      INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 3, "관람평을 위한 유령 관람평(작성예시는 temp1 계정으로)", DATE_SUB(NOW(), INTERVAL 5 DAY), 4, val);
-      SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
-    END WHILE;
-END $$
-
-
-
-
-/*
-
-
-
-
--- 영화 좋아요를 늘리는 프로시저 실행(타이타닉)
-CALL clone_member_like1();
-
--- 영화 좋아요를 늘리는 프로시저 실행(카운트)
-CALL clone_member_like2();
-
--- 영화 좋아요를 늘리는 프로시저 실행(상견니)
-CALL clone_member_like3();
-
--- 영화 좋아요를 늘리는 프로시저 실행(젠틀맨)
-CALL clone_member_like4();
-
--- 영화 좋아요를 늘리는 프로시저 실행(젠틀맨)2
-CALL clone_member_like5();
-
--- 관람평 좋아요 기록 남기는 query
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 1);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 1);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 1);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp4", 1);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 1119);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 1119);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 1119);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp4", 1119);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 1118);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 1118);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 1118);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 1120);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 1120);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 1120);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp4", 1120);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 1122);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 1122);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2116);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2116);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 2116);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp4", 2116);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2117);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2117);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 2117);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2120);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2120);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 2120);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp4", 2120);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2118);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2118);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2205);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2205);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 2205);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp4", 2205);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2206);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2206);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 2206);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2207);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2207);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 2207);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp4", 2207);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2209);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2209);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2255);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2255);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 2255);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp4", 2255);
-
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp1", 2256);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp2", 2256);
-INSERT INTO `comment_info`(`uid`, `umid`)
-VALUES("temp3", 2256);
-
--- 영화 좋아요 예외 추가
-INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 1, 'temp1');
-INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 4, 'temp1');
-INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 2, 'temp1110');
-INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 3, 'temp1110');
-
-
-INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`)
-VALUES("1", "1", "1");
-INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`)
-VALUES("4","1", "1");
-INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`)
-VALUES("7","1", "1");
-
-INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`)
-VALUES("10","1", "1");
-INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`)
-VALUES("13","1", "1");
-INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`)
-VALUES("16","1", "1");
-INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`)
-VALUES("19","1", "1");
+-- 이거 orderby로 하면될듯함
+SELECT *
+FROM movie
+WHERE MID not IN (SELECT distinct mid
+						FROM movie_information);
+						
 */

@@ -16,15 +16,12 @@ import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.mapper.MovieMapper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -51,7 +48,7 @@ public class MovieService {
         // 사용자가 좋아요 누른 영화 목록 검색
         List<MovieMemberEntity> MovieLike = movieMemberRepository.findByUmlikeTrueAndMember(member);
 
-        // 좋아요 누른 영화 목록의 중복제거를 위해 HashSet 으로 변환
+        // 좋아요 누른 영화 목록을 HashSet 으로 변환
         Set<Long> MovieLikeNum = new HashSet<>();
         for (MovieMemberEntity mm : MovieLike) {
             MovieLikeNum.add(mm.getMovie().getMid());
@@ -95,7 +92,11 @@ public class MovieService {
     @Transactional
     public MovieDto getMovieDetail(Long mid, String uid) {
         // 영화 ID를 기반으로 영화 검색
-        MovieEntity movie = movieRepository.findByMid(mid);
+        MovieEntity movie = movieRepository.findById(mid).orElse(null);
+
+        if (movie == null) {
+            throw new MovieNotFoundException("검색된 영화가 없습니다.");
+        }
 
         // 영화에 출연하는 출연진 정보 검색
         List<MovieActorEntity> MovieActor = movieActorRepository.findByMovie(movie);
