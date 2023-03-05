@@ -12,18 +12,27 @@ import { Login } from "@mui/icons-material";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { PAYMENT_REQUEST, RESERVE_LOGIN_PAGE } from "../../reducer/ticket";
 import * as Payment from "../Common_components/Function";
+import PaymentModal from "./PaymentModal";
 
 const TicketMore = ({ setPage, page }) => {
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
   );
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
-  const { choiceSeat, choiceUser, price } = useSelector((state) => state.seat);
+  const { choiceSeat, choiceUser, price, 어른, 아이, 학생 } = useSelector(
+    (state) => state.seat
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   //사용자가 선택한 영화 및 정보를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
   //좌석 페이지로 넘어가야함 데이터와 함께
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModalHandler = () => {
+    setIsOpen(!isOpen);
+  };
 
   //제이쿼리 대신 선언
   useEffect(() => {
@@ -141,7 +150,7 @@ const TicketMore = ({ setPage, page }) => {
           </MovieChoice>
           <MovieSeat
             onClick={() => {
-              if (choiceUser.length > choiceSeat.length) {
+              if (어른 + 아이 + 학생 > choiceSeat.length) {
                 alert("관람인원과 선택 좌석 수가 동일하지 않습니다.");
                 return;
               } else {
@@ -154,7 +163,8 @@ const TicketMore = ({ setPage, page }) => {
                     age: seatnumber,
                   },
                 });
-                paymentRecord();
+                openModalHandler();
+                //  paymentRecord();
               }
             }}
           >
@@ -168,6 +178,7 @@ const TicketMore = ({ setPage, page }) => {
             />
             <p>결제하기</p>
           </MovieSeat>
+          {isOpen && <PaymentModal closeModal={openModalHandler} />}
         </>
       ) : (
         <MovieSeat
