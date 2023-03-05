@@ -68,6 +68,12 @@ const MovieList = () => {
           <p>
             {`${allMovie.slice(0, Limit).length}개의 영화가 검색되었습니다.`}
           </p>
+          <button>
+            예매율순
+          </button>
+          <button>
+            좋아요순
+          </button>
           <div className="search_button">
             <SearchWarp
               placeholder="영화명 검색"

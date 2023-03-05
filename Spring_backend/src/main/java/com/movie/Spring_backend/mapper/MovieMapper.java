@@ -22,6 +22,8 @@ public class MovieMapper {
             return null;
         }
 
+        System.out.println(entity.getCntReserve());
+
         return MovieDto.builder()
                 .mid(entity.getMid())
                 .mdir(entity.getMdir())
