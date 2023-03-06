@@ -33,12 +33,53 @@ const MovieList = () => {
   useEffect(() => {
     dispatch({
       type: ALLMOVIE_REQUEST,
-      data: LOGIN_data.uid,
+      data: {
+        uid: LOGIN_data.uid,
+        button: 'rate',
+        search: ''
+      }
     });
   }, [LOGIN_data.uid, dispatch]);
 
+  // 정렬 버튼 css 변수
+	const [ratebutton, setratebutton] = useState(true);
+	const [likebutton, setlikebutton] = useState(false);
+
+  // 최신순 버튼을 누를 때
+	const clickrate = useCallback(()=> {
+		// dispatch({
+    //   type: DETAIL_COMMENT_RECENT_REQUEST,
+    //   data: {
+    //     pathname: location.pathname,
+    //     uid: LOGIN_data.uid
+    //   }
+    // });
+		setratebutton(true);
+		setlikebutton(false);
+	}, [])
+
+	// 공감순 버튼을 누를 때
+	const clicklike = useCallback(()=> {
+		// dispatch({
+    //   type: DETAIL_COMMENT_LIKE_REQUEST,
+    //   data: {
+    //     pathname: location.pathname,
+    //     uid: LOGIN_data.uid
+    //   }
+    // });
+		setlikebutton(true);
+		setratebutton(false);
+	}, [])
+
+  // 검색칸 내용 변수
+	const [search, setsearch] = useState("");
+	const handleSearchChange = e => {
+    setsearch(e.target.value);
+  };
+
   // 검색 버튼 누를때 실행되는 함수
   const onSearch = (value) => {
+    console.log(search.trim());
     dispatch({
       type: MOVIE_SEARCH_REQUEST,
       data: {
@@ -68,17 +109,25 @@ const MovieList = () => {
           <p>
             {`${allMovie.slice(0, Limit).length}개의 영화가 검색되었습니다.`}
           </p>
-          <button>
-            예매율순
-          </button>
-          <button>
-            좋아요순
-          </button>
+          <ButtonList>
+            <ButtonWrap>
+              <button className={"btn" + (ratebutton ? " active" : "")} onClick={clickrate}>
+                예매순
+              </button>
+            </ButtonWrap>
+            <ButtonWrap>
+              <button className={"btn" + (likebutton ? " active" : "")} onClick={clicklike}>
+                공감순
+              </button>
+            </ButtonWrap>
+          </ButtonList>
           <div className="search_button">
             <SearchWarp
               placeholder="영화명 검색"
               allowClear
               onSearch={onSearch}
+              value={search}
+              onChange={handleSearchChange}
               style={{
                 width: 200,
                 height: 10,
@@ -142,7 +191,7 @@ const InnerWraps = styled.div`
     position: relative;
     width: 98.4%;
     border-bottom: 3px solid #241d1e;
-    padding-bottom: 8px;
+    padding-bottom: 5px;
     margin-top: 30px;
 
     p {
@@ -224,6 +273,54 @@ const More = styled.button`
   &:hover {
     border: 1px solid black;
   }
+`;
+
+const ButtonList = styled.ul`
+	position: absolute;
+	margin-left: 5px !important;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+  top: 16%;
+  right: 18%;
+
+	::after{
+		content: '';
+    display: block;
+    position: absolute;
+    left: 60px;
+    top: 3px;
+    width: 1px;
+    height: 16px;
+    background-color: #ccc;
+	}
+
+	li:first-child {
+		margin-left: 0px;
+	}
+`;
+
+const ButtonWrap = styled.li`
+	margin-left: 23px;
+	list-style: none;
+	display: list-item;
+	float: left;
+
+	.btn {
+		content: "";
+		cursor: pointer;
+		background-color: white;
+		display: block;
+		position: relative;
+		color: #999;
+		font-size: 16px;
+		border: 0;
+		padding: 0;
+
+		&.active {
+      color: #000;
+    }
+	}
 `;
 
 export default MovieList;

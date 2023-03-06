@@ -22,7 +22,6 @@ const DetailCommentWrite = () => {
 	const [comment, setcomment] = useState("");
 	const handleCommentChange = e => {
     setcomment(e.target.value);
-		console.log(comment);
   };
 
 	// 로그인 상태확인용 리덕스 상태

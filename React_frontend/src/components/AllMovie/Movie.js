@@ -117,8 +117,7 @@ const Movie = ({ movie }) => {
           </div>
           <div className="infomation">
             <span className="rate">
-              예매율 7.2%
-              {/* 추후변경 */}
+              예매율 {movie.reserveRate ? movie.reserveRate.toFixed(1) : (0.0).toFixed(1)}%
             </span>
             <span className="date">개봉일 {movie.date}</span>
           </div>
@@ -139,7 +138,9 @@ const Movie = ({ movie }) => {
             </span>
           </Like>
           <Link to="/reserve" state={{ state: location.pathname }}>
-            <Ticket onClick={(e) => OnClickReserve(movie)}>예매</Ticket>
+            <Ticket disabled={!movie.reserve} reserve={movie.reserve} onClick={() => OnClickReserve(movie)}>
+              {movie.reserve ? '예매' : '상영예정'}
+            </Ticket>
           </Link>
         </Button>
       </div>
@@ -294,12 +295,15 @@ const Ticket = styled.button`
   border-radius: 4px;
   height: 36px;
   text-align: center;
-  background: #503396;
-  cursor: pointer;
+  background: ${props => props.reserve ? '#503396' : '#adadad'};
+  cursor: ${props => props.reserve ? 'pointer' : 'default'};
   color: white;
   border: 0;
   font-weight: 400;
   font-size: 16px;
-`; //예매하기 버튼
+
+
+  
+`; // 예매하기 버튼
 
 export default Movie;

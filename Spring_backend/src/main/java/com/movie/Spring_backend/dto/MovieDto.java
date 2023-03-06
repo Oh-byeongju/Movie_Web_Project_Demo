@@ -27,25 +27,29 @@ public class MovieDto {
     private Float mscore; // 평점 평균
     private Boolean mlike; // 사용자 개인별 좋아요 여부
     private String able;
-    private List<String> actors;
+    private List<String> actors; // 영화에 출연하는 배우들
+    private Boolean reserve;    // 예매 가능 여부
+    private Float reserveRate;  // 예매율
 
     @Builder
     public MovieDto(Long mid, String mtitle, String mdir, String mgenre, int mtime, Date mdate, String mrating,
-                    String mstory , String mimagepath, Integer mlikes, Float mscore, Boolean mlike, String able, List<String> actors) {
+                    String mstory , String mimagepath, Integer mlikes, Float mscore, Boolean mlike, String able, List<String> actors, Boolean reserve, Float reserveRate) {
         this.mid = mid;
         this.mtitle = mtitle;
-        this.mdir=mdir;
-        this.mgenre=mgenre;
-        this.mtime=mtime;
-        this.mdate=mdate;
-        this.mrating=mrating;
-        this.mstory=mstory;
-        this.mimagepath=mimagepath;
-        this.mlikes=mlikes;
-        this.mscore=mscore;
-        this.mlike=mlike;
-        this.able=able;
-        this.actors=actors;
+        this.mdir = mdir;
+        this.mgenre = mgenre;
+        this.mtime = mtime;
+        this.mdate = mdate;
+        this.mrating = mrating;
+        this.mstory = mstory;
+        this.mimagepath = mimagepath;
+        this.mlikes = mlikes;
+        this.mscore = mscore;
+        this.mlike = mlike;
+        this.able = able;
+        this.actors = actors;
+        this.reserve = reserve;
+        this.reserveRate = reserveRate;
     }
 }
 

@@ -96,7 +96,7 @@ public class MovieMemberService {
             throw new BusinessException("작성된 관람평이 존재합니다.", ErrorCode.COMMENT_IS_EXIST);
         }
 
-        // 현재 시간변수(이거 추후에 고정날짜로 해야 할수도 있음)
+        // 현재 시간변수
         Date nowDate = new Date();
 
         // 현재 시간을 sql에 사용할 수 있게 매핑

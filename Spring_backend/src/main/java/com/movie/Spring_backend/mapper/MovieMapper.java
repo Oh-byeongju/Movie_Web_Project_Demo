@@ -9,10 +9,57 @@ import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.entity.MovieEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class MovieMapper {
+
+    // 전체 영화 페이지에 사용되는 mapping 메소드
+    public List<MovieDto> toDtoAllMovie(List<MovieEntity> ShowMovies, List<MovieEntity> NotShowMovies, Set<Long> MovieLikes, float AllReserveCnt) {
+
+        List<MovieDto> result = new ArrayList<>();
+
+        // 예매가 가능한 영화 List에 삽입
+        for (MovieEntity m : ShowMovies) {
+            result.add(MovieDto.builder()
+                        .mid(m.getMid())
+                        .mdir(m.getMdir())
+                        .mtitle(m.getMtitle())
+                        .mgenre(m.getMgenre())
+                        .mtime(m.getMtime())
+                        .mdate(m.getMdate())
+                        .mrating(m.getMrating())
+                        .mstory(m.getMstory())
+                        .mimagepath(m.getMimagepath())
+                        .mlikes(m.getCntMovieLike())
+                        .mscore(m.getAvgScore())
+                        .mlike(MovieLikes.contains(m.getMid()))
+                        .reserve(true)
+                        .reserveRate(m.getCntReserve() / AllReserveCnt * 100).build());
+        }
+
+        // 예매가 불가능한 영화 리스트에 삽입
+        for (MovieEntity m : NotShowMovies) {
+            result.add(MovieDto.builder()
+                    .mid(m.getMid())
+                    .mdir(m.getMdir())
+                    .mtitle(m.getMtitle())
+                    .mgenre(m.getMgenre())
+                    .mtime(m.getMtime())
+                    .mdate(m.getMdate())
+                    .mrating(m.getMrating())
+                    .mstory(m.getMstory())
+                    .mimagepath(m.getMimagepath())
+                    .mlikes(m.getCntMovieLike())
+                    .mscore(m.getAvgScore())
+                    .mlike(MovieLikes.contains(m.getMid()))
+                    .reserve(false)
+                    .reserveRate(m.getCntReserve() / AllReserveCnt * 100).build());
+        }
+        return result;
+    }
 
     // 영화 목록과 로그인한 사용자의 좋아요 기록을 mapping 해주는 메소드
     public MovieDto toDto(MovieEntity entity, boolean like) {

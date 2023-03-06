@@ -102,8 +102,8 @@ CREATE TABLE `movie_cinema` (
 CREATE TABLE `movie_information` (
 	`miid`	INT NOT NULL AUTO_INCREMENT,
 	`miday`	DATE NULL,
-	`mistarttime`	time	NULL,
-	`miendtime`	time NULL,
+	`mistarttime`	datetime	NULL,
+	`miendtime`	datetime NULL,
 	`mid`	INT	NOT NULL,
 	`cid` INT NOT NULL,
 	PRIMARY KEY (`miid`),
@@ -844,210 +844,211 @@ BEGIN
    DECLARE i1 INT DEFAULT 1;
    DECLARE i2 INT DEFAULT 2;
    DECLARE i3 INT DEFAULT 3;
-   -- 오늘 이전의 상영기록(이거는 예매에 나오면 안되는 애들임)
+   -- 오늘 이전의 상영기록(이거는 예매에 나오면 안되는 애들임)		
    	-- 70개 짜리 자리
    	-- 아래 insert는 movie에는 존재하지만 상영을 안할경우 고객의 예매 기록에는 남겨야 해서 넣어둠
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 39 DAY), "10:20:00", "12:00:00", "24", 1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 10 DAY), "10:30:00", "13:30:00", "1", 1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 10 DAY), "15:30:00", "17:30:00", "2", 1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 39 DAY), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 39 DAY), "%Y-%m-%d 10:20:00"),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 39 DAY), "%Y-%m-%d 12:00:00"), "24", 1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 10:30:00"),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 13:30:00"), "1", 1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 10 DAY),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 15:30:00"),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 17:30:00"), "2", 1);
    	-- 50개 짜리 자리
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 9 DAY), "10:20:00", "12:00:00", "3", 5);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 9 DAY), "14:00:00", "16:00:00", "4", 5);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 9 DAY),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 10:20:00"),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 12:00:00"), "3", 5);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 9 DAY),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 16:00:00"), "4", 5);
    -- 타이타닉, 카운트, 상견니, 젠틀맨은 이것들 기록으로 관람평 적을 수 있게 만드는거
 	
    WHILE (i1 <= 78) DO
    	-- 이거 아래꺼 예매 기록 넣기 (70개 전부) --> 아이디 넣을때 좀 섞어서 넣기
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "10:30:00", "13:30:00", "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 10:30:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 13:30:00"), "1", i1);
    	-- 이거 아래꺼 예매기록 넣기 (70개 전부)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "16:00:00", "18:00:00", "2", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 16:00:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 18:00:00"), "2", i1);
    	-- 이거 아래꺼 예매 기록 넣기 (70개 전부)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "19:20:00", "21:00:00", "3", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 19:20:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 21:00:00"), "3", i1);
    	-- 이거 아래꺼 예매 기록 넣기 (56자리만)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "22:00:00", "24:00:00", "4", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 21:30:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 23:30:00"), "4", i1);
    	-- 아래꺼 예매기록 넣기 (20자리)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "08:00:00", "11:00:00", "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 08:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 11:00:00"), "1", i1);
    	-- 아래꺼 예매기록 넣기(15자리)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "12:00:00", "14:00:00", "2", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 14:00:00"), "2", i1);
    	-- 아래꺼 예매기록 넣기(15자리)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "15:50:00", "17:30:00", "3", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 15:50:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 17:30:00"), "3", i1);
    	-- 아래꺼 예매기록 넣기(15자리)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "18:00:00", "20:00:00", "4", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 20:00:00"), "4", i1);
   		-- 이거 아래꺼 예매 기록 넣기
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "20:30:00", "23:30:00", "5", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "07:00:00", "10:00:00", "1", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "10:30:00", "12:30:00", "2", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "13:40:00", "15:00:00", "10", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "15:20:00", "17:00:00", "11", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "17:30:00", "19:30:00", "12", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "20:00:00", "21:30:00", "13", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "22:00:00", "24:00:00", "14", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "21:30:00", "24:30:00", "1", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "19:20:00", "21:00:00", "3", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "17:30:00", "19:00:00", "6", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "15:00:00", "17:00:00", "15", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 20:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 23:30:00"), "5", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 07:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 10:00:00"), "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 10:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 12:30:00"), "2", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 13:40:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 15:00:00"), "10", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 15:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 17:00:00"), "11", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 17:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 19:30:00"), "12", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 20:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 21:30:00"), "13", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 21:55:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 23:55:00"), "14", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 20:50:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 23:50:00"), "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 18:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 20:10:00"), "3", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 16:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 18:00:00"), "6", i1);
+   	-- 이거 아래꺼 예매 기록 넣기(70개)
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 13:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 15:00:00"), "15", i1);
    	-- 이거 아래꺼 예매 기록 넣기
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "12:00:00", "14:00:00", "15", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "08:00:00", "11:00:00", "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 10:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 12:00:00"), "15", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 08:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 11:00:00"), "1", i1);
    	-- 이거 아래꺼 예매 기록 넣기
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "11:20:00", "13:00:00", "16", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "14:00:00", "16:00:00", "7", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "17:00:00", "19:00:00", "8", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "19:30:00", "21:30:00", "15", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "22:00:00", "24:00:00", "2", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "09:00:00", "12:00:00", "1", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "12:30:00", "15:30:00", "1", i1);	
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "16:00:00", "17:40:00", "16", i1);	
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "18:00:00", "20:00:00", "15", i1);	
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "20:30:00", "23:30:00", "5", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "10:30:00", "13:30:00", "1", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "14:00:00", "15:40:00", "16", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "16:30:00", "18:30:00", "17", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "19:30:00", "21:30:00", "15", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "09:00:00", "12:00:00", "1", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "12:40:00", "14:20:00", "3", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "15:00:00", "17:00:00", "7", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "18:00:00", "20:00:00", "15", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "21:00:00", "24:00:00", "1", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "16:30:00", "18:00:00", "6", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "13:30:00", "15:30:00", "15", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "10:20:00", "12:00:00", "16", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "10:00:00", "13:00:00", "1", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "14:00:00", "16:00:00", "2", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "16:30:00", "18:00:00", "6", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "19:00:00", "21:00:00", "12", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), "10:00:00", "13:00:00", "1", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), "14:00:00", "16:00:00", "7", i1);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), "17:00:00", "19:00:00", "12", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 11:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 13:00:00"), "16", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 16:00:00"), "7", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 16:40:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 18:40:00"), "8", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 19:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 21:20:00"), "15", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 21:55:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 23:55:00"), "2", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 09:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 12:00:00"), "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 12:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 15:30:00"), "1", i1);	
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 16:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 17:40:00"), "16", i1);	
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 20:00:00"), "15", i1);	
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 20:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 23:30:00"), "5", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 10:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 13:30:00"), "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 15:40:00"), "16", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 16:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 18:30:00"), "17", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 19:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 21:30:00"), "15", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 09:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 12:00:00"), "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 12:40:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 14:20:00"), "3", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 15:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 17:00:00"), "7", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 20:00:00"), "15", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 20:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 23:30:00"), "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 16:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 18:00:00"), "6", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 13:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 15:30:00"), "15", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 10:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 12:00:00"), "16", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 10:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 13:00:00"), "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 16:00:00"), "2", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 16:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 18:00:00"), "6", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 19:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 21:00:00"), "12", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 10:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 13:00:00"), "1", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 16:00:00"), "7", i1);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 17:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 19:00:00"), "12", i1);
       SET i1 = i1 + 3;
    END WHILE;
    
    WHILE (i2 <= 78) DO   	   
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "10:30:00", "12:30:00", "2", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "15:20:00", "17:00:00", "3", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "21:30:00", "23:30:00", "8", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 10:30:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 12:30:00"), "2", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 15:20:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 17:00:00"), "3", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 21:30:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 23:30:00"), "8", i2);
    	-- 이거 아래꺼 예매기록 넣기(50개)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "18:00:00", "21:00:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "15:00:00", "17:00:00", "2", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "13:00:00", "14:40:00", "3", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "10:30:00", "12:30:00", "4", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 21:00:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 15:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 17:00:00"), "2", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 13:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 14:40:00"), "3", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 10:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 12:30:00"), "4", i2);
    	-- 이거 아래꺼 예매 기록 넣기
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "08:00:00", "09:30:00", "6", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "20:30:00", "23:30:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "18:20:00", "20:00:00", "3", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "16:30:00", "18:00:00", "6", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "14:00:00", "16:00:00", "8", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "12:00:00", "13:40:00", "9", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "10:00:00", "11:20:00", "10", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "07:30:00", "09:30:00", "12", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "08:00:00", "11:00:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "12:00:00", "14:00:00", "4", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "14:20:00", "16:00:00", "9", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "16:20:00", "18:00:00", "11", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "19:00:00", "21:00:00", "15", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "20:00:00", "23:00:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "18:00:00", "19:40:00", "3", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "15:30:00", "17:30:00", "4", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "12:00:00", "14:00:00", "15", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "09:30:00", "11:10:00", "16", i2);	
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "20:00:00", "23:00:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "17:30:00", "19:30:00", "2", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "15:20:00", "17:00:00", "3", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "12:00:00", "14:00:00", "14", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "09:20:00", "11:00:00", "16", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "08:00:00", "11:00:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "11:30:00", "13:30:00", "4", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "14:00:00", "17:00:00", "5", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "17:40:00", "19:20:00", "9", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "20:00:00", "21:40:00", "11", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "21:00:00", "24:00:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "17:00:00", "18:40:00", "16", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "14:00:00", "16:00:00", "17", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "12:00:00", "13:30:00", "18", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "09:00:00", "11:00:00", "2", i2);	
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "13:30:00", "16:30:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "15:15:00", "18:15:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "10:00:00", "11:30:00", "18", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "11:45:00", "14:45:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "15:20:00", "17:00:00", "3", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "17:30:00", "20:30:00", "5", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "21:20:00", "23:00:00", "9", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), "09:00:00", "12:00:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), "13:00:00", "14:30:00", "18", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), "15:30:00", "17:30:00", "17", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), "18:00:00", "20:00:00", "19", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 11 DAY), "14:30:00", "17:30:00", "1", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 11 DAY), "19:20:00", "21:00:00", "19", i2);
-		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 12 DAY), "14:30:00", "16:30:00", "12", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 12 DAY), "19:30:00", "21:00:00", "13", i2);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 13 DAY), "13:20:00", "15:00:00", "19", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 08:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 09:30:00"), "6", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 20:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 23:30:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 18:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 20:00:00"), "3", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 16:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 18:00:00"), "6", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 16:00:00"), "8", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 13:40:00"), "9", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 10:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 11:20:00"), "10", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 07:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 09:30:00"), "12", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 08:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 11:00:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 14:00:00"), "4", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 14:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 16:00:00"), "9", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 16:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 18:00:00"), "11", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 19:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 21:00:00"), "15", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 20:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 23:00:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 19:40:00"), "3", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 15:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 17:30:00"), "4", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 14:00:00"), "15", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 09:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 11:10:00"), "16", i2);	
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 20:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 23:00:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 17:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 19:30:00"), "2", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 15:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 17:00:00"), "3", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 14:00:00"), "14", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 09:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 11:00:00"), "16", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 08:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 11:00:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 11:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 13:30:00"), "4", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 17:00:00"), "5", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 17:40:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 19:20:00"), "9", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 20:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 21:40:00"), "11", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 20:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 23:00:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 17:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 18:40:00"), "16", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 16:00:00"), "17", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 13:30:00"), "18", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 09:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 11:00:00"), "2", i2);	
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 13:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 16:30:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 17:15:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 20:15:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 10:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 11:30:00"), "18", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 11:45:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 14:45:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 15:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 17:00:00"), "3", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 17:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 20:30:00"), "5", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 21:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 23:00:00"), "9", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 09:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 12:00:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 13:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 14:30:00"), "18", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 15:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 17:30:00"), "17", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 20:00:00"), "19", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 11 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 11 DAY), "%Y-%m-%d 14:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 11 DAY), "%Y-%m-%d 17:30:00"), "1", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 11 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 11 DAY), "%Y-%m-%d 19:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 11 DAY), "%Y-%m-%d 21:00:00"), "19", i2);
+		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 12 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 12 DAY), "%Y-%m-%d 14:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 12 DAY), "%Y-%m-%d 16:30:00"), "12", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 12 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 12 DAY), "%Y-%m-%d 19:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 12 DAY), "%Y-%m-%d 21:0:00"), "13", i2);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 13 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 13 DAY), "%Y-%m-%d 13:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 13 DAY), "%Y-%m-%d 15:00:00"), "19", i2);
       SET i2 = i2 + 6;
    END WHILE;
 	   
    WHILE (i3 <= 78) DO
    	-- 이거 아래꺼 예매기록 넣기(20개)
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "19:30:00", "22:30:00", "1", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "17:00:00", "19:00:00", "7", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "14:40:00", "16:20:00", "3", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), "11:00:00", "13:00:00", "12", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "17:00:00", "20:00:00", "1", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 19:30:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 22:30:00"), "1", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 17:00:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 19:00:00"), "7", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 14:40:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 16:20:00"), "3", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 11:00:00"),  DATE_FORMAT(NOW(), "%Y-%m-%d 13:00:00"), "12", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 17:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 20:00:00"), "1", i3);
    	-- 이거 아래꺼 예매기록 넣기
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "14:30:00", "16:30:00", "7", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 14:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 16:30:00"), "7", i3);
    	-- 이거 아래꺼 예매기록 넣기
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "12:00:00", "14:00:00", "8", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 14:00:00"), "8", i3);
    	-- 이거 아래꺼 예매기록 넣기
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), "09:20:00", "11:00:00", "9", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "21:00:00", "24:00:00", "1", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "17:00:00", "20:00:00", "1", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "14:30:00", "16:30:00", "2", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "12:00:00", "14:00:00", "4", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "09:30:00", "11:30:00", "7", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), "07:30:00", "09:00:00", "13", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "10:00:00", "14:00:00", "1", i3); 
-		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "14:30:00", "17:30:00", "5", i3); 
-		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "18:00:00", "20:00:00", "14", i3); 
-		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), "20:30:00", "22:30:00", "15", i3); 
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "09:00:00", "12:00:00", "1", i3);   	
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "12:30:00", "14:00:00", "6", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "14:30:00", "15:50:00", "10", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "16:30:00", "18:30:00", "14", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), "19:00:00", "21:00:00", "15", i3);	
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "19:45:00", "22:45:00", "1", i3); 
-		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "14:30:00", "16:00:00", "6", i3); 
-		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "12:00:00", "14:00:00", "8", i3); 
-		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), "10:20:00", "11:20:00", "10", i3); 
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "18:00:00", "21:00:00", "1", i3);  	
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "15:00:00", "17:00:00", "2", i3); 
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "12:00:00", "14:00:00", "8", i3); 
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), "10:00:00", "11:30:00", "13", i3); 
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "16:00:00", "18:00:00", "4", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), "10:00:00", "11:30:00", "18", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "20:00:00", "23:00:00", "1", i3);	
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "17:00:00", "19:00:00", "15", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "14:00:00", "15:40:00", "16", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), "11:00:00", "13:00:00", "17", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "11:00:00", "13:00:00", "15", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), "14:00:00", "15:40:00", "16", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), "14:00:00", "15:20:00", "10", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), "16:00:00", "17:40:00", "19", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 11 DAY), "11:30:00", "13:30:00", "15", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 11 DAY), "14:20:00", "16:00:00", "16", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 12 DAY), "13:00:00", "16:00:00", "1", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 12 DAY), "18:00:00", "19:40:00", "19", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 13 DAY), "17:00:00", "20:00:00", "1", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 17 DAY), "13:20:00", "15:00:00", "19", i3);
-   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "15:20:00", "17:00:00", "19", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 09:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), "%Y-%m-%d 11:00:00"), "9", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 20:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 23:30:00"), "1", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 17:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 20:00:00"), "1", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 14:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 16:30:00"), "2", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 14:00:00"), "4", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 09:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 11:30:00"), "7", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 2 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 07:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 DAY), "%Y-%m-%d 09:00:00"), "13", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 10:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 13:00:00"), "1", i3); 
+		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 14:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 17:30:00"), "5", i3); 
+		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 20:00:00"), "14", i3); 
+		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 3 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 20:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 DAY), "%Y-%m-%d 22:30:00"), "15", i3); 
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 09:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 12:00:00"), "1", i3);   	
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 12:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 14:00:00"), "6", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 14:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 15:50:00"), "10", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 16:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 18:30:00"), "14", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 4 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 19:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 4 DAY), "%Y-%m-%d 21:00:00"), "15", i3);	
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 19:45:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 22:45:00"), "1", i3); 
+		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 14:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 16:00:00"), "6", i3); 
+		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 14:00:00"), "8", i3); 
+		INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 5 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 10:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 5 DAY), "%Y-%m-%d 11:20:00"), "10", i3); 
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 21:00:00"), "1", i3);  	
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 15:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 17:00:00"), "2", i3); 
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 14:00:00"), "8", i3); 
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 6 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 10:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 6 DAY), "%Y-%m-%d 11:30:00"), "13", i3); 
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 16:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 18:00:00"), "4", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 7 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 10:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), "%Y-%m-%d 11:30:00"), "18", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 20:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 23:00:00"), "1", i3);	
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 17:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 19:00:00"), "15", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 15:40:00"), "16", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 8 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 11:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 DAY), "%Y-%m-%d 13:00:00"), "17", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 11:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 13:00:00"), "15", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 9 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 15:40:00"), "16", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 15:20:00"), "10", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 10 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 16:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 17:40:00"), "19", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 11 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 11 DAY), "%Y-%m-%d 11:30:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 11 DAY), "%Y-%m-%d 13:30:00"), "15", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 11 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 11 DAY), "%Y-%m-%d 14:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 11 DAY), "%Y-%m-%d 16:00:00"), "16", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 12 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 12 DAY), "%Y-%m-%d 13:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 12 DAY), "%Y-%m-%d 16:00:00"), "1", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 12 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 12 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 12 DAY), "%Y-%m-%d 19:40:00"), "19", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 13 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 13 DAY), "%Y-%m-%d 17:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 13 DAY), "%Y-%m-%d 20:00:00"), "1", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 17 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 17 DAY), "%Y-%m-%d 13:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 17 DAY), "%Y-%m-%d 15:00:00"), "19", i3);
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 15:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 17:00:00"), "19", i3);
       SET i3 = i3 + 9;
    END WHILE;
    -- 예외적으로 넣어주는 영화
-   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "09:20:00", "11:00:00", "19", 1);
-   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "12:00:00", "13:40:00", "19", 1);
-   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "14:20:00", "16:00:00", "19", 1);
-   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "07:20:00", "09:00:00", "19", 2);
-   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "18:00:00", "19:40:00", "19", 2);
-   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "21:20:00", "23:00:00", "19", 2);
-   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "08:20:00", "10:00:00", "19", 3);
-   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "11:00:00", "12:40:00", "19", 3);
-   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), "19:20:00", "21:00:00", "19", 3);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 09:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 11:00:00"), "19", 1);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 12:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 13:40:00"), "19", 1);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 14:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 16:00:00"), "19", 1);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 07:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 09:00:00"), "19", 2);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 18:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 19:40:00"), "19", 2);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 21:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 23:00:00"), "19", 2);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 08:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 10:00:00"), "19", 3);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 11:00:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 12:40:00"), "19", 3);
+   INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_ADD(NOW(), INTERVAL 19 DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 19:20:00"),  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 19 DAY), "%Y-%m-%d 21:00:00"), "19", 3);
 END $$
 
 -- 유령 회원을 가입시키는 프로시저
@@ -1263,6 +1264,14 @@ BEGIN
    WHILE (i <= 38) DO 
    	SET val = CONCAT("temp", i);
    	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '10000', '성인 1명', 'temporary_value', 'temporary_value', '14', val);      
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 유령 (현재 상영중인 영화 예매 기록 추가(3일지남 -> 개봉직후))
+   SET i = 901;
+   WHILE (i <= 970) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rpayid`, `rtoken`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '10000', '성인 1명', 'temporary_value', 'temporary_value', '25', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1520,7 +1529,7 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
 
-   -- 젠틀맨 F1 ~ G10
+   -- 젠틀맨 F1 ~ F6
    SET j3 = 131;
    WHILE (j3 <= 136) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "9", i);
@@ -1573,6 +1582,30 @@ BEGIN
    WHILE (j2 <= 105) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "14", i);
    	SET j2 = j2 + 2;
+   	SET i = i + 1;
+   END WHILE;
+      
+   -- 유령 A1 ~ C10
+   SET j1 = 1;
+   WHILE (j1 <= 88) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "25", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 유령 D1 ~ E10
+   SET j2 = 91;
+   WHILE (j2 <= 129) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "25", i);
+   	SET j2 = j2 + 2;
+   	SET i = i + 1;
+   END WHILE;
+
+   -- 유령 F1 ~ G10
+   SET j3 = 131;
+   WHILE (j3 <= 150) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "25", i);
+   	SET j3 = j3 + 1;
    	SET i = i + 1;
    END WHILE;
       
@@ -1672,7 +1705,6 @@ BEGIN
    	SET i = i + 1;
    END WHILE;   
 END $$
-
 
 -- 유령 회원을 통한 영화 좋아요와 관람평 늘리는 프로시저
 DELIMITER $$
@@ -1985,15 +2017,49 @@ CALL clone_member_like();
 
 -- 관람평에 좋아요 추가하는 프로시저 실행
 CALL comment_like_insert();
-
 /*
+SELECT *
+FROM movie_member;
 
+UPDATE movie_member
+SET umcomment = NULL
+WHERE umid = 1;
+
+-- 예매가 가능한 영화들
+SELECT *
+FROM movie
+WHERE mtitle LIKE '% %' and MID IN (SELECT DISTINCT MID
+				  						  		FROM movie_information
+										  		WHERE mistarttime >= ADDTIME(now(), '0:30:00'));
+
+-- 예매가 불가능한 영화들(영화 포스터만 뜨고 아직 상영일정이 안나온 영화들)
+-- 아무리 인기없는 영화라도 개봉하고 한번은 상영할테니깐 인기가 없어 상영에서 밀려난 영화들도 걸러짐
+SELECT *
+FROM movie
+WHERE MID not IN (SELECT distinct mid
+						FROM movie_information)
+ORDER BY mdate;	
+				  
+
+SELECT *
+FROM movie_information;
+
+INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), NOW(), NOW(), "24", 1);
+   	
+INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 22:45:00"), DATE_FORMAT(NOW(), "%Y-%m-%d 21:59:00"), "1", 1);
+ 
+ 
+
+INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 22:43:00"), DATE_FORMAT(NOW(), "%Y-%m-%d 21:59:00"), "24", 1);
+ 
+
+ 
 -- 현재 상영작 (오늘 이전의 개봉했으면서, 오늘 이후의 예매가 가능한 영화들)
 SELECT *
 FROM movie
 WHERE mdate <= DATE_FORMAT(NOW(),'%Y-%m-%d') and mid IN (SELECT DISTINCT MID
 																		  FROM movie_information
-																		  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d'));
+																		  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d')); -- 이게 뭔가 이상함 mistarttime으로 바꾸기
 -- 오늘날짜 이후로 예매 가능한 영화가 있는지 확인하는법
 
 				 
@@ -2048,7 +2114,7 @@ SELECT COUNT(*)
 FROM movie_reservation
 WHERE miid IN (SELECT miid
 					FROM movie_information
-					WHERE MID = 2);
+					WHERE MID = 4);
 					
 					
 -- 지금 예매가 가능한 것들
@@ -2058,6 +2124,22 @@ FROM movie
 WHERE MID IN (SELECT DISTINCT MID
 				  FROM movie_information
 				  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d'))
+ORDER BY mtime;
+
+SELECT *
+FROM movie_information
+WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d') AND mistarttime = '10:30:00';
+
+select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 13:33:00");
+
+select DATE_ADD(NOW(), INTERVAL 10 DAY)
+
+select now();
+
+SELECT *
+FROM movie
+WHERE MID IN (SELECT DISTINCT MID
+				  FROM movie_information)
 ORDER BY mtime;
 
 
@@ -2074,4 +2156,3 @@ FROM movie
 WHERE MID not IN (SELECT distinct mid
 						FROM movie_information);
 						
-*/
