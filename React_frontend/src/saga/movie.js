@@ -33,7 +33,9 @@ function* AllMovieLoad(action) {
     imagepath: mv.mimagepath,
     likes: mv.mlikes,
     score: mv.mscore,
-    like: mv.mlike
+    like: mv.mlike,
+    reserve: mv.reserve,
+    reserveRate: mv.reserveRate
   }));
   //네트워크에서 200으로 받아서 수정했음
   if (result.status === 200) {
@@ -53,7 +55,9 @@ function* AllMovieLoad(action) {
 async function LoadAllMovie(data) {
   return await http.get("/movie/normal/allmovie", {
     params: {
-      uid: data
+      uid: data.uid,
+      button: data.button,
+      search: data.search
     }
   })
     .then((response) => {

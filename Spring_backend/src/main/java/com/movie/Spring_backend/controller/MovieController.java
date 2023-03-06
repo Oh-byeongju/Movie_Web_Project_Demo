@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,8 +18,8 @@ public class MovieController {
 
     // 전체 영화 가져오는 메소드
     @GetMapping("/normal/allmovie")
-    public ResponseEntity<List<MovieDto>> AllMovie(@RequestParam("uid") String uid) {
-        return ResponseEntity.ok().body(movieService.getAllMovie(uid));
+    public ResponseEntity<List<MovieDto>> AllMovie(@RequestParam Map<String, String> requestMap) {
+        return ResponseEntity.ok().body(movieService.getAllMovie(requestMap));
     }
 
     // 사용자가 영화를 검색할때 사용되는 메소드

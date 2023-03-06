@@ -20,7 +20,11 @@ const BoxList = () => {
   useEffect(() => {
     dispatch({
       type: ALLMOVIE_REQUEST,
-      data: LOGIN_data.uid
+      data: {
+        uid: LOGIN_data.uid,
+        button: 'rate',
+        search: ''
+      }
     });
   }, [LOGIN_data.uid, dispatch]);
 

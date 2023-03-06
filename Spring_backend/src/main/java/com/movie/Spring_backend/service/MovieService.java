@@ -1,8 +1,8 @@
 /*
-  23-02-07 전체영화 조회 및 사용자 영화 검색 메소드 수정(오병주)
   23-02-10 영화 세부내용을 위한 메소드 설계(오병주)
   23-02-14 영화 세부내용 메소드 수정(오병주)
   23-02-20 영화 관람평 메소드 구현(오병주)
+  23-03-06 전체영화 조회 및 사용자 영화 검색 메소드 수정(오병주)
 */
 package com.movie.Spring_backend.service;
 import com.movie.Spring_backend.dto.CommentInfoDto;
@@ -37,13 +37,25 @@ public class MovieService {
 
     // 전체 영화 조회 메소드
     @Transactional
-    public List<MovieDto> getAllMovie(String uid) {
-        // 테이블 내의 모든 영화 검색
-        List<MovieEntity> Movies = movieRepository.findAllDESC();
+    public List<MovieDto> getAllMovie(Map<String, String> requestMap) {
+        // 영화 테이블에서 현재 예매가 가능한 영화들 조회
+        List<MovieEntity> ShowMovies = movieRepository.findShowMoviesReserveDESC();
+
+        // 영화 테이블에서 한번도 상영일정이 안잡힌 상영예정 영화 조회
+        List<MovieEntity> NotShowMovies = movieRepository.findNotShowMovies();
+
+        // requestMap 안에 정보를 추출
+        String User_id = requestMap.get("uid");
+
+        // 예매가 가능한 영화들의 전체 예매 횟수(예매율 계산시 나누기 할때 사용)
+        float cnt = 0;
+        for (MovieEntity m : ShowMovies) {
+            cnt += m.getCntReserve();
+        }
 
         // 받은 id 정보를 entity 형으로 변환(로그인 정보가 없으면 전달받은 매개변수 uid가 No_login 으로 설정)
         MemberEntity member = MemberEntity.builder()
-                .uid(uid).build();
+                .uid(User_id).build();
 
         // 사용자가 좋아요 누른 영화 목록 검색
         List<MovieMemberEntity> MovieLike = movieMemberRepository.findByUmlikeTrueAndMember(member);
@@ -54,9 +66,8 @@ public class MovieService {
             MovieLikeNum.add(mm.getMovie().getMid());
         }
 
-        // 영화 목록과 좋아요 기록을 mapping 후 리턴
-        return Movies.stream().map(movie ->
-                movieMapper.toDto(movie, MovieLikeNum.contains(movie.getMid()))).collect(Collectors.toList());
+        // 전체 영화 목록과 좋아요 기록을 mapping 후 리턴
+        return movieMapper.toDtoAllMovie(ShowMovies, NotShowMovies, MovieLikeNum, cnt);
     }
 
     // 사용자 영화 검색 메소드
