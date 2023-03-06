@@ -7,6 +7,7 @@ import com.movie.Spring_backend.repository.MemberRepository;
 import com.movie.Spring_backend.repository.MovieInfoSeatRepository;
 import com.movie.Spring_backend.repository.RedisSeatRepository;
 import com.movie.Spring_backend.repository.ReservationRepository;
+import com.movie.Spring_backend.util.RemoveLastChar;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,7 @@ public class PaymentService {
     public ResponseEntity<String> getPayment(Map<String, String> requestMap,
                                              HttpServletRequest request, HttpSession session) throws IOException
 {
+
         jwtValidCheck.JwtCheck(request, "ATK");
 
         String token = payment.getToken();
@@ -46,7 +48,9 @@ public class PaymentService {
         String impUid = requestMap.get("impUid"); //결제 정보
         String miid = requestMap.get("miid");     //movieinfo_id
         String pay = requestMap.get("amount");    //pay
-
+        String people = requestMap.get("people");
+        String rpeople= RemoveLastChar.removeLast(people);
+        System.out.println(rpeople);
         int payamount = Integer.parseInt(pay);  //비교를 위한 형변환
         MemberEntity member = MemberEntity.builder().uid(User_id).build();   //entity형태로 변환
         MovieInfoEntity info = MovieInfoEntity.builder().miid(Long.valueOf(miid)).build(); //entity형태로 변환
@@ -72,6 +76,7 @@ public class PaymentService {
                     reservationEntity = ReservationEntity.builder()
                             .rdate(java.sql.Date.valueOf(day))
                             .rprice(payamount)
+                            .rpeople(rpeople)
                             .rtoken(token)
                             .rpayid(impUid)
                             .movieInfo(info)

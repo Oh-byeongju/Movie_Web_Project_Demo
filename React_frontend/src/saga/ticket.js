@@ -533,7 +533,7 @@ function* selectSchedule(action) {
 
 async function paymentApi(data) {
   return await http
-    .post("/v2/auth /payment", data)
+    .post("/v2/auth/payment", data)
     .then((response) => {
       console.log(response);
       return response;

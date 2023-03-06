@@ -22,6 +22,9 @@ public class ReservationEntity {
     @Column(nullable = false)
     private Integer rprice;
 
+    @Column(nullable= false)
+    private String rpeople;
+
     @Column(nullable = false)
     private String rtoken;
 
@@ -38,10 +41,11 @@ public class ReservationEntity {
     private MemberEntity member;
 
     @Builder
-    public ReservationEntity(Long rid ,Date rdate, Integer rprice,String rtoken,String rpayid, MovieInfoEntity movieInfo, MemberEntity member) {
+    public ReservationEntity(Long rid ,Date rdate, Integer rprice,String rpeople,String rtoken,String rpayid, MovieInfoEntity movieInfo, MemberEntity member) {
         this.rid=rid;
         this.rdate=rdate;
         this.rprice=rprice;
+        this.rpeople=rpeople;
         this.rtoken=rtoken;
         this.rpayid=rpayid;
         this.movieInfo=movieInfo;

@@ -12,9 +12,9 @@ import {
   PAYMENT_REQUEST,
   RESERVE_LOGIN_PAGE,
 } from "../../reducer/ticket";
-import { useDispatch } from "react-redux";
+import { useDispatch ,useSelector} from "react-redux";
 
-export function f1(data, dispatch) {
+  export function f1(data, dispatch) {
   dispatch({
     type: SELECT_THEATER_REQUEST,
     data: data.movie.id, //mid
@@ -68,6 +68,7 @@ export function f1(data, dispatch) {
 }
 //주문번호 만들기
 export function createOrderNum() {
+  
   const date = new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -80,10 +81,10 @@ export function createOrderNum() {
   return orderNum;
 }
 
-export function paymentCard(data, dispatch, uid, choiceSeat, miid) {
+export function paymentCard(data, dispatch, uid, choiceSeat, miid,아이,학생,어른) {
   // 모바일로 결제시 이동페이지
   var IMP = window.IMP;
-
+  
   IMP.init("imp57612323");
 
   IMP.request_pay(
@@ -109,10 +110,22 @@ export function paymentCard(data, dispatch, uid, choiceSeat, miid) {
         data.merchant_uid = rsp.merchant_uid;
         data.uid = uid;
         data.amount = rsp.paid_amount;
+        let people = "";
+        if(아이 !==0 ){
+          people += "아이 "+Object.values({아이})+"명,"
+        }
+        if(학생 !==0 ){
+          people += "학생 "+Object.values({학생})+"명,"
+        }
+        if(어른 !==0 ){
+          people += "어른 "+Object.values({어른})+"명,"
+        }
+        console.log(people);
         let seatnumber = "";
         choiceSeat.map((seat) => (seatnumber += seat.seat_id + ","));
         data.sid = seatnumber;
         data.miid = miid;
+        data.people = people;
         paymentComplete(data, dispatch);
       } else {
         // 결제 실패 시 로직,

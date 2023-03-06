@@ -42,7 +42,9 @@ const seat = (state = initalState, action) => {
       return {
         ...state,
         choiceSeat: [],
-        choiceUser: [],
+        아이:0,
+        학생:0,
+        어른:0,
         price: 0,
         total: 0,
       };
@@ -83,14 +85,14 @@ const seat = (state = initalState, action) => {
       };
 
     case USER_REMOVE:
-      const array = [...state.choiceUser]; //불변성을 위해 배열 똑같이 생성
-      const index = array.indexOf(action.data); //사람에 대한 index 찾기
-      if (index !== -1) {
-        array.splice(index, 1); //배열 제거
-      }
+//      const array = [...state.choiceUser]; //불변성을 위해 배열 똑같이 생성
+  //    const index = array.indexOf(action.data); //사람에 대한 index 찾기
+    //  if (index !== -1) {
+      //  array.splice(index, 1); //배열 제거
+      //}
       return {
         ...state,
-        choiceUser: array, //복사
+        //choiceUser: array, //복사
         price: state.price - action.price,
         total: state.total - 1,
       };

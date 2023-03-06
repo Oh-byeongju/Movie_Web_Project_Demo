@@ -565,7 +565,6 @@ const ticket = (state = initalState, action) => {
         payment_loading: true,
         payment_done: false,
         payment_error: null,
-        payment: action.data,
       };
     case PAYMENT_SUCCESS:
       return {
@@ -573,6 +572,8 @@ const ticket = (state = initalState, action) => {
         payment_loading: false,
         payment_done: true,
         payment_error: null,
+        payment: action.data,
+
       };
     case PAYMENT_FAILURE:
       return {

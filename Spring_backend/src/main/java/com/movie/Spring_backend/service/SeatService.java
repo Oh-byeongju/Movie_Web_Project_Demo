@@ -55,6 +55,8 @@ public class SeatService {
         for (RedisSeatEntity r : datad) {
             if (r != null) {//null 값 제외하고 받아옴
                 String[] SeatNumber = r.getMiid().split(",");
+                System.out.println(SeatNumber[0]);
+                System.out.println(SeatNumber[1]);
                 ocuppyMappers.add(new OcuppyMapper( Long.parseLong(SeatNumber[0]),  Long.parseLong(SeatNumber[1])));
             }
             //miid seatid로 추출해서 매핑

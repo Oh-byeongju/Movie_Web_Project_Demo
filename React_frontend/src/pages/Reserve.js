@@ -10,6 +10,7 @@ import Seat from "../components/ticket/Seat";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RESET_RESERVE_PAGE } from "../reducer/ticket";
+import Complete from "../components/ticket/Complete";
 const Reserve = () => {
   //토글
   const [tabstate, setTabState] = useState({
@@ -48,12 +49,14 @@ const Reserve = () => {
       {page ? (
         <Seat />
       ) : (
+        <Complete />
+        /*
         <BookinWrapper>
           <AllMovieList />
           <AllTheaterList tabstate={tabstate} setTabState={setTabState} />
           <AllDayList />
           <AllSchedule />
-        </BookinWrapper>
+        </BookinWrapper> */
       )}
 
       <TicketMore setPage={setPage} page={page} />
