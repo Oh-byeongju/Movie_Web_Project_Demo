@@ -52,14 +52,20 @@ const Seat = () => {
         data: { id: scheduleData.cid, miid: scheduleData.miid },
       });
     }
-  }, [check_seat_error]);
+    return()=>{
+      dispatch({
+        type:PAGE_RESET
+      })
+    }
+  },
+   []);
   const plusHandlerAdult = () => {
     if (total < selectseat.length && total < 8) {
       setNumAdult((prev) => prev + 1);
       dispatch({
         type: USER_CHOICE,
         data: "어른",
-        price: 12000,
+        price: 30,
       });
     }
   };
@@ -70,7 +76,7 @@ const Seat = () => {
       dispatch({
         type: USER_CHOICE,
         data: "학생",
-        price: 8000,
+        price: 20,
       });
     }
   };
@@ -81,7 +87,7 @@ const Seat = () => {
       dispatch({
         type: USER_CHOICE,
         data: "아이",
-        price: 6000,
+        price: 10,
       });
     }
   };
@@ -144,12 +150,7 @@ const Seat = () => {
   return (
     <SeatWrapper>
       <SeatContent>
-        <Title
-          onClick={() => {
-            console.log("selecteduser : " + selectedUser);
-            console.log("princeinfo : " + priceInfo);
-          }}
-        >
+        <Title>
           인원 / 좌석
         </Title>
         <PersonScreen>

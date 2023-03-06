@@ -12,4 +12,6 @@ public class SortUtil implements Comparator<SeatDto> {
         if(a.getSid()<b.getSid()) return -1;
         return 0;
     }
+
+
 }

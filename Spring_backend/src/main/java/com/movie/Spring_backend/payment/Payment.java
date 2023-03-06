@@ -93,7 +93,7 @@ public class Payment {
         Gson gson = new Gson();
 
         Response response = gson.fromJson(br.readLine(), Response.class);
-
+        System.out.println(response);
         br.close();
         conn.disconnect();
 

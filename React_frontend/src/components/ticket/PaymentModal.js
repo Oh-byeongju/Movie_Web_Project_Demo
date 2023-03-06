@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import * as Payment from "../Common_components/Function";
-
+import seat, { CHECK_SEAT_REQUEST } from "../../reducer/seat";
 const PaymentModal = ({ closeModal }) => {
   const dispatch = useDispatch();
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
   );
-  const { choiceUser, 아이, 학생, 어른, choiceSeat, price } = useSelector(
+  const {  아이, 학생, 어른, choiceSeat, price } = useSelector(
     (state) => state.seat
   );
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
@@ -33,18 +33,19 @@ const PaymentModal = ({ closeModal }) => {
   };
 
   const onClickPayment = () => {
+
     const date = new window.Date().getTime();
 
     const data = {
       pg: "html5_inicis.INIpayTest", //pg사
       payMethod: "card", //결제수단
       oderNum: Payment.createOrderNum(), //주문번호
-      name: "결제 테스트", //결제이름
-      buyerEmail: "testemail@test.com", //구매자 이메일
-      buyerName: "홍길동", //구매자 이름
+      name: movieData.title, //결제이름
+      buyerEmail: "", //구매자 이메일
+      buyerName: LOGIN_data.uname, //구매자 이름
       buyerTel: "010-1234-1234", //구매자 번호
       buyerAddr: "부산광역시 ", //구매자 주소
-      amount: "100",
+      amount:price, 
     };
     Payment.paymentCard(
       data,
@@ -52,7 +53,9 @@ const PaymentModal = ({ closeModal }) => {
       LOGIN_data.uid,
       choiceSeat,
       scheduleData.miid
+      ,아이,학생,어른
     );
+    
   };
   return (
     <Container>
@@ -196,8 +199,26 @@ const PaymentModal = ({ closeModal }) => {
               </PaymentAgreement>
             </Agreement>
 
-            <Reserve onClick={() => onClickPayment()}>결제하기</Reserve>
-            <FAIL>취소</FAIL>
+            <Reserve onClick={() => {
+                  if(check1&&check2&&check3&&check4){
+
+                let seatnumber = "";
+                choiceSeat.map((seat) => (seatnumber += seat.seat_id + ",")); //레디스
+                dispatch({
+                  type: CHECK_SEAT_REQUEST,
+                  data: {
+                    age: seatnumber,
+                  },
+                });
+              onClickPayment()
+            }
+          else{
+            alert('모든 약관에 동의하세요')
+          }}
+              
+              
+              }>결제하기</Reserve>
+            <FAIL onClick={()=>closeModal()}>취소</FAIL>
           </BodyModal>
         </ModalBlock>
       </Background>

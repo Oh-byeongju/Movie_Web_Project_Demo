@@ -19,6 +19,7 @@ public class ReservationDto {
     private Long rid;
     private Date rdate;
     private Long rpice;
+    private String rpeople;
     private String rtoken;
 
     private String rpayid;
@@ -27,10 +28,11 @@ public class ReservationDto {
 
 
     @Builder
-    public ReservationDto(Long rid ,Date rdate, Long rpice,   String rtoken,String rpayid,MovieInfoEntity miid, MemberEntity uid) {
+    public ReservationDto(Long rid ,Date rdate, Long rpice,  String rpeople, String rtoken,String rpayid,MovieInfoEntity miid, MemberEntity uid) {
         this.rid=rid;
         this.rdate=rdate;
         this.rpice=rpice;
+        this.rpeople=rpeople;
         this.rtoken=rtoken;
         this.rpayid=rpayid;
         this.miid=miid;

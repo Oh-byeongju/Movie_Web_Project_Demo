@@ -154,15 +154,7 @@ const TicketMore = ({ setPage, page }) => {
                 alert("관람인원과 선택 좌석 수가 동일하지 않습니다.");
                 return;
               } else {
-                let seatnumber = "";
-                choiceSeat.map((seat) => (seatnumber += seat.seat_id + ",")); //레디스
-                dispatch({
-                  type: CHECK_SEAT_REQUEST,
-                  data: {
-                    name: scheduleData.miid,
-                    age: seatnumber,
-                  },
-                });
+          
                 openModalHandler();
                 //  paymentRecord();
               }
@@ -313,7 +305,7 @@ const MovieChoice = styled.div`
   }
 `;
 const SeatMore = styled.div`
-  width: 185px;
+  width: 240px;
   float: left;
   height: 108px;
   padding-right: 2px;
