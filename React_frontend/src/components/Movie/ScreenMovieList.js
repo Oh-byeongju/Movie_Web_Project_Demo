@@ -1,10 +1,9 @@
 /*
- 23-02-02 css 수정 및 Like수 적용(오병주)
- 23-02-08 사용자가 누른 Like 적용(오병주)
+ 23-03-07 현재 상영작 페이지 생성(오병주)
 */
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ALLMOVIE_REQUEST, MOVIE_SEARCH_REQUEST } from "../../reducer/movie";
+import { SCREENMOVIE_REQUEST } from "../../reducer/movie";
 import Movie from "./Movie";
 import MovieSearchLoading from "../Common_components/MovieSearchLoading";
 import styled from "styled-components";
@@ -12,7 +11,7 @@ import { Input } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 const { Search } = Input;
 
-const MovieList = () => {
+const ScreenMovieList = () => {
   const dispatch = useDispatch();
 
   // UL의 높이를 구하기 위한 useRef
@@ -22,17 +21,16 @@ const MovieList = () => {
   const [Limit, setLimit] = useState(8); //더보기 리미트
   const L = 8;
 
-  const { allMovie, movie_search_loading } = useSelector(
-    (state) => state.movie
-  );
-
+  const { screenMovie } = useSelector((state) => state.movie);
+	const { screenmovie_loading } = useSelector((state) => state.movie);
+	
   // 로그인 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
-
+  
   // 로그인 상태에 따라 전체 검색이 다름(좋아요 표시 때문)
   useEffect(() => {
     dispatch({
-      type: ALLMOVIE_REQUEST,
+      type: SCREENMOVIE_REQUEST,
       data: {
         uid: LOGIN_data.uid,
         button: 'rate',
@@ -41,60 +39,92 @@ const MovieList = () => {
     });
   }, [LOGIN_data.uid, dispatch]);
 
+  // 검색칸 내용 변수
+  const [search, setsearch] = useState("");
+  const handleSearchChange = e => {
+    setsearch(e.target.value);
+  };
+
   // 정렬 버튼 css 변수
 	const [ratebutton, setratebutton] = useState(true);
 	const [likebutton, setlikebutton] = useState(false);
 
   // 최신순 버튼을 누를 때
 	const clickrate = useCallback(()=> {
-		// dispatch({
-    //   type: DETAIL_COMMENT_RECENT_REQUEST,
-    //   data: {
-    //     pathname: location.pathname,
-    //     uid: LOGIN_data.uid
-    //   }
-    // });
+		dispatch({
+      type: SCREENMOVIE_REQUEST,
+      data: {
+        uid: LOGIN_data.uid,
+        button: 'rate',
+        search: search.trim()
+      }
+    });
 		setratebutton(true);
 		setlikebutton(false);
-	}, [])
+
+		setLimit(L);
+    // UL의 높이 갱신
+    var UL_Ref_style = window.getComputedStyle(UL_Ref.current);
+    var UL_Ref_height = UL_Ref_style.getPropertyValue("height");
+    setHeight(parseInt(UL_Ref_height) + 32.4);
+
+	}, [LOGIN_data.uid, search, dispatch])
 
 	// 공감순 버튼을 누를 때
 	const clicklike = useCallback(()=> {
-		// dispatch({
-    //   type: DETAIL_COMMENT_LIKE_REQUEST,
-    //   data: {
-    //     pathname: location.pathname,
-    //     uid: LOGIN_data.uid
-    //   }
-    // });
+		dispatch({
+      type: SCREENMOVIE_REQUEST,
+      data: {
+        uid: LOGIN_data.uid,
+        button: 'like',
+        search: search.trim()
+      }
+    });
 		setlikebutton(true);
 		setratebutton(false);
-	}, [])
 
-  // 검색칸 내용 변수
-	const [search, setsearch] = useState("");
-	const handleSearchChange = e => {
-    setsearch(e.target.value);
-  };
+		setLimit(L);
+    // UL의 높이 갱신
+    var UL_Ref_style = window.getComputedStyle(UL_Ref.current);
+    var UL_Ref_height = UL_Ref_style.getPropertyValue("height");
+    setHeight(parseInt(UL_Ref_height) + 32.4);
+		
+	}, [LOGIN_data.uid, search, dispatch])
 
   // 검색 버튼 누를때 실행되는 함수
-  const onSearch = (value) => {
-    console.log(search.trim());
-    dispatch({
-      type: MOVIE_SEARCH_REQUEST,
-      data: {
-        title: value,
-        uid: LOGIN_data.uid,
-      },
-    });
+  const onSearch = useCallback(() => {
+
+    // 예매순 버튼이 눌러져있을 경우
+    if (ratebutton) {
+      dispatch({
+        type: SCREENMOVIE_REQUEST,
+        data: {
+          uid: LOGIN_data.uid,
+          button: 'rate',
+          search: search.trim()
+        }
+      });
+    }
+    // 공감순 버튼이 눌러져있을 경우
+    else {
+      dispatch({
+        type: SCREENMOVIE_REQUEST,
+        data: {
+          uid: LOGIN_data.uid,
+          button: 'like',
+          search: search.trim()
+        }
+      });
+    }
 
     setLimit(L);
     // UL의 높이 갱신
     var UL_Ref_style = window.getComputedStyle(UL_Ref.current);
     var UL_Ref_height = UL_Ref_style.getPropertyValue("height");
     setHeight(parseInt(UL_Ref_height) + 32.4);
-  };
+  }, [LOGIN_data.uid, ratebutton, search, dispatch]);
 
+  // 더보기 버튼을 누를경우 limit를 증가시켜줌
   const onMoreClick = useCallback(() => {
     setLimit(Limit + 8);
   }, [Limit]);
@@ -103,11 +133,11 @@ const MovieList = () => {
     <Container>
       <InnerWraps>
         <div className="titleMenu">
-          <h1>전체영화</h1>
+          <h1>현재상영작</h1>
         </div>
         <div className="search">
           <p>
-            {`${allMovie.slice(0, Limit).length}개의 영화가 검색되었습니다.`}
+            {`${screenMovie.slice(0, Limit).length}개의 영화가 검색되었습니다.`}
           </p>
           <ButtonList>
             <ButtonWrap>
@@ -136,19 +166,19 @@ const MovieList = () => {
           </div>
         </div>
         {/* 처음 랜더링 될때 로딩화면 */}
-        {allMovie.length === 0 && Height === 962.2 ? (
+        {screenMovie.length === 0 && Height === 962.2 ? (
           <div>
             <MovieSearchLoading height={Height} />
           </div>
         ) : null}
-        {movie_search_loading ? (
+        {screenmovie_loading ? (
           <MovieSearchLoading height={Height} />
         ) : (
           <div className="movie-list">
             <UL ref={UL_Ref}>
               {/* 영화 검색 결과에 따라 다른 화면을 출력 */}
-              {allMovie.length !== 0 ? (
-                allMovie
+              {screenMovie.length !== 0 ? (
+                screenMovie
                   .slice(0, Limit)
                   .map((movie) => <Movie movie={movie} key={movie.id} />)
               ) : (
@@ -159,7 +189,7 @@ const MovieList = () => {
             </UL>
           </div>
         )}
-        {Limit >= allMovie.length ? (
+        {Limit >= screenMovie.length ? (
           ""
         ) : (
           <More onClick={onMoreClick}>
@@ -323,4 +353,4 @@ const ButtonWrap = styled.li`
 	}
 `;
 
-export default MovieList;
+export default ScreenMovieList;

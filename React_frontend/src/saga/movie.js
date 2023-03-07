@@ -3,9 +3,12 @@ import {
   ALLMOVIE_REQUEST,
   ALLMOVIE_SUCCESS,
   ALLMOVIE_FAILURE,
-  MOVIE_SEARCH_REQUEST,
-  MOVIE_SEARCH_FAILURE,
-  MOVIE_SEARCH_SUCCESS,
+  SCREENMOVIE_REQUEST,
+  SCREENMOVIE_SUCCESS,
+  SCREENMOVIE_FAILURE,
+  COMINGMOVIE_REQUEST,
+  COMINGMOVIE_SUCCESS,
+  COMINGMOVIE_FAILURE,
   DETAIL_MOVIE_REQUEST,
   DETAIL_MOVIE_SUCCESS,
   DETAIL_MOVIE_FAILURE,
@@ -22,14 +25,14 @@ import { http } from "../lib/http";
 function* AllMovieLoad(action) {
   const result = yield call(LoadAllMovie, action.data);
   const allmoviedata = result.data.map((mv) => ({
-    id: mv.mid, //영화번호
-    dir: mv.mdir, //감독
-    date: mv.mdate, //개봉일
-    time: mv.mtime, //러닝타임
-    genre: mv.mgenre, //장르
+    id: mv.mid, 
+    dir: mv.mdir, 
+    date: mv.mdate, 
+    time: mv.mtime, 
+    genre: mv.mgenre, 
     story: mv.mstory,
-    title: mv.mtitle, //제목
-    rating: mv.mrating, //연령
+    title: mv.mtitle, 
+    rating: mv.mrating, 
     imagepath: mv.mimagepath,
     likes: mv.mlikes,
     score: mv.mscore,
@@ -37,7 +40,6 @@ function* AllMovieLoad(action) {
     reserve: mv.reserve,
     reserveRate: mv.reserveRate
   }));
-  //네트워크에서 200으로 받아서 수정했음
   if (result.status === 200) {
     yield put({
       type: ALLMOVIE_SUCCESS,
@@ -68,46 +70,96 @@ async function LoadAllMovie(data) {
     });
 }
 
-// 사용자 영화 검색을 위한 함수
-function* SearchMovieLoad(action) {
-  const result = yield call(SearchMovie, action.data);
+// 현재 상영작 영화 불러오는 함수
+function* ScreenMovieLoad(action) {
+  const result = yield call(LoadScreenMovie, action.data);
+  const screenmoviedata = result.data.map((mv) => ({
+    id: mv.mid, 
+    dir: mv.mdir, 
+    date: mv.mdate, 
+    time: mv.mtime, 
+    genre: mv.mgenre,
+    story: mv.mstory,
+    title: mv.mtitle, 
+    rating: mv.mrating, 
+    imagepath: mv.mimagepath,
+    likes: mv.mlikes,
+    score: mv.mscore,
+    like: mv.mlike,
+    reserve: mv.reserve,
+    reserveRate: mv.reserveRate
+  }));
   if (result.status === 200) {
-    const allmoviedata = result.data.map((mv) => ({
-      id: mv.mid, //영화번호
-      dir: mv.mdir, //감독
-      date: mv.mdate, //개봉일
-      time: mv.mtime, //러닝타임
-      genre: mv.mgenre, //장르
-      story: mv.mstory,
-      title: mv.mtitle, //제목
-      rating: mv.mrating, //연령
-      imagepath: mv.mimagepath,
-      likes: mv.mlikes,
-      score: mv.mscore,
-      like: mv.mlike
-    }));
-    //네트워크에서 200으로 받아서 수정했음
     yield put({
-      type: MOVIE_SEARCH_SUCCESS,
-      data: allmoviedata,
+      type: SCREENMOVIE_SUCCESS,
+      data: screenmoviedata,
     });
   } else {
     yield put({
-      type: MOVIE_SEARCH_FAILURE,
+      type: SCREENMOVIE_FAILURE,
       data: result.status,
     });
   }
 }
 
 // 백엔드 호출
-async function SearchMovie(data) {
-  return await http
-    .get(`/movie/normal/searchmovie`, {
-      params: {
-        title: data.title,
-        uid: data.uid
-      }
+async function LoadScreenMovie(data) {
+  return await http.get("/movie/normal/screenmovie", {
+    params: {
+      uid: data.uid,
+      button: data.button,
+      search: data.search
+    }
+  })
+    .then((response) => {
+      return response;
     })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
+// 상영 예정작 영화 불러오는 함수
+function* ComingMovieLoad(action) {
+  const result = yield call(LoadComingMovie, action.data);
+  const comingmoviedata = result.data.map((mv) => ({
+    id: mv.mid, 
+    dir: mv.mdir, 
+    date: mv.mdate, 
+    time: mv.mtime, 
+    genre: mv.mgenre,
+    story: mv.mstory,
+    title: mv.mtitle, 
+    rating: mv.mrating, 
+    imagepath: mv.mimagepath,
+    likes: mv.mlikes,
+    score: mv.mscore,
+    like: mv.mlike,
+    reserve: mv.reserve,
+    reserveRate: mv.reserveRate
+  }));
+  if (result.status === 200) {
+    yield put({
+      type: COMINGMOVIE_SUCCESS,
+      data: comingmoviedata,
+    });
+  } else {
+    yield put({
+      type: COMINGMOVIE_FAILURE,
+      data: result.status,
+    });
+  }
+}
+
+// 백엔드 호출
+async function LoadComingMovie(data) {
+  return await http.get("/movie/normal/comingmovie", {
+    params: {
+      uid: data.uid,
+      button: data.button,
+      search: data.search
+    }
+  })
     .then((response) => {
       return response;
     })
@@ -238,8 +290,12 @@ function* allMovie() {
   yield takeLatest(ALLMOVIE_REQUEST, AllMovieLoad);
 }
 
-function* selectedMovie() {
-  yield takeLatest(MOVIE_SEARCH_REQUEST, SearchMovieLoad);
+function* screenMovie() {
+  yield takeLatest(SCREENMOVIE_REQUEST, ScreenMovieLoad);
+}
+
+function* comingMovie() {
+  yield takeLatest(COMINGMOVIE_REQUEST, ComingMovieLoad);
 }
 
 function* detailMovie() {
@@ -255,5 +311,5 @@ function* detailCommentLike() {
 }
 
 export default function* movieSaga() {
-  yield all([fork(allMovie), fork(selectedMovie), fork(detailMovie), fork(detailCommentRecent), fork(detailCommentLike)]);
+  yield all([fork(allMovie), fork(screenMovie), fork(comingMovie), fork(detailMovie), fork(detailCommentRecent), fork(detailCommentLike)]);
 }

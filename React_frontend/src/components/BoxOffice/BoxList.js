@@ -35,7 +35,7 @@ const BoxList = () => {
     <CardList>
       <div style={{ paddingBottom: "40px" }}>
         <Title>박스오피스</Title>
-        <Link to="/movie">
+        <Link to="/allmovie">
           <More>
             더 많은 영화보기 <PlusOutlined />
           </More>

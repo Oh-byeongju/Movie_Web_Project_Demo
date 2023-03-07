@@ -5,7 +5,9 @@ import Home from "./pages/Home";
 import UserLogin from "./pages/UserLogin";
 import UserJoin from "./pages/UserJoin";
 import Reserve from "./pages/Reserve";
-import Movie from "./pages/Movie";
+import AllMovie from "./pages/AllMovie";
+import ScreenMovie from "./pages/ScreenMovie";
+import ComingMovie from "./pages/ComingMovie";
 import MovieDetail from "./pages/MovieDetail";
 import StoryChange from "./pages/StoryChange";
 
@@ -18,7 +20,9 @@ function App() {
         <Route path="/UserLogin" element={<UserLogin />}></Route>
         <Route path="/UserJoin" element={<UserJoin />}></Route>
         <Route path="/Reserve" exact element={<Reserve />}></Route>
-        <Route path="/movie" element={<Movie />}></Route>
+        <Route path="/allmovie" element={<AllMovie />}></Route>
+        <Route path="/screenmovie" element={<ScreenMovie />}></Route>
+        <Route path="/comingmovie" element={<ComingMovie />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
         <Route path="/StoryChange" element={<StoryChange />}></Route>
       </Route>
