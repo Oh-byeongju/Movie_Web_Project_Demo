@@ -430,7 +430,7 @@ VALUES('주연', '43', '13');
 -- 이미 존재해서 갯수가 위와 갯수가 다름
 
 INSERT INTO `movie`(`mtitle`, `mdir`, `mgenre`, `mtime`, `mdate`, `mrating`, `mstory`, `mimagepath`)
-VALUES("다음 소희", "정주리" , "드라마", "120", DATE_SUB(NOW(), INTERVAL 3 DAY), "15", '<h2><span style="color: rgb(68, 68, 68);">“나 이제 사무직 여직원이다?”</span></h2><p><span style="color: rgb(68, 68, 68);">춤을 좋아하는 씩씩한 열여덟 고등학생 소희.</span></p><p><span style="color: rgb(68, 68, 68);">졸업을 앞두고 현장실습을 나가게 되면서 점차 변하기 시작한다.</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">“막을 수 있었잖아. 근데 왜 보고만 있었냐고”</span></p><p><span style="color: rgb(68, 68, 68);">오랜만에 복직한 형사 유진.</span></p><p><span style="color: rgb(68, 68, 68);">사건을 조사하던 중, 새로운 사실을 발견하고 그 자취를 쫓는다.</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">같은 공간 다른 시간, 언젠가 마주쳤던 두 사람의 이야기.</span></p><p><span style="color: rgb(68, 68, 68);">우리는 모두 그 애를 만난 적이 있다.</span></p>',"img/ranking/18.jpg");
+VALUES("다음 소희", "정주리" , "드라마", "120", DATE_SUB(NOW(), INTERVAL 1 DAY), "15", '<h2><span style="color: rgb(68, 68, 68);">“나 이제 사무직 여직원이다?”</span></h2><p><span style="color: rgb(68, 68, 68);">춤을 좋아하는 씩씩한 열여덟 고등학생 소희.</span></p><p><span style="color: rgb(68, 68, 68);">졸업을 앞두고 현장실습을 나가게 되면서 점차 변하기 시작한다.</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">“막을 수 있었잖아. 근데 왜 보고만 있었냐고”</span></p><p><span style="color: rgb(68, 68, 68);">오랜만에 복직한 형사 유진.</span></p><p><span style="color: rgb(68, 68, 68);">사건을 조사하던 중, 새로운 사실을 발견하고 그 자취를 쫓는다.</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">같은 공간 다른 시간, 언젠가 마주쳤던 두 사람의 이야기.</span></p><p><span style="color: rgb(68, 68, 68);">우리는 모두 그 애를 만난 적이 있다.</span></p>',"img/ranking/18.jpg");
 
 INSERT INTO `actor` (`aname`, `abirthplace`)
 VALUES ('배두나', '한국');
@@ -443,7 +443,7 @@ INSERT INTO `movie_actor` (`marole`, `aid`, `mid`)
 VALUES('주연', '56', '14');
 
 INSERT INTO `movie`(`mtitle`, `mdir`, `mgenre`, `mtime`, `mdate`, `mrating`, `mstory`, `mimagepath`)
-VALUES("유령", "이해영" , "액션", "120", DATE_ADD(NOW(), INTERVAL 3 DAY), "15", '<h2><span style="color: rgb(68, 68, 68);">“유령에게 고함. 작전을 시작한다”</span></h2><p><br></p><p><span style="color: rgb(68, 68, 68);">1933년, 일제강점기 경성. 항일조직 ‘흑색단’의 스파이인 ‘유령’이 비밀리에 활약하고 있다.</span></p><p><span style="color: rgb(68, 68, 68);">새로 부임한 경호대장 카이토는 ‘흑색단’의 총독 암살 시도를 막기 위해</span></p><p><span style="color: rgb(68, 68, 68);">조선총독부 내의 ‘유령’을 잡으려는 덫을 친다.</span></p><p><span style="color: rgb(68, 68, 68);">영문도 모른 채, ‘유령’으로 의심받고 벼랑 끝 외딴 호텔에 갇힌 용의자들.</span></p><p><span style="color: rgb(68, 68, 68);">총독부 통신과 감독관 쥰지, 암호문 기록 담당 차경, 정무총감 비서 유리코,</span></p><p><span style="color: rgb(68, 68, 68);">암호 해독 담당 천계장, 통신과 직원 백호. 이들에게 주어진 시간은 단 하루 뿐.</span></p><p><span style="color: rgb(68, 68, 68);">기필코 살아나가 동지들을 구하고 총독 암살 작전을 성공시켜야 하는 ‘유령’과</span></p><p><span style="color: rgb(68, 68, 68);">무사히 집으로 돌아가고 싶은 이들 사이, 의심과 경계는 점점 짙어지는데…</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">과연 ‘유령’은 작전에 성공할 수 있을 것인가?</span></p><p><span style="color: rgb(68, 68, 68);">“성공할 때까지 멈춰서는 안 된다”</span></p>',"img/ranking/15.jpg");
+VALUES("유령", "이해영" , "액션", "120", NOW(), "15", '<h2><span style="color: rgb(68, 68, 68);">“유령에게 고함. 작전을 시작한다”</span></h2><p><br></p><p><span style="color: rgb(68, 68, 68);">1933년, 일제강점기 경성. 항일조직 ‘흑색단’의 스파이인 ‘유령’이 비밀리에 활약하고 있다.</span></p><p><span style="color: rgb(68, 68, 68);">새로 부임한 경호대장 카이토는 ‘흑색단’의 총독 암살 시도를 막기 위해</span></p><p><span style="color: rgb(68, 68, 68);">조선총독부 내의 ‘유령’을 잡으려는 덫을 친다.</span></p><p><span style="color: rgb(68, 68, 68);">영문도 모른 채, ‘유령’으로 의심받고 벼랑 끝 외딴 호텔에 갇힌 용의자들.</span></p><p><span style="color: rgb(68, 68, 68);">총독부 통신과 감독관 쥰지, 암호문 기록 담당 차경, 정무총감 비서 유리코,</span></p><p><span style="color: rgb(68, 68, 68);">암호 해독 담당 천계장, 통신과 직원 백호. 이들에게 주어진 시간은 단 하루 뿐.</span></p><p><span style="color: rgb(68, 68, 68);">기필코 살아나가 동지들을 구하고 총독 암살 작전을 성공시켜야 하는 ‘유령’과</span></p><p><span style="color: rgb(68, 68, 68);">무사히 집으로 돌아가고 싶은 이들 사이, 의심과 경계는 점점 짙어지는데…</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">과연 ‘유령’은 작전에 성공할 수 있을 것인가?</span></p><p><span style="color: rgb(68, 68, 68);">“성공할 때까지 멈춰서는 안 된다”</span></p>',"img/ranking/15.jpg");
 
 INSERT INTO `actor` (`aname`, `abirthplace`)
 VALUES ('설경구', '한국');
@@ -468,7 +468,7 @@ INSERT INTO `movie_actor` (`marole`, `aid`, `mid`)
 VALUES('조연', '61', '15');
 
 INSERT INTO `movie`(`mtitle`, `mdir`, `mgenre`, `mtime`, `mdate`, `mrating`, `mstory`, `mimagepath`)
-VALUES("장화신은 고양이: 끝내주는 모험", "조엘 크로포드" , "애니메이션", "100", DATE_ADD(NOW(), INTERVAL 4 DAY), "0", '<h2><span style="color: rgb(68, 68, 68);">아홉 개의 목숨 중 단 하나의 목숨만 남은 장화신은 고양이.</span></h2><p><span style="color: rgb(68, 68, 68);">마지막 남은 목숨을 지키기 위해 히어로의 삶 대신 반려묘의 삶을 선택한 그에게 찾아온 마지막 기회, 바로 소원을 들어주는 소원별이 있는 곳을 알려주는 지도!</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">잃어버린 목숨을 되찾고 다시 히어로가 되기를 꿈꾸는 장화신은 고양이는</span></p><p><span style="color: rgb(68, 68, 68);">뜻밖의 동료가 된 앙숙 파트너 "키티 말랑손", 그저 친구들과 함께 라면 모든 게 행복한 강아지 "페로"와 함께</span></p><p><span style="color: rgb(68, 68, 68);">소원별을 찾기 위해 길을 떠난다.</span></p><p><span style="color: rgb(68, 68, 68);">그리고 소원별을 노리는 또 다른 빌런들과 마주치게 되는데…</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">새해를 여는 끝내주는 모험이 시작된다!</span></p>',"img/ranking/16.jpg");
+VALUES("장화신은 고양이: 끝내주는 모험", "조엘 크로포드" , "애니메이션", "100", DATE_ADD(NOW(), INTERVAL 1 DAY), "0", '<h2><span style="color: rgb(68, 68, 68);">아홉 개의 목숨 중 단 하나의 목숨만 남은 장화신은 고양이.</span></h2><p><span style="color: rgb(68, 68, 68);">마지막 남은 목숨을 지키기 위해 히어로의 삶 대신 반려묘의 삶을 선택한 그에게 찾아온 마지막 기회, 바로 소원을 들어주는 소원별이 있는 곳을 알려주는 지도!</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">잃어버린 목숨을 되찾고 다시 히어로가 되기를 꿈꾸는 장화신은 고양이는</span></p><p><span style="color: rgb(68, 68, 68);">뜻밖의 동료가 된 앙숙 파트너 "키티 말랑손", 그저 친구들과 함께 라면 모든 게 행복한 강아지 "페로"와 함께</span></p><p><span style="color: rgb(68, 68, 68);">소원별을 찾기 위해 길을 떠난다.</span></p><p><span style="color: rgb(68, 68, 68);">그리고 소원별을 노리는 또 다른 빌런들과 마주치게 되는데…</span></p><p><br></p><p><span style="color: rgb(68, 68, 68);">새해를 여는 끝내주는 모험이 시작된다!</span></p>',"img/ranking/16.jpg");
 
 INSERT INTO `actor` (`aname`, `abirthplace`)
 VALUES ('안토니오 반데라스', '스페인');
@@ -1855,6 +1855,22 @@ BEGIN
       INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 16, val);
       SET i = i + 1; 
    END WHILE;
+   
+   -- 멍뭉이 좋아요 추가
+   SET i = 1;
+   WHILE (i <= 5) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 20, val);
+      SET i = i + 1; 
+   END WHILE;
+   
+   -- 페르시아어 수업 좋아요 추가
+   SET i = 1;
+   WHILE (i <= 7) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 23, val);
+      SET i = i + 1; 
+   END WHILE;
 END $$
 
 -- 관람평에 좋아요 추가하는 프로시저
@@ -2017,20 +2033,21 @@ CALL clone_member_like();
 
 -- 관람평에 좋아요 추가하는 프로시저 실행
 CALL comment_like_insert();
-/*
-SELECT *
-FROM movie_member;
+
+
 
 UPDATE movie_member
 SET umcomment = NULL
 WHERE umid = 1;
 
 -- 예매가 가능한 영화들
+-- 여기에 스프링에서 orderby 추가
 SELECT *
 FROM movie
 WHERE mtitle LIKE '% %' and MID IN (SELECT DISTINCT MID
 				  						  		FROM movie_information
 										  		WHERE mistarttime >= ADDTIME(now(), '0:30:00'));
+
 
 -- 예매가 불가능한 영화들(영화 포스터만 뜨고 아직 상영일정이 안나온 영화들)
 -- 아무리 인기없는 영화라도 개봉하고 한번은 상영할테니깐 인기가 없어 상영에서 밀려난 영화들도 걸러짐
@@ -2041,46 +2058,29 @@ WHERE MID not IN (SELECT distinct mid
 ORDER BY mdate;	
 				  
 
-SELECT *
-FROM movie_information;
-
-INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), NOW(), NOW(), "24", 1);
-   	
-INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 22:45:00"), DATE_FORMAT(NOW(), "%Y-%m-%d 21:59:00"), "1", 1);
- 
- 
-
-INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(NOW(), DATE_FORMAT(NOW(), "%Y-%m-%d 22:43:00"), DATE_FORMAT(NOW(), "%Y-%m-%d 21:59:00"), "24", 1);
- 
-
- 
 -- 현재 상영작 (오늘 이전의 개봉했으면서, 오늘 이후의 예매가 가능한 영화들)
+-- 여기에 스프링에서 orderby 추가
 SELECT *
 FROM movie
-WHERE mdate <= DATE_FORMAT(NOW(),'%Y-%m-%d') and mid IN (SELECT DISTINCT MID
-																		  FROM movie_information
-																		  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d')); -- 이게 뭔가 이상함 mistarttime으로 바꾸기
--- 오늘날짜 이후로 예매 가능한 영화가 있는지 확인하는법
-
+WHERE mtitle LIKE '%%' AND mdate <= DATE_FORMAT(NOW(),'%Y-%m-%d') and mid IN (SELECT DISTINCT MID
+				  						  																FROM movie_information
+																								  		WHERE mistarttime >= ADDTIME(now(), '0:30:00'));
 				 
-				 
--- 상영 예정작(예매가 가능한 것) order by 도 해야하는데 고민 해보기
+-- 상영 예정작(예매가 가능한 것)
+-- 여기에 스프링에서 orderby 추가
 SELECT *
 FROM movie
-WHERE mdate >= DATE_FORMAT(NOW(), '%Y-%m-%d') AND MID IN (SELECT DISTINCT MID
-																		    FROM movie_information
-																		    WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d'));
+WHERE mtitle LIKE '%%' AND mdate > DATE_FORMAT(NOW(), '%Y-%m-%d') AND MID IN (SELECT DISTINCT MID
+																		    							FROM movie_information
+																									   WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d'));
 
 -- 상영 예정작(예매가 불가능한 것) --> 영화 포스터는 떴는데 예매는 불가능한거
+-- 여기에 스프링에서 orderby 추가
 SELECT *
 FROM movie
 WHERE MID not IN (SELECT distinct mid
 						FROM movie_information);
 -- 여기서 어느 시점 영화를 삭제했다고 생각도 해봐야혀
--- 메인에 4개 영화는 아래 쿼리문 쓰면 상영중인 애들만 나오니깐 거기서 예매율 순으로 orderby
-SELECT DISTINCT MID
-FROM movie_information
-WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d')
 
 
 
@@ -2091,23 +2091,8 @@ WHERE miid IN (SELECT miid
 					FROM movie_information
 					WHERE MID IN (SELECT DISTINCT mid
 									  FROM movie_information
-									  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d')));
-
-
-					(SELECT miid
-					FROM movie_information
-					WHERE MID IN (SELECT DISTINCT mid
-									  FROM movie_information
-									  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d')));
-							
-							
-						
-SELECT COUNT(*)
-FROM movie_reservation
-WHERE miid IN (SELECT miid
-					FROM movie_information
-					WHERE MID = 1);						
-						
+									  WHERE mistarttime >= ADDTIME(now(), '0:30:00')));
+													
 						
 -- 특정 영화의 reservation 갯수
 SELECT COUNT(*)
@@ -2115,44 +2100,3 @@ FROM movie_reservation
 WHERE miid IN (SELECT miid
 					FROM movie_information
 					WHERE MID = 4);
-					
-					
--- 지금 예매가 가능한 것들
-
-SELECT *
-FROM movie
-WHERE MID IN (SELECT DISTINCT MID
-				  FROM movie_information
-				  WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d'))
-ORDER BY mtime;
-
-SELECT *
-FROM movie_information
-WHERE miday >= DATE_FORMAT(NOW(),'%Y-%m-%d') AND mistarttime = '10:30:00';
-
-select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 DAY), "%Y-%m-%d 13:33:00");
-
-select DATE_ADD(NOW(), INTERVAL 10 DAY)
-
-select now();
-
-SELECT *
-FROM movie
-WHERE MID IN (SELECT DISTINCT MID
-				  FROM movie_information)
-ORDER BY mtime;
-
-
-SELECT COUNT(*)
-FROM movie_reservation
-GROUP BY miid;
-
-
-
-
--- 이거 orderby로 하면될듯함
-SELECT *
-FROM movie
-WHERE MID not IN (SELECT distinct mid
-						FROM movie_information);
-						

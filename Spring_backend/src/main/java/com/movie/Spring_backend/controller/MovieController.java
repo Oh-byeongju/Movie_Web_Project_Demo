@@ -22,10 +22,16 @@ public class MovieController {
         return ResponseEntity.ok().body(movieService.getAllMovie(requestMap));
     }
 
-    // 사용자가 영화를 검색할때 사용되는 메소드
-    @GetMapping("/normal/searchmovie")
-    public ResponseEntity<List<MovieDto>> SearchMovie(@RequestParam(value = "title") String title, @RequestParam(value = "uid") String uid){
-        return ResponseEntity.ok().body(movieService.getSearchMovie(title, uid));
+    // 현재상영작 영화 가져오는 메소드
+    @GetMapping("/normal/screenmovie")
+    public ResponseEntity<List<MovieDto>> ScreenMovie(@RequestParam Map<String, String> requestMap) {
+        return ResponseEntity.ok().body(movieService.getScreenMovie(requestMap));
+    }
+
+    // 상영예정작 영화 가져오는 메소드
+    @GetMapping("/normal/comingmovie")
+    public ResponseEntity<List<MovieDto>> ComingMovie(@RequestParam Map<String, String> requestMap) {
+        return ResponseEntity.ok().body(movieService.getComingMovie(requestMap));
     }
 
     // 영화 세부내용을 보여줄 때 사용되는 메소드

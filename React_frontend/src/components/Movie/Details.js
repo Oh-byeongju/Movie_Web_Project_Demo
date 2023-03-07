@@ -3,7 +3,7 @@
  23-02-15 페이지 css 수정(오병주)
 */
 import React, { useState, useEffect, useCallback } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -160,7 +160,7 @@ const Details = () => {
                     상영 등급 : &nbsp;
                   </dt>
                   <dd>
-                    {detailMovie.mrating == 0 ? "전체 이용가" : detailMovie.mrating+"세 이용가"}
+                    {detailMovie.mrating === '0' ? "전체 이용가" : detailMovie.mrating+"세 이용가"}
                   </dd>
                   <br />
                   <dt>

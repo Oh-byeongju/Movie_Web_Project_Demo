@@ -1,7 +1,7 @@
 import React from "react";
-import Details from "../components/AllMovie/Details";
-import DetailCommentWrite from "../components/AllMovie/DetailCommentWrite";
-import DetailCommentList from "../components/AllMovie/DetailCommentList";
+import Details from "../components/Movie/Details";
+import DetailCommentWrite from "../components/Movie/DetailCommentWrite";
+import DetailCommentList from "../components/Movie/DetailCommentList";
 
 const MovieDetail = () => {
   return (

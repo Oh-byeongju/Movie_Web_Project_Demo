@@ -39,19 +39,18 @@ public class MovieService {
     @Transactional
     public List<MovieDto> getAllMovie(Map<String, String> requestMap) {
         // 영화 테이블에서 현재 예매가 가능한 영화들 조회
-        List<MovieEntity> ShowMovies = movieRepository.findShowMoviesReserveDESC();
-
-        // 영화 테이블에서 한번도 상영일정이 안잡힌 상영예정 영화 조회
-        List<MovieEntity> NotShowMovies = movieRepository.findNotShowMovies();
-
-        // requestMap 안에 정보를 추출
-        String User_id = requestMap.get("uid");
+        List<MovieEntity> Movies = movieRepository.findShowMoviesReserve();
 
         // 예매가 가능한 영화들의 전체 예매 횟수(예매율 계산시 나누기 할때 사용)
         float cnt = 0;
-        for (MovieEntity m : ShowMovies) {
+        for (MovieEntity m : Movies) {
             cnt += m.getCntReserve();
         }
+
+        // requestMap 안에 정보를 추출
+        String User_id = requestMap.get("uid");
+        String sort = requestMap.get("button");
+        String title = requestMap.get("search");
 
         // 받은 id 정보를 entity 형으로 변환(로그인 정보가 없으면 전달받은 매개변수 uid가 No_login 으로 설정)
         MemberEntity member = MemberEntity.builder()
@@ -66,37 +65,132 @@ public class MovieService {
             MovieLikeNum.add(mm.getMovie().getMid());
         }
 
-        // 전체 영화 목록과 좋아요 기록을 mapping 후 리턴
-        return movieMapper.toDtoAllMovie(ShowMovies, NotShowMovies, MovieLikeNum, cnt);
+        // 검색될 영화들 변수
+        List<MovieEntity> ShowMovies;
+        List<MovieEntity> NotShowMovies;
+
+        // 영화를 예매순으로 불러올 경우
+        if (sort.equals("rate")) {
+            // 영화 테이블에서 현재 예매가 가능한 영화들 조회(title을 매개변수로 전달, 예매순으로 내림차순)
+            ShowMovies = movieRepository.findShowMoviesReserveDESC(title);
+
+            // 영화 테이블에서 한번도 상영일정이 안잡힌 상영예정 영화 조회(title을 매개변수로 전달, 날짜순으로 오름차순)
+            NotShowMovies = movieRepository.findNotShowMoviesDateASC(title);
+        }
+        // 영화를 공감순으로 불러올 경우
+        else {
+            // 영화 테이블에서 현재 예매가 가능한 영화들 조회(title을 매개변수로 전달, 공감순으로 내림차순)
+            ShowMovies = movieRepository.findShowMoviesLikeDESC(title);
+
+            // 영화 테이블에서 한번도 상영일정이 안잡힌 상영예정 영화 조회(title을 매개변수로 전달, 공감순으로 내림차순)
+            NotShowMovies = movieRepository.findNotShowMoviesLikeDESC(title);
+        }
+
+        // 위에서 검색한 영화 목록과 좋아요 기록을 mapping 후 리턴
+        return movieMapper.toDtoAllORComingMovie(ShowMovies, NotShowMovies, MovieLikeNum, cnt);
     }
 
-    // 사용자 영화 검색 메소드
+    // 현재상영작 영화 조회 메소드
     @Transactional
-    public List<MovieDto> getSearchMovie(String title, String uid) {
-        // 사용자가 입력한 제목으로 영화 검색(제목의 일부분 검색도 지원)
-        List<MovieEntity> Movies = movieRepository.findSearchDESC(title);
+    public List<MovieDto> getScreenMovie(Map<String, String> requestMap) {
+        // 영화 테이블에서 현재 예매가 가능한 영화들 조회
+        List<MovieEntity> Movies = movieRepository.findShowMoviesReserve();
 
-        // 검색된 영화가 없을경우 예외처리
-        if (Movies.isEmpty()) {
-            throw new MovieNotFoundException("검색 결과 없습니다.");
+        // 예매가 가능한 영화들의 전체 예매 횟수(예매율 계산시 나누기 할때 사용)
+        float cnt = 0;
+        for (MovieEntity m : Movies) {
+            cnt += m.getCntReserve();
         }
+
+        // requestMap 안에 정보를 추출
+        String User_id = requestMap.get("uid");
+        String sort = requestMap.get("button");
+        String title = requestMap.get("search");
 
         // 받은 id 정보를 entity 형으로 변환(로그인 정보가 없으면 전달받은 매개변수 uid가 No_login 으로 설정)
         MemberEntity member = MemberEntity.builder()
-                .uid(uid).build();
+                .uid(User_id).build();
 
         // 사용자가 좋아요 누른 영화 목록 검색
-        List<MovieMemberEntity> MovieLikes = movieMemberRepository.findByUmlikeTrueAndMember(member);
+        List<MovieMemberEntity> MovieLike = movieMemberRepository.findByUmlikeTrueAndMember(member);
 
         // 좋아요 누른 영화 목록을 HashSet 으로 변환
-        Set<Long> MovieLikeSet = new HashSet<>();
-        for (MovieMemberEntity mm : MovieLikes) {
-            MovieLikeSet.add(mm.getMovie().getMid());
+        Set<Long> MovieLikeNum = new HashSet<>();
+        for (MovieMemberEntity mm : MovieLike) {
+            MovieLikeNum.add(mm.getMovie().getMid());
         }
 
-        // 영화 목록과 좋아요 기록을 mapping 후 리턴
-        return Movies.stream().map(movie ->
-                movieMapper.toDto(movie, MovieLikeSet.contains(movie.getMid()))).collect(Collectors.toList());
+        // 검색될 영화 변수
+        List<MovieEntity> ShowMovies;
+
+        // 영화를 예매순으로 불러올 경우
+        if (sort.equals("rate")) {
+            // 영화 테이블에서 현재 예매가 가능하고 개봉한 영화들 조회(title을 매개변수로 전달, 예매순으로 내림차순)
+            ShowMovies = movieRepository.findScreenMoviesReserveDESC(title);
+        }
+        // 영화를 공감순으로 불러올 경우
+        else {
+            // 영화 테이블에서 현재 예매가 가능하고 개봉한 영화들 조회(title을 매개변수로 전달, 공감순으로 내림차순)
+            ShowMovies = movieRepository.findScreenMoviesLikeDESC(title);
+        }
+
+        // 위에서 검색한 영화 목록과 좋아요 기록을 mapping 후 리턴
+        return movieMapper.toDtoScreenMovie(ShowMovies, MovieLikeNum, cnt);
+    }
+
+    // 상영 예정작 조회 메소드
+    @Transactional
+    public List<MovieDto> getComingMovie(Map<String, String> requestMap) {
+        // 영화 테이블에서 현재 예매가 가능한 영화들 조회
+        List<MovieEntity> Movies = movieRepository.findShowMoviesReserve();
+
+        // 예매가 가능한 영화들의 전체 예매 횟수(예매율 계산시 나누기 할때 사용)
+        float cnt = 0;
+        for (MovieEntity m : Movies) {
+            cnt += m.getCntReserve();
+        }
+
+        // requestMap 안에 정보를 추출
+        String User_id = requestMap.get("uid");
+        String sort = requestMap.get("button");
+        String title = requestMap.get("search");
+
+        // 받은 id 정보를 entity 형으로 변환(로그인 정보가 없으면 전달받은 매개변수 uid가 No_login 으로 설정)
+        MemberEntity member = MemberEntity.builder()
+                .uid(User_id).build();
+
+        // 사용자가 좋아요 누른 영화 목록 검색
+        List<MovieMemberEntity> MovieLike = movieMemberRepository.findByUmlikeTrueAndMember(member);
+
+        // 좋아요 누른 영화 목록을 HashSet 으로 변환
+        Set<Long> MovieLikeNum = new HashSet<>();
+        for (MovieMemberEntity mm : MovieLike) {
+            MovieLikeNum.add(mm.getMovie().getMid());
+        }
+
+        // 검색될 영화들 변수
+        List<MovieEntity> ShowMovies;
+        List<MovieEntity> NotShowMovies;
+
+        // 영화를 예매순으로 불러올 경우
+        if (sort.equals("rate")) {
+            // 영화 테이블에서 현재 예매가 가능한 미개봉 영화들 조회(title을 매개변수로 전달, 예매순으로 내림차순)
+            ShowMovies = movieRepository.findComingMoviesReserveDESC(title);
+
+            // 영화 테이블에서 한번도 상영일정이 안잡힌 상영예정 영화 조회(title을 매개변수로 전달, 날짜순으로 오름차순)
+            NotShowMovies = movieRepository.findNotShowMoviesDateASC(title);
+        }
+        // 영화를 공감순으로 불러올 경우
+        else {
+            // 영화 테이블에서 현재 예매가 가능한 미개봉 영화들 조회(title을 매개변수로 전달, 공감순으로 내림차순)
+            ShowMovies = movieRepository.findComingMoviesLikeDESC(title);
+
+            // 영화 테이블에서 한번도 상영일정이 안잡힌 상영예정 영화 조회(title을 매개변수로 전달, 공감순으로 내림차순)
+            NotShowMovies = movieRepository.findNotShowMoviesLikeDESC(title);
+        }
+
+        // 위에서 검색한 영화 목록과 좋아요 기록을 mapping 후 리턴
+        return movieMapper.toDtoAllORComingMovie(ShowMovies, NotShowMovies, MovieLikeNum, cnt);
     }
 
     // 영화 세부내용 메소드

@@ -2,9 +2,12 @@ export const initalState = {
   allmovie_loading: false,
   allmovie_done: false,
   allmovie_error: null,
-  movie_search_loading: false,
-  movie_search_done: false,
-  movie_search_error: null,
+  screenmovie_loading: false,
+  screenmovie_done: false,
+  screenmovie_error: null,
+  comingmovie_loading: false,
+  comingmovie_done: false,
+  comingmovie_error: null,
   detail_movie_loading: false,
   detail_movie_done: false,
   detail_movie_error: null,
@@ -15,6 +18,8 @@ export const initalState = {
   detail_comment_like_done: false,
   detail_comment_like_error: null,
   allMovie: [],
+  screenMovie: [],
+  comingMovie: [],
   detailMovie: [],
   detailComment: []
 };
@@ -24,10 +29,15 @@ export const ALLMOVIE_REQUEST = "ALLMOVIE_REQUEST";
 export const ALLMOVIE_SUCCESS = "ALLMOVIE_SUCCESS";
 export const ALLMOVIE_FAILURE = "ALLMOVIE_FAILURE";
 
-// 검색한 영화 리스트
-export const MOVIE_SEARCH_REQUEST = "MOVIE_SEARCH_REQUEST";
-export const MOVIE_SEARCH_SUCCESS = "MOVIE_SEARCH_SUCCESS";
-export const MOVIE_SEARCH_FAILURE = "MOVIE_SEARCH_FAILURE";
+// 현재 상영작 리스트
+export const SCREENMOVIE_REQUEST = "SCREENMOVIE_REQUEST";
+export const SCREENMOVIE_SUCCESS = "SCREENMOVIE_SUCCESS";
+export const SCREENMOVIE_FAILURE = "SCREENMOVIE_FAILURE";
+
+// 상영 예정작 리스트
+export const COMINGMOVIE_REQUEST = "COMINGMOVIE_REQUEST";
+export const COMINGMOVIE_SUCCESS = "COMINGMOVIE_SUCCESS";
+export const COMINGMOVIE_FAILURE = "COMINGMOVIE_FAILURE";
 
 // 영화 세부정보 리스트
 export const DETAIL_MOVIE_REQUEST = "DETAIL_MOVIE_REQUEST";
@@ -54,7 +64,6 @@ const movie = (state = initalState, action) => {
         allmovie_done: false,
         allmovie_error: null
       };
-
     case ALLMOVIE_SUCCESS:
       return {
         ...state,
@@ -63,39 +72,61 @@ const movie = (state = initalState, action) => {
         allmovie_error: null,
         allMovie: action.data
       };
-
     case ALLMOVIE_FAILURE:
       return {
         ...state,
         allmovie_loading: false,
         allmovie_done: false,
-        allmovie_error: action.error
+        allmovie_error: action.error,
+        allMovie: []
       };
-    // 영화 검색 케이스들
-    case MOVIE_SEARCH_REQUEST:
+    // 현재 상영작 영화 케이스들
+    case SCREENMOVIE_REQUEST:
       return {
         ...state, 
-        movie_search_loading: true,
-        movie_search_done: false,
-        movie_search_error: null
+        screenmovie_loading: true,
+        screenmovie_done: false,
+        screenmovie_error: null
       };
-
-    case MOVIE_SEARCH_SUCCESS:
+    case SCREENMOVIE_SUCCESS:
       return {
         ...state,
-        movie_search_loading: false,
-        movie_search_done: true,
-        movie_search_error: null,
-        allMovie: action.data
+        screenmovie_loading: false,
+        screenmovie_done: true,
+        screenmovie_error: null,
+        screenMovie: action.data
       };
-
-    case MOVIE_SEARCH_FAILURE:
+    case SCREENMOVIE_FAILURE:
       return {
         ...state,
-        movie_search_loading: false,
-        movie_search_done: false,
-        movie_search_error: action.error,
-        allMovie: []
+        screenmovie_loading: false,
+        screenmovie_done: false,
+        screenmovie_error: action.error,
+        screenMovie: []
+      };
+    // 상영 예정작 영화 케이스들
+    case COMINGMOVIE_REQUEST:
+      return {
+        ...state, 
+        comingmovie_loading: true,
+        comingmovie_done: false,
+        comingmovie_error: null
+      };
+    case COMINGMOVIE_SUCCESS:
+      return {
+        ...state,
+        comingmovie_loading: false,
+        comingmovie_done: true,
+        comingmovie_error: null,
+        comingMovie: action.data
+      };
+    case COMINGMOVIE_FAILURE:
+      return {
+        ...state,
+        comingmovie_loading: false,
+        comingmovie_done: false,
+        comingmovie_error: action.error,
+        comingMovie: []
       };
     // 영화 세부정보 케이스들
     case DETAIL_MOVIE_REQUEST:

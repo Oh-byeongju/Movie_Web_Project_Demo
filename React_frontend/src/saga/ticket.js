@@ -55,6 +55,8 @@ async function loadAllMovie(data) {
     .get("movie/normal/allmovie", {
       params: {
         uid: data,
+        button: 'rate',
+        search: ''
       },
     })
     .then((response) => {
