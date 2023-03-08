@@ -35,7 +35,7 @@ public class PaymentService {
     private final RedisSeatRepository redisSeatRepository;
 
     @Transactional
-    public ResponseEntity<String> getPayment(Map<String, String> requestMap,
+    public ResponseEntity<?> getPayment(Map<String, String> requestMap,
                                              HttpServletRequest request, HttpSession session) throws IOException
 {
 
@@ -97,19 +97,18 @@ public class PaymentService {
 
                        String keys = "";
                        keys = miid + "," + ss;
-                       RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, "dd");
+                       RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, "dd",User_id);
                        redisSeatRepository.delete(redisSeatEntity);
 
                    }
 
 
                    movieInfoSeatRepository.saveAll(infoseat);
-
                     // MovieMember = MovieMemberEntity.builder()
                     //    .umlike(true)
                     //      .movie(movie)
                     //        .member(member).build();
-                    return new ResponseEntity<>("결제에 이상없습니다.", HttpStatus.OK);
+                    return new ResponseEntity<>(data.getRid(), HttpStatus.OK);
                 }
                 else {
                     payment.payMentCancle(token, impUid, amount, "결제 에러");

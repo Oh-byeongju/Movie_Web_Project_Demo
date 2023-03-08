@@ -42,16 +42,21 @@ const AllSchedule = () => {
                       schedule={sc.miid}
                       scheduleData={scheduleData}
                       onClick={() => {
+                        if(sc.allcount-sc.count===0){
+                          alert('남은 좌석이 없습니다.')
+                        }
+                        else{
                         dispatch({
                           type: SCHEDULE_DATA,
                           data: sc,
                         });
                       }}
+                    }
                     >
                       <Legend></Legend>
                       <Hour>
-                        <StartTime>{sc.mistarttime.substring(0, 5)}</StartTime>
-                        <EndTime>{sc.miendtime.substring(0, 5)}</EndTime>
+                        <StartTime>{sc.mistarttime.substring(11, 16)}</StartTime>
+                        <EndTime>{sc.miendtime.substring(11, 16)}</EndTime>
                       </Hour>
                       <Title>
                         <Name>
@@ -222,8 +227,6 @@ const Seat = styled.span`
   width: 60px;
   height: 20px;
   padding: 0;
-  padding-left: 25px;
-  letter-spacing: 0;
   text-align: center;
   border: 1px solid #f2f4f5;
 `;
@@ -233,16 +236,15 @@ const Now = styled.strong`
   line-height: 20px;
   vertical-align: middle;
   font-weight: 700;
-  position: absolute;
-  right: 45px;
+  padding-left:30px;
+  padding-right:3px;
+
 `;
 const All = styled.em`
   display: inline-block;
   color: #666;
   line-height: 20px;
   vertical-align: middle;
-  position: absolute;
-  right: 30px;
 `;
 
 export default AllSchedule;

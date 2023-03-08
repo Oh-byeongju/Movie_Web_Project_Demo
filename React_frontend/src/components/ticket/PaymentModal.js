@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import * as Payment from "../Common_components/Function";
 import seat, { CHECK_SEAT_REQUEST } from "../../reducer/seat";
+import { Login } from "@mui/icons-material";
 const PaymentModal = ({ closeModal }) => {
   const dispatch = useDispatch();
-  const { movieData, theaterData, DayData, scheduleData } = useSelector(
+  const { movieData, theaterData, DayData, scheduleData, payment_done } = useSelector(
     (state) => state.ticket
   );
   const {  아이, 학생, 어른, choiceSeat, price } = useSelector(
@@ -18,6 +19,7 @@ const PaymentModal = ({ closeModal }) => {
   const [check3, setCheck3] = useState(false);
   const [check4, setCheck4] = useState(false);
 
+  
   // 체크박스 true / false 변경
   const ClickCheck1 = (check1) => {
     setCheck1(!check1);
@@ -126,7 +128,6 @@ const PaymentModal = ({ closeModal }) => {
               </Content>
             </ReserveInfo>
             <PaymentInfo>
-              {" "}
               <h5>
                 결제 정보
                 <span>결제하기 버튼을 클릭하시면 결제가 완료됩니다.</span>
@@ -138,14 +139,13 @@ const PaymentModal = ({ closeModal }) => {
                   <tr>
                     <th>결제금액</th>
                     <td>
-                      <span className="amount">{price}원</span>
+                    {price}
                     </td>
                   </tr>
                   <tr>
                     <th>결제수단</th>
                     <td>
-                      <span>카드</span>
-                    </td>
+카드                    </td>
                   </tr>
                 </tbody>
               </InfoTable>
@@ -201,16 +201,19 @@ const PaymentModal = ({ closeModal }) => {
 
             <Reserve onClick={() => {
                   if(check1&&check2&&check3&&check4){
-
                 let seatnumber = "";
                 choiceSeat.map((seat) => (seatnumber += seat.seat_id + ",")); //레디스
+                console.log(seatnumber)
                 dispatch({
                   type: CHECK_SEAT_REQUEST,
                   data: {
+                    user:LOGIN_data.uid,
+                    name:scheduleData.miid,
                     age: seatnumber,
                   },
                 });
               onClickPayment()
+              closeModal()
             }
           else{
             alert('모든 약관에 동의하세요')

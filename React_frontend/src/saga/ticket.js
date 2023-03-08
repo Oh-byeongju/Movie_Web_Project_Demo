@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, put, call } from "redux-saga/effects";
+import { all, takeLatest, fork, put, call,delay } from "redux-saga/effects";
 import {
   T_ALLMOVIE_FAILURE,
   T_ALLMOVIE_SUCCESS,
@@ -142,7 +142,7 @@ async function selectTheaterApi(data) {
 function* selectTheater(action) {
   const result = yield call(selectTheaterApi, action.data);
   if (result.status === 200) {
-    yield put({
+        yield put({
       type: SELECT_THEATER_SUCCESS,
       data: result.data,
     });

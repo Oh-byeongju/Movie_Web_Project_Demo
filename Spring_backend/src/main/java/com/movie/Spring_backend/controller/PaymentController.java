@@ -34,7 +34,7 @@ public class PaymentController {
 
     //결제 완료 시
     @PostMapping("/auth/payment")
-    public ResponseEntity<String> paymentComplete(@RequestBody Map<String, String> requestMap,
+    public ResponseEntity<?> paymentComplete(@RequestBody Map<String, String> requestMap,
                                                   HttpServletRequest request, HttpSession session) throws IOException {
         // 1. 아임포트 API 키와 SECRET키로 토큰을 생성
         return paymentService.getPayment(requestMap, request,session);
