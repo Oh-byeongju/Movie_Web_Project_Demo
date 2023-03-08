@@ -52,11 +52,10 @@ const Seat = () => {
         data: { id: scheduleData.cid, miid: scheduleData.miid },
       });
     }
-    return()=>{
-      dispatch({
-        type:PAGE_RESET
-      })
-    }
+    dispatch({
+      type:PAGE_RESET
+    })
+  
   },
    []);
   const plusHandlerAdult = () => {
@@ -100,7 +99,7 @@ const Seat = () => {
       dispatch({
         type: USER_REMOVE,
         data: "어른",
-        price: 12000,
+        price: 30,
       });
     }
   };
@@ -112,7 +111,7 @@ const Seat = () => {
       dispatch({
         type: USER_REMOVE,
         data: "학생",
-        price: 8000,
+        price: 20,
       });
     }
   };
@@ -124,7 +123,7 @@ const Seat = () => {
       dispatch({
         type: USER_REMOVE,
         data: "유아",
-        price: 6000,
+        price: 10,
       });
     }
   };

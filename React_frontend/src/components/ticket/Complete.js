@@ -1,7 +1,18 @@
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { useLocation, Link ,useNavigate} from "react-router-dom";
 
 const Complete = ()=>{
-    return (
+  const { movieData, theaterData, DayData, scheduleData,payment } = useSelector(
+    (state) => state.ticket
+  );
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+  const { choiceSeat, choiceUser, price, 어른, 아이, 학생 } = useSelector(
+    (state) => state.seat
+  );
+  const navigate= useNavigate();
+  const location = useLocation();
+  return (
         <CompleteWrapper>
             <CompleteHead>
             <Title>
@@ -11,7 +22,7 @@ const Complete = ()=>{
         <Content>
             <h5>예매가 완료 되었습니다.</h5>
                 <Poster>
-                  <img></img>
+                <img src={`${movieData.imagepath}`}></img>
                 </Poster>
                 <Table>
                   <caption>예매정보</caption>
@@ -19,49 +30,50 @@ const Complete = ()=>{
                   <tbody>
                     <tr>
                       <th>예매번호</th>
-                      <td style={{color:"red"}}>010-01010101-10101010-110101</td>
+                      <td style={{color:"red"}}>{payment}</td> 
+                    
                     </tr>
                     <tr>
                       <th>영화</th>
-                      <td>
-                        아바타
+                      <td>{movieData.title}
                       </td>
                     </tr>
                     <tr>
                       <th>극장</th>
-                      <td>
-                        서울 강남점
-                      </td>
+                      <td>{theaterData.tarea}&nbsp;{theaterData.tname}점
+                  </td>
                     </tr>
                     <tr>
                       <th>일시</th>
                       <td>
-                        2023-03-05
-                      </td>
+{scheduleData.miday}&nbsp; {scheduleData.mistarttime}                      </td>
                     </tr>
                     <tr>
                       <th>인원</th>
                       <td>
-                        아이2명, 학생2명
+                      {아이 === 0 ? "" : <>아이 {아이}명 </>}
+                        {학생 === 0 ? "" : <>학생 {학생}명 </>}
+                        {어른 === 0 ? "" : <>어른 {어른}명 </>}
                       </td>
                     </tr>
                     <tr>
                       <th>좌석</th>
                       <td>
-                        A1, A2, A3, A4, A5, A6
+                      {choiceSeat.map((seat) => {
+                          return <>{seat.location}&nbsp;</>;
+                        })}
                       </td>
                     </tr>
                     <tr>
                       <th>결제금액</th>
                       <td>
-                        <span style={{color:'red'}}>50000</span>원
+                        <span style={{color:'red'}}>{price}</span>원
                       </td>
                     </tr>
                   </tbody>
                 </Table>
-                <Reserve>홈티켓 출력</Reserve>
-                <SNS>예매결과 SNS전송</SNS>
                 <Check>예매확인/취소</Check>
+                <Reserve onClick={()=>window.location.replace('/')}>메인 페이지</Reserve>
 
                 <Agreement>
               <PaymentAgreement>
@@ -193,7 +205,7 @@ const Reserve = styled.button`
   text-decoration: none;
   font-weight: 600;
   transition: 0.25s;
-  background-color: #800000;
+  background-color: #392f31;
   margin-right:20px;
 `;
 const Check = styled.button`
@@ -210,30 +222,13 @@ box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 text-decoration: none;
 font-weight: 600;
 transition: 0.25s;
-background-color: #392f31;
+background-color: #800000;
+
 color: white;
 margin-right:20px;
 
 `;
-const SNS = styled.button`
-position: relative;
-top: 2rem;
-cursor: pointer;
-border: none;
-display: inline-block;
-width:10rem;
-height:3rem;
-border-radius: 5px;
-font-family: "paybooc-Light", sans-serif;
-box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-text-decoration: none;
-font-weight: 600;
-transition: 0.25s;
-background-color: #392f31;
-color: white;
-margin-right:20px;
 
-`;
 
 const Agreement = styled.div`
   border-top: 1px solid rgb(204, 204, 204);
