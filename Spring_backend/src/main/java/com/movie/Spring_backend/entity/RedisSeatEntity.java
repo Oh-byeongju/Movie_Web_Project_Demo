@@ -15,12 +15,16 @@ public class RedisSeatEntity {
 
     @Id
     private String miid;
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false)
     private String seatid;
 
-    public RedisSeatEntity(String miid, String seatid) {
+
+    @Column(nullable = false)
+    private String user;
+    public RedisSeatEntity(String miid, String seatid,String user) {
         this.miid = miid;
         this.seatid = seatid;
+        this.user=user;
     }
 
 

@@ -35,6 +35,7 @@ const TicketMore = ({ setPage, page }) => {
   };
 
   //제이쿼리 대신 선언
+  //아임포트 불러오기
   useEffect(() => {
     const jquery = document.createElement("script");
     jquery.src = "https://code.jquery.com/jquery-1.12.4.min.js";
@@ -150,10 +151,14 @@ const TicketMore = ({ setPage, page }) => {
           </MovieChoice>
           <MovieSeat
             onClick={() => {
-              if (어른 + 아이 + 학생 > choiceSeat.length) {
+              if (어른 + 아이 + 학생 > choiceSeat.length ) {
                 alert("관람인원과 선택 좌석 수가 동일하지 않습니다.");
                 return;
-              } else {
+              } 
+              else if( 어른 +아이+학생 ===0){
+                alert('인원 및 좌석을 선택해주세요')
+              }
+              else {
           
                 openModalHandler();
                 //  paymentRecord();

@@ -652,6 +652,7 @@ const ticket = (state = initalState, action) => {
         choiceDay: false,
         selectDay: [...copydatare],
         scheduleData: "",
+        payment:""
       };
 
     case RESERVE_LOGIN_PAGE:

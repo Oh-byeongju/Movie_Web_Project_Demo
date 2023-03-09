@@ -26,7 +26,7 @@ public class SeatController {
 
     @PostMapping("/normal/rediss")
     public void startRedis(@RequestBody HashMap<String, String> body, HttpServletRequest request) {
-        seatService.setValues(body.get("name"), body.get("age"), request);
+        seatService.setValues(body.get("name"), body.get("age"),body.get("user"), request);
     }
 
     @GetMapping("/normal/rediss")
