@@ -9,7 +9,7 @@ const PaymentModal = ({ closeModal }) => {
   const { movieData, theaterData, DayData, scheduleData, payment_done } = useSelector(
     (state) => state.ticket
   );
-  const {  아이, 학생, 어른, choiceSeat, price } = useSelector(
+  const {  아이, 학생, 어른, choiceSeat, price ,check_seat_error} = useSelector(
     (state) => state.seat
   );
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
@@ -103,8 +103,8 @@ const PaymentModal = ({ closeModal }) => {
                       <th>일시</th>
                       <td>
                         {scheduleData.miday}&nbsp;&nbsp;
-                        {scheduleData.mistarttime.substr(0, 5)}~
-                        {scheduleData.miendtime.substr(0, 5)}
+                        {scheduleData.mistarttime.substring(11, 16)}~
+                        {scheduleData.miendtime.substring(11,16)}
                       </td>
                     </tr>
                     <tr>
@@ -139,7 +139,7 @@ const PaymentModal = ({ closeModal }) => {
                   <tr>
                     <th>결제금액</th>
                     <td>
-                    {price}
+                    {price}원
                     </td>
                   </tr>
                   <tr>
@@ -212,7 +212,9 @@ const PaymentModal = ({ closeModal }) => {
                     age: seatnumber,
                   },
                 });
-              onClickPayment()
+                if(check_seat_error===null){
+                onClickPayment()
+                }
               closeModal()
             }
           else{
@@ -426,10 +428,10 @@ const InfoTable = styled.table`
     td {
       width: 376px;
       height: inherit;
-      line-height: inherit;
+      line-height: inherit;        
+      font-weight: bold;
       background: none;
       span {
-        font-weight: bold;
       }
     }
   }

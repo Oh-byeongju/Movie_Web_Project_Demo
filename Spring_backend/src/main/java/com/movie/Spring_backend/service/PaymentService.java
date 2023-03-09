@@ -97,7 +97,7 @@ public class PaymentService {
 
                        String keys = "";
                        keys = miid + "," + ss;
-                       RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, "dd",User_id);
+                       RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, User_id);
                        redisSeatRepository.delete(redisSeatEntity);
 
                    }

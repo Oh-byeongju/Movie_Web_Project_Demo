@@ -10,6 +10,7 @@ import ScreenMovie from "./pages/ScreenMovie";
 import ComingMovie from "./pages/ComingMovie";
 import MovieDetail from "./pages/MovieDetail";
 import StoryChange from "./pages/StoryChange";
+import TimeTable from "./pages/TimeTable";
 
 // TopButton과 Footer가 있어야 하는 페이지이면 Layout 사이에 넣고 아니면 따로 빼기
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/comingmovie" element={<ComingMovie />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
         <Route path="/StoryChange" element={<StoryChange />}></Route>
+        <Route path="/Timetable" element={<TimeTable />}></Route>
       </Route>
     </Routes>
   );
