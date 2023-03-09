@@ -31,6 +31,7 @@ public class MovieService {
     private final MovieMemberRepository movieMemberRepository;
     private final MovieActorRepository movieActorRepository;
     private final ActorRepository actorRepository;
+    private final MovieInfoRepository movieInfoRepository;
     private final CommentInfoRepository commentInfoRepository;
     private final MovieMapper movieMapper;
     private final MovieCommentMapper movieCommentMapper;
@@ -199,8 +200,18 @@ public class MovieService {
         // 영화 ID를 기반으로 영화 검색
         MovieEntity movie = movieRepository.findById(mid).orElse(null);
 
+        // 영화가 없을경우 예외처리
         if (movie == null) {
             throw new MovieNotFoundException("검색된 영화가 없습니다.");
+        }
+
+        // 영화 테이블에서 현재 예매가 가능한 영화들 조회
+        List<MovieEntity> Movies = movieRepository.findShowMoviesReserve();
+
+        // 예매가 가능한 영화들의 전체 예매 횟수(예매율 계산시 나누기 할때 사용)
+        float cnt = 0;
+        for (MovieEntity m : Movies) {
+            cnt += m.getCntReserve();
         }
 
         // 영화에 출연하는 출연진 정보 검색
@@ -233,17 +244,23 @@ public class MovieService {
         // 사용자의 현재 영화 평가 기록 검색
         MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
 
-        // 사용자의 영화 평가가 없을 경우 좋아요 여부를 false 로 return
+        // 현재 영화가 예매가 가능한지 검색
+        List<MovieInfoEntity> ScreenInfos = movieInfoRepository.findMovieScreen(movie);
+
+        // 예매가 가능한 영화가 존재하면 true, 아니면 false
+        boolean Screen = !ScreenInfos.isEmpty();
+
+        // 위에서 검색한 내용들 + 사용자의 영화 평가가 없을 경우 좋아요 여부를 false 로 전달
         if (MovieMember == null) {
-            return movieMapper.toDtoDetail(movie, false, Actors);
+            return movieMapper.toDtoDetail(movie, false, Screen, Actors, cnt);
         }
 
-        // 사용자의 영화 평가에서 좋아요 여부를 판단 후 return
+        // 위에서 검색한 내용들 + 사용자의 영화 평가에서 좋아요 여부를 판단 후 return
         if (MovieMember.getUmlike() == null || !MovieMember.getUmlike()) {
-            return movieMapper.toDtoDetail(movie, false, Actors);
+            return movieMapper.toDtoDetail(movie, false, Screen, Actors, cnt);
         }
         else {
-            return movieMapper.toDtoDetail(movie, true, Actors);
+            return movieMapper.toDtoDetail(movie, true, Screen, Actors, cnt);
         }
     }
 
@@ -279,7 +296,7 @@ public class MovieService {
                 .mid(mid).build();
 
         // 영화 id를 기반으로 MovieMember table 검색(최신순)
-        List<MovieMemberEntity> MovieMembers = movieMemberRepository.findByMovieAndUmcommentIsNotNullOrderByUmidDesc(movie);
+        List<MovieMemberEntity> MovieMembers = movieMemberRepository.findByMovieAndUmcommentIsNotNullOrderByUmcommenttimeDesc(movie);
 
         // 영화 관람평이 없는경우 예외처리
         if (MovieMembers.isEmpty()) {

@@ -50,6 +50,7 @@ const DetailCommentList = () => {
     });
 		setnewbutton(true);
 		setlikebutton(false);
+		setlimit(10);
 	}, [LOGIN_data.uid, location.pathname, dispatch])
 
 	// 공감순 버튼을 누를 때
@@ -63,6 +64,7 @@ const DetailCommentList = () => {
     });
 		setlikebutton(true);
 		setnewbutton(false);
+		setlimit(10);
 	}, [LOGIN_data.uid, location.pathname, dispatch])
 
 	// 더보기 버튼을 누를 때

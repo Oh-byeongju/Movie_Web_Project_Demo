@@ -66,13 +66,13 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
             "ORDER BY a.miid ",nativeQuery = true)
     public List<MovieInfoEntity> findCount();*/
 
-    // 오늘 이전에 상영이 끝난 모든 영화 정보를 들고오는 메소드(날짜만 기준으로 확인)
-    @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
-            "WHERE mi.movie = :movie AND mi.miday < :day")
-    List<MovieInfoEntity> findInfoBeforeToday(@Param("movie") MovieEntity movie, @Param("day") Date day);
+    // 특정 Movie id를 가지고 현재 예매가 가능한 영화 정보를 들고오는 메소드
+    @Query(value = "SELECT mi FROM MovieInfoEntity as mi WHERE mi.movie = :movie AND " +
+            "mi.mistarttime >= function('addtime', now(), '0:30:00')")
+    List<MovieInfoEntity> findMovieScreen(@Param("movie") MovieEntity movie);
 
-    // 오늘 상영이 끝난 영화 정보를 들고오는 메소드(현재 시간이 추가됨)
+    // 상영이 끝난 특정 영화 정보를 들고오는 메소드
     @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
-            "WHERE mi.movie = :movie AND mi.miday = :day AND mi.miendtime < :hour")
-    List<MovieInfoEntity> findInfoToday(@Param("movie") MovieEntity movie, @Param("day") Date day, @Param("hour") String hour);
+            "WHERE mi.movie = :movie AND mi.miendtime <= now()")
+    List<MovieInfoEntity> findInfoBeforeToday(@Param("movie") MovieEntity movie);
 }

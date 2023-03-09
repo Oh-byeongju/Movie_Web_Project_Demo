@@ -87,57 +87,50 @@ public class MovieMapper {
         return result;
     }
 
-
-
-
-
-    // 영화 목록과 로그인한 사용자의 좋아요 기록을 mapping 해주는 메소드
-    public MovieDto toDto(MovieEntity entity, boolean like) {
-
-        // 예외처리
-        if (entity == null) { 
-            return null;
-        }
-
-        System.out.println(entity.getCntReserve());
-
-        return MovieDto.builder()
-                .mid(entity.getMid())
-                .mdir(entity.getMdir())
-                .mtitle(entity.getMtitle())
-                .mgenre(entity.getMgenre())
-                .mtime(entity.getMtime())
-                .mdate(entity.getMdate())
-                .mrating(entity.getMrating())
-                .mstory(entity.getMstory())
-                .mimagepath(entity.getMimagepath())
-                .mlikes(entity.getCntMovieLike())
-                .mscore(entity.getAvgScore())
-                .mlike(like).build();
-    }
-
     // 영화 상세페이지에 필요한 내용들을 mapping 해주는 메소드
-    public MovieDto toDtoDetail(MovieEntity entity, boolean like, List<String> Actors) {
+    public MovieDto toDtoDetail(MovieEntity entity, boolean like, boolean Screen, List<String> Actors, float AllReserveCnt) {
 
         // 예외처리
         if (entity == null) {
             return null;
         }
 
-        return MovieDto.builder()
-                .mid(entity.getMid())
-                .mdir(entity.getMdir())
-                .mtitle(entity.getMtitle())
-                .mgenre(entity.getMgenre())
-                .mtime(entity.getMtime())
-                .mdate(entity.getMdate())
-                .mrating(entity.getMrating())
-                .mstory(entity.getMstory())
-                .mimagepath(entity.getMimagepath())
-                .mlikes(entity.getCntMovieLike())
-                .mscore(entity.getAvgScore())
-                .mlike(like)
-                .actors(Actors).build();
+        // 영화 예매가 가능할 경우 예매율까지 계산해서 전달, 아닐경우 예매율을 제외하고 전달
+        if (Screen) {
+            return MovieDto.builder()
+                    .mid(entity.getMid())
+                    .mdir(entity.getMdir())
+                    .mtitle(entity.getMtitle())
+                    .mgenre(entity.getMgenre())
+                    .mtime(entity.getMtime())
+                    .mdate(entity.getMdate())
+                    .mrating(entity.getMrating())
+                    .mstory(entity.getMstory())
+                    .mimagepath(entity.getMimagepath())
+                    .mlikes(entity.getCntMovieLike())
+                    .mscore(entity.getAvgScore())
+                    .mlike(like)
+                    .actors(Actors)
+                    .reserve(true)
+                    .reserveRate(entity.getCntReserve() / AllReserveCnt * 100).build();
+        }
+        else {
+            return MovieDto.builder()
+                    .mid(entity.getMid())
+                    .mdir(entity.getMdir())
+                    .mtitle(entity.getMtitle())
+                    .mgenre(entity.getMgenre())
+                    .mtime(entity.getMtime())
+                    .mdate(entity.getMdate())
+                    .mrating(entity.getMrating())
+                    .mstory(entity.getMstory())
+                    .mimagepath(entity.getMimagepath())
+                    .mlikes(entity.getCntMovieLike())
+                    .mscore(entity.getAvgScore())
+                    .mlike(like)
+                    .actors(Actors)
+                    .reserve(false).build();
+        }
     }
 
     public MovieDto toAble(MovieEntity entity) {

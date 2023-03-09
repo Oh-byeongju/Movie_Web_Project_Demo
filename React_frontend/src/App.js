@@ -9,6 +9,7 @@ import AllMovie from "./pages/AllMovie";
 import ScreenMovie from "./pages/ScreenMovie";
 import ComingMovie from "./pages/ComingMovie";
 import MovieDetail from "./pages/MovieDetail";
+import MyPageReserve from "./pages/MyPageReserve";
 import StoryChange from "./pages/StoryChange";
 import TimeTable from "./pages/TimeTable";
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/screenmovie" element={<ScreenMovie />}></Route>
         <Route path="/comingmovie" element={<ComingMovie />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
+        <Route path="/MypageReserve" element={<MyPageReserve />}></Route>
         <Route path="/StoryChange" element={<StoryChange />}></Route>
         <Route path="/Timetable" element={<TimeTable />}></Route>
       </Route>
