@@ -72,7 +72,7 @@ CREATE TABLE `movie_member` (
 	`umlike`	BOOLEAN 	NULL,
 	`umscore`	INT 	NULL,
 	`umcomment`	VARCHAR(200) NULL,
-	`umcommenttime` DATE NULL,
+	`umcommenttime` DATETIME NULL,
 	`mid` INT NOT NULL,
 	`uid` VARCHAR(20) NOT NULL,
 	PRIMARY KEY (`umid`),
@@ -2034,19 +2034,40 @@ CALL clone_member_like();
 -- 관람평에 좋아요 추가하는 프로시저 실행
 CALL comment_like_insert();
 
-SELECT *
-FROM movie
-WHERE MID = 23;
+-- 최신순 조회 확인을 위한 임의 쿼리
+UPDATE movie_member
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+WHERE MID = 1 AND uid = 'temp21';
 
-SELECT *
-FROM movie_information
-WHERE MID = 3 and mistarttime >= ADDTIME(now(), '0:30:00');
+UPDATE movie_member
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 22 MINUTE)
+WHERE MID = 1 AND uid = 'temp24';
+
+UPDATE movie_member
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 8 MINUTE)
+WHERE MID = 2 AND uid = 'temp10';
+
+UPDATE movie_member
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 27 MINUTE)
+WHERE MID = 2 AND uid = 'temp15';
+
+UPDATE movie_member
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 11 MINUTE)
+WHERE MID = 3 AND uid = 'temp5';
+
+UPDATE movie_member
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 32 MINUTE)
+WHERE MID = 3 AND uid = 'temp22';
+
+UPDATE movie_member
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 3 MINUTE)
+WHERE MID = 4 AND uid = 'temp8';
+
+UPDATE movie_member
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
+WHERE MID = 4 AND uid = 'temp17';
 
 /*
-UPDATE movie_member
-SET umcomment = NULL
-WHERE umid = 1;
-
 -- 예매가 가능한 영화들
 -- 여기에 스프링에서 orderby 추가
 SELECT *
@@ -2107,3 +2128,5 @@ FROM movie_reservation
 WHERE miid IN (SELECT miid
 					FROM movie_information
 					WHERE MID = 4);
+					
+*/

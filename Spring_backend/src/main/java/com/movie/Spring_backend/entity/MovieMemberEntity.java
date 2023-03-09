@@ -29,7 +29,7 @@ public class MovieMemberEntity {
 
     private String umcomment;
 
-    private Date umcommenttime;
+    private String umcommenttime;
 
     // 관람평 좋아요 개수 추출
     // 테이블에는 존재하지 않고 Formula 어노테이션으로 테이블을 join 시켜서 들고옴
@@ -53,7 +53,7 @@ public class MovieMemberEntity {
     private List<CommentInfoEntity> commentInfos = new ArrayList<>();
 
     @Builder
-    public MovieMemberEntity(Long umid, Boolean umlike, Integer umscore , String umcomment, Date umcommenttime,
+    public MovieMemberEntity(Long umid, Boolean umlike, Integer umscore , String umcomment, String umcommenttime,
                              Integer cntCommentLike, MovieEntity movie, MemberEntity member, List<CommentInfoEntity> commentInfos) {
         this.umid = umid;
         this.umlike = umlike;

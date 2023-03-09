@@ -94,7 +94,7 @@ const Details = () => {
         <Wrapper>
           <BaseMovie>
             <BoxImage>
-              <Poster src={`/${detailMovie.mimagepath}`} alt="포스터" />
+              <Poster src={`/${detailMovie.mimagepath}`} alt="Poster" />
             </BoxImage>
             <BoxContent>
               <Title>
@@ -353,7 +353,7 @@ const Ticket = styled.div`
   margin-left: 3px;
   width: 120px;
   height: 36px;
-  border: 1px solid #222222; // 이거 색깔 바꾸거나 해야할듯
+  border: ${props => props.reserve ? '1px solid #222222' : '1px solid #adadad'};
   background: ${props => props.reserve ? '#503396' : '#adadad'};
   line-height: 36px;
   text-align: center;

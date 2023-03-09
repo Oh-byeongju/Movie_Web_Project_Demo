@@ -24,27 +24,35 @@ public interface MovieMemberRepository extends JpaRepository<MovieMemberEntity, 
     // MovieMember 테이블에 튜플이 있는지 확인하는 메소드
     Optional<MovieMemberEntity> findByMovieAndMember(MovieEntity movie, MemberEntity member);
 
-    // 사용자의 좋아요 기록을 true 에서 false로 바꾸는 메소드
+    // MovieMember 테이블에 튜플이 존재할경우 관람평 내용을 update 하는 메소드
+    @Modifying
+    @Query("UPDATE MovieMemberEntity mm " +
+            "SET mm.umscore = :umscore, mm.umcomment = :umcomment, mm.umcommenttime = now() " +
+            "WHERE mm.member = :member AND mm.movie = :movie")
+    void MovieCommentUpdate(@Param("umscore") int umscore, @Param("umcomment") String umcomment,
+                            @Param("member") MemberEntity member, @Param("movie") MovieEntity movie);
+
+    // 사용자의 좋아요 기록을 true에서 false로 바꾸는 메소드
     @Modifying
     @Query("UPDATE MovieMemberEntity mm " +
             "SET mm.umlike = false " +
             "WHERE mm.member = :member AND mm.movie = :movie")
     void MovieLikeChangeFalse(@Param("member") MemberEntity member, @Param("movie") MovieEntity movie);
 
-    // 사용자의 좋아요 기록을 false 에서 true로 바꾸는 메소드
+    // 사용자의 좋아요 기록을 false에서 true로 바꾸는 메소드
     @Modifying
     @Query("UPDATE MovieMemberEntity mm " +
             "SET mm.umlike = true " +
             "WHERE mm.member = :member AND mm.movie = :movie")
     void MovieLikeChangeTrue(@Param("member") MemberEntity member, @Param("movie") MovieEntity movie);
 
-    // 특정 영화의 MovieMember 관람평 정보를 들고오는 메소드(내림차순)
-    List<MovieMemberEntity> findByMovieAndUmcommentIsNotNullOrderByUmidDesc(MovieEntity movie);
+    // 특정 영화의 MovieMember 관람평 정보를 들고오는 메소드(최신순 --> 작성시간 내림차순)
+    List<MovieMemberEntity> findByMovieAndUmcommentIsNotNullOrderByUmcommenttimeDesc(MovieEntity movie);
 
-    // 특정 영화의 MovieMember 관람평 정보를 들고오는 메소드(좋아요순)
+    // 특정 영화의 MovieMember 관람평 정보를 들고오는 메소드(좋아요순, 작성시간 오름차순)
     @Query(value = "SELECT mm FROM MovieMemberEntity as mm " +
             "WHERE mm.movie = :movie AND mm.umcomment is not null " +
-            "ORDER BY mm.cntCommentLike DESC")
+            "ORDER BY mm.cntCommentLike DESC, mm.umcommenttime ASC")
     List<MovieMemberEntity> findAllCommentLikeDESC(@Param("movie") MovieEntity movie);
 
     // 영화 관람평에 대한 기록을 지우는 메소드
@@ -53,7 +61,4 @@ public interface MovieMemberRepository extends JpaRepository<MovieMemberEntity, 
             "SET mm.umscore = null, mm.umcomment = null, mm.umcommenttime = null " +
             "WHERE mm.member = :member AND mm.movie = :movie")
     void MovieCommentNull(@Param("member") MemberEntity member, @Param("movie") MovieEntity movie);
-
-    // 영화 id와 사용자 id를 이용해 영화 관람평 삭제하는 메소드
-    void deleteByMovieAndMember(MovieEntity movie, MemberEntity member);
 }

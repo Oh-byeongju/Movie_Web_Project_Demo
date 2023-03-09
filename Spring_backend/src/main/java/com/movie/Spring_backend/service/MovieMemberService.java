@@ -96,47 +96,28 @@ public class MovieMemberService {
             throw new BusinessException("작성된 관람평이 존재합니다.", ErrorCode.COMMENT_IS_EXIST);
         }
 
-        // 현재 시간변수
-        Date nowDate = new Date();
-
-        // 현재 시간을 sql에 사용할 수 있게 매핑
-        SimpleDateFormat DateFormatYMD = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat DateFormatHMS = new SimpleDateFormat("HH:mm:ss");
-        String day = DateFormatYMD.format(nowDate);
-        String hour = DateFormatHMS.format(nowDate);
-
-        // 상영이 끝난 영화정보 튜플 검색(조건 때문에 2번 검색)
-        List<MovieInfoEntity> MovieInfos = movieInfoRepository.findInfoBeforeToday(movie, java.sql.Date.valueOf(day));
-        List<MovieInfoEntity> MovieInfos2 = movieInfoRepository.findInfoToday(movie, java.sql.Date.valueOf(day), hour);
-
-        // 두개의 영화 정보를 결합
-        List<MovieInfoEntity> MovieInfoAll = new ArrayList<>();
-        MovieInfoAll.addAll(MovieInfos);
-        MovieInfoAll.addAll(MovieInfos2);
+        // 상영이 끝난 영화정보 튜플 검색
+        List<MovieInfoEntity> MovieInfos = movieInfoRepository.findInfoBeforeToday(movie);
 
         // 상영이 끝난 영화들 중 사용자가 영화를 관람한 기록이 있는지 조회
-        List<ReservationEntity> Reservations = reservationRepository.findByMemberAndMovieInfoIn(member, MovieInfoAll);
+        List<ReservationEntity> Reservations = reservationRepository.findByMemberAndMovieInfoIn(member, MovieInfos);
 
         // 관람기록이 존재하지 않을경우 예외처리
         if (Reservations.isEmpty()) {
             throw new EntityNotFoundException("영화 관람기록이 없습니다.", ErrorCode.WATCHING_IS_NONE);
         }
-        // 관람기록이 존재하지는 경우
+        // 관람기록이 존재하는 경우
         else {
+            // 현재 시간변수
+            Date nowDate = new Date();
+            // 현재 시간을 sql에 사용할 수 있게 매핑
+            SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String day = DateFormat.format(nowDate);
+
             // 관람평을 쓰는 사용자가 영화에 대한 좋아요 기록이 있을 경우
             if (MovieMember != null && MovieMember.getUmlike() != null) {
-                // 사용자 좋아요 기록을 그대로 entity 생성
-                MovieMemberEntity Data = MovieMemberEntity.builder()
-                        .umlike(MovieMember.getUmlike())
-                        .umcomment(Movie_comment)
-                        .umscore(Integer.valueOf(Movie_score))
-                        .umcommenttime(java.sql.Date.valueOf(day))
-                        .movie(movie)
-                        .member(member).build();
-                // 관람평 최신순 검색을 위해 튜플을 제거 후
-                movieMemberRepository.deleteByMovieAndMember(movie, member);
-                // 튜플을 다시 삽입
-                movieMemberRepository.save(Data);
+                // MovieMember 테이블의 내용을 update
+                movieMemberRepository.MovieCommentUpdate(Integer.parseInt(Movie_score), Movie_comment, member, movie);
             }
             // 관람평을 쓰는 사용자가 영화에 대한 좋아요 기록이 없을 경우
             else {
@@ -144,7 +125,7 @@ public class MovieMemberService {
                 MovieMember = MovieMemberEntity.builder()
                         .umcomment(Movie_comment)
                         .umscore(Integer.valueOf(Movie_score))
-                        .umcommenttime(java.sql.Date.valueOf(day))
+                        .umcommenttime(day)
                         .movie(movie)
                         .member(member).build();
                 movieMemberRepository.save(MovieMember);

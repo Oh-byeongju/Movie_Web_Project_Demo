@@ -64,7 +64,9 @@ const TopButtons = () => {
               <Link to={`/UserLogin`} state={{ url: location.pathname}}>
                 로그인
               </Link>
-              <Link to="/UserJoin">회원가입</Link>
+              <Link to="/UserJoin">
+                회원가입
+              </Link>
             </div>
           ) : (
             <div className="Top_right">
@@ -136,7 +138,9 @@ const TopButtons = () => {
             />
           </Button>
           <Button>
-            <UserOutlined style={{ fontSize: "25px", color: "white" }} />
+            <Link to="/MypageReserve">
+              <UserOutlined style={{ fontSize: "25px", color: "white" }} />
+            </Link>
           </Button>
           </div>
           <div className="menu_pan">
