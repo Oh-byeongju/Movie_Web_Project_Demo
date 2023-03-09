@@ -102,9 +102,8 @@ const Details = () => {
                   {detailMovie.mtitle}
                 </strong>
                 <div className="info">
-                  {/* 예매율은 나중에 디비에서 들고 와야함 */}
                   <span className="reservation">
-                    예매율&nbsp; 8.0% 
+                    예매율&nbsp; {detailMovie.reserveRate ? detailMovie.reserveRate.toFixed(1) : (0.0).toFixed(1)}%
                   </span>
                   <span className="rate">
                     관람객 평점 
@@ -182,10 +181,8 @@ const Details = () => {
                     </span> 
                   </div>
                 </Likes>
-                <Ticket>
-                  <div>
-                    예매하기
-                  </div>  
+                <Ticket disabled={!detailMovie.reserve} reserve={detailMovie.reserve}>
+                  {detailMovie.reserve ? '예매' : '상영예정'}
                 </Ticket>         
               </Like>
             </BoxContent>
@@ -356,8 +353,8 @@ const Ticket = styled.div`
   margin-left: 3px;
   width: 120px;
   height: 36px;
-  border: 1px solid #222222;
-  background: #503396;
+  border: 1px solid #222222; // 이거 색깔 바꾸거나 해야할듯
+  background: ${props => props.reserve ? '#503396' : '#adadad'};
   line-height: 36px;
   text-align: center;
   display: inline-block;
@@ -366,7 +363,7 @@ const Ticket = styled.div`
   color: white;
   font-size: 14px;
   font-weight: 400;
-  cursor: pointer;
+  cursor: ${props => props.reserve ? 'pointer' : 'default'};
 `;
 
 const ColsContent = styled.div`

@@ -301,9 +301,6 @@ const Ticket = styled.button`
   border: 0;
   font-weight: 400;
   font-size: 16px;
-
-
-  
 `; // 예매하기 버튼
 
 export default Movie;
