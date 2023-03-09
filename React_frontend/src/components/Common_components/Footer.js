@@ -54,7 +54,7 @@ const Footer = () => {
               <br></br>
               강경목 (프로젝트 제작)
               <br></br>
-              E-mail : 여기 이메일좀 &nbsp; | &nbsp; Github :
+              E-mail : kmsjkh12@naver.com &nbsp; | &nbsp; Github :
               https://github.com/kmsjkh12
               <br></br>
             </CorpInfo>

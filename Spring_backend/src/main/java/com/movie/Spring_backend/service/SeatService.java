@@ -52,7 +52,7 @@ public class SeatService {
         //레디스의 점유 좌석을 매핑해줌
         for (RedisSeatEntity r : datad) {
             if (r != null) {//null 값 제외하고 받아옴
-                String[] SeatNumber = r.getMiid().split(","); //레디스의 데이터를 매핑해서 객체 형식으로 만듬
+                String[] SeatNumber = r.getKey().split(","); //레디스의 데이터를 매핑해서 객체 형식으로 만듬
                 ocuppyMappers.add(new OcuppyMapper(Long.parseLong(SeatNumber[0]),  Long.parseLong(SeatNumber[1])));
               }
             //miid seatid로 추출해서 매핑
@@ -100,52 +100,62 @@ public class SeatService {
     public void setValues(String name, String age ,String user, HttpServletRequest request) {
         //name : miid , age : seatid
         jwtValidCheck.JwtCheck(request, "ATK");
-        boolean check =false;
+        boolean check = false;
         String[] SeatNumber = age.split(",");
         List<RedisSeatEntity> datad = redisSeatRepository.findAll();
+        //구조를 변경해야함
 
-        for (String k : SeatNumber) {
-
-            String keys = "";
-            String miid = "";
-            keys = "seat:" + name + "," + k;
-            miid= name+","+k;
-            try {
-                if (!redisTemplate.hasKey(keys)) { //키가 있는지 없는지 검사를 한다. 키가 있으면 예외처리를 통해 종료.
-                    System.out.println("key 가 없습니다.");
-                }
-                else {
-                    for(RedisSeatEntity r :datad){
-                        if(r.getMiid()==miid){//좌석과 영화정보가 같은것 중에서
-                        if(r.getUser()==user){//유저도 같으면 패스
-                            System.out.println("해당사항없습니다.");
-                        }
-                        else{   //만약에 점유된 좌석일 경우 예외 던짐
-                            throw new SeatOccupyException("점유된 좌석입니다.");
-                    }}
-                    }
-                   //키가 있으면 종료 시킴
-                }
-            } catch (SeatOccupyException e) {
-                e.printStackTrace();
-                check=true;
-            }
-        }
-        //점유된 좌석이 없으면 키 삽입 시작
-        if (check==false) {
+        if (datad.isEmpty()) {//
+            System.out.println("레디스가 비어있음");
+            //무조건 삽입을 해야함 데이터가 없으니까
+            //get()으로 검색이 가능함
             for (String k : SeatNumber) {
                 String keys = "";
                 keys = name + "," + k;
-                    System.out.println("안에 겹치는 데이터가 없으므로 key 삽입");
-                    RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys,"dd", user);
-                    redisSeatRepository.save(redisSeatEntity);
+                System.out.println("안에 겹치는 데이터가 없으므로 key 삽입");
+                RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, user);
+                //레디스에 데이터가 아무것도 없으니까 다른 검사 없이 삽입해준다.
+                redisSeatRepository.save(redisSeatEntity);
 
             }
+        } else if (!datad.isEmpty()) {
+            //여기서부턴 검사가 필요함
+            //레디스에 값이 있음
+            for (String k : SeatNumber) {
+                String keys = "";
+                keys = name + "," + k;
+
+                RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, user);
+                //레디스 데이터를 키값으로 검사
+                Optional<RedisSeatEntity> seated = redisSeatRepository.findById(redisSeatEntity.getKey());
+                //seated가 null이면
+                if (seated.isEmpty()) {
+                    System.out.println("키가 없다");
+                } else {
+                    //seated가 있는데 아이디값이 같으면 예외처리를 하지않고
+                    if (user.equals(seated.get().getUser())) {
+                        System.out.println("예외 x");
+                        check=true;
+                    } else {
+                        //아이디값이 다르면 예외를 던진다.
+                        System.out.println("예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외");
+                        System.out.println("예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외");
+                        check=true;
+                        throw new SeatOccupyException("점유된 자리입니다.");
+                    }
+                }
+            }
         }
-
-
+        if(check==false) {
+            for (String k : SeatNumber) {
+                System.out.println("xxxxxxx");
+                String keys = "";
+                keys = name + "," + k;
+                RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, user);
+                redisSeatRepository.save(redisSeatEntity);
+            }
+        }
     }
-
     // 데이터 가져오기
     public String getValues(){
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();

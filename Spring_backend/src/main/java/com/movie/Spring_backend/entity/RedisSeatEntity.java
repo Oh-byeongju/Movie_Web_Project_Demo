@@ -14,16 +14,14 @@ import java.time.LocalDateTime;
 public class RedisSeatEntity {
 
     @Id
-    private String miid;
-    @Column(nullable = false)
-    private String seatid;
+    private String key;
 
 
     @Column(nullable = false)
     private String user;
-    public RedisSeatEntity(String miid, String seatid,String user) {
-        this.miid = miid;
-        this.seatid = seatid;
+
+    public RedisSeatEntity(String key, String user) {
+        this.key = key;
         this.user=user;
     }
 
