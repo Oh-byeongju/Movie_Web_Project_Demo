@@ -1,14 +1,19 @@
 package com.movie.Spring_backend.service;
 
+import com.google.gson.JsonObject;
+import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.mapper.MovieInfoMapper;
+import com.movie.Spring_backend.mapper.ScheduleMapper;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
 import com.movie.Spring_backend.repository.MovieInfoSeatRepository;
 import com.movie.Spring_backend.repository.MovieRepository;
+import com.movie.Spring_backend.util.DeduplicationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -143,4 +148,18 @@ public class MovieInfoService {
         return datas.stream().map(data -> movieInfoMapper.CountDto(data,data.getCinema().getCid(),data.getCinema().getCname(),data.getCinema().getCtype(),data.getCntSeatInfo(),data.getCinema().getCseat())).collect(Collectors.toList());
 
     }
+
+    //영화와 날짜 지역으로 영화 정보를 불러오는 서비스
+  /*  @Transactional
+    public List<MovieInfoDto> findTest(Long mid ,  Date miday ,String tarea) {
+        List<MovieInfoEntity> datas = movieInfoRepository.findSchedule(mid, miday, tarea);
+        List <CinemaEntity> cinema = new ArrayList<>();
+        for (MovieInfoEntity cine : datas){
+            cine.getCinema();
+        }
+        List<MovieInfoEntity> cid =  DeduplicationUtil.deduplication(datas,MovieInfoEntity::);
+        ScheduleMapper scheduleMapper = new ScheduleMapper();
+
+    }
+*/
 }

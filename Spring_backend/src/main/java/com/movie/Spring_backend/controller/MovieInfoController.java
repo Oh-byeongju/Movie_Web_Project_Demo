@@ -133,6 +133,10 @@ public class MovieInfoController {
         return movieInfoService.findBySchedule(miday,mid,cid);
     }
 
-
-
+/*
+    @GetMapping("normal/findtest")
+    public List<MovieInfoDto> findtest(@RequestParam Long mid , @RequestParam Date miday, @RequestParam String area){
+        List<MovieInfoDto> cid = movieInfoService.findTest(mid,miday,area);
+        return cid;
+    }*/
 }

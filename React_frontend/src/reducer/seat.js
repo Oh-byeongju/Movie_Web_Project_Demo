@@ -64,35 +64,43 @@ const seat = (state = initalState, action) => {
       };
 
     case USER_CHOICE:
-      let 어른 = state.어른;
-      let 학생 = state.학생;
-      let 아이 = state.아이;
+      let 어른1 = state.어른;
+      let 학생1 = state.학생;
+      let 아이1 = state.아이;
       if (action.data === "어른") {
-        어른 = state.어른 + 1;
+        어른1 = state.어른 + 1;
       } else if (action.data === "학생") {
-        학생 = state.학생 + 1;
+        학생1 = state.학생 + 1;
       } else if (action.data === "아이") {
-        아이 = state.아이 + 1;
+        아이1 = state.아이 + 1;
       } else {
       }
       return {
         ...state,
-        어른: 어른,
-        학생: 학생,
-        아이: 아이,
+        어른: 어른1,
+        학생: 학생1,
+        아이: 아이1,
         price: state.price + action.price,
         total: state.total + 1,
       };
 
     case USER_REMOVE:
-//      const array = [...state.choiceUser]; //불변성을 위해 배열 똑같이 생성
-  //    const index = array.indexOf(action.data); //사람에 대한 index 찾기
-    //  if (index !== -1) {
-      //  array.splice(index, 1); //배열 제거
-      //}
+      let 어른2 = state.어른;
+      let 학생2 = state.학생;
+      let 아이2 = state.아이;
+    if (action.data === "어른") {
+      어른2 = state.어른 -1;
+    } else if (action.data === "학생") {
+      학생2 = state.학생 - 1;
+    } else if (action.data === "아이") {
+      아이2 = state.아이 - 1;
+    } else {
+    }
       return {
         ...state,
-        //choiceUser: array, //복사
+        어른: 어른2,
+        학생: 학생2,
+        아이: 아이2,
         price: state.price - action.price,
         total: state.total - 1,
       };
