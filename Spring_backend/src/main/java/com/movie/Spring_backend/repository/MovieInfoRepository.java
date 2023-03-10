@@ -75,4 +75,11 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
     @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
             "WHERE mi.movie = :movie AND mi.miendtime <= now()")
     List<MovieInfoEntity> findInfoBeforeToday(@Param("movie") MovieEntity movie);
+
+    @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
+            "where mid= :mid and mi.miday= :miday and " +
+            "mi.cinema.cid in (select c.cid from CinemaEntity as c " +
+            "where tid in(select t.tid from TheaterEntity as t where t.tarea= :tarea)) ")
+    List <MovieInfoEntity> findSchedule(@Param("mid") Long mid ,@Param("miday") Date miday ,@Param("tarea")String tarea);
+
 }

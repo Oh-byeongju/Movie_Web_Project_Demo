@@ -26,11 +26,6 @@ public class CinemaService {
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper;
 
-
-
-
-
-
     //cid로 tid추출하기
 
         @Transactional
@@ -49,8 +44,6 @@ public class CinemaService {
             }
             return tid;
         }
-
-
 
     @Transactional
     public List<Long> SelectTid(List<Long> id) {
@@ -84,35 +77,24 @@ public class CinemaService {
         for(CinemaEntity cc :datas){
             mappedcid.add(cc.getCid());
         }
-        //건들거 없음 여기서 이제 not과 not in 검색을 따로 해줘야됨
-        System.out.print(mappedcid);
         //cid in을 이용해서 movieinfo에서 mid 추출
-        //IN
         List <MovieInfoEntity> IndataM = movieInfoRepository.findByCinemaCidIn(mappedcid);
         List<Long> InmappedMid = new ArrayList<>();
-
-        for(MovieInfoEntity mm :IndataM){
+        for(MovieInfoEntity mm :IndataM) {
             InmappedMid.add(mm.getMovie().getMid());
         }
+
         List<MovieEntity> able = movieRepository.findByMidInAble(InmappedMid);
         //여기서 able 에 전체 in 데이터가 넘어감
-
+        List<MovieEntity> DisAble = movieRepository.findByMidInDisAble(InmappedMid);
 
         //able dto mapping
-    List<MovieDto> AbleDto= able.stream().map((movie->movieMapper.toAble(movie))).collect(Collectors.toList());
+        List<MovieDto> AbleDto= able.stream().map((movie->movieMapper.toAble(movie))).collect(Collectors.toList());
         //NOTIN cid 구하고
-        List <MovieInfoEntity> NotIndataM= movieInfoRepository.findByCinemaCidNotIn(mappedcid);
-        List<Long> NotmappedMid = new ArrayList<>();
-        for(MovieInfoEntity mm :NotIndataM){
-            NotmappedMid.add(mm.getMovie().getMid());
-        }
-        List<MovieEntity> disable = movieRepository.findByMidInDisAble(NotmappedMid);
-        for(MovieEntity mm :disable){
-            able.add(mm);
-        }
+
         //disable dto mapping
 
-        List<MovieDto> DisAbleDto= able.stream().map((movie->movieMapper.toDisable(movie))).collect(Collectors.toList());
+        List<MovieDto> DisAbleDto= DisAble.stream().map((movie->movieMapper.toDisable(movie))).collect(Collectors.toList());
 
         for(MovieDto mm : DisAbleDto){
             AbleDto.add(mm);

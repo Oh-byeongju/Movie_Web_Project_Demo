@@ -8,6 +8,9 @@ import {
 } from "../../reducer/ticket";
 import Movie from "./Movie";
 import Theater from "./Theater";
+import Time from "./Time";
+import MovieSchedule from "./MovieSchedule";
+import TheaterSchedule from "./TheaterSchedule";
 const Scheduler = () =>{
     const [ tab, setTab] = useState(1);
     const tabClick= (index)=>
@@ -27,7 +30,7 @@ const Scheduler = () =>{
                             <li onClick={()=>tabClick(2)}
                              key={2}
                             className={2==tab?"hover tab" : "tab"}
-                                                    ><a><i><CoPresentOutlinedIcon style={{width:'40px' ,height:'40px'}} /></i>영화별</a></li>
+                                                    ><a><i><CoPresentOutlinedIcon style={{width:'40px' ,height:'40px'}} /></i>극장별</a></li>
                             
                         </ul>
                         </TabLeft> 
@@ -36,6 +39,9 @@ const Scheduler = () =>{
                             {tab===1? <Movie /> : <Theater />}
                         </TabCenter>
                 </ MovieAreaChoice>
+                <Time />
+                {tab===1? <MovieSchedule /> : <TheaterSchedule />}
+                <MovieSchedule />
             </TimeTablePage>
         </TimeTableWrapper>
     )
