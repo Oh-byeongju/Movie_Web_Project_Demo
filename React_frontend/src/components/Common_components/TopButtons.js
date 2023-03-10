@@ -138,7 +138,7 @@ const TopButtons = () => {
             />
           </Button>
           <Button>
-            <Link to="/MypageReserve">
+            <Link to="/Mypage/Reserve">
               <UserOutlined style={{ fontSize: "25px", color: "white" }} />
             </Link>
           </Button>
