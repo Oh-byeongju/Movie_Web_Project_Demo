@@ -9,7 +9,9 @@ import AllMovie from "./pages/AllMovie";
 import ScreenMovie from "./pages/ScreenMovie";
 import ComingMovie from "./pages/ComingMovie";
 import MovieDetail from "./pages/MovieDetail";
+import Mypage from "./pages/MyPage";
 import MyPageReserve from "./pages/MyPageReserve";
+import MyPageReserveDetail from "./pages/MyPageReserveDetail";
 import StoryChange from "./pages/StoryChange";
 import TimeTable from "./pages/TimeTable";
 
@@ -26,7 +28,10 @@ function App() {
         <Route path="/screenmovie" element={<ScreenMovie />}></Route>
         <Route path="/comingmovie" element={<ComingMovie />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
-        <Route path="/MypageReserve" element={<MyPageReserve />}></Route>
+        <Route element={<Mypage />}>
+          <Route path="/Mypage/Reserve" element={<MyPageReserve />}></Route>
+          <Route path="/Mypage/ReserveDetail/:id" element={<MyPageReserveDetail />}></Route>
+        </Route>
         <Route path="/StoryChange" element={<StoryChange />}></Route>
         <Route path="/Timetable" element={<TimeTable />}></Route>
       </Route>
@@ -35,4 +40,3 @@ function App() {
 }
 
 export default App;
-// <Route path="/Notice/free/:id" element={<NoticeFreeLook/>}></Route> 추후 쿼리 스트링 사용시 쓰기(양식)
