@@ -18,7 +18,8 @@ const Detail = () => {
 		price: "100",
 		poster: "img/ranking/5.jpg",
 		paytype: "테스트15",
-		moviestart: "2023-03-11 02:34:00"
+		moviestart: "2023-03-11 02:34:00",
+		movieend: "2023-03-11 02:34:00"
 	}
 
 	const location = useLocation();
