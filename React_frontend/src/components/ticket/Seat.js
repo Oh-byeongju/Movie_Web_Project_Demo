@@ -27,10 +27,10 @@ const Seat = () => {
   const {
     choiceSeat,
     selectseat,
-    check_seat_done,
-    check_seat_error,
     total,
-    choiceUser,
+    아이,
+    학생,
+    어른
   } = useSelector((state) => state.seat);
   const { movieData, theaterData, DayData, scheduleData } = useSelector(
     (state) => state.ticket
@@ -94,7 +94,11 @@ const Seat = () => {
   const minusHandlerAdult = () => {
     if (total <= choiceSeat.length) {
       alert("선택한 좌석이 예매 인원 보다 많습니다.");
-    } else if (numAdult) {
+    } 
+    else if(어른===0){
+      alert('줄일수없습니다.')
+    }
+    else if (numAdult) {
       setNumAdult((prev) => prev - 1);
       dispatch({
         type: USER_REMOVE,
@@ -106,7 +110,12 @@ const Seat = () => {
   const minusHandlerTeenager = () => {
     if (total <= choiceSeat.length) {
       alert("선택한 좌석이 예매 인원 보다 많습니다.");
-    } else if (numTeenager) {
+    } 
+    else if(학생===0){
+      alert('줄일수없습니다.')
+
+    }
+    else if (numTeenager) {
       setNumTeenager((prev) => prev - 1);
       dispatch({
         type: USER_REMOVE,
@@ -116,13 +125,17 @@ const Seat = () => {
     }
   };
   const minusHandlerKid = () => {
-    if (total <= choiceSeat.length) {
+    if(아이===0){
+      alert('줄일수없습니다.')
+    }
+    else if (total <= choiceSeat.length) {
       alert("선택한 좌석이 예매 인원 보다 많습니다.");
-    } else if (numKid) {
+    } 
+    else if (numKid) {
       setNumKid((prev) => prev - 1);
       dispatch({
         type: USER_REMOVE,
-        data: "유아",
+        data: "아이",
         price: 10,
       });
     }
@@ -159,7 +172,10 @@ const Seat = () => {
                 <span>유아</span>
                 <ButtonGroup style={{ marginLeft: "15px" }}>
                   <Button
-                    onClick={minusHandlerKid}
+                    onClick={()=>{
+                      minusHandlerKid()
+                    }}
+                    disabled={아이===0?true:false}
                     icon={<MinusOutlined />}
                     style={{ width: "32px", height: "32px" }}
                   />
@@ -183,8 +199,14 @@ const Seat = () => {
                 <span>학생</span>
                 <ButtonGroup style={{ marginLeft: "15px" }}>
                   <Button
-                    onClick={minusHandlerTeenager}
-                    icon={<MinusOutlined />}
+                    onClick={()=>{
+                      if(학생!==0){
+                      minusHandlerTeenager()
+                    }}
+                  }
+                  disabled={학생===0?true:false}
+
+                  icon={<MinusOutlined />}
                     style={{ width: "32px", height: "32px" }}
                   />
                   <Button
@@ -208,7 +230,10 @@ const Seat = () => {
                 <span>어른</span>
                 <ButtonGroup style={{ marginLeft: "15px" }}>
                   <Button
-                    onClick={minusHandlerAdult}
+                    onClick={()=>{
+                      if(어른!==0){minusHandlerAdult()}}}
+                      disabled={어른===0?true:false}
+
                     icon={<MinusOutlined />}
                     style={{ width: "32px", height: "32px" }}
                   />

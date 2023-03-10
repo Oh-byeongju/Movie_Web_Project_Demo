@@ -160,10 +160,11 @@ const TopButtons = () => {
               <div className="menu_category">
                 <div className="title_category">예매</div>
                 <div className="category">
-                  {" "}
                   <Link to="/reserve">빠른예매</Link>
                 </div>
-                <div className="category">상영시간표</div>
+                <div className="category">
+                <Link to="/TimeTable">상영시간표</Link>
+</div>
               </div>
               <div className="menu_category">
                 <div className="title_category">극장</div>

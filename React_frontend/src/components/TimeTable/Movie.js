@@ -1,47 +1,55 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import CoPresentOutlinedIcon from '@mui/icons-material/CoPresentOutlined';
-import MovieOutlinedIcon from '@mui/icons-material/MovieOutlined';
 import { useDispatch, useSelector } from "react-redux";
-import {
-  
-  T_ALLMOVIE_REQUEST,
-
-} from "../../reducer/ticket";
+import { ALLMOVIE_REQUEST } from "../../reducer/movie";
+import { MOVIE_DATAS } from "../../reducer/TimeTable";
 const Movie = () =>{
-    useEffect(()=>{
-        dispatch({
-            type: T_ALLMOVIE_REQUEST,
-            data: LOGIN_data.uid,
-            button:"sort",
-            search:""
-          });
-      },[])
     const dispatch = useDispatch();
     const {
-        t_allMovie,
-
-      } = useSelector((state) => state.ticket);
+        allMovie
+      } = useSelector((state) => state.movie);
       const { LOGIN_data } = useSelector((state) => state.R_user_login);
-
+      const { movie } =useSelector((state)=>state.TimeTable)
       
+    useEffect(()=>{
+        dispatch({
+            type: ALLMOVIE_REQUEST,
+            data:{
+            uid: LOGIN_data.uid,
+            button:"sort",
+            search:""
+    }});    
+      },[])
     return(
         <MovieWrapper>
         <ListSection>
             <ScrollBar>
                 <MovieContainer>
                         <ul>
-                            { t_allMovie.map((num)=>
+                            {allMovie.map((num)=>
                             
-                            <li key={num.id}
-                                movie={num}
+                            <Movies
+                            key={num.id}
+                                movie={num.id}
+                                movieData={movie}
                                 >
-                                <button>  {num.title}</button>
-                              </li>)}
+                                <button onClick={()=>{
+                                    dispatch({
+                                        type:MOVIE_DATAS,
+                                        data:num
+                                    })
+
+                                }}>  {num.title}</button>
+                              </Movies>)}
                         </ul>
                 </MovieContainer>
             </ScrollBar>
         </ListSection>
+        <Poster>
+            <Table> 
+                <img src={`${movie.imagepath}`} style={{width:"100%" ,height:"100%"}}/>
+            </Table>
+        </Poster>
     </MovieWrapper>
     )
 }
@@ -58,6 +66,7 @@ position: absolute;
 `
 const ListSection = styled.div`
 overflow: hidden;
+width:644px;
 height: 240px;
 padding: 20px 0;
 `
@@ -87,30 +96,44 @@ position: relative;
     margin: 0;
     padding: 0;
     
-    li{
-        float: left;
-        width: 25%;
-        padding: 0;
+    }
+`
+const Movies = styled.li`
+float: left;
+width: 25%;
+padding: 0;
 
-        button{
-            display: block;
-            width: 100%;
-            height: 50px;
-            margin: 0;
-            padding: 0 28px 0 10px;
-            color: #444;
-            border: 0;
-            text-align: left;
-            background-color: transparent;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            cursor: pointer;
-            letter-spacing: -.5px;
-            font-weight: 400;
-            font-family: NanumBarunGothic,Dotum,'돋움',sans-serif;
-        }
-    }
-    }
+background-color: ${(props) =>
+    props.movieData.id === props.movie ? "gray" : "white"};
+button{
+    display: block;
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    padding: 0 28px 0 10px;
+    color: #444;
+    border: 0;
+    text-align: left;
+    background-color: transparent;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+    letter-spacing: -.5px;
+    font-weight: 400;
+    font-family: NanumBarunGothic,Dotum,'돋움',sans-serif;
+}
+`
+const Poster = styled.div`
+    position:absolute;
+    right:0;
+    top:0;
+    width:206px;
+    height:100%;
+`
+const Table =styled.div`
+    display:block;
+    width:100%;
+    height:100%;
 `
 export default Movie;
