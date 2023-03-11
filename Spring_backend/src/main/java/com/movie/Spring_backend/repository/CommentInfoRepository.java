@@ -14,5 +14,8 @@ public interface CommentInfoRepository extends JpaRepository<CommentInfoEntity, 
 
     // 사용자 ID와 관람평 번호를 이용해서 좋아요 기록을 삭제하는 메소드
     void deleteByMemberAndMoviemember(MemberEntity member, MovieMemberEntity moviemember);
+
+    // 특정 관람평의 좋아요 기록을 모두 삭제하는 메소드
+    void deleteByMoviemember(MovieMemberEntity moviemember);
 }
 

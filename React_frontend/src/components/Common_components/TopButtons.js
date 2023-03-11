@@ -164,7 +164,7 @@ const TopButtons = () => {
                 </div>
                 <div className="category">
                 <Link to="/TimeTable">상영시간표</Link>
-</div>
+                </div>
               </div>
               <div className="menu_category">
                 <div className="title_category">극장</div>

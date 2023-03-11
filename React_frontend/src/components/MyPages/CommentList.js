@@ -1,9 +1,9 @@
 /*
- 23-03-10 마이페이지 css 구축(오병주)
+ 23-03-11 마이페이지 css 구축(오병주)
 */
 import React from 'react';
 import styled from 'styled-components';
-import Reserve from './Reserve';
+import CommentMovie from './CommentMovie';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 const datas = [
@@ -17,42 +17,46 @@ const datas = [
 		price: "100",
 		poster: "img/ranking/5.jpg"
 	},
-	{
-		rid: "50",
-		mtitle: "상견니",
-		cinema: "서울-홍대점 7관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "G7, G8",
-		price: "500",
-		poster: "img/ranking/8.jpg"
-	},
 ]
 
-const ReserveList = () => {
+const CommentList = () => {
 	return (
 		<Content>
 			<ContentTitle>
 				<ContentLeft>
 					<h2>
-						예매내역
+						관람평 내역
 					</h2>
-					<span>
-						최대 6개월까지의 예매 내역이 출력됩니다.
-					</span>
 				</ContentLeft>
 			</ContentTitle>
-			<ContentLine/>
+			<ButtonList>
+				<Button>
+					작성 가능 영화
+				</Button>
+				<Button>
+					작성한 관람평
+				</Button>
+			</ButtonList>
+
+			{/* 여기서 버튼에 따라 랜더링 다르게 넣기  하나는 작성가능, 하나는 작성한거*/}
+
+
 			<ContentDetails>
-				{datas.length !== 0 ? datas.map((data, index) => <Reserve data={data} key={index} />) : 
+				<span className='total'>
+					총 {datas.length}개
+				</span>
+				{datas.length !== 0 ? datas.map((data, index) => <CommentMovie data={data} key={index} />) : 
 				<NoContent>
-					<span>
+					<span className='None'>
 						<InfoCircleOutlined/>
 					</span>
-						예매내역이 존재하지 않습니다.						
+						작성 가능한 영화가 존재하지 않습니다.						
 				</NoContent>
 				}
 			</ContentDetails>
+
+
+
 		</Content>
 	);
 };
@@ -97,20 +101,37 @@ const ContentLeft = styled.div`
 	}
 `;
 
-const ContentLine = styled.div`
+const ButtonList = styled.div`
 	display: flex;
-	flex-direction: row;
+	flex-wrap: nowrap;
 	width: 100%;
-	-webkit-box-align: center;
-	align-items: center;
-	box-sizing: border-box;
-	margin: 0;
-	border-bottom: 2px solid rgb(51, 51, 51);
+	height: 60px;
+	background-color: rgb(250, 250, 250);
+`;
+
+const Button = styled.button`
+	flex: 1 1 0%;
+	border: 1px solid rgb(244, 244, 244);
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 21px;
+	cursor: pointer;
 `;
 
 const ContentDetails = styled.div`
 	position: relative;
-	min-height : 400px;
+	min-height : 350px;
+	margin-top: 65px;
+	border-top: 1px solid rgb(51, 51, 51);
+
+	.total {
+		position: absolute;
+    top: -8%;
+    left: 0px;
+    font-size: 14px;
+    font-weight: 550;
+    line-height: 17px;
+	}
 `;
 
 const NoContent = styled.div`
@@ -127,12 +148,11 @@ const NoContent = styled.div`
 	padding: 0;
 	padding-top: 180px;
 
-	span {
-		display: block;
+	.None {
     margin: 0px auto 16px;
     height: 28px;
 		font-size: 30px;
 	}
 `;
 
-export default ReserveList;
+export default CommentList;

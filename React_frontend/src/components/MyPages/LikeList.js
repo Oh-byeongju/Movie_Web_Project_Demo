@@ -1,9 +1,9 @@
 /*
- 23-03-10 마이페이지 css 구축(오병주)
+ 23-03-11 마이페이지 css 구축(오병주)
 */
 import React from 'react';
 import styled from 'styled-components';
-import Reserve from './Reserve';
+import Like from './Like';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 const datas = [
@@ -27,29 +27,36 @@ const datas = [
 		price: "500",
 		poster: "img/ranking/8.jpg"
 	},
+	{
+		rid: "50",
+		mtitle: "상견니",
+		cinema: "서울-홍대점 7관",
+		rdate: "2023.03.09",
+		watchdate: "2023-03-10 (금) 17:00",
+		seat: "G7, G8",
+		price: "500",
+		poster: "img/ranking/8.jpg"
+	},
 ]
 
-const ReserveList = () => {
+const LikeList = () => {
 	return (
 		<Content>
 			<ContentTitle>
 				<ContentLeft>
 					<h2>
-						예매내역
+						찜한 영화 ({datas.length})
 					</h2>
-					<span>
-						최대 6개월까지의 예매 내역이 출력됩니다.
-					</span>
 				</ContentLeft>
 			</ContentTitle>
 			<ContentLine/>
 			<ContentDetails>
-				{datas.length !== 0 ? datas.map((data, index) => <Reserve data={data} key={index} />) : 
+				{datas.length !== 0 ? datas.map((data, index) => <Like data={data} key={index} />) : 
 				<NoContent>
 					<span>
 						<InfoCircleOutlined/>
 					</span>
-						예매내역이 존재하지 않습니다.						
+						찜한 영화가 존재하지 않습니다.						
 				</NoContent>
 				}
 			</ContentDetails>
@@ -135,4 +142,4 @@ const NoContent = styled.div`
 	}
 `;
 
-export default ReserveList;
+export default LikeList;

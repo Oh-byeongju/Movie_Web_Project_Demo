@@ -11,7 +11,11 @@ import ComingMovie from "./pages/ComingMovie";
 import MovieDetail from "./pages/MovieDetail";
 import Mypage from "./pages/MyPage";
 import MyPageReserve from "./pages/MyPageReserve";
+import MyPageCancel from "./pages/MyPageCancel";
 import MyPageReserveDetail from "./pages/MyPageReserveDetail";
+import MyPageCancleDetail from "./pages/MyPageCancleDetail";
+import MyPageLike from "./pages/MyPageLike";
+import MyPageComment from "./pages/MyPageComment";
 import StoryChange from "./pages/StoryChange";
 import TimeTable from "./pages/TimeTable";
 
@@ -30,7 +34,11 @@ function App() {
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
         <Route element={<Mypage />}>
           <Route path="/Mypage/Reserve" element={<MyPageReserve />}></Route>
+          <Route path="/Mypage/Cancle" element={<MyPageCancel />}></Route>
           <Route path="/Mypage/ReserveDetail/:id" element={<MyPageReserveDetail />}></Route>
+          <Route path="/Mypage/CancleDetail/:id" element={<MyPageCancleDetail />}></Route>
+          <Route path="/Mypage/Like" element={<MyPageLike />}></Route>
+          <Route path="/Mypage/Comment" element={<MyPageComment />}></Route>
         </Route>
         <Route path="/StoryChange" element={<StoryChange />}></Route>
         <Route path="/Timetable" element={<TimeTable />}></Route>
