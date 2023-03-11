@@ -192,6 +192,8 @@ public class MovieMemberService {
 
             // 관람평에 대한 내용을 모두 null 로 교체
             movieMemberRepository.MovieCommentNull(Member, Movie);
+            // 관람평에 적용됐던 좋아요 모두 삭제
+            commentInfoRepository.deleteByMoviemember(MovieMember);
         }
         // 영화에 대한 좋아요 기록이 없을경우 바로 MovieMember 튜플 제거
         else {

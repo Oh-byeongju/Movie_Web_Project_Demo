@@ -5,11 +5,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { HeartOutlined, HeartFilled } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled, StarFilled } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { DETAIL_MOVIE_REQUEST } from "../../reducer/movie";
 import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
-import { StarFilled } from "@ant-design/icons";
 
 const Details = () => {
   const location = useLocation();  

@@ -1,84 +1,57 @@
 /*
- 23-03-10 마이페이지 css 구축(오병주)
+ 23-03-11 마이페이지 css 구축(오병주)
 */
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
 
-const Detail = () => {
+
+const CancleDetail = () => {
 
 	const datas = {
-		rid: "1",
-		mtitle: "타이타닉",
+		rid: "3",
+		mtitle: "두다다쿵",
 		cinema: "서울-강남점 2관",
 		rdate: "2023.03.09",
 		watchdate: "2023-03-10 (금) 17:00",
 		people: "성인 1명, 아동 1명",
 		price: "100",
-		poster: "img/ranking/5.jpg",
+		poster: "img/ranking/8.jpg",
 		paytype: "테스트15",
 		moviestart: "2023-03-11 02:34:00",
 		movieend: "2023-03-11 02:34:00"
 	}
 
-	const location = useLocation();
 	
-	// 현재 시간에서 30분을 더한 값
-	var now = new Date();
-	now.setMinutes(now.getMinutes() + 30);
 	
-	// 영화 시작시간을 date형으로 변경
-	const movietime = useMemo(() => new Date(datas.moviestart), [datas.moviestart]);
-
-	// 결제취소 버튼을 누를 경우
-	const onCancle = useCallback(() => {
-		// 결제 취소 버튼을 누르는 시점의 시간에서 30분을 더한 값
-		var nowCancle = new Date();
-		nowCancle.setMinutes(nowCancle.getMinutes() + 30);
-
-		// paytype이 테스트이거나 현재 시간에 30분을 더한값이 영화 시작시간보다 클경우 결제취소를 막는 if문
-		if (datas.paytype === '테스트' || nowCancle > movietime) {
-			alert("결제취소 가능 시간이 지났습니다!")
-			window.location.replace(location.pathname);
-			return;
-		}
-
-		// 여기에 취소하는 과정 넣으면됨
-		console.log("취소가능");
-	},[datas.paytype, location.pathname, movietime]);
 
 	return (
 		<Content>
 			<ContentTitle>
 				<ContentLeft>
 					<h2>
-						예매내역상세
+						취소내역상세
 					</h2>
 				</ContentLeft>
 			</ContentTitle>
 			<ContentDetailTop>
 				<h3>
-					예매번호 
+					취소번호 
 					<span>
 						1
 					</span>
 				</h3>
-				<Link to="/moviedetail/1">
-					영화 상세정보 보기
-				</Link>
 			</ContentDetailTop>
 			<ContentLine/>
 			<ContentDetails>
 				<ContentDetailMiddleInfos>
-				<Poster src='/img/ranking/5.jpg' alt="Poster" />
+				<Poster src='/img/ranking/9.jpg' alt="Poster" />
 					<ContentDetailMiddleInfo>
 						<dl>
 							<dt>
 								영화명
 							</dt>
 							<dd>
-								타이타닉
+								두다다쿵
 							</dd>
 						</dl>
 						<dl>
@@ -170,9 +143,16 @@ const Detail = () => {
 						</span>
 					</ContentListElement>
 				</ContentList>
+
+
+
+				
+
+
+
 				<ContentTitle>
 					<h3>
-						결제회원정보
+						회원정보
 					</h3>
 				</ContentTitle>
 				<ContentList>
@@ -201,24 +181,47 @@ const Detail = () => {
 						</span>
 					</ContentListElement>
 				</ContentList>
-			</ContentDetails>
-			<ButtonList>
-				<Link to="/Mypage/Reserve">
-					<Button check={false}>
-						<span>
-							예매내역조회
+
+
+				<ContentTitle>
+					<h3>
+						결제취소정보
+					</h3>
+				</ContentTitle>
+				<ContentList>
+					<ContentListElement>
+						<span className='title'>
+							취소일시
 						</span>
-					</Button>
-				</Link>
-				{/* 현재 시간에 30분을 더한값이 영화 시작시간보다 크거나 paytype이 test일 경우 disable */}
-				<Button onClick={onCancle} disabled={datas.paytype === '테스트' || now > movietime} check={datas.paytype === '테스트' || now > movietime}>
-					<span>
-						결제취소하기
-					</span>
-				</Button>
-			</ButtonList>
+						<span className='content'>
+							2023-03-10 20:27:51
+						</span>
+					</ContentListElement>
+					<ContentListElement>
+						<span className='title'>
+							환불유형
+						</span>
+						<span className='content'>
+							{datas.paytype}
+						</span>
+					</ContentListElement>
+					<ContentListElement>
+						<span className='title'>
+							환불금액
+						</span>
+						<span className='content'>
+							{datas.price}원
+						</span>
+					</ContentListElement>
+				</ContentList>
+
+
+
+
+
+			</ContentDetails>
 			<Notice>
-				결제취소는 영화 시작 30분전 및 결제유형이 테스트가 아닌 경우 가능합니다.
+				결제취소 후 환불은 결제취소일 기준 3일 이내에 지급됩니다.
 			</Notice>
 		</Content>
 	);
@@ -289,7 +292,7 @@ const ContentLeft = styled.div`
 	align-items: center;
 
 	h2 {
-		font-weight: 550;
+		font-weight: 500;
     font-size: 24px;
     color: rgb(51, 51, 51);
     letter-spacing: -0.5px;
@@ -426,38 +429,6 @@ const ContentListElement = styled.li`
 	}
 `;
 
-const ButtonList = styled.div`
-	display: flex;
-	-webkit-box-pack: center;
-	justify-content: center;
-	margin: 40px 0px 25px 0px;
-
-	a + button {
-		margin-left: 20px;
-	}
-`;
-
-const Button = styled.button`
-	display: block;
-	padding: 0px 10px;
-	text-align: center;
-	overflow: hidden;
-	width: 200px;
-	height: 56px;
-	border-radius: 3px;
-	border: 1px solid #5F0080;
-	background: #fff;
-	border-color: ${props => props.check ? '#cccccc' : '#5F0080;'};
-	color: ${props => props.check ? '#cccccc' : '#5F0080;'};
-  cursor: ${props => props.check ? 'default' : 'pointer'};
-
-	span {
-		display: inline-block;
-    font-size: 16px;
-    font-weight: 550;
-	}
-`;
-
 const Notice = styled.span`
 	display: block;
 	line-height: 1.43;
@@ -465,4 +436,4 @@ const Notice = styled.span`
 	color: rgb(102, 102, 102);
 `;
 
-export default Detail;
+export default CancleDetail;

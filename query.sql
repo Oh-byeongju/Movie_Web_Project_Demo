@@ -1062,7 +1062,7 @@ BEGIN
    WHILE (i <= 1120) DO -- for문 작성(i가 1120이 될 때까지 반복)
    	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
    	-- 멤버를 추가(비밀번호는 temp123456임)
-      INSERT INTO `member` VALUE(val, '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '오병주', 'dhqudwn0@naver.com', '01012341234', '충남 당진시 합덕읍 감자마을1길 12 101', '1998-11-11', 'ROLE_USER');
+      INSERT INTO `member` VALUE(val, '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '임시사용자', 'anonymous@naver.com', '01012341234', '부산 부산진구 가야공원로 1 303호', '1998-01-15', 'ROLE_USER');
       SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
     END WHILE;
 END $$
@@ -2069,8 +2069,14 @@ UPDATE movie_member
 SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
 WHERE MID = 4 AND uid = 'temp17';
 
-
 /*
+
+SELECT *
+FROM comment_info;
+
+SELECT *
+FROM movie_member;
+
 -- 예매가 가능한 영화들
 -- 여기에 스프링에서 orderby 추가
 SELECT *

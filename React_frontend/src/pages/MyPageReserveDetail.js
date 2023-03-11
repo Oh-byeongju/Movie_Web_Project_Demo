@@ -1,10 +1,10 @@
 import React from 'react';
-import Detail from '../components/MyPages/Detail';
+import ReserveDetail from '../components/MyPages/ReserveDetail';
 
 const MyPageReserveDetail = () => {
 	return (
 		<>
-			<Detail />
+			<ReserveDetail />
 		</>
 	);
 };

@@ -15,7 +15,7 @@ const SideBar = () => {
 			</SideTitle>
 			<SideUL>
 				<li>
-					<Link to="/MypageReserve">
+					<Link to="/Mypage/Reserve">
 						예매내역
 						<span>
 							<RightOutlined/>
@@ -23,8 +23,24 @@ const SideBar = () => {
 					</Link>
 				</li>
 				<li>
-					<Link>
-						예매취소내역
+					<Link to="/Mypage/Cancle">
+						예매 취소내역
+						<span>
+							<RightOutlined/>
+						</span>
+					</Link>
+				</li>
+				<li>
+					<Link to="/Mypage/Like">
+						찜한 영화
+						<span>
+							<RightOutlined/>
+						</span>
+					</Link>
+				</li>
+				<li>
+					<Link to="/Mypage/Comment">
+						관람평 내역
 						<span>
 							<RightOutlined/>
 						</span>
@@ -32,23 +48,7 @@ const SideBar = () => {
 				</li>
 				<li>
 					<Link>
-						공감영화
-						<span>
-							<RightOutlined/>
-						</span>
-					</Link>
-				</li>
-				<li>
-					<Link>
-						관람평내역
-						<span>
-							<RightOutlined/>
-						</span>
-					</Link>
-				</li>
-				<li>
-					<Link>
-						회원정보수정
+						회원정보 수정
 						<span>
 							<RightOutlined/>
 						</span>
