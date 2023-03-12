@@ -3,13 +3,14 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { ALLMOVIE_REQUEST } from "../../reducer/movie";
 import { MOVIE_DATAS } from "../../reducer/TimeTable";
+
 const Movie = () =>{
     const dispatch = useDispatch();
     const {
         allMovie
       } = useSelector((state) => state.movie);
       const { LOGIN_data } = useSelector((state) => state.R_user_login);
-      const { movie } =useSelector((state)=>state.TimeTable)
+      const { movie,area } =useSelector((state)=>state.TimeTable)
       
     useEffect(()=>{
         dispatch({
@@ -29,7 +30,7 @@ const Movie = () =>{
                             {allMovie.map((num)=>
                             
                             <Movies
-                            key={num.id}
+                                key={num.id}
                                 movie={num.id}
                                 movieData={movie}
                                 >
@@ -38,7 +39,7 @@ const Movie = () =>{
                                         type:MOVIE_DATAS,
                                         data:num
                                     })
-
+                                  
                                 }}>  {num.title}</button>
                               </Movies>)}
                         </ul>
@@ -47,7 +48,8 @@ const Movie = () =>{
         </ListSection>
         <Poster>
             <Table> 
-                <img src={`${movie.imagepath}`} style={{width:"100%" ,height:"100%"}}/>
+            <img src={`${movie.imagepath}`} style={{width:"100%" ,height:"100%"}}/>
+
             </Table>
         </Poster>
     </MovieWrapper>

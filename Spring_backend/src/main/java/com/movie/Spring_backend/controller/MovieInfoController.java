@@ -8,6 +8,7 @@ import com.movie.Spring_backend.entity.CinemaEntity;
 import com.movie.Spring_backend.entity.MovieEntity;
 import com.movie.Spring_backend.entity.MovieInfoEntity;
 import com.movie.Spring_backend.entity.TheaterEntity;
+import com.movie.Spring_backend.mapper.ScheduleMapper;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
 import com.movie.Spring_backend.service.CinemaService;
 import com.movie.Spring_backend.service.MovieInfoService;
@@ -133,10 +134,16 @@ public class MovieInfoController {
         return movieInfoService.findBySchedule(miday,mid,cid);
     }
 
-/*
+
     @GetMapping("normal/findtest")
-    public List<MovieInfoDto> findtest(@RequestParam Long mid , @RequestParam Date miday, @RequestParam String area){
-        List<MovieInfoDto> cid = movieInfoService.findTest(mid,miday,area);
+    public List<ScheduleMapper> findtest(@RequestParam Long mid , @RequestParam Date miday, @RequestParam String area){
+        List<ScheduleMapper> cid = movieInfoService.findTest(mid,miday,area);
         return cid;
-    }*/
+    }
+
+    @GetMapping("normal/findbytimetest")
+    public List<ScheduleMapper> findbytimetest(@RequestParam Date miday, @RequestParam Long tid){
+        List<ScheduleMapper> cid = movieInfoService.findByTheater(miday,tid);
+        return cid;
+    }
 }

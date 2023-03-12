@@ -1,241 +1,72 @@
 import styled from "styled-components";
-import React from "react";
+import React ,{useEffect, useState}from "react";
+import { SELECT_SC_THEATER_REQUEST ,AREA_DATAS} from "../../reducer/TimeTable";
+import { useDispatch, useSelector } from "react-redux";
 const MovieSchedule = () =>{
+    const dispatch = useDispatch();
+    const { movie,theater,area,city} =useSelector((state)=>state.TimeTable)
+    const [ tab, setTab] = useState(1);
+    const tabClick= (index)=>
+    {
+        setTab(index);
+    }
+    useEffect(()=>{
+        dispatch({
+            type:SELECT_SC_THEATER_REQUEST,
+            data:{
+                mid:movie.id,
+                miday:"2023-03-13",
+                area:area,
+                tid:"",
+            }
+        })
+    },[area,movie])
+   
+
     return(<>
     <ReverseTheaterWrapper>
-        <TheaterTab>   
-            <ul>
-                <li><a>서울</a>
-                </li>
-                <li><a>경기</a>
-                </li>
-                <li><a>인천</a>
-                </li>
-                <li><a>부산</a>
-                </li>
-            </ul>
-        </TheaterTab>
-        <TheaterList>
+            {theater.map((th)=>
+                    <TheaterList>
+
             <TheaterArea>
-                <a>더 부티크 목동 현대백화점</a>
+                <a>{th.theater}</a>
             </TheaterArea>
+            {th.infoMapper.map((info)=>
             <CinemaTypeWrapper>
                 <CinemaType>
-                <p className="theater-type">1관</p>
-                <p className="chair">총 232석</p>
+                <p className="theater-type">{info.name}</p>
+                <p className="chair">{info.people}명</p>
                 </CinemaType>
                 <CinemaTime>
-                    <Type>2D(자막)</Type>
-                    <Time> 
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <Type>{info.type}</Type>
+                    <Time>
+                    <table>
+                        <tbody>
+                        <tr>
+                            {info.history.map((movieinfo)=>
+                             <td>
+                             <div>
+                                 <a>
+                                     <p>
+                                         {movieinfo.start.substring(11, 16)}
+                                     </p>
+                                     <p>
+                                         42석
+                                     </p>
+                                 </a>
+                             </div>
+                         </td>
+                            )}
+                           
+                        </tr>
+                        </tbody>
+                    </table>
                     </Time>
                 </CinemaTime>
-            </CinemaTypeWrapper>
-            <CinemaTypeWrapper>
-                <CinemaType>
-                <p className="theater-type">1관</p>
-                <p className="chair">총 232석</p>
-                </CinemaType>
-                <CinemaTime>
-                    <Type>2D(자막)</Type>
-                    <Time> 
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </Time>
-                </CinemaTime>
-            </CinemaTypeWrapper><CinemaTypeWrapper>
-                <CinemaType>
-                <p className="theater-type">1관</p>
-                <p className="chair">총 232석</p>
-                </CinemaType>
-                <CinemaTime>
-                    <Type>2D(자막)</Type>
-                    <Time> 
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </Time>
-                </CinemaTime>
-            </CinemaTypeWrapper>
-        </TheaterList>
-        <TheaterList>
-            <TheaterArea>
-                <a>더 부티크 목동 현대백화점</a>
-            </TheaterArea>
-            <CinemaTypeWrapper>
-                <CinemaType>
-                <p className="theater-type">1관</p>
-                <p className="chair">총 232석</p>
-                </CinemaType>
-                <CinemaTime>
-                    <Type>2D(자막)</Type>
-                    <Time> 
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                    <td>
-                                        <div>   
-                                            <a>
-                                                <p>
-                                                24:00
-                                                </p>
-                                                <p>
-                                                    42석
-                                                </p>
-                                            </a>
-                                        </div>  
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </Time>
-                </CinemaTime>
-            </CinemaTypeWrapper>
-        </TheaterList>
+            </CinemaTypeWrapper>)
+}
+            </TheaterList>
+)}
     </ReverseTheaterWrapper>
     </>)
 }
@@ -254,8 +85,14 @@ padding-bottom:40px;
 ul{
     list-style-type:none;
     width:100%;
+    .hover {
+        background-color: grey;
+        border-right: none;
+    
+       }
     
    li{
+    cursor:pointer;
     float:left;
     width:137px;
     height:34px;

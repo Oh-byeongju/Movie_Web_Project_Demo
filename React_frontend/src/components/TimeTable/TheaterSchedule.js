@@ -1,10 +1,28 @@
 import styled from "styled-components";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SELECT_SC_THEATER_REQUEST } from "../../reducer/TimeTable";
+
 const TheaterSchedule = () =>{
+    const { movie,city} =useSelector((state)=>state.TimeTable)
+    const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch({
+        type:SELECT_SC_THEATER_REQUEST,
+        data:{
+            mid:movie.id,
+            miday:"2023-03-13",
+            area:"",
+            tid:city,
+        }
+    })
+  },[])
     return(<>
     <ReverseTheaterWrapper>
         <TheaterList>
+            
             <TheaterArea>
+            
                 <p className="title">
                     <a>스즈메의 문단속</a>
                 </p>

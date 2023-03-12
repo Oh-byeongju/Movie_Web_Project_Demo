@@ -76,10 +76,33 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
             "WHERE mi.movie = :movie AND mi.miendtime <= now()")
     List<MovieInfoEntity> findInfoBeforeToday(@Param("movie") MovieEntity movie);
 
+
+    //영황 상영 시간표를 검색할 때 영화, 날짜, 지역으로 검색하는 메소드
     @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
-            "where mid= :mid and mi.miday= :miday and " +
+            "where mid= :mid and mi.miday= :miday and mi.mistarttime >= function('addtime', now(), '0:30:00') and " +
             "mi.cinema.cid in (select c.cid from CinemaEntity as c " +
             "where tid in(select t.tid from TheaterEntity as t where t.tarea= :tarea)) ")
     List <MovieInfoEntity> findSchedule(@Param("mid") Long mid ,@Param("miday") Date miday ,@Param("tarea")String tarea);
 
+    
+
+    //영화, 날짜, 상영관으로 miid를 추출하는 메소드
+    @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
+            "where mid= :mid and mi.miday= :miday and " +
+            "cid = :cid and mi.mistarttime >= function('addtime', now(), '0:30:00')"
+    )
+    List <MovieInfoEntity> findmiid(@Param("mid") Long mid ,@Param("miday") Date miday ,@Param("cid")Long cid);
+
+
+    @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
+            "where mi.miday= :miday and mi.mistarttime >= function('addtime', now(), '0:30:00') and " +
+            "mi.cinema.cid in (select c.cid from CinemaEntity as c " +
+            "where tid = :tid) ")
+    List <MovieInfoEntity> findTimeTheater(@Param("miday") Date miday ,@Param("tid")Long tid);
+
+
+
+
+
 }
+
