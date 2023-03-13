@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,7 @@ public class MovieInfoController {
         return theaterService.findByTidIn(tid);
     }
 
-    //날짜 검색
+    //영화로 날짜 검색
     @GetMapping("/normal/movieselectday")
     public List<MovieInfoDto> findByMovieToDay(@RequestParam Long id) {
         //영화 아이디로 영화 정보 추출 CID를 리스트로 추출
@@ -136,14 +137,37 @@ public class MovieInfoController {
 
 
     @GetMapping("normal/findtest")
-    public List<ScheduleMapper> findtest(@RequestParam Long mid , @RequestParam Date miday, @RequestParam String area){
-        List<ScheduleMapper> cid = movieInfoService.findTest(mid,miday,area);
-        return cid;
+    public List<ScheduleMapper> findtest(@RequestParam Long mid , @RequestParam Date miday, @RequestParam String area,@RequestParam Long tid,
+    @RequestParam String message){
+        if(message.equals("movie")) {
+            System.out.println("극장조회");
+            List<ScheduleMapper>  cinema= movieInfoService.findTest(mid, miday, area);
+            return cinema;
+        }
+        else if(message.equals("theater")){
+            System.out.println("영화조회");
+
+            List<ScheduleMapper> movie = movieInfoService.findByTheater(miday,tid);
+            return movie;
+        }
+        return null;
     }
 
-    @GetMapping("normal/findbytimetest")
-    public List<ScheduleMapper> findbytimetest(@RequestParam Date miday, @RequestParam Long tid){
-        List<ScheduleMapper> cid = movieInfoService.findByTheater(miday,tid);
-        return cid;
+    @GetMapping("/normal/timeselect")
+    public List<MovieInfoDto> timeselect(@RequestParam Long mid,@RequestParam Long tid,@RequestParam String message) {
+
+        if(message.equals("movie")){
+            List<MovieInfoDto> mappedmid = movieInfoService.findByMovieToDay(mid);
+            return mappedmid;
+        }
+        else if(message.equals("theater")){
+            List<Long> mappedcid = cinemaService.findByTheaterday(tid);
+            List<MovieInfoDto> theater = movieInfoService.findByCinemaCidIn(mappedcid);
+            return theater;
+        }
+        return null;
+        //영화 검색 시 해당하는 상영 날짜 추출
     }
+
+
 }

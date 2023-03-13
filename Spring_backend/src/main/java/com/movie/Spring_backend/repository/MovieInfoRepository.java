@@ -20,11 +20,13 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
 
     public List<MovieInfoEntity> findByMovie(MovieEntity id);
 
-    @Query("SELECT mi From MovieInfoEntity as mi, MovieEntity as m Where mi.movie.mid= (:mid) Group by mi.miday Order by mi.miday ASC ")
+    @Query("SELECT mi From MovieInfoEntity as mi, MovieEntity as m Where mi.movie.mid= (:mid) " +
+            "and mi.mistarttime >= function('addtime', now(), '0:30:00') Group by mi.miday Order by mi.miday ASC ")
     public List<MovieInfoEntity> findByMovieToDay(@Param("mid") Long mid);
 
     //in able을 위해
-    @Query("SELECT mi From MovieInfoEntity as mi, CinemaEntity as c WHERE mi.cinema.cid IN (:cid)")
+    @Query("SELECT mi From MovieInfoEntity as mi, CinemaEntity as c WHERE mi.cinema.cid IN (:cid) " +
+            "and mi.mistarttime >= function('addtime', now(), '0:30:00')")
     public List<MovieInfoEntity> findByCinemaCidIn(@Param("cid") List<Long> cid);
 
     //notin able을 위해
