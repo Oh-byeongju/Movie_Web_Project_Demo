@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* 
 	23-01-02 ~ 23-01-04 회원가입 ui 수정 및 기능 추가(오병주)
 	23-01-13 ~ 23-01-13 중복확인 기능 추가(오병주)
@@ -532,7 +531,7 @@ const JoinForm = () => {
 				navigate(`${location.state.url}`);
 			}
     }
-  }, [LOGIN_data.uname, dispatch]);
+  }, [LOGIN_data.uname, location.state, navigate, dispatch]);
 
 	// ID 중복을 확인하기 위한 리덕스 상태
 	const { ID_status } = useSelector((state) => state.R_user_join);
@@ -552,7 +551,7 @@ const JoinForm = () => {
 
 	// IDcheck를 호출해서 ID_status의 상태가 변경이 됐을 때 유효성 검사를 해주는 useEffect
 	useEffect(() => {
-		if (ID_status == 204) {
+		if (ID_status === 204) {
 			alert("사용 가능한 아이디입니다.");
 			dispatch({
 				type: USER_ID_RESET
@@ -560,7 +559,7 @@ const JoinForm = () => {
 			setIDButton(true);
 			setIDText(true);
 		}
-		if (ID_status == 400) {
+		if (ID_status === 400) {
 			alert("이미 사용중인 아이디입니다.");
 			dispatch({
 				type: USER_ID_RESET
@@ -607,12 +606,12 @@ const JoinForm = () => {
 
 	// JOIN_status의 상태가 변경이 됐을 때 회원가입 성공 여부를 알려주는 useEffect
 	useEffect(() => {
-		if (JOIN_status == 204) {
+		if (JOIN_status === 204) {
 			alert('회원가입이 완료 되었습니다.');
 			window.location.assign('/');
 		}
 
-		if (JOIN_status == 400 || JOIN_status == 500) {
+		if (JOIN_status === 400 || JOIN_status === 500) {
 			alert('예기치 못한 오류가 발생하였습니다. 다시 회원가입 해주십시오.');
 			window.location.assign('/');
 		}

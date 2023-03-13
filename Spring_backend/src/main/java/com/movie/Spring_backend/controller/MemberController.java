@@ -36,9 +36,7 @@ public class MemberController {
     // 로그인을 위한 메소드, id와 pw가 일치할 경우 Token을 생성하여 리턴
     @PostMapping("/normal/login")
     public ResponseEntity<MemberDto> login_check(@RequestBody MemberDto requestDto, HttpServletResponse response) {
-        // 로그인한 유저의 이름
-        MemberDto result = memberService.login(requestDto, response);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(memberService.login(requestDto, response));
     }
 
     // 로그인 상태를 확인하는 메소드
