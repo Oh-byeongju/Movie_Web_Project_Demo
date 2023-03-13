@@ -173,7 +173,8 @@ public class MovieInfoService {
                     for (MovieInfoEntity mi : miid) {
                         Map<String, Object> miidd = Map.of(
                                 "miid", mi.getMiid(),
-                                "start", mi.getMistarttime()
+                                "start", mi.getMistarttime(),
+                                "count", mi.getCntSeatInfo()
                         );
                         history.add(miidd);
                     }
@@ -206,35 +207,40 @@ public class MovieInfoService {
 
         List<ScheduleMapper> scheduleMappers = new ArrayList<>();
         ScheduleMapper scheduleMapper = new ScheduleMapper();
-        for (MovieInfoDto c : title) {    //지역으로 나눔
+        // 영화 중복 제거해서 for문
+        for(MovieInfoDto movies : title){
             List<InfoMapper> infoMapper = new ArrayList<>();
 
-            for (MovieInfoDto a : cid) { //극장으로 나눔
-                if (c.getTitle().equals(a.getTitle())) {
-                    System.out.println(a.getCid());//전체 지역 중 중복 제거한 극장의 지역명이 같으면
-                    List<MovieInfoEntity> miid = movieInfoRepository.findmiid(c.getMid(),miday, a.getCid()); //지점과 cid 에 맞는 miid들
+            for( MovieInfoDto cinema : cid){  // 10 , 12
+                    List<MovieInfoEntity> miid = movieInfoRepository.findmiid(movies.getMid(), miday, cinema.getCid()); //지점과 cid 에 맞는 miid들
                     List<Map<String, Object>> history = new ArrayList<>();
-                    for (MovieInfoEntity mi : miid) {
-                        Map<String, Object> miidd = Map.of(
-                                "miid", mi.getMiid(),
-                                "start", mi.getMistarttime()
-                        );
-                        history.add(miidd);
+                    if(!miid.isEmpty()) {
+                        for (MovieInfoEntity mi : miid) {
+                            System.out.println(mi.getMiid());
+                            Map<String, Object> miidd = Map.of(
+                                    "miid", mi.getMiid(),
+                                    "start", mi.getMistarttime(),
+                                    "count", mi.getCntSeatInfo()
+
+                            );
+                            history.add(miidd);
+                        }
+                        InfoMapper dd = new InfoMapper(cinema.getCid(), cinema.getAllcount(), cinema.getType(), cinema.getArea(), cinema.getName(), history); //1상영관에 대한 정보
+                        infoMapper.add(dd);    //여기는 r에 해당하는 모든 상영관에 대한 정보   //극장에 해당하는 모든 정보
+                        //여기까지 하면 cid 에 맞는 miid 추출
+                        //지역에 따른 cid 정보들로 ㅊ푸출
                     }
 
-                    InfoMapper dd = new InfoMapper(a.getCid(), a.getAllcount(), a.getType(), a.getArea(), a.getName(), history); //1상영관에 대한 정보
-                    infoMapper.add(dd);    //여기는 r에 해당하는 모든 상영관에 대한 정보   //극장에 해당하는 모든 정보
-                    //여기까지 하면 cid 에 맞는 miid 추출
-                    //지역에 따른 cid 정보들로 ㅊ푸출
-                }
             }
 
-            scheduleMapper = new ScheduleMapper(c.getTitle(), infoMapper);
+
+            scheduleMapper = new ScheduleMapper(movies.getTitle(), infoMapper);
 
             scheduleMappers.add(scheduleMapper);
-
 
         }
         return scheduleMappers;
     }
+
+
 }

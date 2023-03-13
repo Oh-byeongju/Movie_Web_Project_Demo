@@ -4,7 +4,7 @@ import { SELECT_SC_THEATER_REQUEST ,AREA_DATAS} from "../../reducer/TimeTable";
 import { useDispatch, useSelector } from "react-redux";
 const MovieSchedule = () =>{
     const dispatch = useDispatch();
-    const { movie,theater,area,city} =useSelector((state)=>state.TimeTable)
+    const { movie,theater,area,dayone} =useSelector((state)=>state.TimeTable)
     const [ tab, setTab] = useState(1);
     const tabClick= (index)=>
     {
@@ -15,12 +15,14 @@ const MovieSchedule = () =>{
             type:SELECT_SC_THEATER_REQUEST,
             data:{
                 mid:movie.id,
-                miday:"2023-03-13",
+                miday:dayone,
                 area:area,
-                tid:"",
+                tid:0,
+                message:"movie"
+
             }
         })
-    },[area,movie])
+    },[area,movie,dayone])
    
 
     return(<>
@@ -51,7 +53,7 @@ const MovieSchedule = () =>{
                                          {movieinfo.start.substring(11, 16)}
                                      </p>
                                      <p>
-                                         42석
+                                     {info.people-movieinfo.count}석
                                      </p>
                                  </a>
                              </div>

@@ -2,10 +2,14 @@ import React ,{useState,useRef}from "react";
 import moment from "moment";
 import styled from "styled-components";
 import "moment/locale/ko";
-const Time = ()=>{
+import { useEffect } from "react";
+import { useDispatch,useSelector } from "react-redux";
+import { DAY_REQUEST, DAY_DATAS} from "../../reducer/TimeTable";
+const Time = ({tab})=>{
     moment.locale('ko')
-   
-
+    const dispatch = useDispatch();
+    const {area, city,movie, date,dayone} =useSelector((state)=>state.TimeTable)
+    let able = false;
     const week = [];
     const day =[];
     const today = moment().format("YYYY-MM-DD")
@@ -13,9 +17,32 @@ const Time = ()=>{
     for(let i = 0 ; i < 14; i++){
         week[i] = moment().add('days',i).format("YYYY-MM-DD"); 
         day[i]= moment().add('days',i).format('dddd');
-        
     }
-    
+    useEffect(()=>{
+        if(tab===1){
+        if(movie.length!==0){
+        dispatch({
+            type:DAY_REQUEST,
+            data:{
+                mid:movie.id,
+                tid:city,
+                message:"movie"
+            }
+        })
+    }}
+    else if (tab===2){
+        if(city!==""){
+            dispatch({
+                type:DAY_REQUEST,
+                data:{
+                    mid:movie.id,
+                    tid:city,
+                    message:"theater"
+                }
+            })  
+        }
+    }
+    },[movie,city])
     return(
         <TimeSchedule>
                     <Wrap>
@@ -28,9 +55,25 @@ const Time = ()=>{
                             <DateArea>
                                 <Date>
                                  {week.map((week,index)=>{
+                                    able = false;
+                                    {date.map((day)=>
+                                        {
+                                            if(week===day.miday){
+                                                able=true;
+                                            }
+                                        })}
                                     return(
                                       <Button
-                                        className={day[index]==="토요일" ?"blue day" : day[index]==="일요일" ? "red day" : day }>
+                                        onClick={()=>{
+                                            dispatch({
+                                                type:DAY_DATAS,
+                                                data:week
+                                            })
+                                        }}
+                                        date={week}
+                                        dayone={dayone}
+                                        disabled={able?"": "disabled"}
+                                        className={!able ?"disable": day[index]==="토요일" ?"blue day" : day[index]==="일요일" ? "red day" : day }>
                                         <span className="month">{week}</span>
                                         <em>{week.substring(8,10)}
                                         <br />
@@ -104,6 +147,9 @@ position: relative;
     .red{
         color:red;
     }
+    .disable:hover{
+        border-bottom:none;
+    }
 `
 
 const Button = styled.button`
@@ -114,6 +160,17 @@ width: 70px;
     float: left;
     border-bottom: 3px solid transparent;
     font-weight: 400;
+    cursor:pointer;
+    background-color: ${(props) =>
+        props.dayone === props.date ? "#d9d9d9" : "white"};
+    
+    border-bottom: ${(props) =>
+        props.dayone === props.date ? "3px solid #503396" : "white"};
+        
+
+    &:hover{  
+        border-bottom: 3px solid #503396;
+    }
 
     .month{
         text-indent: -9999px;
