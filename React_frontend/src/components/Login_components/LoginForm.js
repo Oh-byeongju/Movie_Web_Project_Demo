@@ -80,6 +80,7 @@ const LoginForm = () => {
     const datas = {
       uid: id,
       upw: pw,
+      // 로그인 유지 버튼 유뮤를 uname 변수에 넣어서 보냄
       uname: check_type,
     };
     dispatch({
@@ -89,7 +90,6 @@ const LoginForm = () => {
   }, [id, pw, check_type, dispatch]);
 
   // 로그인의 성공 여부를 알리는 useEffect
-
   useEffect(() => {
     console.log("login 페이지");
     console.log(location);
@@ -119,10 +119,10 @@ const LoginForm = () => {
         navigate(`${location.state.url}`);
       }
     }
-  }, [LOGIN_data, location.state, navigate, dispatch]);
+  }, [LOGIN_data, location, location.state, navigate, dispatch]);
 
   return (
-    <div>
+    <>
       {LOGIN_loading ? <LoginLoading /> : null}
       <Layout>
         <Title>회원 로그인</Title>
@@ -163,12 +163,12 @@ const LoginForm = () => {
           </LoginButton>
           <Links>
             <Link to="/UserJoin">회원가입</Link>
-            <Link to="/">아이디 찾기</Link>
-            <Link to="/">비밀번호 찾기</Link>
+            <Link to="/">아이디 찾기(미구현)</Link>
+            <Link to="/">비밀번호 찾기(미구현)</Link>
           </Links>
         </Form>
       </Layout>
-    </div>
+    </>
   );
 };
 

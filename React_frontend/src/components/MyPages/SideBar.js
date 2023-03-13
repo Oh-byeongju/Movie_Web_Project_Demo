@@ -47,7 +47,7 @@ const SideBar = () => {
 					</Link>
 				</li>
 				<li>
-					<Link>
+					<Link to="/Mypage/Modify">
 						회원정보 수정
 						<span>
 							<RightOutlined/>

@@ -14,6 +14,9 @@ import {
   USER_LOGOUT_REQUEST,
   USER_LOGOUT_SUCCESS,
   USER_LOGOUT_FAILURE,
+  USER_PW_CHECK_REQUEST,
+  USER_PW_CHECK_SUCCESS,
+  USER_PW_CHECK_FAILURE
 } from "../reducer/R_user_login";
 import { http } from "../lib/http";
 
@@ -51,12 +54,12 @@ function* UserCheck() {
   if (result.status === 200) {
     yield put({
       type: USER_LOGIN_STATUS_SUCCESS,
-      data: result.data,
+      data: result.data
     });
   } else {
     yield put({
       type: USER_LOGIN_STATUS_FAILURE,
-      data: result.data,
+      data: result.data
     });
   }
 }
@@ -99,6 +102,35 @@ async function Checkout() {
     });
 }
 
+// 비밀번호 비교 함수
+function* UserPwCheck(action) {
+  const result = yield call(callPwCheck, action.data);
+  if (result.status === 204) {
+    yield put({
+      type: USER_PW_CHECK_SUCCESS,
+      data: result.status
+    });
+  } 
+  else {
+    yield put({
+      type: USER_PW_CHECK_FAILURE,
+      data: result.status
+    });
+  }
+}
+
+// 백엔드 호출
+async function callPwCheck(data) {
+  return await http
+    .post("/member/auth/checkPw", data)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
 function* USER_LOGIN() {
   yield takeLatest(USER_LOGIN_REQUEST, UserLogin);
 }
@@ -111,6 +143,10 @@ function* USER_LOGOUT() {
   yield takeLatest(USER_LOGOUT_REQUEST, UserLogout);
 }
 
+function* USER_PWCHECK() {
+  yield takeLatest(USER_PW_CHECK_REQUEST, UserPwCheck);
+}
+
 export default function* S_user_login() {
-  yield all([fork(USER_LOGIN), fork(USER_STATUS), fork(USER_LOGOUT)]);
+  yield all([fork(USER_LOGIN), fork(USER_STATUS), fork(USER_LOGOUT), fork(USER_PWCHECK)]);
 }

@@ -9,12 +9,15 @@ import com.movie.Spring_backend.entity.Authority;
 import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.entity.RefreshTokenEntity;
 import com.movie.Spring_backend.error.exception.ErrorCode;
+import com.movie.Spring_backend.error.exception.InvalidValueException;
 import com.movie.Spring_backend.exceptionlist.IdDuplicateException;
 import com.movie.Spring_backend.exceptionlist.MemberNotFoundException;
+import com.movie.Spring_backend.exceptionlist.PwNotCorrectException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.jwt.TokenProvider;
 import com.movie.Spring_backend.repository.MemberRepository;
 import com.movie.Spring_backend.repository.RefreshTokenRepository;
+import com.movie.Spring_backend.util.SecurityUtil;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -22,12 +25,9 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -47,7 +47,7 @@ public class MemberService {
     @Transactional
     public void existsId(String id) {
         // 아이디 중복을 확인하고 중복일 경우 예외를 던져줌
-        if (memberRepository.existsByUid(id)) {
+        if (memberRepository.existsById(id)) {
             throw new IdDuplicateException("중복된 아이디입니다.");
         }
     }
@@ -58,7 +58,7 @@ public class MemberService {
         // 거의 희박한 확률이지만 A와 B라는 사람이 회원가입을 하고 있을 때 동시에 같은 아이디를 입력하였고,
         // 그때 그 아이디가 DB에 없어서 사전에 중복확인을 실패하여 먼저 회원가입 버튼을 누른 사람은 가입을 시켜도 되지만
         // 두번째로 회원가입 버튼을 누른 사람은 회원가입이 되면 안되므로 추가한 예외
-        if (memberRepository.existsByUid(requestDto.getUid())) {
+        if (memberRepository.existsById(requestDto.getUid())) {
             throw new IdDuplicateException("중복 회원가입 방지", 1);
         }
 
@@ -82,8 +82,8 @@ public class MemberService {
     public MemberDto login(MemberDto requestDto, HttpServletResponse response) {
 
         // 로그인 한 유저의 정보 추출
-        MemberEntity Data = memberRepository.findByUid(requestDto.getUid())
-                .orElseThrow(() -> new MemberNotFoundException(requestDto.getUid()));
+        MemberEntity Data = memberRepository.findById(requestDto.getUid())
+                .orElseThrow(() -> new MemberNotFoundException("회원 정보가 존재하지 않습니다."));
 
         // Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = toAuthentication(requestDto.getUid(), requestDto.getUpw());
@@ -174,12 +174,15 @@ public class MemberService {
 
     // 로그인 상태확인 메소드
     @Transactional
-    public MemberDto getMyInfoBySecurity(String currentMemberId, HttpServletRequest request) {
+    public MemberDto getMyInfoBySecurity(HttpServletRequest request) {
+        // authentication 객체에서 아이디 확보
+        String currentMemberId = SecurityUtil.getCurrentMemberId();
+
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
 
         // SecurityContext 에서 추출한 유저정보를 이용하여 Member 검색
-        MemberEntity Data = memberRepository.findByUid(currentMemberId)
+        MemberEntity Data = memberRepository.findById(currentMemberId)
                 .orElseThrow(() -> new MemberNotFoundException(currentMemberId));
 
         // 로그인 정보가 있을경우 아이디와 이름을 리턴
@@ -286,12 +289,10 @@ public class MemberService {
     // 로그아웃 메소드
     public void logout(HttpServletResponse response) {
         // authentication 객체에서 아이디 확보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
-        String username = userDetails.getUsername();
+        String currentMemberId = SecurityUtil.getCurrentMemberId();
 
         // Redis에 저장되어 있는 Refresh Token 삭제
-        refreshTokenRepository.deleteById(username);
+        refreshTokenRepository.deleteById(currentMemberId);
 
         // 기존에 있던 두 가지 쿠키와 이름은 동일하지만 value는 빈칸, duration은 0인 쿠키들을 생성
         // 새로 생성된 쿠키들은 브라우저에 있는 기존의 쿠키들을 덮어쓴 후 사라짐
@@ -314,9 +315,25 @@ public class MemberService {
         // 응답 헤더에 두 가지 쿠기를 할당
         response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+    }
 
-        // authentication 객체 초기화
-        SecurityContextHolder.clearContext();
+    // 회원정보 수정 시 비밀번호를 확인하는 메소드
+    @Transactional
+    public void CheckPw(HttpServletRequest request, String Pw) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // authentication 객체에서 아이디 확보
+        String currentMemberId = SecurityUtil.getCurrentMemberId();
+
+        // 확보한 아이디를 이용해서 DB 검색
+        MemberEntity member = memberRepository.findById(currentMemberId)
+                .orElseThrow(() -> new MemberNotFoundException("회원 정보가 존재하지 않습니다."));
+
+        // 프론트단에서 입력한 패스워드와 DB에 저장되어있는 패스워드를 비교
+        if (!passwordEncoder.matches(Pw, member.getUpw())) {
+            throw new PwNotCorrectException("비밀번호가 일치하지 않습니다.");
+        }
     }
 
     // id와 pw를 파라미터로 전달 받아 UsernamePasswordAuthenticationToken 으로 반환하여 리턴해주는 메소드

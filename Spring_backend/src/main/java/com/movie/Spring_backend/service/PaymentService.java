@@ -70,7 +70,7 @@ public class PaymentService {
 
         try{
             //아이디가 있어야 함
-            if(memberRepository.existsByUid(User_id)){
+            if(memberRepository.existsById(User_id)){
                 if(payamount==amount){ //리턴된 페이와 프론트 리턴 페이 보냄
 
                     reservationEntity = ReservationEntity.builder()

@@ -162,6 +162,8 @@ const CommentElement = styled.li`
 		margin-bottom: 0;
     line-height: 20px;
 		font-size: 13px;
+		letter-spacing: 0.2px;
+		word-spacing: 1.1px;
 	}
 
 	.bottom {

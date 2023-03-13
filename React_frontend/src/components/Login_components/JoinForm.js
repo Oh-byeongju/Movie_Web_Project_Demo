@@ -619,7 +619,7 @@ const JoinForm = () => {
 	}, [JOIN_status])
 
 	return (
-		<div>
+		<>
 			{ JOIN_loading  ? <LoginLoading/> : null }
 			<Layout>
 				<Title>
@@ -885,7 +885,7 @@ const JoinForm = () => {
 					</ButtonForm>	
 				</Form>
 			</Layout>
-		</div>
+		</>
 	);
 };
 
@@ -927,6 +927,7 @@ const CheckStar = styled.span`
 
 const InfoForm = styled.div`
 	padding: 0px;
+	margin-top: 7px;
 `;
 
 const InfoTextForm = styled.div`
