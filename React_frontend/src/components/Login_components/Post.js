@@ -61,7 +61,7 @@ const LoginLayout = styled.div`
   margin: 50px auto;
   margin-top: 150px !important;
   padding: 20px;
-  background: #fff; //로그인 배경이다
+  background: #fff;
 
   .header_layout {
     overflow: hidden;

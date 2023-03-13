@@ -18,6 +18,7 @@ public enum ErrorCode {
     ID_DUPLICATION(400, "M001", "중복된 아이디입니다."),
     SIGN_UNEXPECTED_ERROR(400, "M002", "예기치 못한 오류가 발생하였습니다. 다시 회원가입 해주십시오."),
     MEMBER_NOT_FOUND(400, "M003", "회원정보가 존재하지 않습니다."),
+    PASSWORD_NOT_CORRECT(400, "M004", "비밀번호가 일치하지 않습니다."),
 
     // Security
     LOGIN_IS_NONE(400, "S001", "로그인 정보가 존재하지 않습니다."),

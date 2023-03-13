@@ -1,22 +1,19 @@
 /*
  23-03-12 마이페이지 css 구축(오병주)
 */
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Rate } from 'antd';
-import { SmileFilled, MehFilled, FrownFilled, DeleteOutlined, LikeOutlined, LikeFilled } from '@ant-design/icons';
+import { DeleteOutlined, LikeOutlined, LikeFilled } from '@ant-design/icons';
 
-const CommentReview = () => {
+const CommentReview = ({ data }) => {
 
-	// 사용자가 보이는 like UI 변경을 위한 변수
-  const [like, setlike] = useState(false);
-  const [likes, setlikes] = useState(7);
 
 	const comment = {
 		umscore: 9,
-		uid: '오늘 밤, 세계에서 이 사랑이 사라진다 해도',
+		uid: 'temp1',
 		umcommenttime: '2023-03-12 08:11:21',
-		umcomment: '관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평',
+		umcomment: ' 람평을 관람평 관람평을 관람평 관람평을 관람평관람평람평을 관람평 관람평을 관람평 관람평을 관람평 관람asdasda평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평',
 	};
 
 	const LOGIN_data = {
@@ -27,13 +24,14 @@ const CommentReview = () => {
 		<>
 
 		<CommentElement>
-			<span className='img'>
-				{comment.umscore > 6 ? <SmileFilled style={{fontSize: "40px", color: "#4a4321"}}/> 
-				: comment.umscore > 3 ? <MehFilled style={{fontSize: "40px", color: "#4a4321"}} /> : <FrownFilled style={{fontSize: "40px", color: "#4a4321"}}/>}
-			</span>
+			<div className='img'>
+				<Poster src={`/${data.poster}`} alt="Poster">
+
+				</Poster>
+			</div>
 			<div className='top'>
 				<span className='name'>
-					{comment.uid}
+					영화 : {data.mtitle}
 				</span>
 				<span className='score'>
 					<RateCustom allowHalf value={comment.umscore/2}/> 
@@ -46,7 +44,7 @@ const CommentReview = () => {
 				</span>
 			</div>
 			<div className='middle'>
-				{comment.umcomment}
+				{data.comment}
 			</div>
 			<div className='bottom'>
 				{/* 공백을 넣어줘서 간격을 벌림 */}
@@ -55,9 +53,9 @@ const CommentReview = () => {
 				</span>
 				<ButtonCustom style={{paddingLeft: "1px"}} >
 					<span className='cnt'>
-						{likes}
+						7
 					</span>
-					{like ? <LikeFilled style={{color: "#e61919"}}/> : <LikeOutlined/>}
+					{false ? <LikeFilled style={{color: "#e61919"}}/> : <LikeOutlined/>}
 				</ButtonCustom>			
 				{comment.uid === LOGIN_data.uid && <ButtonCustom style={{marginLeft: "2px"}}>
 					<DeleteOutlined/>
@@ -68,18 +66,29 @@ const CommentReview = () => {
 	);
 };
 
+
+const Poster = styled.img`
+  display: block;
+  width: 91px;
+  height: 150px;
+`;
+
+
+
+
 const CommentElement = styled.div`
 	position: relative;
-	padding: 22px 0 17px 68px;
+	padding: 15px 0 14px 110px;
 	border-bottom: 1px solid #eee;
+	min-height: 143px;
 
 	.img {
 		display: block;
     position: absolute;
-    top: 25px;
-    left: 10px;
-    width: 42px;
-    height: 42px;
+    top: 11px;
+    left: 0px;
+    width: 91px;
+    height: 150px;
 	}
 
 	.top {
@@ -88,7 +97,7 @@ const CommentElement = styled.div`
 
 		.name {
 			display: block;
-			font-size: 14px;
+			font-size: 15px;
 			margin-bottom: 1px;
 			font-weight: 600;
 		}
@@ -118,10 +127,16 @@ const CommentElement = styled.div`
 	.middle {
 		margin-bottom: 0;
     line-height: 20px;
-		font-size: 13px;
+		font-size: 14px;
+		letter-spacing: 0.4px;
+		word-spacing: 1.3px;
 	}
 
 	.bottom {
+		position: absolute;
+		right: 0;
+		bottom: 8px;
+
 		margin-top: 12px;
 		margin-bottom: 0;
     line-height: 20px;

@@ -16,6 +16,7 @@ import MyPageReserveDetail from "./pages/MyPageReserveDetail";
 import MyPageCancleDetail from "./pages/MyPageCancleDetail";
 import MyPageLike from "./pages/MyPageLike";
 import MyPageComment from "./pages/MyPageComment";
+import MyPageModify from "./pages/MyPageModify";
 import StoryChange from "./pages/StoryChange";
 import TimeTable from "./pages/TimeTable";
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/Mypage/CancleDetail/:id" element={<MyPageCancleDetail />}></Route>
           <Route path="/Mypage/Like" element={<MyPageLike />}></Route>
           <Route path="/Mypage/Comment" element={<MyPageComment />}></Route>
+          <Route path="/Mypage/Modify" element={<MyPageModify />}></Route>
         </Route>
         <Route path="/StoryChange" element={<StoryChange />}></Route>
         <Route path="/Timetable" element={<TimeTable />}></Route>

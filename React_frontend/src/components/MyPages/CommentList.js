@@ -49,7 +49,30 @@ const datas2 = [
 		watchdate: "2023-03-10 (금) 17:00",
 		seat: "A1, A2",
 		price: "100",
+		comment: '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)',
 		poster: "img/ranking/5.jpg"
+	},
+	{
+		rid: "1",
+		mtitle: "상견니",
+		cinema: "서울-강남점 2관",
+		rdate: "2023.03.09",
+		watchdate: "2023-03-10 (금) 17:00",
+		seat: "A1, A2",
+		price: "100",
+		comment: '와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요!',
+		poster: "img/ranking/3.jpg"
+	},
+	{
+		rid: "1",
+		mtitle: "두다다쿵",
+		cinema: "서울-강남점 2관",
+		rdate: "2023.03.09",
+		watchdate: "2023-03-10 (금) 17:00",
+		seat: "A1, A2",
+		price: "100",
+		comment: '와 재밌어요!',
+		poster: "img/ranking/8.jpg"
 	}
 	
 ]

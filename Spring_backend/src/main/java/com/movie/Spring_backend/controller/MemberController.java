@@ -44,7 +44,7 @@ public class MemberController {
     // 로그인 상태를 확인하는 메소드
     @GetMapping("/normal/login_status")
     public ResponseEntity<MemberDto> getMyInfoBySecurity(HttpServletRequest request) {
-        return ResponseEntity.ok(memberService.getMyInfoBySecurity(SecurityUtil.getCurrentMemberId(), request));
+        return ResponseEntity.ok(memberService.getMyInfoBySecurity(request));
     }
 
     // 리프레시 토큰을 이용한 토큰 재발급 메소드
@@ -58,6 +58,13 @@ public class MemberController {
     @PostMapping("/normal/logout")
     public ResponseEntity<String> logoutUser(HttpServletResponse response) {
         memberService.logout(response);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 회원정보 수정 페이지 패스워드 확인 메소드
+    @PostMapping("/auth/checkPw")
+    public ResponseEntity<String> checkPw(HttpServletRequest request, @RequestBody MemberDto requestDto) {
+        memberService.CheckPw(request, requestDto.getUpw());
         return ResponseEntity.noContent().build();
     }
 }

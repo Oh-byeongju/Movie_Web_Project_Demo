@@ -2,6 +2,7 @@
  23-01-19 로그인 구현(오병주)
  23-01-24 로그인 상태확인 구현(오병주)
  23-01-27 로그아웃 구현(오병주)
+ 23-03-13 비밀번호 비교 구현(오병주)
 */
 export const USER_LOGIN_REQUEST = "USER_LOGIN_REQUEST";
 export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
@@ -13,6 +14,10 @@ export const USER_LOGIN_STATUS_FAILURE = "USER_LOGIN_STATUS_FAILURE";
 export const USER_LOGOUT_REQUEST = "USER_LOGOUT_REQUEST";
 export const USER_LOGOUT_SUCCESS = "USER_LOGOUT_SUCCESS";
 export const USER_LOGOUT_FAILURE = "USER_LOGOUT_FAILURE";
+export const USER_PW_CHECK_REQUEST = "USER_PW_CHECK_REQUEST";
+export const USER_PW_CHECK_SUCCESS = "USER_PW_CHECK_SUCCESS";
+export const USER_PW_CHECK_FAILURE = "USER_PW_CHECK_FAILURE";
+export const USER_PW_CHECK_RESET = "USER_PW_CHECK_RESET";
 
 const initalState = {
   LOGIN_loading: false,
@@ -24,7 +29,11 @@ const initalState = {
   LOGIN_STATUS_error: null,
   LOGOUT_loading: false,
   LOGOUT_done: false,
-  LOGOUT_error: null
+  LOGOUT_error: null,
+  PW_CHECK_loading: false,
+  PW_CHECK_done: false,
+  PW_CHECK_error: null,
+  PW_data: ''
 };
 
 const R_user_login = (state = initalState, action) => {
@@ -108,6 +117,39 @@ const R_user_login = (state = initalState, action) => {
         LOGOUT_error: action.data,
         LOGIN_data: {uid: 'No_login', uname : ''}
       };
+
+    // 비밀번호 비교 케이스들
+    case USER_PW_CHECK_REQUEST:
+      return {
+        ...state,
+        PW_CHECK_loading: true,
+        PW_CHECK_done: false,
+        PW_CHECK_error: null,
+      };
+    case USER_PW_CHECK_SUCCESS:
+      return {
+        ...state,
+        PW_CHECK_loading: false,
+        PW_CHECK_done: true,
+        PW_CHECK_error: null,
+        PW_data: action.data
+      };
+    case USER_PW_CHECK_FAILURE:
+      return {
+        ...state,
+        PW_CHECK_loading: false,
+        PW_CHECK_done: false,
+        PW_CHECK_error: true,
+        PW_data: action.data
+      };
+    case USER_PW_CHECK_RESET:
+      return {
+        ...state,
+        PW_CHECK_loading: false,
+        PW_CHECK_done: false,
+        PW_CHECK_error: null,
+        PW_data: ''
+      }
     default:
       return state;
   }
