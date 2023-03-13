@@ -22,6 +22,16 @@ public class MovieInfoMapper {
                 .build();
     }
 
+    public MovieInfoDto Test(MovieInfoEntity entity,Long cid,String name, String type,Integer count,Integer allcount, String area,String title ,Long mid) {
+        // 예외처리
+        if (entity == null) {
+            return null;
+        }
+        return  MovieInfoDto.builder().miid(entity.getMiid()).miday(entity.getMiday()).mistarttime(entity.getMistarttime()).miendtime(entity.getMiendtime()).
+                cid(cid).name(name).type(type).count(count).allcount(allcount).area(entity.getCinema().getTheater().getTname()).title(entity.getMovie().getMtitle())
+                .mid(entity.getMovie().getMid())
+                .build();
+    }
 
 
 }

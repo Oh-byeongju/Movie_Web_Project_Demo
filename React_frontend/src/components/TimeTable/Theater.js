@@ -4,9 +4,8 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import {
   ALLTHEATER_REQUEST,
-  
 } from "../../reducer/ticket";
-
+import { THEATER_DATAS } from "../../reducer/TimeTable";
 const Theater = () =>{
     let 서울 =0;
     let 경기= 0;
@@ -20,7 +19,8 @@ const Theater = () =>{
     const {
         allTheater
       } = useSelector((state) => state.ticket);
-    
+    const { city} =useSelector((state)=>state.TimeTable)
+
       const [ tab, setTab] = useState("서울");
       const tabClick= (index)=>
       {
@@ -66,9 +66,18 @@ const Theater = () =>{
                             if(t.tarea===tab){
                                 서울++
                                 return(
-                                    <li>
+                                    <TheaterLi onClick={()=>{
+                                        dispatch({
+                                            type:THEATER_DATAS,
+                                            data:t.tname
+                                        })
+                                    }
+                                    }
+                                    city={city}
+                                    cityName={t.tname}
+                                    >
                                         {t.tname}
-                                    </li>
+                                    </TheaterLi>
                                 )
                             }
                        })}</> : ""}
@@ -76,9 +85,19 @@ const Theater = () =>{
                             if(t.tarea===tab){
                                 경기++
                                 return(
-                                    <li>
+                                    <TheaterLi
+                                    onClick={()=>{
+                                        dispatch({
+                                            type:THEATER_DATAS,
+                                            data:t.tname
+                                        })
+                                    }
+                                    }
+                                    city={city}
+                                    cityName={t.tname}
+                                    >
                                         {t.tname}
-                                    </li>
+                                    </TheaterLi>
                                 )
                             }
                        })}</> : ""}
@@ -86,9 +105,18 @@ const Theater = () =>{
                             if(t.tarea===tab){
                                 인천++
                                 return(
-                                    <li>
+                                    <TheaterLi
+                                    onClick={()=>{
+                                        dispatch({
+                                            type:THEATER_DATAS,
+                                            data:t.tname
+                                        })
+                                    }
+                                    }
+                                    city={city}
+                                    cityName={t.tname}>
                                         {t.tname}
-                                    </li>
+                                    </TheaterLi>
                                 )
                             }
                        })}</>  : ""}
@@ -96,9 +124,18 @@ const Theater = () =>{
                             if(t.tarea===tab){
                                 부산++
                                 return(
-                                    <li>
+                                    <TheaterLi
+                                    onClick={()=>{
+                                        dispatch({
+                                            type:THEATER_DATAS,
+                                            data:t.tname
+                                        })
+                                    }
+                                    }
+                                    city={city}
+                                    cityName={t.tname}>
                                         {t.tname}
-                                    </li>
+                                    </TheaterLi>
                                 )
                             }
                        })}</> : ""}
@@ -117,6 +154,7 @@ position: absolute;
     width: calc(100% - 164px);
     height: 300px;
     padding: 0;
+    
 `
 const Wrapper = styled.div`
 float: left;
@@ -154,31 +192,6 @@ position: relative;
         list-style-type: none;
     margin: 0;
     padding: 0;
-    
-    li{
-        float: left;
-        width: 25%;
-        padding: 0;
-
-        button{
-            display: block;
-            width: 100%;
-            height: 50px;
-            margin: 0;
-            padding: 0 28px 0 10px;
-            color: #444;
-            border: 0;
-            text-align: left;
-            background-color: transparent;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            cursor: pointer;
-            letter-spacing: -.5px;
-            font-weight: 400;
-            font-family: NanumBarunGothic,Dotum,'돋움',sans-serif;
-        }
-    }
     }
 `
 const ListChoice = styled.div`
@@ -196,6 +209,7 @@ ul{
         font-weight: 400;
     }
     li{
+        cursor:pointer;
         float: left;font-size: .9333em;
         margin-right: 15px;
         text-decoration: none;
@@ -206,4 +220,34 @@ ul{
     }
 }
 `
+const TheaterLi=styled.li`
+background-color: ${(props) =>
+    props.cityName ===  props.city? "grey" : "white"};
+
+    float: left;
+    width: 25%;
+    padding: 0;
+    cursor:pointer;
+    button{
+        display: block;
+        width: 100%;
+        height: 50px;
+        margin: 0;
+        padding: 0 28px 0 10px;
+        color: #444;
+        border: 0;
+        text-align: left;
+        background-color: transparent;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        cursor: pointer;
+        letter-spacing: -.5px;
+        font-weight: 400;
+        font-family: NanumBarunGothic,Dotum,'돋움',sans-serif;
+    }
+
+`
+
+
 export default Theater;
