@@ -1,9 +1,10 @@
 /*
  23-03-11 마이페이지 css 구축(오병주)
 */
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import CommentMovie from './CommentMovie';
+import CommentReview from './CommentReview';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 const datas = [
@@ -17,9 +18,68 @@ const datas = [
 		price: "100",
 		poster: "img/ranking/5.jpg"
 	},
+	{
+		rid: "1",
+		mtitle: "타이타닉",
+		cinema: "서울-강남점 2관",
+		rdate: "2023.03.09",
+		watchdate: "2023-03-10 (금) 17:00",
+		seat: "A1, A2",
+		price: "100",
+		poster: "img/ranking/5.jpg"
+	},
+	{
+		rid: "1",
+		mtitle: "타이타닉",
+		cinema: "서울-강남점 2관",
+		rdate: "2023.03.09",
+		watchdate: "2023-03-10 (금) 17:00",
+		seat: "A1, A2",
+		price: "100",
+		poster: "img/ranking/5.jpg"
+	}
+]
+
+const datas2 = [
+	{
+		rid: "1",
+		mtitle: "타이타닉",
+		cinema: "서울-강남점 2관",
+		rdate: "2023.03.09",
+		watchdate: "2023-03-10 (금) 17:00",
+		seat: "A1, A2",
+		price: "100",
+		poster: "img/ranking/5.jpg"
+	}
+	
 ]
 
 const CommentList = () => {
+
+	// 메뉴 버튼 변수
+	const [possiblebutton, setpossiblebutton] = useState(true);
+	const [reviewbutton, setreviewbutton] = useState(false);
+
+	// 작성 가능 영화 버튼 누를 때
+	const clickpossible = useCallback(()=> {
+		
+		setpossiblebutton(true);
+		setreviewbutton(false);
+		console.log("작성버튼");
+    
+	}, [])
+
+	// 작성한 관람평 버튼 누를 때
+	const clickreview = useCallback(()=> {
+		
+		setpossiblebutton(false);
+		setreviewbutton(true);
+		console.log("관람평버튼");
+    
+	}, [])
+
+
+
 	return (
 		<Content>
 			<ContentTitle>
@@ -30,17 +90,17 @@ const CommentList = () => {
 				</ContentLeft>
 			</ContentTitle>
 			<ButtonList>
-				<Button>
+				<button className={"btn" + (possiblebutton ? " active" : "")} onClick={clickpossible}>
 					작성 가능 영화
-				</Button>
-				<Button>
+				</button>
+				<button className={"btn" + (reviewbutton ? " active" : "")} onClick={clickreview}>
 					작성한 관람평
-				</Button>
+				</button>
 			</ButtonList>
 
 			{/* 여기서 버튼에 따라 랜더링 다르게 넣기  하나는 작성가능, 하나는 작성한거*/}
 
-
+			{possiblebutton ?  
 			<ContentDetails>
 				<span className='total'>
 					총 {datas.length}개
@@ -53,7 +113,20 @@ const CommentList = () => {
 						작성 가능한 영화가 존재하지 않습니다.						
 				</NoContent>
 				}
-			</ContentDetails>
+			</ContentDetails>:
+			 <ContentDetails>
+				<span className='total'>
+					총 {datas2.length}개
+				</span>
+				{datas2.length !== 0 ? datas2.map((data, index) => <CommentReview data={data} key={index} />) : 
+				<NoContent>
+					<span className='None'>
+						<InfoCircleOutlined/>
+					</span>
+					작성한 관란평이 존재하지 않습니다.						
+				</NoContent>
+				}
+			</ContentDetails>}
 
 
 
@@ -106,16 +179,20 @@ const ButtonList = styled.div`
 	flex-wrap: nowrap;
 	width: 100%;
 	height: 60px;
-	background-color: rgb(250, 250, 250);
-`;
 
-const Button = styled.button`
-	flex: 1 1 0%;
-	border: 1px solid rgb(244, 244, 244);
-	font-weight: 500;
-	font-size: 16px;
-	line-height: 21px;
-	cursor: pointer;
+	.btn {
+		flex: 1 1 0%;
+		border: 1px solid rgb(240, 240, 240);
+		font-weight: 600;
+		font-size: 17px;
+		line-height: 21px;
+		background-color: rgb(248, 249, 251);
+		cursor: pointer;
+
+		&.active {
+      background-color: #fff;
+    }
+	}
 `;
 
 const ContentDetails = styled.div`
@@ -126,7 +203,7 @@ const ContentDetails = styled.div`
 
 	.total {
 		position: absolute;
-    top: -8%;
+    top: -32px;
     left: 0px;
     font-size: 14px;
     font-weight: 550;
