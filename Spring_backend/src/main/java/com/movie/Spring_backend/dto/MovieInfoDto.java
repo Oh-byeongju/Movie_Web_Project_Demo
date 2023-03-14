@@ -32,9 +32,15 @@ public class MovieInfoDto {
     private String area;
     private String title;
     private Long mid;
+
+    private Long tid;
+    private Integer time;
+    private String rating;
+    private String image;
     @Builder
     public MovieInfoDto(Long miid, Date miday, String mistarttime, String miendtime, MovieEntity movie, CinemaEntity cinema,
-                        Long cid,  String name,      String type,  Integer allcount,  Integer count ,String area,String title,Long mid) {
+                        Long cid,  String name,      String type,  Integer allcount,  Integer count ,String area,String title,Long mid,
+                        Long tid,Integer time,String rating,String image) {
         this.miid= miid;
         this.miday=miday;
         this.mistarttime=mistarttime;
@@ -49,6 +55,10 @@ public class MovieInfoDto {
         this.area=area;
         this.title=title;
         this.mid=mid;
+        this.tid=tid;
+        this.time=time;
+        this.rating=rating;
+        this.image=image;
     }
 
 

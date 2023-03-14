@@ -16,17 +16,19 @@ public class InfoMapper {
     String type;
     String area;
     String name;
+    Long tid;
     private List<Map<String, Object>> history;
     @Builder
     public InfoMapper(Long cid,
     Integer people,
-    String type, String area,String name,
+    String type, String area,String name,Long tid,
                       List<Map<String, Object>> history ) {
         this.cid=cid;
         this.people=people;
         this.type=type;
         this.area=area;
         this.name=name;
+        this.tid=tid;
         this.history=history;
     }
 

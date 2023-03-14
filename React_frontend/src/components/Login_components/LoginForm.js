@@ -108,7 +108,7 @@ const LoginForm = () => {
         console.log("reserve에서 왔니?");
         if (
           location.state.Day !== "" &&
-          location.state.mvie !== "" &&
+          location.state.movie !== "" &&
           location.state.schedule !== "" &&
           location.state.theater !== ""
         ) {

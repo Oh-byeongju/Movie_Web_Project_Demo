@@ -8,17 +8,28 @@ import { DAY_REQUEST, DAY_DATAS} from "../../reducer/TimeTable";
 const Time = ({tab})=>{
     moment.locale('ko')
     const dispatch = useDispatch();
-    const {area, city,movie, date,dayone} =useSelector((state)=>state.TimeTable)
+    const {area, theater,city,movie, date,dayone} =useSelector((state)=>state.TimeTable)
     let able = false;
     const week = [];
     const day =[];
+    let count= 0;
     const today = moment().format("YYYY-MM-DD")
     const tomorrow = moment().add('days',1).format("YYYY-MM-DD"); 
-    for(let i = 0 ; i < 14; i++){
+    for(let i = 0 ; i < 21; i++){
         week[i] = moment().add('days',i).format("YYYY-MM-DD"); 
         day[i]= moment().add('days',i).format('dddd');
     }
+    const [marginleft,setMarginLeft] = useState(0);
+    const onClickMarginLeft=(data)=>{
+        setMarginLeft(marginleft+data)
+    }
+    const [left,setLeft] = useState(940);
+    const onClickLeft=(data)=>{
+        setLeft(left+data)
+    }
     useEffect(()=>{
+        //영화 선택 페이지시
+        //영화 기준으로 날짜를 검색한다
         if(tab===1){
         if(movie.length!==0){
         dispatch({
@@ -31,6 +42,8 @@ const Time = ({tab})=>{
         })
     }}
     else if (tab===2){
+        //극장 선택 페이지시
+        //극장을 기준으로 날짜를 선택함
         if(city!==""){
             dispatch({
                 type:DAY_REQUEST,
@@ -42,20 +55,49 @@ const Time = ({tab})=>{
             })  
         }
     }
-    },[movie,city])
+    },[tab,movie,city])
+   useEffect(()=>{
+    if(theater.length===0){
+        if(date.length!==0){
+        console.log("1번 날짜")
+        dispatch({
+            type:DAY_DATAS,
+            data:date[0].miday,
+        })}}
+   },[theater,date])
     return(
         <TimeSchedule>
                     <Wrap>
-                        <button className="btn-pre" onClick={()=>{
-                        
-                        }}>
+                        <button className="btn-pre" 
+                        disabled={marginleft>=0?"disabled": ""}
+                        onClick={()=>{   
+                            onClickLeft(70)
+
+                        onClickMarginLeft(3.3)}
+                        }>
                             이전
                         </button>
                         <DateList>
+
+                            <DateMonth >
+                                                        {week.map((week,index)=>{
+                                                            if(week.substring(8,10)==="01"){
+                                                                count=index //17 한줄에 14
+                                                            }
+                        return(<>
+                         {week === today  ?<Month style={{left:'30px', zIndex:'1', opacity:'1'}}>{week.substring(0,7)}</Month>: ""}
+                          {week.substring(8,10)==="01"?<NextMonth style={{left:left, zIndex:'1', opacity:'1'}}>{week.substring(0,7)}</NextMonth>:""}
+  </>)  })}
+ 
+                          </DateMonth>
                             <DateArea>
-                                <Date>
+                            
+                                <Date style={{
+                                transform:`translate(${marginleft}%)`
+                                }}>
                                  {week.map((week,index)=>{
                                     able = false;
+                                    
                                     {date.map((day)=>
                                         {
                                             if(week===day.miday){
@@ -63,8 +105,11 @@ const Time = ({tab})=>{
                                             }
                                         })}
                                     return(
+                                        <div>
+                                                                               
                                       <Button
                                         onClick={()=>{
+                                            
                                             dispatch({
                                                 type:DAY_DATAS,
                                                 data:week
@@ -82,10 +127,11 @@ const Time = ({tab})=>{
                                         :
                                         week===tomorrow?
                                             <span className="day">내일</span>:
-
+                                        
                                         <span className="day">{day[index].substring(0,1)}</span>}
                                     </em>
                                       </Button>
+                                      </div>
                                     )
                                  })}
 
@@ -93,7 +139,12 @@ const Time = ({tab})=>{
                                 </Date>
                             </DateArea>
                         </DateList>
-                        <button className="btn-next">
+                        <button className="btn-next"
+                        disabled={marginleft===-19.8 ? "disabled":""}
+                        onClick={()=> {
+                            onClickLeft(-70)
+                            onClickMarginLeft(-3.3);}
+                        }>
                             이후
                         </button>
                     </Wrap>
@@ -103,16 +154,17 @@ const Time = ({tab})=>{
 
 const TimeSchedule = styled.div`
 width: 100%;
+padding-top:20px;
 `
 const Wrap = styled.div`
 height: 73px;
-    border: 1px solid #d8d9db;
-    border-right: 0;
-    border-left: 0;
-    position: relative;
+border: 1px solid #d8d9db;
+border-right: 0;
+border-left: 0;
+position: relative;
     .btn-pre{
         width: 30px;
-    height: 73px;
+    height: 80px;
     border: 0!important;
     background-color: transparent!important;
     float: left;
@@ -127,20 +179,26 @@ height: 73px;
 `
 const DateList = styled.div`
 width: 980px;
-    overflow: hidden;
-    float: left;
-    height: 72px;
+overflow: hidden;
+float: left;
+height: 72px;
+
+
 `
 const DateArea =styled.div`
-height: 73px;
-    float: left;
-    
+position: relative;
+width: 2100px;
+border: none;
+left: -70px;
+
 `
 const Date = styled.div`
 position: relative;
-    width: 2100px;
     border: none;
+    transition: 0.6s ease-out;
+
     left: 0px;
+    
     .blue{
         color:blue;
     }
@@ -193,4 +251,41 @@ width: 70px;
         line-height: 1.1;
     }
 `
+const DateMonth= styled.div`
+
+`
+const Month = styled.div`
+position: absolute;
+top: 0;
+font-size: .8667em;
+width: 70px;
+height: 28px;
+line-height: 28px;
+margin-top: -14px;
+border: 1px solid #d8d9db;
+border-radius: 15px;
+text-align: center;
+background-color: #fff;
+font-weight: 400;
+transition: 0.6s ease-out;
+
+
+`
+const NextMonth = styled.div`
+position: absolute;
+top: 0;
+font-size: .8667em;
+width: 70px;
+height: 28px;
+line-height: 28px;
+margin-top: -14px;
+border: 1px solid #d8d9db;
+border-radius: 15px;
+text-align: center;
+background-color: #fff;
+font-weight: 400;
+transition: 0.6s ease-out;
+
+`
+
 export default Time;

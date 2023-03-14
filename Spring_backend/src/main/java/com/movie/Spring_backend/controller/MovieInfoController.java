@@ -67,10 +67,9 @@ public class MovieInfoController {
     @GetMapping("/normal/theaterday")
     public List<MovieInfoDto> getTheaterDay(@RequestParam Long id) {
         //Long cid에 담겨있음
-        List<Long> mappedcid = cinemaService.findByTheaterday(id);
 
         //메핑된 cid로 movieinfo 검색
-        return movieInfoService.findByCinemaCidIn(mappedcid);
+        return movieInfoService.findByCinemaCidIn(id);
 
     }
     //영화+극장 날짜검색
@@ -153,6 +152,7 @@ public class MovieInfoController {
         return null;
     }
 
+    //영화 스케쥴 페이지에서 날짜 검색(movie: 영화 기준, theater: 극장 기준)
     @GetMapping("/normal/timeselect")
     public List<MovieInfoDto> timeselect(@RequestParam Long mid,@RequestParam Long tid,@RequestParam String message) {
 
@@ -161,8 +161,7 @@ public class MovieInfoController {
             return mappedmid;
         }
         else if(message.equals("theater")){
-            List<Long> mappedcid = cinemaService.findByTheaterday(tid);
-            List<MovieInfoDto> theater = movieInfoService.findByCinemaCidIn(mappedcid);
+            List<MovieInfoDto> theater = movieInfoService.findByCinemaCidIn(tid);
             return theater;
         }
         return null;

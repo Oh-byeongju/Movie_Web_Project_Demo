@@ -10,6 +10,7 @@ import {
 import {
   T_ALLMOVIE_REQUEST,
 } from "../../reducer/ticket";
+import EventBusyOutlinedIcon from '@mui/icons-material/EventBusyOutlined';
 import Time from "./Time";
 import MovieSchedule from "./MovieSchedule";
 import TheaterSchedule from "./TheaterSchedule";
@@ -257,7 +258,12 @@ const Scheduler = () =>{
                 
             </ul>
         </TheaterTab> : ""}
-                {tab===1? <MovieSchedule /> : <TheaterSchedule />}
+                {tab===1?  <MovieSchedule /> : <TheaterSchedule />}
+                {theater.length === 0 ?<NoTheater>
+                    <div>
+                    <EventBusyOutlinedIcon  style={{width: "120px", height:"120px"}}/><br />
+                    해당 지역에 상영 시간표가 없습니다.<br />
+다른지역을 선택해 주세요.</div> </NoTheater> : ""}
             </TimeTablePage>
         </TimeTableWrapper>
     )
@@ -563,5 +569,15 @@ background-color: ${(props) =>
         font-family: NanumBarunGothic,Dotum,'돋움',sans-serif;
     }
 
+`
+const NoTheater =styled.div`
+    width:100%;
+    height:200px;
+    div{
+        text-align:center;
+        width:30%;
+        position:relative;
+        left:390px;
+    }
 `
 export default Scheduler;

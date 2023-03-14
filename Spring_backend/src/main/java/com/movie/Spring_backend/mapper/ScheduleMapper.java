@@ -13,6 +13,10 @@ public class ScheduleMapper {
 
 
     String theater;
+    Long mid;
+    Integer time;
+    String rating;
+    String image;
     List<InfoMapper>infoMapper;
 
     @Builder
@@ -20,6 +24,18 @@ public class ScheduleMapper {
     List<InfoMapper>infoMapper)
     {
         this.theater=theater;
+        this.infoMapper=infoMapper;
+    }
+
+    @Builder
+    public ScheduleMapper( String theater,Long mid,Integer time, String rating,String image,
+                           List<InfoMapper>infoMapper)
+    {
+        this.theater=theater;
+        this.mid=mid;
+        this.time=time;
+        this.rating=rating;
+        this.image=image;
         this.infoMapper=infoMapper;
     }
 }
