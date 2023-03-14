@@ -68,17 +68,10 @@ public class CinemaService {
     @Transactional
     public List<MovieDto> findByTheater(Long id) {
         //외래키 검색을 위해 엔티티 매핑
-        TheaterEntity theaterEntity = TheaterEntity.builder().tid(id).build();
 
-        //위에서 매핑한 theater엔티티를 이용해서 cinema에서 cid 추출하기
-        List<CinemaEntity> datas = cinemaRepository.findByTheater(theaterEntity);
-        List<Long> mappedcid = new ArrayList<>();
-        //cid 추출
-        for(CinemaEntity cc :datas){
-            mappedcid.add(cc.getCid());
-        }
+
         //cid in을 이용해서 movieinfo에서 mid 추출
-        List <MovieInfoEntity> IndataM = movieInfoRepository.findByCinemaCidIn(mappedcid);
+        List <MovieInfoEntity> IndataM = movieInfoRepository.findByCinemaCidIn(id);
         List<Long> InmappedMid = new ArrayList<>();
         for(MovieInfoEntity mm :IndataM) {
             InmappedMid.add(mm.getMovie().getMid());

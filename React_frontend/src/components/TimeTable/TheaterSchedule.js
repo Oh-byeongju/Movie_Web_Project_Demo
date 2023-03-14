@@ -2,9 +2,12 @@ import styled from "styled-components";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SELECT_SC_THEATER_REQUEST } from "../../reducer/TimeTable";
-
+import * as ReserveLogin from "../Common_components/Function";
+import { useNavigate } from "react-router-dom";
 const TheaterSchedule = () =>{
-    const { dayone,city,theater} =useSelector((state)=>state.TimeTable)
+    const navigate = useNavigate();
+
+    const { area,dayone,city,theater} =useSelector((state)=>state.TimeTable)
     const dispatch = useDispatch();
   useEffect(()=>{
     dispatch({
@@ -39,7 +42,31 @@ const TheaterSchedule = () =>{
                             <tbody>
                             <tr>
                                 {info.history.map((movieinfo)=>
-                                 <td>
+                                 <td
+                                 onClick={()=>{
+                                    ReserveLogin.f1({
+                                        movie:{id:th.mid,
+                                        title:th.theater,
+                                        time:th.time,
+                                        imagepath:th.image,
+                                        rating:th.rating},
+                                        theater:{tid:info.tid,
+                                        tarea:area,
+                                        tname:info.area
+                                    },
+                                        Day:{miday:dayone},
+                                        schedule:{miid:movieinfo.miid,
+                                        cid: info.cid,
+                                        type: info.name,
+                                        name:info.type,
+                                        miday:dayone,
+                                        mistarttime:movieinfo.start,
+                                        miendtime:movieinfo.end
+                                    }
+                                    }, dispatch);
+                                    navigate("/reserve")
+    
+                                }}>
                                  <div>
                                      <a>
                                          <p>

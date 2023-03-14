@@ -1,8 +1,7 @@
 import { DAY_REQUEST, DAY_SUCCESS, MOVIE_FAILURE, MOVIE_REQUEST, MOVIE_SUCCESS, MOVIE_DATAS,SELECT_SC_THEATER_FAILURE, SELECT_SC_THEATER_REQUEST, SELECT_SC_THEATER_SUCCESS, DAY_DATAS } from "../reducer/TimeTable";
 import { call, all, takeLatest, fork, put, select } from "redux-saga/effects";
 import { http } from "../lib/http";
-
-
+import { useSelector } from "react-redux";
 async function selectTheaterApi(data) {
     return await http
       .get("/infomovie/normal/findtest", {params:{
@@ -54,6 +53,7 @@ async function selectTheaterApi(data) {
   
   function* selectDay(action) {
     const result = yield call(selectDayApi, action.data);
+  
     console.log('day datya')
     console.log(result);
     
@@ -62,10 +62,7 @@ async function selectTheaterApi(data) {
         type: DAY_SUCCESS,
         data:result.data,
       });
-      yield put({
-        type:DAY_DATAS,
-        data:result.data[0].miday
-      })
+  
     } else {
       yield put({
         type: DAY_REQUEST,
