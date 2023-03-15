@@ -11,7 +11,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Table(name = "member")     // 디비의 테이블명과 클래스 명이 다를 경우
 public class MemberEntity {
-    // 엔티티 내부는 전부 언더바를 제외하고 + 첫글자는 소문자로 해서 만들어야함
+
     @Id
     @Column(nullable = false, length = 20)
     private String uid;
@@ -31,22 +31,31 @@ public class MemberEntity {
     @Column(nullable = false, length = 50)
     private String uaddr;
 
+    @Column(nullable = false, length = 50)
+    private String uaddrsecond;
+
     @Column(nullable = false)
     private Date ubirth;
+
+    @Column(nullable = false)
+    private Date ujoindate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Authority uauthority;
 
     @Builder
-    public MemberEntity(String uid, String upw, String uname, String uemail, String utel, String uaddr, Date ubirth, Authority uauthority) {
+    public MemberEntity(String uid, String upw, String uname, String uemail, String utel,
+                        String uaddr, String uaddrsecond, Date ubirth, Date ujoindate, Authority uauthority) {
         this.uid = uid;
         this.upw = upw;
         this.uname = uname;
         this.uemail = uemail;
         this.utel = utel;
         this.uaddr = uaddr;
+        this.uaddrsecond = uaddrsecond;
         this.ubirth = ubirth;
+        this.ujoindate = ujoindate;
         this.uauthority = uauthority;
     }
 }

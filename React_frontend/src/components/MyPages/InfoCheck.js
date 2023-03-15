@@ -78,12 +78,14 @@ const InfoCheck = () => {
 						회원정보 수정
 					</h2>
 				</ContentLeft>
+				{pwcheck ? 
 				<CheckText>
 					<CheckStar style={{marginRight: "5px"}}>
 						*	
 					</CheckStar>
 					모든 정보는 필수입력입니다
 				</CheckText>
+				: null}
 			</ContentTitle>
 			{pwcheck ? <InfoModify/> :
 			<ContentDetails>

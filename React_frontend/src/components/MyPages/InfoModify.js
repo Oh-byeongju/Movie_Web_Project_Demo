@@ -1,31 +1,624 @@
 /*
  23-03-13 마이페이지 css 구축(오병주)
+ 23-03-15 회원정보 수정 구축(오병주)
 */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import Post from '../Login_components/Post';
+import { USER_UPDATE_REQUEST, USER_UPDATE_RESET } from '../../reducer/R_user_join';
+import { useLocation } from 'react-router-dom';
 
 const InfoModify = () => {
 
 	/*
-		지금 css만 완성했고 경고 뜨거나 하는거도 마무리 해야함
+		지금 로그아웃 안시켜도 괜찮은데 추후에 문제 생기면 우째할지 생각해보기
 
-		현재 비밀번호랑 새 비밀번호는 다르게
+		회원탈퇴하면 다 날리고 메인화면으로 보내기
 
-		새 비밀번호랑 새 비밀번호 확인은 같게 만들고
-		
-		나머지들 디비에서 불러와서 처음에 값 넣어주는거도 해야할듯
-
-		상세주소는 원래 뜨게 해놔야하긴함
 	*/ 
 
+	// 주소검색 팝업창 관리
+	const [popup, setpopup] = useState(false);
 
+	// 주소 관리를 위한 변수
+	const [M_address, setM_address] = useState('');
+
+	// 팝업창에서 주소 선택시 기본주소 Input에 주소 값 넣어주는 것
+	const InsertAddress = (value) => {
+		setM_address(value);
+
+		// 상세주소는 초기화
+		setInputs({
+			...inputs,
+			S_address: '',
+		});
+
+		setChecks({
+			...checks,	// 기존의 check 객체를 복사한 뒤
+			isM_Address: true, 	// 기본 주소 상태 변경
+			isS_Address: false // 상세 주소 상태 변경
+		});
+	}
+
+	// 사용자가 입력하는 input 관리
+	const [inputs, setInputs] = useState({
+		pw: '',
+		newpw: '',
+		newpwConfirm: '',
+    name: '',
+		email: '',
+		phone1: '',
+		phone2: '',
+		S_address: '',
+		year: '',
+		month: '',
+		day: '',
+  });
+
+	const {
+		pw,
+		newpw, 
+		newpwConfirm, 
+		name, 
+		email, 
+		phone1, 
+		phone2,
+		S_address, 
+		year, 
+		month, 
+		day } = inputs;	// 비구조화 할당을 통해 값 추출
+
+	// 오류메시지 상태저장
+	const [messages, setMessages] = useState({
+		newpwMessage: '',
+		newpwConfirmMessage: '',
+		nameMessage: '',
+		emailMessage: '',
+		phoneMessage: '',
+		birthMessage: ''
+	});
+
+	const {newpwMessage,
+				 newpwConfirmMessage, 
+				 nameMessage, 
+				 emailMessage, 
+				 phoneMessage,
+				 birthMessage} = messages; // 비구조화 할당을 통해 값 추출
+
+	// 유효성검사 상태저장
+	const [checks, setChecks] = useState({
+		isPw: false,
+		isNewPw: false,
+		isNewPwConfirm: false,
+		isName: true,
+		isEmail: true,
+		isPhone1: true,
+		isPhone2: true,
+		isM_Address: true,
+		isS_Address: true,
+		isYear: true,
+		isMonth: true,
+		isDay: true
+	});
+
+	const {
+				isPw,
+				isNewPw, 
+				isNewPwConfirm, 
+				isName, 
+				isEmail, 
+				isPhone1, 
+				isPhone2,
+				isM_Address,
+				isS_Address,
+				isYear,
+				isMonth,
+				isDay} = checks; // 비구조화 할당을 통해 값 추출
+
+	// Input 내용이 바뀔때 실행되는 함수
+	const ChangeInput = (e) => {
+    const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
+
+    setInputs({
+      ...inputs, // 기존의 input 객체를 복사한 뒤
+      [name]: value // name 키를 가진 값을 value 로 설정
+    });
+
+		// 모든 if문은 value 기준으로 해야 바로바로 체크됨 id, pw 이런 변수 사용 x
+
+		// 현재 비밀번호가 변경될때 실행
+		if (name === 'pw') {
+			// 현재 비밀번호와 새 비밀번호가 같은 경우
+			if (value === newpw) {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					newpwMessage: '현재 비밀번호와 다르게 입력해주십시오', // newpwMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isNewPw: false, 	// isNewPw 상태 변경
+					isPw: false,			// isPw 상태변경
+				});
+			}
+			// 비밀번호가 서로 다른경우
+			else {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					newpwMessage: '', // newpwMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isNewPw: true, 	// isNewPw 상태 변경
+					isPw: true			// isPw 상태변경
+				});
+			}
+		}
+
+		// 새 비밀번호가 변경될때 실행
+		if (name === 'newpw') {
+			const pwRegExp = /^(?=.*[a-zA-z])(?=.*[0-9]).{8,99}$/; 
+
+			// 새 비밀번호 확인이랑 새 비밀번호랑 같으면서 새 비밀번호 확인이 빈칸이 아닌경우
+			if (value === newpwConfirm && newpwConfirm !== '') {
+				if (!pwRegExp.test(value)) {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						newpwMessage: '영어와 숫자의 조합으로 8글자 이상 입력해주세요', // newpwMessage의 값 변경
+						newpwConfirmMessage: '' // newpwConfirmMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isNewPw: false,	 // isNewPw 상태 변경
+						isNewPwConfirm: true 	// isNewPwConfirm 상태 변경
+					});
+				}
+				else {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						newpwMessage: '', // newpwMessage의 값 변경
+						newpwConfirmMessage: '' // newpwConfirmMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isNewPw: true, 	// isNewPw 상태 변경
+						isNewPwConfirm: true 	// isNewPwConfirm 상태 변경
+					});
+				}
+			}
+
+			// 새 비밀번호 확인이랑 새 비밀번호랑 다르면서 새 비밀번호 확인이 빈칸이 아닌 경우
+			if (value !== newpwConfirm && newpwConfirm !== '') {
+				if (!pwRegExp.test(value)) {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						newpwMessage: '영어와 숫자의 조합으로 8글자 이상 입력해주세요', // newpwMessage의 값 변경
+						newpwConfirmMessage: '동일한 비밀번호를 입력해주세요' // newpwConfirmMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isNewPw: false,	 // isNewPw 상태 변경
+						isNewPwConfirm: false 	// isNewPwConfirm 상태 변경
+					});
+				}
+				else {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						newpwMessage: '', // newpwMessage의 값 변경
+						newpwConfirmMessage: '동일한 비밀번호를 입력해주세요' // newpwConfirmMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isNewPw: true, 	// isNewPw 상태 변경
+						isNewPwConfirm: false 	// isNewPwConfirm 상태 변경
+					});
+				}
+			}
+
+			// 새 비밀번호 확인이 빈칸인 경우
+			if (newpwConfirm === '') {
+				if (!pwRegExp.test(value)) {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						newpwMessage: '영어와 숫자의 조합으로 8글자 이상 입력해주세요', // newpwMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isNewPw: false,	 // isNewPw 상태 변경
+					});
+				}
+				else {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						newpwMessage: '', // newpwMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isNewPw: true, 	// isNewPw 상태 변경
+					});
+				}
+			}
+
+			// 현재 비밀번호와 새 비밀번호가 같으면서 새 비밀번호의 길이가 7자리를 초과할경우
+			if (value === pw && value.length > 7) {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					newpwMessage: '현재 비밀번호와 다르게 입력해주십시오', // newpwMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isNewPw: false, 	// isNewPw 상태 변경
+				});
+			}
+		}
+
+		// 새 비밀번호 확인이 변경될때 실행
+		if (name === 'newpwConfirm') {
+			if (value !== newpw) {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					newpwConfirmMessage: '동일한 비밀번호를 입력해주세요' // newpwConfirmMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isNewPwConfirm: false	 // isNewPwConfirm 상태 변경
+				});
+			}
+			else {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					newpwConfirmMessage: '' // newpwConfirmMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isNewPwConfirm: true 	// isNewConfirmPw 상태 변경
+				});
+			}
+		}
+
+		// 이름이 변경될때 실행
+		if (name === 'name') {
+			if (value.length < 2 || value.length > 5) {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					nameMessage: '이름의 형식이 올바르지 않습니다' // nameMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isName: false	 // isName 상태 변경
+				});
+			}
+			else {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					nameMessage: '' // nameMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isName: true 	// isName 상태 변경
+				});
+			}
+		}
+
+		// email이 변경될 때 실행
+		if (name === 'email') {
+			const emailRegExp = /^([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
+			if (!emailRegExp.test(value)) {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					emailMessage: '이메일 형식으로 입력해주세요' // emailMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isEmail: false	 // isEmail 상태 변경
+				});
+			}
+			else {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					emailMessage: '' // emailMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isEmail: true 	// isEmail 상태 변경
+				});
+			}
+		}
+
+		// 휴대폰 가운데 번호가 수정될 때 실행
+		if (name === 'phone1') {
+			// 특수문자등이 입력됐을경우 없애주기 위한 변수
+			const result = value.replace(/\D/g, '');
+
+			// 숫자만 입력되게 하기 위해서 setInputs를 다시해줌
+			setInputs({
+				...inputs, // 기존의 input 객체를 복사한 뒤
+				[name]: result // name 키를 가진 값을 value 로 설정
+			});
+
+			// 입력된 숫자 확인
+			if (result.length < 4) {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					phoneMessage: '휴대전화 번호를 확인해주세요' // phoneMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isPhone1: false	 // isPhone1 상태 변경
+				});
+			}
+			else {
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isPhone1: true	 // isPhone1 상태 변경
+				});
+				if (isPhone2) {		// 만약에 마지막 번호가 있을경우
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						phoneMessage: '' // phoneMessage의 값 변경
+					});
+				}
+			}
+		}
+
+		// 휴대폰 마지막 번호가 수정될 때 실행
+		if (name === 'phone2') {
+			// 특수문자등이 입력됐을경우 없애주기 위한 변수
+			const result = value.replace(/\D/g, '');
+
+			// 숫자만 입력되게 하기 위해서 setInputs를 다시해줌
+			setInputs({
+				...inputs, // 기존의 input 객체를 복사한 뒤
+				[name]: result // name 키를 가진 값을 value 로 설정
+			});
+
+			// 입력된 숫자 확인
+			if (result.length < 4) {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					phoneMessage: '휴대전화 번호를 확인해주세요' // phoneMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isPhone2: false	 // isPhone2 상태 변경
+				});
+			}
+			else {
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isPhone2: true	 // isPhone2 상태 변경
+				});
+				if (isPhone1) {		// 만약에 중간번호가 있을경우
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						phoneMessage: '' // phoneMessage의 값 변경
+					});
+				}
+			}
+		}
+
+		// 상세주소가 변경될때 실행
+		if (name === 'S_address') {
+			if (value.length < 1) {
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isS_Address: false	 // isS_Address 상태 변경
+				});
+			}
+			else {
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isS_Address: true 	// isS_Address 상태 변경
+				});
+			}
+		}
+
+		// 생일년도를 입력할 경우
+		if (name === 'year') {
+			// 특수문자등이 입력됐을경우 없애주기 위한 변수
+			const result = value.replace(/\D/g, '');
+
+			// 숫자만 입력되게 하기 위해서 setInputs를 다시해줌
+			setInputs({
+				...inputs, // 기존의 input 객체를 복사한 뒤
+				[name]: result // name 키를 가진 값을 value 로 설정
+			});
+
+			// 입력된 숫자 확인
+			if (result.length < 4) {
+				setMessages({
+					...messages, // 기존의 message 객체를 복사한 뒤
+					birthMessage: '생년월일을 확인해주세요' // birthMessage의 값 변경
+				});
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isYear: false	 // isYear 상태 변경
+				});
+			}
+			else {
+				if (result > 1940 && result < 2009) {
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isYear: true	 // isYear 상태 변경
+					});
+					if (isMonth && isDay) {	// 만약에 다른 생년월일이 채워졌을경우
+						setMessages({
+							...messages, // 기존의 message 객체를 복사한 뒤
+							birthMessage: '' // birthMessage의 값 변경
+						});
+					}
+				}
+				if (result > 2008) {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						birthMessage: '16세 이상부터 가입이 가능합니다' // birthMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isYear: false	 // isYear 상태 변경
+					});
+				}
+			}
+		}
+
+		// 생일달을 입력할 경우
+		if (name === 'month') {
+			// 특수문자등이 입력됐을경우 없애주기 위한 변수
+			const result = value.replace(/\D/g, '');
+
+			// 숫자만 입력되게 하기 위해서 setInputs를 다시해줌
+			setInputs({
+				...inputs, // 기존의 input 객체를 복사한 뒤
+				[name]: result // name 키를 가진 값을 value 로 설정
+			});
+			setMessages({
+				...messages, // 기존의 message 객체를 복사한 뒤
+				birthMessage: '생년월일을 확인해주세요' // birthMessage의 값 변경
+			});
+			setChecks({
+				...checks,	// 기존의 check 객체를 복사한 뒤
+				isMonth: false	 // isMonth 상태 변경
+			});
+
+			if (result < 13 && result > 0) {
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isMonth: true	 // isMonth 상태 변경
+				});
+				if (isYear && isDay) {		// 만약에 다른 생년월일이 채워졌을경우
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						birthMessage: '' // birthMessage의 값 변경
+					});
+				}
+			}
+		}
+
+		// 생일 Day를 입력할 경우
+		if (name === 'day') {
+			// 특수문자등이 입력됐을경우 없애주기 위한 변수
+			const result = value.replace(/\D/g, '');
+
+			// 숫자만 입력되게 하기 위해서 setInputs를 다시해줌
+			setInputs({
+				...inputs, // 기존의 input 객체를 복사한 뒤
+				[name]: result // name 키를 가진 값을 value 로 설정
+			});
+
+			setMessages({
+				...messages, // 기존의 message 객체를 복사한 뒤
+				birthMessage: '생년월일을 확인해주세요' // birthMessage의 값 변경
+			});
+			setChecks({
+				...checks,	// 기존의 check 객체를 복사한 뒤
+				isDay: false	 // isDay 상태 변경
+			});
+
+			if (result < 32 && result > 0) {
+				setChecks({
+					...checks,	// 기존의 check 객체를 복사한 뒤
+					isDay: true	 // isDay 상태 변경
+				});
+				if (isYear && isMonth) {		// 만약에 다른 생년월일이 채워졌을경우
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						birthMessage: '' // birthMessage의 값 변경
+					});
+				}
+			}
+		}
+	};
+
+	// 처음에 랜더링 될때 사용자의 정보를 채워주는 useEffect (의존성 배열을 비워둬서 한번만 실행됨)
+	useEffect(()=> {
+		setM_address(LOGIN_data.uaddr);
+		setInputs({
+			...inputs,
+			id: LOGIN_data.uid,
+			name: LOGIN_data.uname,
+			email: LOGIN_data.uemail,
+			phone1: LOGIN_data.utel.substring(3, 7),
+			phone2: LOGIN_data.utel.substring(7, 11),
+			S_address: LOGIN_data.uaddrsecond,
+			year: LOGIN_data.ubirth.substring(0, 4),
+			month: LOGIN_data.ubirth.substring(5, 7),
+			day: LOGIN_data.ubirth.substring(8, 10)
+		});
+	}, [])
+	
+	
+	const dispatch = useDispatch();
+	const location = useLocation();
 	// 로그인 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
+	// 회원정보 수정 상태를 확인하기 위한 리덕스 상태
+	const { UPDATE_status } = useSelector((state) => state.R_user_join);
+
+	// 회원정보 수정을 누를 시 실행되는 함수
+	const memberUpdate = () => {
+		var res_month = month;
+		var res_day = day;
+
+		// 생일의 달을 한자리로 입력했을경우 바꿔줌
+		if (month.length === 1) {
+			res_month = "0"+res_month;
+		}
+
+		// 생일의 일을 한자리로 입력했을경우 바꿔줌
+		if (day.length === 1) {
+			res_day = "0"+res_day;
+		}
+
+		const datas = {
+			uid: LOGIN_data.uid,
+			upw: pw,
+			uname: name,
+			uemail: email,
+			utel: "010"+phone1+phone2,
+			uaddr: M_address,
+			uaddrsecond: S_address,
+			ubirth: year+"-"+res_month+"-"+res_day,
+			newPw: newpw
+		};
+		
+		// 입력이 전부 되어있을 경우
+		if (isPw && isNewPw && isNewPwConfirm && isName && isEmail && isPhone1 && isPhone2 && isM_Address && isS_Address &&isYear && isMonth && isDay) {
+			dispatch({
+				type: USER_UPDATE_REQUEST,
+				data: datas
+			});
+		}
+		else {
+			alert("모든 정보입력 및 확인 해주십시오.");
+		}
+	};
+
+	// UPDATE_status의 상태가 변경 됐을 때 회원정보 수정 성공 여부를 알려주는 useEffect
+	useEffect(() => {
+		if (UPDATE_status === 204) {
+			alert('회원정보 수정이 완료 되었습니다.');
+			window.location.replace(location.pathname);
+		}
+
+		if (UPDATE_status === 400) {
+			alert('현재 비밀번호가 일치하지 않습니다.');
+			dispatch({
+				type: USER_UPDATE_RESET
+			});
+		}
+
+		if (UPDATE_status === 500) {
+			alert('예기치 못한 오류가 발생하였습니다.');
+			window.location.assign('/');
+		}
+
+	}, [UPDATE_status, location.pathname, dispatch])
+
 	return (
 		<>
-		{/* 여기 제일위에 로딩 넣기 joinform보삼 */}
+		{/* 여기 제일위에 로딩 넣기 joinform보삼 --> 근데 없어도 될수도..?*/}
 			<Layout>
 				<Form>
 					<InfoForm>
@@ -43,11 +636,6 @@ const InfoModify = () => {
 									<InputText type="text" value={LOGIN_data.uid} disabled={true} >
 									</InputText>
 								</InfoCenter>
-								<ErrorField>
-									<ErrorText>
-
-									</ErrorText>
-								</ErrorField>
 							</CenterField>
 						</InfoTextForm>
 						<InfoTextForm>
@@ -61,14 +649,9 @@ const InfoModify = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="password" placeholder='비밀번호를 입력해주세요' >
+									<InputText type="password" placeholder='비밀번호를 입력해주세요' maxLength={30} name="pw" onChange={ChangeInput} value={pw}>
 									</InputText>
 								</InfoCenter>
-								<ErrorField>
-									<ErrorText>
-
-									</ErrorText>
-								</ErrorField>
 							</CenterField>
 						</InfoTextForm>
 						<InfoTextForm>
@@ -82,12 +665,12 @@ const InfoModify = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="password" placeholder='새 비밀번호를 입력해주세요' >
+									<InputText type="password" placeholder='새 비밀번호를 입력해주세요'  maxLength={30} name="newpw" onChange={ChangeInput} value={newpw} >
 									</InputText>
 								</InfoCenter>
 								<ErrorField>
 									<ErrorText>
-
+										{newpwMessage}
 									</ErrorText>
 								</ErrorField>
 							</CenterField>
@@ -103,12 +686,12 @@ const InfoModify = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="password" placeholder='새 비밀번호를 한번 더 입력해주세요'>
+									<InputText type="password" placeholder='새 비밀번호를 한번 더 입력해주세요' maxLength={30} name="newpwConfirm" onChange={ChangeInput} value={newpwConfirm}>
 									</InputText>
 								</InfoCenter>
 								<ErrorField>
 									<ErrorText>
-	
+										{newpwConfirmMessage}
 									</ErrorText>
 								</ErrorField>
 							</CenterField>
@@ -124,12 +707,12 @@ const InfoModify = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="pass" placeholder='이름을 입력해 주세요' name="name" >
+									<InputText type="pass" placeholder='이름을 입력해 주세요' maxLength={5} name="name" onChange={ChangeInput} value={name}>
 									</InputText>	
 								</InfoCenter>
 								<ErrorField>
 									<ErrorText>
-
+										{nameMessage}
 									</ErrorText>
 								</ErrorField>
 							</CenterField>
@@ -145,12 +728,12 @@ const InfoModify = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="text" placeholder='이메일을 입력해주세요' name="email" >
+									<InputText type="text" placeholder='이메일을 입력해주세요' maxLength={49} name="email" onChange={ChangeInput} value={email}>
 									</InputText>
 								</InfoCenter>
 								<ErrorField>
 									<ErrorText>
-
+										{emailMessage}
 									</ErrorText>
 								</ErrorField>
 							</CenterField>
@@ -172,14 +755,14 @@ const InfoModify = () => {
 								<InfoCenter>
 									<InputTextDiv type='text' value='010' readOnly>
 									</InputTextDiv>
-									<InputTextDiv type='text' name='phone1' maxLength={4} >
+									<InputTextDiv type='text' name='phone1' maxLength={4} value={phone1} onChange={ChangeInput}>
 									</InputTextDiv>
-									<InputTextDiv	type='text' name='phone2' maxLength={4} >
+									<InputTextDiv	type='text' name='phone2' maxLength={4} value={phone2} onChange={ChangeInput}>
 									</InputTextDiv>
 								</InfoCenter>
 								<ErrorField>
 									<ErrorText>
-
+										{phoneMessage}
 									</ErrorText>
 								</ErrorField>
 							</CenterField>
@@ -194,15 +777,16 @@ const InfoModify = () => {
 								</CheckStar>
 							</InfoLeft>
 							<InfoCenter>
-								<InputText type="text" placeholder='주소를 검색해주세요' readOnly>
+								<InputText type="text" placeholder='주소를 검색해주세요' readOnly value={M_address}>
 								</InputText>
 							</InfoCenter>
-							<InfoCheck >
+							<InfoCheck onClick={()=>{setpopup(!popup);}}>
 								주소검색
 							</InfoCheck>
-							
+							{popup && <div><Post setAddress={setpopup} M_address={M_address} InsertAddress={InsertAddress} /></div>}
 						</InfoTextForm>
 						{/* 주소를 선택하면 상세주소 칸이 생김 */}
+						{M_address === '' ? null : 
 						<InfoTextForm>
 							<InfoLeft>
 								<label>
@@ -213,11 +797,11 @@ const InfoModify = () => {
 								</CheckStar>
 							</InfoLeft>
 							<InfoCenter>
-								<InputText type="text" placeholder='상세주소를 입력해주세요' >
+								<InputText type="text" placeholder='상세주소를 입력해주세요' maxLength={49} value={S_address} onChange={ChangeInput} name="S_address">
 								</InputText>
 							</InfoCenter>
 						</InfoTextForm>
-						
+						}
 						<InfoTextForm>
 							<InfoLeft>
 								<label>
@@ -229,16 +813,16 @@ const InfoModify = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputTextDiv type="text" placeholder='YYYY' maxLength={4} >
+									<InputTextDiv type="text" placeholder='YYYY' maxLength={4} name='year' value={year} onChange={ChangeInput}>
 									</InputTextDiv>
-									<InputTextDiv type="text" placeholder='MM' maxLength={2}>
+									<InputTextDiv type="text" placeholder='MM' maxLength={2} name='month' value={month} onChange={ChangeInput}>
 									</InputTextDiv>
-									<InputTextDiv type="text" placeholder='DD' maxLength={2} >
+									<InputTextDiv type="text" placeholder='DD' maxLength={2} name='day' value={day} onChange={ChangeInput}>
 									</InputTextDiv>
 								</InfoCenter>
 								<ErrorField>
 									<ErrorText>
-
+										{birthMessage}
 									</ErrorText>
 								</ErrorField>
 							</CenterField>
@@ -253,11 +837,11 @@ const InfoModify = () => {
 								회원탈퇴
 							</span>
 						</LeaveButton>
-						<JoinButton>
+						<UpdateButton onClick={memberUpdate}>
 							<span>
 								회원정보수정
 							</span>
-						</JoinButton>
+						</UpdateButton>
 					</ButtonForm>	
 					<Notice>
 						회원을 탈퇴할 경우 사용자가 대한 모든 기록이 삭제됩니다.
@@ -386,7 +970,7 @@ const ButtonForm = styled.div`
 	margin-top: 0px;
 `;
 
-const JoinButton = styled.button`
+const UpdateButton = styled.button`
 	display: block;
 	padding: 0px 10px;
 	text-align: center;

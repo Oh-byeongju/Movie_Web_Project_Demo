@@ -31,6 +31,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +64,11 @@ public class MemberService {
             throw new IdDuplicateException("중복 회원가입 방지", 1);
         }
 
+        // 현재 시간을 sql에 사용할 수 있게 매핑
+        Date nowDate = new Date();
+        SimpleDateFormat DateFormatYMD = new SimpleDateFormat("yyyy-MM-dd");
+        String day = DateFormatYMD.format(nowDate);
+
         // 파라미터로 전달받은 requestDto의 내용을 통해 MemberEntity 형의 member 생성
         MemberEntity member = MemberEntity.builder()
                 .uid(requestDto.getUid())
@@ -70,7 +77,9 @@ public class MemberService {
                 .uemail(requestDto.getUemail())
                 .utel(requestDto.getUtel())
                 .uaddr(requestDto.getUaddr())
+                .uaddrsecond(requestDto.getUaddrsecond())
                 .ubirth(requestDto.getUbirth())
+                .ujoindate(java.sql.Date.valueOf(day))
                 .uauthority(Authority.ROLE_USER).build();
 
         // 생성된 member(회원정보)를 DB에 저장
@@ -82,7 +91,7 @@ public class MemberService {
     public MemberDto login(MemberDto requestDto, HttpServletResponse response) {
 
         // 로그인 한 유저의 정보 추출
-        MemberEntity Data = memberRepository.findById(requestDto.getUid())
+        MemberEntity Member = memberRepository.findById(requestDto.getUid())
                 .orElseThrow(() -> new MemberNotFoundException("회원 정보가 존재하지 않습니다."));
 
         // Login ID/PW 를 기반으로 AuthenticationToken 생성
@@ -168,8 +177,14 @@ public class MemberService {
 
         // 로그인한 사용자의 아이디와 이름을 리턴
         return MemberDto.builder()
-                .uid(Data.getUid())
-                .uname(Data.getUname()).build();
+                .uid(Member.getUid())
+                .uname(Member.getUname())
+                .uemail(Member.getUemail())
+                .utel(Member.getUtel())
+                .uaddr(Member.getUaddr())
+                .uaddrsecond(Member.getUaddrsecond())
+                .ubirth(Member.getUbirth())
+                .ujoindate(Member.getUjoindate()).build();
     }
 
     // 로그인 상태확인 메소드
@@ -182,13 +197,19 @@ public class MemberService {
         jwtValidCheck.JwtCheck(request, "ATK");
 
         // SecurityContext 에서 추출한 유저정보를 이용하여 Member 검색
-        MemberEntity Data = memberRepository.findById(currentMemberId)
+        MemberEntity Member = memberRepository.findById(currentMemberId)
                 .orElseThrow(() -> new MemberNotFoundException(currentMemberId));
 
         // 로그인 정보가 있을경우 아이디와 이름을 리턴
         return MemberDto.builder()
-                .uid(Data.getUid())
-                .uname(Data.getUname()).build();
+                .uid(Member.getUid())
+                .uname(Member.getUname())
+                .uemail(Member.getUemail())
+                .utel(Member.getUtel())
+                .uaddr(Member.getUaddr())
+                .uaddrsecond(Member.getUaddrsecond())
+                .ubirth(Member.getUbirth())
+                .ujoindate(Member.getUjoindate()).build();
     }
 
     // 토큰 재발급 메소드
@@ -334,6 +355,34 @@ public class MemberService {
         if (!passwordEncoder.matches(Pw, member.getUpw())) {
             throw new PwNotCorrectException("비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    // 회원정보 수정 메소드
+    @Transactional
+    public void MemberUpdate(HttpServletRequest request, MemberDto requestDto) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // 프론트단에서 전달받은 ID를 이용하여 사용자 검색
+        MemberEntity member = memberRepository.findById(requestDto.getUid())
+                .orElseThrow(() -> new MemberNotFoundException("회원 정보가 존재하지 않습니다."));
+
+        // 프론트단에서 입력한 현재 비밀번호와 DB에 저장되어있는 비밀번호를 비교
+        if (!passwordEncoder.matches(requestDto.getUpw(), member.getUpw())) {
+            throw new PwNotCorrectException("비밀번호가 일치하지 않습니다.");
+        }
+
+        // 전달받은 새로운 회원정보를 통해 DB 업데이트(프로젝트에 빌더 패턴을 사용해서 JPQL을 사용)
+        // 매개변수로 id, pw, 이름, 이메일, 전화번호, 주소, 생일을 전달
+        memberRepository.MemberInfoUpdate(
+                requestDto.getUid(),
+                passwordEncoder.encode(requestDto.getNewPw()),
+                requestDto.getUname(),
+                requestDto.getUemail(),
+                requestDto.getUtel(),
+                requestDto.getUaddr(),
+                requestDto.getUaddrsecond(),
+                requestDto.getUbirth());
     }
 
     // id와 pw를 파라미터로 전달 받아 UsernamePasswordAuthenticationToken 으로 반환하여 리턴해주는 메소드

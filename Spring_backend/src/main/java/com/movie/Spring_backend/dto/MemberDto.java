@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import javax.persistence.Column;
 import java.sql.Date;
 
 // 빌더패턴을 사용한 Dto 파일
@@ -19,18 +20,25 @@ public class MemberDto {
     private String uemail;
     private String utel;
     private String uaddr;
+    private String uaddrsecond;
     private Date ubirth;
+    private Date ujoindate;
     private Authority uauthority;
+    private String newPw;
 
     @Builder
-    public MemberDto(String uid, String upw, String uname, String uemail, String utel, String uaddr, Date ubirth, Authority uauthority) {
+    public MemberDto(String uid, String upw, String uname, String uemail, String utel,
+                     String uaddr, String uaddrsecond, Date ubirth, Date ujoindate, Authority uauthority, String newPw) {
         this.uid = uid;
         this.upw = upw;
         this.uname = uname;
         this.uemail = uemail;
         this.utel = utel;
         this.uaddr = uaddr;
+        this.uaddrsecond = uaddrsecond;
         this.ubirth = ubirth;
+        this.ujoindate = ujoindate;
         this.uauthority = uauthority;
+        this.newPw = newPw;
     }
 }

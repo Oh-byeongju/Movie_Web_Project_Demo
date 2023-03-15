@@ -24,7 +24,9 @@ CREATE TABLE `member` (
 	`uemail` varchar(50) NOT NULL,
 	`utel`	varchar(15)	NOT NULL,
 	`uaddr`	varchar(50)	NOT NULL,
+	`uaddrsecond` VARCHAR(50) NOT NULL,
 	`ubirth`	date	NOT NULL,
+	`ujoindate` DATE NOT NULL,
 	`uauthority` VARCHAR(20) NOT NULL,
 	PRIMARY KEY (`uid`)
 );
@@ -1057,13 +1059,13 @@ END $$
 DELIMITER $$
 CREATE PROCEDURE clone_member()
 BEGIN
-   DECLARE i INT DEFAULT 1; -- i변수 선언, defalt값 설정
-   DECLARE val VARCHAR(20); -- 임시로 사용할 변수 선언
-   WHILE (i <= 1120) DO -- for문 작성(i가 1120이 될 때까지 반복)
-   	SET val = CONCAT("temp", i); -- temp와 i를 더해서 임시 아이디를 만듦
+   DECLARE i INT DEFAULT 1; 
+   DECLARE val VARCHAR(20);
+   WHILE (i <= 1120) DO 
+   	SET val = CONCAT("temp", i);
    	-- 멤버를 추가(비밀번호는 temp123456임)
-      INSERT INTO `member` VALUE(val, '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '임시사용자', 'anonymous@naver.com', '01012341234', '부산 부산진구 가야공원로 1 303호', '1998-01-15', 'ROLE_USER');
-      SET i = i + 1; -- i값에 1더해주고 WHILE문 처음으로 이동
+      INSERT INTO `member` VALUE(val, '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '임시사용자', 'anonymous@naver.com', '01012345678', '부산 부산진구 가야공원로 1', '303호', '1998-01-15', DATE_SUB(NOW(), INTERVAL 3 DAY), 'ROLE_USER');
+      SET i = i + 1;
     END WHILE;
 END $$
 
@@ -2069,7 +2071,6 @@ UPDATE movie_member
 SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
 WHERE MID = 4 AND uid = 'temp17';
 
-
 /*
 select *
 from member;
@@ -2137,7 +2138,7 @@ WHERE miid IN (SELECT miid
 SELECT COUNT(*)
 FROM movie_reservation
 WHERE miid IN (SELECT miid
-					FROM movie_information
+					FROM movie_informationmovie
 					WHERE MID = 4);
 					
 */
