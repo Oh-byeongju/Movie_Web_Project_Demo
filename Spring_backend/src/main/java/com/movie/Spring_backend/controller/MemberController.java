@@ -65,4 +65,11 @@ public class MemberController {
         memberService.CheckPw(request, requestDto.getUpw());
         return ResponseEntity.noContent().build();
     }
+
+    // 회원정보 수정 페이지 회원정보 수정 메소드
+    @PostMapping("/auth/memberUpdate")
+    public ResponseEntity<String> memberUpdate(HttpServletRequest request, @RequestBody MemberDto requestDto) {
+        memberService.MemberUpdate(request, requestDto);
+        return ResponseEntity.noContent().build();
+    }
 }

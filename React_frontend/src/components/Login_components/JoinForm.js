@@ -24,9 +24,17 @@ const JoinForm = () => {
 	// 팝업창에서 주소 선택시 기본주소 Input에 주소 값 넣어주는 것
 	const InsertAddress = (value) => {
 		setM_address(value);
+
+		// 상세주소는 초기화
+		setInputs({
+			...inputs,
+			S_address: '',
+		});
+
 		setChecks({
 			...checks,	// 기존의 check 객체를 복사한 뒤
 			isM_Address: true, 	// 기본 주소 상태 변경
+			isS_Address: false // 상세 주소 상태 변경
 		});
 	}
 
@@ -117,7 +125,7 @@ const JoinForm = () => {
 				 isMonth,
 				 isDay} = checks; // 비구조화 할당을 통해 값 추출
 
-	// 유효성 검사하는 함수 
+	// Input 내용이 바뀔때 실행되는 함수
 	const ChangeInput = (e) => {
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
 
@@ -267,7 +275,7 @@ const JoinForm = () => {
 
 		// 이름이 변경될때 실행
 		if (name === 'name') {
-			if (value.length < 2 || value.length > 4) {
+			if (value.length < 2 || value.length > 5) {
 				setMessages({
 					...messages, // 기존의 message 객체를 복사한 뒤
 					nameMessage: '이름의 형식이 올바르지 않습니다' // nameMessage의 값 변경
@@ -426,7 +434,7 @@ const JoinForm = () => {
 				});
 			}
 			else {
-				if (result > 1940) {
+				if (result > 1940 && result < 2009) {
 					setChecks({
 						...checks,	// 기존의 check 객체를 복사한 뒤
 						isYear: true	 // isYear 상태 변경
@@ -437,6 +445,16 @@ const JoinForm = () => {
 							birthMessage: '' // birthMessage의 값 변경
 						});
 					}
+				}
+				if (result > 2008) {
+					setMessages({
+						...messages, // 기존의 message 객체를 복사한 뒤
+						birthMessage: '16세 이상부터 가입이 가능합니다' // birthMessage의 값 변경
+					});
+					setChecks({
+						...checks,	// 기존의 check 객체를 복사한 뒤
+						isYear: false	 // isYear 상태 변경
+					});
 				}
 			}
 		}
@@ -589,10 +607,12 @@ const JoinForm = () => {
 			uname: name,
 			uemail: email,
 			utel: "010"+phone1+phone2,
-			uaddr: M_address + " " + S_address,
+			uaddr: M_address,
+			uaddrsecond: S_address,
 			ubirth: year+"-"+res_month+"-"+res_day,
 		};
 		
+		// 모든칸에 입력이 다 되어있을 경우
 		if (isId && isPw && isPwConfirm && isName && isEmail && isPhone1 && isPhone2 && isM_Address && isS_Address && isYear && isMonth && isDay && check1 && check2) {
 			dispatch({
 				type: USER_JOIN_REQUEST,
@@ -600,7 +620,7 @@ const JoinForm = () => {
 			});
 		}
 		else {
-			alert("모든 정보 입력 및 약관에 동의해주세요.");
+			alert("모든 정보 입력 및 확인 그리고 약관에 동의해주세요.");
 		}
 	};
 
@@ -643,7 +663,7 @@ const JoinForm = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="text" placeholder='아이디를 입력해주세요' name="id" onChange={ChangeInput} value={id} disabled={IDText}>
+									<InputText type="text" placeholder='아이디를 입력해주세요' maxLength={12} name="id" onChange={ChangeInput} value={id} disabled={IDText}>
 									</InputText>
 								</InfoCenter>
 								<ErrorField>
@@ -667,7 +687,7 @@ const JoinForm = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="password" placeholder='비밀번호를 입력해주세요' name="pw" onChange={ChangeInput} value={pw}>
+									<InputText type="password" placeholder='비밀번호를 입력해주세요' maxLength={30} name="pw" onChange={ChangeInput} value={pw}>
 									</InputText>
 								</InfoCenter>
 								<ErrorField>
@@ -688,7 +708,7 @@ const JoinForm = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="password" placeholder='비밀번호를 한번 더 입력해주세요' name="pwConfirm" onChange={ChangeInput} value={pwConfirm}>
+									<InputText type="password" placeholder='비밀번호를 한번 더 입력해주세요' maxLength={30} name="pwConfirm" onChange={ChangeInput} value={pwConfirm}>
 									</InputText>
 								</InfoCenter>
 								<ErrorField>
@@ -709,7 +729,7 @@ const JoinForm = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="pass" placeholder='이름을 입력해 주세요' name="name" onChange={ChangeInput} value={name}>
+									<InputText type="pass" placeholder='이름을 입력해 주세요' maxLength={5} name="name" onChange={ChangeInput} value={name}>
 									</InputText>	
 								</InfoCenter>
 								<ErrorField>
@@ -730,7 +750,7 @@ const JoinForm = () => {
 							</InfoLeft>
 							<CenterField>
 								<InfoCenter>
-									<InputText type="text" placeholder='이메일을 입력해주세요' name="email" onChange={ChangeInput} value={email}>
+									<InputText type="text" placeholder='이메일을 입력해주세요' maxLength={49} name="email" onChange={ChangeInput} value={email}>
 									</InputText>
 								</InfoCenter>
 								<ErrorField>
@@ -799,7 +819,7 @@ const JoinForm = () => {
 								</CheckStar>
 							</InfoLeft>
 							<InfoCenter>
-								<InputText type="text" placeholder='상세주소를 입력해주세요' value={S_address} onChange={ChangeInput} name="S_address">
+								<InputText type="text" placeholder='상세주소를 입력해주세요' maxLength={49} value={S_address} onChange={ChangeInput} name="S_address">
 								</InputText>
 							</InfoCenter>
 						</InfoTextForm>

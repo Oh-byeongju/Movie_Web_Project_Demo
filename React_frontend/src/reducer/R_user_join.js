@@ -10,6 +10,10 @@ export const USER_ID_RESET = "USER_ID_RESET";
 export const USER_JOIN_REQUEST = "USER_JOIN_REQUEST";
 export const USER_JOIN_SUCCESS = "USER_JOIN_SUCCESS";
 export const USER_JOIN_FAILURE = "USER_JOIN_FAILURE";
+export const USER_UPDATE_REQUEST = "USER_UPDATE_REQUEST";
+export const USER_UPDATE_SUCCESS = "USER_UPDATE_SUCCESS";
+export const USER_UPDATE_FAILURE = "USER_UPDATE_FAILURE";
+export const USER_UPDATE_RESET = "USER_UPDATE_RESET";
 
 const initalState = {
   ID_loading: false,
@@ -19,7 +23,11 @@ const initalState = {
   JOIN_loading: false,
   JOIN_done: false,
   JOIN_error: null,
-  JOIN_status: ''
+  JOIN_status: '',
+  UPDATE_loading: false,
+  UPDATE_done: false,
+  UPDATE_error: null,
+  UPDATE_status: ''
 };
 
 const R_user_join = (state = initalState, action) => {
@@ -79,6 +87,38 @@ const R_user_join = (state = initalState, action) => {
         JOIN_done: false,
         JOIN_error: action.error,
         JOIN_status: action.data
+      };
+    // 회원정보 수정 케이스들
+    case USER_UPDATE_REQUEST:
+      return {
+        ...state,
+        UPDATE_loading: true,
+        UPDATE_done: false,
+        UPDATE_error: null,
+      };
+    case USER_UPDATE_SUCCESS:
+      return {
+        ...state,
+        UPDATE_loading: false,
+        UPDATE_done: true,
+        UPDATE_error: null,
+        UPDATE_status: action.data
+      };
+    case USER_UPDATE_FAILURE:
+      return {
+        ...state,
+        UPDATE_loading: false,
+        UPDATE_done: false,
+        UPDATE_error: action.error,
+        UPDATE_status: action.data
+      };
+    case USER_UPDATE_RESET:
+      return {
+        ...state,
+        UPDATE_loading: false,
+        UPDATE_done: false,
+        UPDATE_error: null,
+        UPDATE_status: ''
       };
     default:
       return state;

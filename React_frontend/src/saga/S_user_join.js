@@ -11,6 +11,9 @@ import {
   USER_JOIN_REQUEST,
   USER_JOIN_SUCCESS,
   USER_JOIN_FAILURE,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAILURE,
 } from "../reducer/R_user_join";
 import { http } from "../lib/http";
 
@@ -74,6 +77,34 @@ async function SignUp(data) {
     });
 }
 
+// 회원정보 수정 함수
+function* UserUpdate(action) {
+  const result = yield call(Update, action.data);
+  if (result.status === 204) {
+    yield put({
+      type: USER_UPDATE_SUCCESS,
+      data: result.status,
+    });
+  } else {
+    yield put({
+      type: USER_UPDATE_FAILURE,
+      data: result.status,
+    });
+  }
+}
+
+// 디비에 회원정보를 수정하고 저장
+async function Update(data) {
+  return await http
+    .post("/member/auth/memberUpdate", data)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
 function* USER_ID() {
   yield takeLatest(USER_ID_REQUEST, IDcheck);
 }
@@ -82,6 +113,10 @@ function* USER_JOIN() {
   yield takeLatest(USER_JOIN_REQUEST, UserSignUp);
 }
 
+function* USER_UPDATE() {
+  yield takeLatest(USER_UPDATE_REQUEST, UserUpdate);
+}
+
 export default function* S_user_join() {
-  yield all([fork(USER_ID), fork(USER_JOIN)]);
+  yield all([fork(USER_ID), fork(USER_JOIN), fork(USER_UPDATE)]);
 }
