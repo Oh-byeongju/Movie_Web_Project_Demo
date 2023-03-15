@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long> {
 
-    @Query("SELECT mi From MovieInfoEntity as mi Group by mi.miday Order by mi.miday ASC")
+    @Query("SELECT mi From MovieInfoEntity as mi where mi.mistarttime >= function('addtime', now(), '0:30:00')  Group by mi.miday Order by mi.miday ASC")
     List<MovieInfoEntity> findAll();
 
     public List<MovieInfoEntity> findByMovie(MovieEntity id);
@@ -30,14 +30,11 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
             "(select cid from c where tid= (:tid)) ORDER BY mi.miday ASC")
     public List<MovieInfoEntity> findByCinemaCidIn(@Param("tid") Long tid);
 
-    //notin able을 위해
-    @Query("SELECT mi From MovieInfoEntity as mi, CinemaEntity as c WHERE mi.cinema.cid Not IN (:cid)")
-    public List<MovieInfoEntity> findByCinemaCidNotIn(@Param("cid") List<Long> cid);
-
     //극장 영화로 day 검색
     public List<MovieInfoEntity> findByCinemaCidInAndMovieMid(List<Long> cid, Long mid);
 
     //miday로 영화or극장 검색하려고 만듬
+    
     public List<MovieInfoEntity> findByMiday(Date miday);
 
     //mid를 구해야함
@@ -47,7 +44,7 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
 
     @Query("Select mi From MovieInfoEntity as mi JOIN FETCH mi.cinema " +
             "JOIN FETCH mi.movie " +
-            "Where mi.miday = (:miday) AND " +
+            "Where mi.miday = (:miday) AND mi.mistarttime >= function('addtime', now(), '0:30:00') and " +
             "mi.movie.mid= (:mid) AND "+
             "mi.cinema.cid IN (:cid) "+
             "ORDER BY mistarttime asc"
@@ -55,19 +52,6 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
     @EntityGraph(attributePaths = {"cinema.theater"})
     //페치조인을 해서 영화와 극장 정보까지 함께 보내기
     public List<MovieInfoEntity> findBySchedule(@Param("miday")Date miday,@Param("mid") Long mid, @Param("cid")List<Long> cid);
-
-    /*
-    @Query(value = "SELECT a.miid, COALESCE(b.CNT,0) AS cnt " +
-            "FROM Movie_Information AS a " +
-            "LEFT OUTER JOIN( " +
-            "SELECT miid, COUNT(*) AS CNT " +
-            "FROM Movie_infoseat  " +
-            "GROUP BY miid " +
-            ") AS b " +
-            "ON a.miid = b.miid " +
-            "WHERE a.miid IN (1,2,3,4) " +
-            "ORDER BY a.miid ",nativeQuery = true)
-    public List<MovieInfoEntity> findCount();*/
 
     // 특정 Movie id를 가지고 현재 예매가 가능한 영화 정보를 들고오는 메소드
     @Query(value = "SELECT mi FROM MovieInfoEntity as mi WHERE mi.movie = :movie AND " +
