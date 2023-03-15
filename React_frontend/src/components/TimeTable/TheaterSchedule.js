@@ -27,8 +27,13 @@ const TheaterSchedule = () =>{
                         <TheaterList>
     
                 <TheaterArea>
-                    <a>{th.theater}</a>
+                <Img src={`img/age/${th.rating}.png`} alt="영화" />
+                 <a>{th.theater}</a>
+                 <TheaterTime>
+                    <a>상영중<span>/상영시간 {th.time}분</span></a>
+                </TheaterTime>
                 </TheaterArea>
+               
                 {th.infoMapper.map((info)=>
                 <CinemaTypeWrapper>
                     <CinemaType>
@@ -205,7 +210,8 @@ const TheaterSchedule = () =>{
         table-layout:auto;
         td{
             width:99px;
-           
+            cursor:pointer;
+
             text-align:center;
             div{
                 width:100%;
@@ -216,4 +222,16 @@ const TheaterSchedule = () =>{
         }
     }
     `
+    const Img = styled.img`
+  width: 23px;
+  height: 20px;
+  position: relative;
+  top: 3px;
+  padding-right: 5px;
+`;
+const TheaterTime =styled.div`
+position:absolute;
+top:0;
+right:0;
+`
 export default TheaterSchedule;

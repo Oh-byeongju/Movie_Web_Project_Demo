@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-//선언하지 않아도, 디바이스 혹은 locale의 시간을 불러온다.
-//캘린더를 표시해주는 컴포넌트 2023-02-13 수정완(강경목)
-//캘린더 able, disable
-import "moment/locale/ko";
 import {
   ALLDAY_REQUEST,
   SELECT_DAY_TO_MOVIE_REQUEST,
@@ -18,7 +14,9 @@ import {
 import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 
+
 const AllDayList = () => {
+
   const {
     allDay,
     selectDay,
@@ -66,27 +64,7 @@ const AllDayList = () => {
         {moment.map((moment, index) => {
           return (
             <div key={index}>
-              <YearMonthList>
-                <span className={cn("Year")}>
-                  <Year
-                    id="Year"
-                    format={"YYYY"}
-                    ticking={false}
-                    timezone={"KR/Pacific"}
-                  >
-                    {year}
-                  </Year>
-                </span>
-                <span className={cn("Month")}>
-                  <Month
-                    format={"MMMM"}
-                    ticking={false}
-                    timezone={"KR/Pacific"}
-                  >
-                    {moment}
-                  </Month>
-                </span>
-              </YearMonthList>
+              
               <DaylistSector>
                 {allDay.map((calendar, index) => {
                   let disableClassName = "";
@@ -214,6 +192,25 @@ const AllDayList = () => {
                             }
                           }}
                         >
+                          <YearMonthList>
+                          <span className={cn("Year")}>
+                            <Year
+                    id="Year"
+                    format={"YYYY"}
+                    ticking={false}
+                    timezone={"KR/Pacific"}
+                  >
+                  </Year>
+                  </span>
+                 <span className={cn("Month")}>
+                   <Month
+                    format={"MMMM"}
+                    ticking={false}
+                    timezone={"KR/Pacific"}
+                  >
+                  </Month>
+                </span>
+              </YearMonthList>
                           <Week
                             className={cn(
                               "weak",

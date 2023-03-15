@@ -67,8 +67,6 @@ const MovieSchedule = () =>{
                                 }
                                 }, dispatch);
                                 navigate("/reserve")
-
-                        
                              }}>
                              <div>
                                  <a>
@@ -207,7 +205,7 @@ table{
     table-layout:auto;
     td{
         width:99px;
-       
+       cursor:pointer;
         text-align:center;
         div{
             width:100%;

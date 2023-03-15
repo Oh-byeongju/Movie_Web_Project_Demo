@@ -303,7 +303,7 @@ float: left;
     
        }
         li{
-            cursor:poniter;
+            cursor:pointer;
             display: block;
     text-align: center;
     width: 100%;
