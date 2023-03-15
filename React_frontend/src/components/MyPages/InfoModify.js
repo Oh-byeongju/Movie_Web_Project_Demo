@@ -591,7 +591,7 @@ const InfoModify = () => {
 			});
 		}
 		else {
-			alert("모든 정보입력 및 확인 해주십시오.");
+			alert("모든 정보입력 및 확인을 해주십시오.");
 		}
 	};
 
@@ -615,6 +615,8 @@ const InfoModify = () => {
 		}
 
 	}, [UPDATE_status, location.pathname, dispatch])
+
+	// 내일 회원탈퇴하고 연쇄삭제 시키기
 
 	return (
 		<>

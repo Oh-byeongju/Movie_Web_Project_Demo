@@ -384,6 +384,8 @@ public class MemberService {
                 requestDto.getUaddrsecond(),
                 requestDto.getUbirth());
     }
+    
+    // 회원탈퇴 시키고 할때 쿠키도 같이 없애줘야함
 
     // id와 pw를 파라미터로 전달 받아 UsernamePasswordAuthenticationToken 으로 반환하여 리턴해주는 메소드
     public UsernamePasswordAuthenticationToken toAuthentication(String uid, String upw) {
