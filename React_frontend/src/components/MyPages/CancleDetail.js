@@ -35,7 +35,7 @@ const CancleDetail = () => {
 			</ContentTitle>
 			<ContentDetailTop>
 				<h3>
-					취소번호 
+					예매번호 
 					<span>
 						1
 					</span>

@@ -14,6 +14,9 @@ export const USER_UPDATE_REQUEST = "USER_UPDATE_REQUEST";
 export const USER_UPDATE_SUCCESS = "USER_UPDATE_SUCCESS";
 export const USER_UPDATE_FAILURE = "USER_UPDATE_FAILURE";
 export const USER_UPDATE_RESET = "USER_UPDATE_RESET";
+export const USER_DROP_REQUEST = "USER_DROP_REQUEST";
+export const USER_DROP_SUCCESS = "USER_DROP_SUCCESS";
+export const USER_DROP_FAILURE = "USER_DROP_FAILURE";
 
 const initalState = {
   ID_loading: false,
@@ -27,7 +30,11 @@ const initalState = {
   UPDATE_loading: false,
   UPDATE_done: false,
   UPDATE_error: null,
-  UPDATE_status: ''
+  UPDATE_status: '',
+  DROP_loading: false,
+  DROP_done: false,
+  DROP_error: null,
+  DROP_status: ''
 };
 
 const R_user_join = (state = initalState, action) => {
@@ -119,6 +126,30 @@ const R_user_join = (state = initalState, action) => {
         UPDATE_done: false,
         UPDATE_error: null,
         UPDATE_status: ''
+      };
+    // 회원탈퇴 케이스들
+    case USER_DROP_REQUEST:
+      return {
+        ...state,
+        DROP_loading: true,
+        DROP_done: false,
+        DROP_error: null,
+      };
+    case USER_DROP_SUCCESS:
+      return {
+        ...state,
+        DROP_loading: false,
+        DROP_done: true,
+        DROP_error: null,
+        DROP_status: action.data
+      };
+    case USER_DROP_FAILURE:
+      return {
+        ...state,
+        DROP_loading: false,
+        DROP_done: false,
+        DROP_error: action.error,
+        DROP_status: action.data
       };
     default:
       return state;

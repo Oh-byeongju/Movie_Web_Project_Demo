@@ -122,7 +122,11 @@ function* UserPwCheck(action) {
 // 백엔드 호출
 async function callPwCheck(data) {
   return await http
-    .post("/member/auth/checkPw", data)
+    .get("/member/auth/checkPw", {
+      params: {
+        upw: data
+      },
+    })
     .then((response) => {
       return response;
     })
@@ -130,6 +134,7 @@ async function callPwCheck(data) {
       return error.response;
     });
 }
+
 
 function* USER_LOGIN() {
   yield takeLatest(USER_LOGIN_REQUEST, UserLogin);

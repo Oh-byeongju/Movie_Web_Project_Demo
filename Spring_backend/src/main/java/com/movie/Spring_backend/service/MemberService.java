@@ -1,12 +1,16 @@
-// 23-01-13 아이디 중복 검사 메소드구현(오병주)
-// 23-01-16 회원가입 및 로그인 메소드구현(오병주)
-// 23-01-18 토큰 재발급 관련 메소드구현(오병주)
+/*
+  23-01-13 아이디 중복 검사 메소드구현(오병주)
+  23-01-16 회원가입 및 로그인 메소드구현(오병주)
+  23-01-18 토큰 재발급 관련 메소드구현(오병주)
+  23-03-15 ~ 16 회원정보 수정 및 탈퇴 메소드구현(오병주)
+*/
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.MemberDto;
 import com.movie.Spring_backend.dto.TokenDto;
 import com.movie.Spring_backend.entity.Authority;
 import com.movie.Spring_backend.entity.MemberEntity;
+import com.movie.Spring_backend.entity.MovieInfoEntity;
 import com.movie.Spring_backend.entity.RefreshTokenEntity;
 import com.movie.Spring_backend.error.exception.ErrorCode;
 import com.movie.Spring_backend.error.exception.InvalidValueException;
@@ -16,6 +20,7 @@ import com.movie.Spring_backend.exceptionlist.PwNotCorrectException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.jwt.TokenProvider;
 import com.movie.Spring_backend.repository.MemberRepository;
+import com.movie.Spring_backend.repository.MovieInfoRepository;
 import com.movie.Spring_backend.repository.RefreshTokenRepository;
 import com.movie.Spring_backend.util.SecurityUtil;
 import io.jsonwebtoken.JwtException;
@@ -33,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +50,9 @@ public class MemberService {
     private final AuthenticationManagerBuilder managerBuilder;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtValidCheck jwtValidCheck;
+
+    //임시사용
+    private final MovieInfoRepository movieInfoRepository;
 
     // 아이디 중복을 확인하기 위한 메소드
     @Transactional
@@ -200,6 +209,16 @@ public class MemberService {
         MemberEntity Member = memberRepository.findById(currentMemberId)
                 .orElseThrow(() -> new MemberNotFoundException(currentMemberId));
 
+
+
+
+        List<MovieInfoEntity> temp = movieInfoRepository.findMemberPossible();
+
+        for (MovieInfoEntity m : temp) {
+            System.out.println(m.getMiid());
+            System.out.println(m.getMovie());
+        }
+
         // 로그인 정보가 있을경우 아이디와 이름을 리턴
         return MemberDto.builder()
                 .uid(Member.getUid())
@@ -306,9 +325,12 @@ public class MemberService {
         }
     }
 
-    @Transactional
     // 로그아웃 메소드
-    public void logout(HttpServletResponse response) {
+    @Transactional
+    public void logout(HttpServletResponse response, HttpServletRequest request) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
         // authentication 객체에서 아이디 확보
         String currentMemberId = SecurityUtil.getCurrentMemberId();
 
@@ -372,7 +394,7 @@ public class MemberService {
             throw new PwNotCorrectException("비밀번호가 일치하지 않습니다.");
         }
 
-        // 전달받은 새로운 회원정보를 통해 DB 업데이트(프로젝트에 빌더 패턴을 사용해서 JPQL을 사용)
+        // 전달받은 새로운 회원정보를 통해 DB 업데이트(프로젝트에 빌더 패턴을 사용해서 update 쿼리 사용 시 JPQL을 사용)
         // 매개변수로 id, pw, 이름, 이메일, 전화번호, 주소, 생일을 전달
         memberRepository.MemberInfoUpdate(
                 requestDto.getUid(),
@@ -384,8 +406,46 @@ public class MemberService {
                 requestDto.getUaddrsecond(),
                 requestDto.getUbirth());
     }
-    
-    // 회원탈퇴 시키고 할때 쿠키도 같이 없애줘야함
+
+    // 회원탈퇴 메소드
+    @Transactional
+    public void MemberDrop(HttpServletResponse response, HttpServletRequest request) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // authentication 객체에서 아이디 확보
+        String currentMemberId = SecurityUtil.getCurrentMemberId();
+
+        System.out.println(SecurityUtil.getCurrentMemberId());
+
+        // Redis에 저장되어 있는 Refresh Token 삭제
+        refreshTokenRepository.deleteById(currentMemberId);
+
+        // 기존에 있던 두 가지 쿠키와 이름은 동일하지만 value는 빈칸, duration은 0인 쿠키들을 생성
+        // 새로 생성된 쿠키들은 브라우저에 있는 기존의 쿠키들을 덮어쓴 후 사라짐
+        ResponseCookie accessCookie = ResponseCookie.from("ATK", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge( 0)
+                .sameSite("None")
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("RTK", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("None")
+                .build();
+
+        // 응답 헤더에 두 가지 쿠기를 할당
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+        // 사용자 테이블에서 사용자 제거(연관된 DB 내용은 CascadeType.REMOVE 때문에 연쇄 삭제)
+        memberRepository.deleteById(currentMemberId);
+    }
 
     // id와 pw를 파라미터로 전달 받아 UsernamePasswordAuthenticationToken 으로 반환하여 리턴해주는 메소드
     public UsernamePasswordAuthenticationToken toAuthentication(String uid, String upw) {

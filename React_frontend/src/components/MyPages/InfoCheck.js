@@ -39,14 +39,11 @@ const InfoCheck = () => {
 			return;
 		}
 
-		const datas = {
-      upw: pw,
-    };
-
 		dispatch({
 			type: USER_PW_CHECK_REQUEST,
-			data: datas
+			data: pw
 		});
+		
 	}, [pw, dispatch]);
 
 	// 비밀번호 재확인의 성공 여부를 알리는 useEffect

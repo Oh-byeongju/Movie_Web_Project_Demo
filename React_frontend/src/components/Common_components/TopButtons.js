@@ -11,7 +11,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   USER_LOGOUT_REQUEST,
 } from "../../reducer/R_user_login";
@@ -23,7 +23,6 @@ const TopButtons = () => {
 
   // 현재 페이지의 정보와 페이지 이동을 위해 선언 
   const location = useLocation();
-  const navigate = useNavigate();	
 
   // 로그아웃 버튼을 눌렀을 때 실행되는 함수
   const onLogout = useCallback(() => {
@@ -35,9 +34,9 @@ const TopButtons = () => {
     dispatch({
       type: USER_LOGOUT_REQUEST,
     });
-    navigate(`/`);
     
-  }, [dispatch, navigate]);
+    window.location.assign('/');
+  }, [dispatch]);
 
   // const [search, setSearch] = useState("");
 

@@ -14,6 +14,9 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_FAILURE,
+  USER_DROP_REQUEST,
+  USER_DROP_SUCCESS,
+  USER_DROP_FAILURE,
 } from "../reducer/R_user_join";
 import { http } from "../lib/http";
 
@@ -96,7 +99,35 @@ function* UserUpdate(action) {
 // 디비에 회원정보를 수정하고 저장
 async function Update(data) {
   return await http
-    .post("/member/auth/memberUpdate", data)
+    .patch("/member/auth/memberUpdate", data)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
+// 회원탈퇴 함수
+function* UserDrop() {
+  const result = yield call(DROP);
+  if (result.status === 204) {
+    yield put({
+      type: USER_DROP_SUCCESS,
+      data: result.status,
+    });
+  } else {
+    yield put({
+      type: USER_DROP_FAILURE,
+      data: result.status,
+    });
+  }
+}
+
+// 디비에 존재하는 회원정보를 삭제
+async function DROP() {
+  return await http
+    .delete("/member/auth/memberDrop")
     .then((response) => {
       return response;
     })
@@ -117,6 +148,10 @@ function* USER_UPDATE() {
   yield takeLatest(USER_UPDATE_REQUEST, UserUpdate);
 }
 
+function* USER_DROP() {
+  yield takeLatest(USER_DROP_REQUEST, UserDrop);
+}
+
 export default function* S_user_join() {
-  yield all([fork(USER_ID), fork(USER_JOIN), fork(USER_UPDATE)]);
+  yield all([fork(USER_ID), fork(USER_JOIN), fork(USER_UPDATE), fork(USER_DROP)]);
 }
