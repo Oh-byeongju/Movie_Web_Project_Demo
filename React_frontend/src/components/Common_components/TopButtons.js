@@ -106,7 +106,7 @@ const TopButtons = () => {
             </li>
             <li className="topMenuLiLeft">
               <strong>
-                극장
+                게시판
               </strong>
             </li>
           </ul>
@@ -167,9 +167,9 @@ const TopButtons = () => {
                 </div>
               </div>
               <div className="menu_category">
-                <div className="title_category">극장</div>
-                <div className="category">전체극장</div>
-                <div className="category">특별관</div>
+                <div className="title_category">게시판</div>
+                <div className="category">    
+                <Link to="/Board">게시판</Link></div>
               </div>
               <div className="menu_category">
                 <div className="title_category">이벤트</div>
