@@ -1,23 +1,17 @@
+/*eslint-disable*/
 /*
  23-03-13 마이페이지 css 구축(오병주)
  23-03-15 회원정보 수정 구축(오병주)
+ 23-03-16 회원탈퇴 구축(오병주)
 */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import Post from '../Login_components/Post';
-import { USER_UPDATE_REQUEST, USER_UPDATE_RESET } from '../../reducer/R_user_join';
+import { USER_UPDATE_REQUEST, USER_UPDATE_RESET, USER_DROP_REQUEST } from '../../reducer/R_user_join';
 import { useLocation } from 'react-router-dom';
 
 const InfoModify = () => {
-
-	/*
-		지금 로그아웃 안시켜도 괜찮은데 추후에 문제 생기면 우째할지 생각해보기
-
-		회원탈퇴하면 다 날리고 메인화면으로 보내기
-
-	*/ 
-
 	// 주소검색 팝업창 관리
 	const [popup, setpopup] = useState(false);
 
@@ -547,17 +541,25 @@ const InfoModify = () => {
 		});
 	}, [])
 	
-	
 	const dispatch = useDispatch();
 	const location = useLocation();
+
 	// 로그인 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
 	// 회원정보 수정 상태를 확인하기 위한 리덕스 상태
 	const { UPDATE_status } = useSelector((state) => state.R_user_join);
 
+	// 회원탈퇴 상태를 확인하기 위한 리덕스 상태
+	const { DROP_status } = useSelector((state) => state.R_user_join);
+
 	// 회원정보 수정을 누를 시 실행되는 함수
 	const memberUpdate = () => {
+
+		if (!window.confirm("회원 정보를 수정하시겠습니까?")) {
+      return;
+    };
+
 		var res_month = month;
 		var res_day = day;
 
@@ -616,11 +618,35 @@ const InfoModify = () => {
 
 	}, [UPDATE_status, location.pathname, dispatch])
 
-	// 내일 회원탈퇴하고 연쇄삭제 시키기
+	// 회원탈퇴를 누를 시 실행되는 함수
+	const memberDrop = useCallback(() => {
+		
+		if (!window.confirm("회원을 탈퇴하시겠습니까? (모든 정보는 사라지고 복구되지 않습니다)")) {
+      return;
+    };
+	
+		dispatch({
+			type: USER_DROP_REQUEST,
+		});
+		
+	}, [dispatch]);
+
+	// DROP_status의 상태가 변경 됐을 때 회원탈퇴 성공 여부를 알려주는 useEffect
+	useEffect(() => {
+		if (DROP_status === 204) {
+			alert('회원탈퇴가 완료 되었습니다.');
+			window.location.assign('/');
+			return;
+		}
+
+		if (DROP_status !== '') {
+			alert('예기치 못한 오류가 발생하였습니다.');
+			window.location.assign('/');
+		}
+	}, [DROP_status])
 
 	return (
 		<>
-		{/* 여기 제일위에 로딩 넣기 joinform보삼 --> 근데 없어도 될수도..?*/}
 			<Layout>
 				<Form>
 					<InfoForm>
@@ -834,7 +860,7 @@ const InfoModify = () => {
 				</Form>
 				<Form>
 					<ButtonForm>
-						<LeaveButton>
+						<LeaveButton onClick={memberDrop}>
 							<span>
 								회원탈퇴
 							</span>

@@ -54,22 +54,29 @@ public class MemberController {
 
     // 로그아웃 메소드
     @PostMapping("/normal/logout")
-    public ResponseEntity<String> logoutUser(HttpServletResponse response) {
-        memberService.logout(response);
+    public ResponseEntity<String> logoutUser(HttpServletResponse response, HttpServletRequest request) {
+        memberService.logout(response, request);
         return ResponseEntity.noContent().build();
     }
 
     // 회원정보 수정 페이지 패스워드 확인 메소드
-    @PostMapping("/auth/checkPw")
-    public ResponseEntity<String> checkPw(HttpServletRequest request, @RequestBody MemberDto requestDto) {
-        memberService.CheckPw(request, requestDto.getUpw());
+    @GetMapping("/auth/checkPw")
+    public ResponseEntity<String> checkPw(HttpServletRequest request, @RequestParam("upw") String pw) {
+        memberService.CheckPw(request, pw);
         return ResponseEntity.noContent().build();
     }
 
     // 회원정보 수정 페이지 회원정보 수정 메소드
-    @PostMapping("/auth/memberUpdate")
+    @PatchMapping("/auth/memberUpdate")
     public ResponseEntity<String> memberUpdate(HttpServletRequest request, @RequestBody MemberDto requestDto) {
         memberService.MemberUpdate(request, requestDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 회원탈퇴 메소드
+    @DeleteMapping("/auth/memberDrop")
+    public ResponseEntity<String> memberDrop(HttpServletResponse response, HttpServletRequest request) {
+        memberService.MemberDrop(response, request);
         return ResponseEntity.noContent().build();
     }
 }

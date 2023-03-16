@@ -26,6 +26,7 @@ public class MovieInfoSeatEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="rid") //조인할 컬럼 이름
     private ReservationEntity reserve;
+
     @Builder
     public MovieInfoSeatEntity(Long misid, SeatEntity seat, MovieInfoEntity info, ReservationEntity reserve) {
         this.misid= misid;

@@ -57,8 +57,8 @@ public class PaymentService {
         Date nowDate = new Date();
 
         // 현재 시간을 sql에 사용할 수 있게 매핑
-        SimpleDateFormat DateFormatYMD = new SimpleDateFormat("yyyy-MM-dd");
-        String day = DateFormatYMD.format(nowDate);
+        SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String day = DateFormat.format(nowDate);
         String[] SeatNumber = requestMap.get("sid").split(",");
         List<Long> sid = new ArrayList<>();
         for(String s: SeatNumber){
@@ -74,7 +74,7 @@ public class PaymentService {
                 if(payamount==amount){ //리턴된 페이와 프론트 리턴 페이 보냄
 
                     reservationEntity = ReservationEntity.builder()
-                            .rdate(java.sql.Date.valueOf(day))
+                            .rdate(day)
                             .rprice(payamount)
                             .rpeople(rpeople)
                             .rtoken(token)

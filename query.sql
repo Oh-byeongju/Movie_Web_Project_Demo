@@ -118,11 +118,13 @@ CREATE TABLE `movie_reservation` (
 	`rid`	INT AUTO_INCREMENT NOT NULL,
 	`rdate`	datetime	NULL,
 	`rprice`	int	NULL,
-	`rpeople` VARCHAR(40) NULL,
+	`rpeople` VARCHAR(30) NULL,
 	`rticket` INT NULL,
-	`rtoken` VARCHAR(255) NULL,
 	`rpayid` VARCHAR(255) NULL,
+	`rtoken` VARCHAR(255) NULL,
 	`rpaytype` VARCHAR(20) NULL,
+	`rstate` BOOLEAN NULL,
+	`rcancledate` DATETIME NULL,
 	`miid`	int	NOT NULL,
 	`uid`	varchar(20)	NOT NULL,
 	PRIMARY KEY (`rid`),
@@ -1163,7 +1165,7 @@ BEGIN
    -- 똑똑똑 (상영 했다가 상영 끝난 영화 기록 추가)
    WHILE (i <= 70) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 40 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', val);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 40 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '1', val);
       SET i = i + 1;
    END WHILE;
    
@@ -1171,7 +1173,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 70) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 12 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '2', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 12 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1179,7 +1181,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 56) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 12 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '3', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 12 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '3', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1187,7 +1189,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 50) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 10 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '4', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 10 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '4', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1195,7 +1197,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 40) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 10 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '5', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 10 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '5', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1203,7 +1205,7 @@ BEGIN
    SET i = 71;
    WHILE (i <= 140) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '6', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '6', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1211,7 +1213,7 @@ BEGIN
    SET i = 81;
    WHILE (i <= 150) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '7', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '7', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1219,7 +1221,7 @@ BEGIN
    SET i = 151;
    WHILE (i <= 220) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '8', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '8', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1227,7 +1229,7 @@ BEGIN
    SET i = 71;
    WHILE (i <= 126) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '9', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '9', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1235,7 +1237,7 @@ BEGIN
    SET i = 201;
    WHILE (i <= 220) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '10', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '10', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1243,7 +1245,7 @@ BEGIN
    SET i = 231;
    WHILE (i <= 245) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '11', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '11', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1251,7 +1253,7 @@ BEGIN
    SET i = 246;
    WHILE (i <= 260) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '12', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '12', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1259,7 +1261,7 @@ BEGIN
    SET i = 281;
    WHILE (i <= 295) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '13', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '13', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1267,7 +1269,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 38) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '14', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '14', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1275,7 +1277,7 @@ BEGIN
    SET i = 901;
    WHILE (i <= 970) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '25', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '25', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1283,7 +1285,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 48) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '26', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '26', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1291,7 +1293,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 43) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '28', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '28', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1299,7 +1301,7 @@ BEGIN
    SET i = 501;
    WHILE (i <= 530) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1335', val); 
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '1335', val); 
       SET i = i + 1;
    END WHILE;
    
@@ -1307,7 +1309,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 35) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1339', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '1339', val);      
       SET i = i + 1;
    END WHILE;
 
@@ -1315,7 +1317,7 @@ BEGIN
    SET i = 901;
    WHILE (i <= 920) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '2060', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2060', val);      
       SET i = i + 1;
    END WHILE;
   
@@ -1323,7 +1325,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 27) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '2065', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2065', val);      
       SET i = i + 1;
    END WHILE;
   
@@ -1331,7 +1333,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 24) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '2066', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2066', val);      
       SET i = i + 1;
    END WHILE;
   
@@ -1339,7 +1341,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 17) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '2067', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2067', val);      
       SET i = i + 1;
    END WHILE;
   
@@ -2071,7 +2073,29 @@ UPDATE movie_member
 SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
 WHERE MID = 4 AND uid = 'temp17';
 
+
 /*
+SELECT *
+FROM movie_information
+WHERE miendtime <= '2023-03-18' AND miid IN (SELECT miid
+												  FROM movie_reservation
+												  WHERE uid = 'temp22');
+
+SELECT mi.mid
+FROM movie_information mi LEFT JOIN movie_reservation mr
+ON mi.miid = mr.miid
+WHERE mi.miendtime <= '2023-03-18'D mr.uid = 'temp1';
+-- 여기서 뽑은 mid를 검색
+
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '0', '21', 'temp1');      
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '0', '21', 'temp1');      
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '0', '21', 'temp1');      
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '0', '21', 'temp1');      
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '0', '21', 'temp1');      
+      
+SELECT * FROM movie_information
+WHERE miid = 8;
+
 select *
 from member;
 SELECT *

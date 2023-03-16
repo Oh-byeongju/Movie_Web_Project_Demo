@@ -63,7 +63,6 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
             "WHERE mi.movie = :movie AND mi.miendtime <= now()")
     List<MovieInfoEntity> findInfoBeforeToday(@Param("movie") MovieEntity movie);
 
-
     //영황 상영 시간표를 검색할 때 영화, 날짜, 지역으로 검색하는 메소드
     @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
             "where mid= :mid and mi.miday= :miday and mi.mistarttime >= function('addtime', now(), '0:30:00') and " +
@@ -88,8 +87,11 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
     List <MovieInfoEntity> findTimeTheater(@Param("miday") Date miday ,@Param("tid")Long tid);
 
 
-
-
-
+    // 이거 해쉬셋으로 중복 없애야할듯
+    // 특정 사용자가 예매후 관람이 끝난
+    // true false 봐줘야하는데 이러면
+    @Query(value = "SELECT mi FROM MovieInfoEntity as mi LEFT OUTER JOIN mi.reservations rs " +
+            "where mi.miendtime <= NOW() AND rs.member = 'temp22' ")
+    List<MovieInfoEntity> findMemberPossible();
 }
 

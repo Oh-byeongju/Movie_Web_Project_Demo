@@ -1,11 +1,11 @@
 package com.movie.Spring_backend.entity;
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="movie_reservation")
@@ -17,7 +17,7 @@ public class ReservationEntity {
     private Long rid;
 
     @Column(nullable = false)
-    private Date rdate;
+    private String rdate;
 
     @Column(nullable = false)
     private Integer rprice;
@@ -25,12 +25,25 @@ public class ReservationEntity {
     @Column(nullable= false)
     private String rpeople;
 
+    // 티켓 매수
     @Column(nullable = false)
-    private String rtoken;
+    private Integer rticket;
 
     @Column(nullable = false)
     private String rpayid;
 
+    @Column(nullable = false)
+    private String rtoken;
+
+    @Column(nullable = false)
+    private String rpaytype;
+
+    // 예매 취소 확인용(true -> 예매한 것, false -> 취소한 것)
+    @Column(nullable = false)
+    private Boolean rstate;
+
+    @Column
+    private String rcancledate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="miid")
@@ -40,15 +53,28 @@ public class ReservationEntity {
     @JoinColumn(name="uid")
     private MemberEntity member;
 
+    // 일대다 관계 매핑
+    @OneToMany(mappedBy = "reserve",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
+    private List<MovieInfoSeatEntity> infoSeats = new ArrayList<>();
+
     @Builder
-    public ReservationEntity(Long rid ,Date rdate, Integer rprice,String rpeople,String rtoken,String rpayid, MovieInfoEntity movieInfo, MemberEntity member) {
-        this.rid=rid;
-        this.rdate=rdate;
-        this.rprice=rprice;
-        this.rpeople=rpeople;
-        this.rtoken=rtoken;
-        this.rpayid=rpayid;
-        this.movieInfo=movieInfo;
-        this.member=member;
+    public ReservationEntity(Long rid, String rdate, Integer rprice, String rpeople, Integer rticket, String rpayid,
+                             String rtoken, String rpaytype, Boolean rstate, String rcancledate, MovieInfoEntity movieInfo,
+                             MemberEntity member, List<MovieInfoSeatEntity> infoSeats) {
+        this.rid = rid;
+        this.rdate = rdate;
+        this.rprice = rprice;
+        this.rpeople = rpeople;
+        this.rticket = rticket;
+        this.rpayid = rpayid;
+        this.rtoken = rtoken;
+        this.rpaytype = rpaytype;
+        this.rstate = rstate;
+        this.rcancledate = rcancledate;
+        this.movieInfo = movieInfo;
+        this.member = member;
+        this.infoSeats = infoSeats;
     }
 }
