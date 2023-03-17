@@ -64,7 +64,7 @@ function* CommentInsert(action) {
   }
 }
 
-// 유저 정보를 전달한 뒤 좋아요 기록 변경(백엔드 연결)
+// 관람평 내용을 전달한 뒤 저장(백엔드 연결)
 async function CallCommentInsert(data) {
   return await http.post("/MovieMember/auth/InsertComment", data)
     .then((response) => {

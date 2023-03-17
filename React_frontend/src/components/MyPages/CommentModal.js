@@ -1,16 +1,17 @@
 /*
 	23-03-12 마이페이지 css 구축(오병주)
+	23-03-17 마이페이지 관람평 작성 구현(오병주)
 */
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { CloseOutlined } from "@ant-design/icons";
 import { Rate } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { USER_COMMENT_WRITE_REQUEST, USER_COMMENT_WRITE_RESET } from '../../reducer/R_user_movie';
+import { USER_MY_COMMENT_WRITE_REQUEST } from '../../reducer/R_mypage_movie';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const CommentModal = ({ setwrite }) => {
+const CommentModal = ({ movie, setwrite }) => {
 	const dispatch = useDispatch();
 	const location = useLocation();
 
@@ -24,21 +25,11 @@ const CommentModal = ({ setwrite }) => {
     setcomment(e.target.value);
   };
 
-	// 로그인 상태확인용 리덕스 상태
-  const { LOGIN_data } = useSelector((state) => state.R_user_login);
-
-	// 관람평 작성에 필요한 리덕스 상태
-	const { detailMovie } = useSelector((state) => state.movie);
-	const { WRITE_code } = useSelector((state) => state.R_user_movie);
+	// 관람평 작성 확인에 필요한 리덕스 상태
+	const { MY_COMMENT_status } = useSelector((state) => state.R_mypage_movie);
 
 	// 관람평 작성 버튼을 누르면 실행되는 함수
 	const onSubmit = useCallback(() => {
-
-		// 로그인 상태 확인
-		if (LOGIN_data.uid === 'No_login') {
-      alert("로그인이 필요한 서비스입니다.")
-      return;
-    }
 
 		// 관람평이 빈칸인지 확인
 		if (comment === '') {
@@ -52,45 +43,28 @@ const CommentModal = ({ setwrite }) => {
 
 		// 관람평 작성 요청
 		dispatch({
-			type: USER_COMMENT_WRITE_REQUEST,
+			type: USER_MY_COMMENT_WRITE_REQUEST,
 			data: {
-				uid: LOGIN_data.uid,
-				mid: detailMovie.mid,
+				mid: movie.mid,
 				mcomment: comment,
 				mscore: (value*2)
 			}
 		})
 
-	}, [dispatch, LOGIN_data.uid, detailMovie.mid, comment, value]);
+	}, [dispatch, movie, comment, value]);
 
 	// 관람평 작성 결과에 따른 alert을 위한 useEffect
 	useEffect(()=> {
-		if (WRITE_code === 204) {
+		if (MY_COMMENT_status === 204) {
 			window.location.replace(location.pathname);
 			return;
 		}
 
-		if (WRITE_code === "MC002") {
+		if (MY_COMMENT_status === 400) {
 			alert("이미 작성된 관람평이 존재합니다.");
-			dispatch({
-				type: USER_COMMENT_WRITE_RESET
-			})
-			return;
+			window.location.replace(location.pathname);
 		}
-
-		if (WRITE_code === "MC003") {
-			alert("영화 관람기록이 존재하지 않습니다.");
-			dispatch({
-				type: USER_COMMENT_WRITE_RESET
-			});
-		}
-
-	}, [WRITE_code, location.pathname, dispatch]);
-
-
-
-	// 모달에서 하는 행동 수정해야함 db에 보내는거
-	// 검사하고 리프레시할때 링크나 이런거 확인
+	}, [MY_COMMENT_status, location.pathname, dispatch]);
 
   return (
 		<Modal>
@@ -106,7 +80,7 @@ const CommentModal = ({ setwrite }) => {
 						<Form>
 							<StarForm>
 								<h4 style={{paddingTop: "8px"}}>
-									이거 이름 무비에서 받아오기
+									{movie.mtitle}
 								</h4>
 								<RateLine>
 									<Rate allowHalf onChange={setValue} value={value} style={{fontSize: "50px"}} allowClear={false}/>

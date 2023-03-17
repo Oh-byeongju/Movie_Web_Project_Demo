@@ -6,7 +6,9 @@ import movieSaga from "./movie";
 import S_user_movie from "./S_user_movie";
 import seatSaga from "./seat";
 import timeTableSaga from "./TimeTable";
+import S_mypage_movie from "./S_mypage_movie";
 import BoardSaga from "./Board";
+
 //사가 파일 추가 시 rootSaga 안에 fork해주면 됨
 export default function* rootSaga() {
   yield all([
@@ -17,6 +19,7 @@ export default function* rootSaga() {
     fork(S_user_movie),
     fork(seatSaga),
     fork(timeTableSaga),
+    fork(S_mypage_movie),
     fork(BoardSaga)
   ]);
 }

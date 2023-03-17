@@ -1,44 +1,13 @@
 /*
  23-03-11 마이페이지 css 구축(오병주)
 */
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import CommentMovie from './CommentMovie';
 import CommentReview from './CommentReview';
 import { InfoCircleOutlined } from '@ant-design/icons';
-
-const datas = [
-	{
-		rid: "1",
-		mtitle: "타이타닉",
-		cinema: "서울-강남점 2관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "A1, A2",
-		price: "100",
-		poster: "img/ranking/5.jpg"
-	},
-	{
-		rid: "1",
-		mtitle: "타이타닉",
-		cinema: "서울-강남점 2관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "A1, A2",
-		price: "100",
-		poster: "img/ranking/5.jpg"
-	},
-	{
-		rid: "1",
-		mtitle: "타이타닉",
-		cinema: "서울-강남점 2관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "A1, A2",
-		price: "100",
-		poster: "img/ranking/5.jpg"
-	}
-]
+import { useDispatch, useSelector } from 'react-redux';
+import { USER_MOVIE_POSSIBLE_REQUEST } from '../../reducer/R_mypage_movie';
 
 const datas2 = [
 	{
@@ -78,6 +47,17 @@ const datas2 = [
 ]
 
 const CommentList = () => {
+	const dispatch = useDispatch();
+
+	// 관람평 작성 가능 영화 상태
+  const { possibleMovie } = useSelector((state) => state.R_mypage_movie);
+
+	// 관람평 작성 가능 영화 요청
+  useEffect(() => {
+    dispatch({
+      type: USER_MOVIE_POSSIBLE_REQUEST
+    });
+  }, [dispatch]);
 
 	// 메뉴 버튼 변수
 	const [possiblebutton, setpossiblebutton] = useState(true);
@@ -126,9 +106,9 @@ const CommentList = () => {
 			{possiblebutton ?  
 			<ContentDetails>
 				<span className='total'>
-					총 {datas.length}개
+					총 {possibleMovie.length}개
 				</span>
-				{datas.length !== 0 ? datas.map((data, index) => <CommentMovie data={data} key={index} />) : 
+				{possibleMovie.length !== 0 ? possibleMovie.map((movie, index) => <CommentMovie movie={movie} key={index} />) : 
 				<NoContent>
 					<span className='None'>
 						<InfoCircleOutlined/>

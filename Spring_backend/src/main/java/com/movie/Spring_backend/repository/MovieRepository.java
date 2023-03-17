@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface MovieRepository extends JpaRepository<MovieEntity,Long> {
@@ -89,6 +90,12 @@ public interface MovieRepository extends JpaRepository<MovieEntity,Long> {
             "(SELECT DISTINCT mi.movie FROM MovieInfoEntity mi WHERE mi.miday >= function('date_format', now(), '%Y-%m-%d')) " +
             "ORDER BY m.cntMovieLike DESC")
     List<MovieEntity> findComingMoviesLikeDESC(@Param("title") String title);
+
+    // 사용자가 관람평을 작성할 수 있는 영화 검색 (관람객 평점 기준으로 내림차순)
+    @Query("SELECT m FROM MovieEntity as m " +
+            "WHERE m.mid IN (:mid)" +
+            "ORDER BY m.avgScore DESC")
+    List<MovieEntity> findMoviesScoreDESC(@Param("mid") Set<Long> mid);
 
     // 극장 클릭 시 영화 id list를 활용하여 검색
     @Query(value ="SELECT m ,'able' as able FROM MovieEntity as m where m.mid IN (:mid) ORDER BY m.cntMovieLike DESC")

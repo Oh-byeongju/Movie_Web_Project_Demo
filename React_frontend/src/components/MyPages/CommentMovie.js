@@ -7,34 +7,32 @@ import { StarFilled } from "@ant-design/icons";
 import { Link } from 'react-router-dom';
 import CommentModal from './CommentModal';
 
-const CommentMovie = ({ data }) => {
+const CommentMovie = ({ movie }) => {
 
+	// 모달 키고 끄는 변수
 	const [write, setwrite] = useState(false);
-	// 모달에서 하는 행동 수정해야함 db에 보내는거
-
 
 	return (
 		<ContentDetail>
 			<ContentDetailMiddle>
 				<BoxImage>
-          <Poster src='/img/ranking/5.jpg' alt="Poster" />
+          <Poster src={`/${movie.mimagepath}`} alt="Poster" />
         </BoxImage>
         <BoxContent>
           <Title>
           	<strong>
-              타이타닉
+              {movie.mtitle}
             </strong>
 						<span className="reservation">
-							예매율&nbsp; {data.reserveRate ? data.reserveRate.toFixed(1) : (0.0).toFixed(1)}%
+							예매율&nbsp; {movie.reserveRate ? movie.reserveRate.toFixed(1) : (0.0).toFixed(1)}%
 						</span>
 						<span className="rate">
 							관람객 평점 
 							<StarFilled style={{color :"#fea408", marginLeft: "7px", marginRight: "7px"}}/>
-							{data.mscore ? data.mscore.toFixed(1) : 0.0.toFixed(1)}
+							{movie.mscore ? movie.mscore.toFixed(1) : 0.0.toFixed(1)}
 						</span>	
 						<span className="more">
-							{/* 링크넣기 */}
-							<Link> 
+							<Link to={`/moviedetail/${movie.mid}`}> 
 								영화 상세정보 보기
 							</Link>
 						</span>
@@ -45,40 +43,40 @@ const CommentMovie = ({ data }) => {
 								감독 : &nbsp;
 							</dt>
 							<dd>
-								제임스 카메론	
+								{movie.mdir}
 							</dd>
 							<br/>
 							<dt>
 								장르 : &nbsp; 
 							</dt>
 							<dd>
-								로맨스
+								{movie.mgenre}
 							</dd>
 							<br/>
 							<dt>
 								상영 시간 : &nbsp;
 							</dt>
 							<dd>
-								180분
+								{movie.mtime}분
 							</dd>
 							<br/>
 							<dt> 
 								상영 등급 : &nbsp;
 							</dt>
 							<dd>
-								15세 이용가
+								{movie.mrating === '0' ? "전체 이용가" : movie.mrating+"세 이용가"}
 							</dd>
 							<br />
 							<dt>
 								개봉일 : &nbsp;
 							</dt>
 							<dd>
-								2023-02-17
+								{movie.mdate}
 							</dd>
 						</dl>
 					</Spec>
 					<Button>
-						{write && <CommentModal setwrite={setwrite}/>}
+						{write && <CommentModal movie={movie} setwrite={setwrite}/>}
 						<Write onClick={()=> setwrite(true)}>
 							관람평 작성하기	
 						</Write>         
@@ -141,13 +139,18 @@ const Title = styled.div`
     color: #1a1919;
     font-size: 21px;
     vertical-align: middle;
+		text-overflow: ellipsis;
+    white-space: nowrap;
+		width: 180px;
+		display: inline-block;
+		overflow: hidden;
   }
 
 	.reservation {
 	font-size: 13px;
 	position: relative;
 	vertical-align: middle;
-	margin: 0 13px 0 16px;
+	margin: 0 13px 0 65px;
 	padding: 0 13px 0 0;
 
 	::after {
@@ -173,7 +176,7 @@ const Title = styled.div`
 		font-size: 12px;
 		position: relative;
 		vertical-align: middle;
-		margin-left: 182px;
+		margin-left: 30px;
 
 		a {
 			text-decoration: none;
@@ -199,6 +202,7 @@ const Spec = styled.div`
     overflow: visible;
     float: left;
     margin: 0;
+
     a:link {
       color : #6a6a6a;
     }

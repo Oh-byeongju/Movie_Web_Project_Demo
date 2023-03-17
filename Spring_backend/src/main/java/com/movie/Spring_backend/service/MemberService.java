@@ -209,16 +209,6 @@ public class MemberService {
         MemberEntity Member = memberRepository.findById(currentMemberId)
                 .orElseThrow(() -> new MemberNotFoundException(currentMemberId));
 
-
-
-
-        List<MovieInfoEntity> temp = movieInfoRepository.findMemberPossible();
-
-        for (MovieInfoEntity m : temp) {
-            System.out.println(m.getMiid());
-            System.out.println(m.getMovie());
-        }
-
         // 로그인 정보가 있을경우 아이디와 이름을 리턴
         return MemberDto.builder()
                 .uid(Member.getUid())
@@ -415,8 +405,6 @@ public class MemberService {
 
         // authentication 객체에서 아이디 확보
         String currentMemberId = SecurityUtil.getCurrentMemberId();
-
-        System.out.println(SecurityUtil.getCurrentMemberId());
 
         // Redis에 저장되어 있는 Refresh Token 삭제
         refreshTokenRepository.deleteById(currentMemberId);

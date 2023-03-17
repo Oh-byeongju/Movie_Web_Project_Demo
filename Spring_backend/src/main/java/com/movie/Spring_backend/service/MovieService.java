@@ -9,7 +9,6 @@ import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.exceptionlist.MovieCommentNotFoundException;
 import com.movie.Spring_backend.mapper.MovieCommentMapper;
-import com.movie.Spring_backend.mapper.MovieInfoMapper;
 import com.movie.Spring_backend.repository.*;
 import com.movie.Spring_backend.util.DeduplicationUtil;
 import com.movie.Spring_backend.dto.MovieDto;

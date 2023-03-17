@@ -91,7 +91,7 @@ const Movie = ({ movie }) => {
       <div className="Image">
         <div className="banner_img">
           <Link to={`/moviedetail/${movie.id}`}>
-            <Img className="imggg" src={movie.imagepath} alt="영화" />
+            <Img className="img2" src={movie.imagepath} alt="영화" />
           </Link>
           <div className="middle">
             <Link to={`/moviedetail/${movie.id}`}>
@@ -166,7 +166,7 @@ const LI = styled.li`
       -ms-transform: translate(-50%, -50%);
       text-align: center;
     }
-    &:hover .imggg {
+    &:hover .img2 {
       filter: brightness(0.3);
     }
     &:hover .middle {

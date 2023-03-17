@@ -2095,10 +2095,6 @@ WHERE miendtime <= '2023-03-18' AND miid IN (SELECT miid
 												  FROM movie_reservation
 												  WHERE uid = 'temp22');
 
-SELECT mi.mid
-FROM movie_information mi LEFT JOIN movie_reservation mr
-ON mi.miid = mr.miid
-WHERE mi.miendtime <= '2023-03-18'D mr.uid = 'temp1';
 -- 여기서 뽑은 mid를 검색
 
 INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '0', '21', 'temp1');      

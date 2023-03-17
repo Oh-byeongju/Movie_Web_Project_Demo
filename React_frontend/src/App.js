@@ -23,6 +23,7 @@ import Board from "./pages/Board";
 import BoardList from "./pages/BoardList";
 import BoardWrite from "./pages/BoardWrite";
 import BoardCard from "./pages/BoardCard";
+
 // TopButton과 Footer가 있어야 하는 페이지이면 Layout 사이에 넣고 아니면 따로 빼기
 function App() {
   return (
@@ -36,14 +37,11 @@ function App() {
         <Route path="/screenmovie" element={<ScreenMovie />}></Route>
         <Route path="/comingmovie" element={<ComingMovie />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
-
         <Route element={<Board />}>
-        <Route path="/Board/list" element={<BoardList />}></Route>
-        <Route path="/Board/write" element={<BoardWrite />}></Route>
-        <Route path="/Board/content" element={<BoardCard />}></Route>
-
+          <Route path="/Board/list" element={<BoardList />}></Route>
+          <Route path="/Board/write" element={<BoardWrite />}></Route>
+          <Route path="/Board/content" element={<BoardCard />}></Route>
         </Route>
-
         <Route element={<Mypage />}>
           <Route path="/Mypage/Reserve" element={<MyPageReserve />}></Route>
           <Route path="/Mypage/Cancle" element={<MyPageCancel />}></Route>
@@ -52,7 +50,6 @@ function App() {
           <Route path="/Mypage/Like" element={<MyPageLike />}></Route>
           <Route path="/Mypage/Comment" element={<MyPageComment />}></Route>
           <Route path="/Mypage/Modify" element={<MyPageModify />}></Route>
-          
         </Route>
         <Route path="/StoryChange" element={<StoryChange />}></Route>
         <Route path="/Timetable" element={<TimeTable />}></Route>
