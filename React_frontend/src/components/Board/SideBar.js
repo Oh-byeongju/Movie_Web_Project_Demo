@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components"
 const SideBar = () =>{
     const menus = [
-        { name: "관람 후기", path: "/" },
+        { name: "자유 게시판", path: "/" },
         { name: "영화 뉴스", path: "/" },
         { name: "인터뷰", path: "/" },
         { name: "동영상", path: "/"}

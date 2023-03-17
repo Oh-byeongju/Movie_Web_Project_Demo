@@ -1,9 +1,30 @@
 import React ,{useRef, useState,useMemo}from "react";
 import styled from "styled-components";
 import ReactQuill from "react-quill";
-const Writing = () =>{
-    const QuillRef = useRef();
+import 'react-quill/dist/quill.snow.css';
+import { useSelector ,useDispatch} from "react-redux";
+import axios from "axios";
+import { http } from "../../lib/http";
+import { BOARD_WRITE_REQUEST } from "../../reducer/Board";
 
+const Writing = () =>{
+    const dispatch = useDispatch();
+    const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+    const selectList = ["자유 게시판", "영화 뉴스", "인터뷰", "동영상"];
+    const [Selected, setSelected] = useState("자유 게시판");
+  
+    //select option 가져오기
+    const handleSelect = (e) => {
+      setSelected(e.target.value);
+    };
+  const quillRef = useRef();
+
+  const [title , setTitle ]= useState('')
+  const handleTitle = (e) => {
+    setTitle(e.target.value);
+    console.log(title)
+  };
 	const [Board_Content, setContent] = useState('');
 
 	const onEditorChange = (value) => {
@@ -12,13 +33,35 @@ const Writing = () =>{
 	};
 
   const imageHandler = () => {
+    // file input 임의 생성
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
-    input.setAttribute("accept", "image/*");
     input.click();
 
-    
-  }
+    input.onchange = async() => {
+        const file = input.files;
+        const formData = new FormData();
+
+        if(file) {
+            formData.append("multipartFiles", file[0]);
+        }
+
+        // file 데이터 담아서 서버에 전달하여 이미지 업로드
+        const res = await http.post('http://localhost:8080/v2/normal/uploadImage', formData);
+
+        if(quillRef.current) {
+            // 현재 Editor 커서 위치에 서버로부터 전달받은 이미지 불러오는 url을 이용하여 이미지 태그 추가
+            const index = (quillRef.current.getEditor().getSelection() ).index;
+
+            const quillEditor = quillRef.current.getEditor();
+            quillEditor.setSelection(index, 1);
+
+            quillEditor.clipboard.dangerouslyPasteHTML(
+                index,
+                `<img src=${res.data} alt=${'alt text'} />`
+            );
+        }
+    }}
 
   const modules = useMemo (
     () => ({
@@ -54,16 +97,17 @@ const Writing = () =>{
                 console.log(Board_Content)
             }}>글쓰기</h2>
                 <Select>
-                    <select>
-                        <option>관람 후기</option>
-                        <option>영화 뉴스</option>
-                        <option>인터뷰</option>
-                        <option>동영상</option>
-                    </select>
-                    <input type="text" placeholder="제목"/>
+                <select onChange={handleSelect} value={Selected}>
+                {selectList.map((item) => (
+                <option value={item} key={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+                    <input type="text" placeholder="제목" value={title} onChange={handleTitle}/>
                 </Select>
                 <CustomReactQuill
-        ref={QuillRef}
+        ref={quillRef}
         formats={formats}
         value={Board_Content}
         onChange={onEditorChange}
@@ -75,7 +119,20 @@ const Writing = () =>{
        </WriteWrapper>
        <ButtonMore>
         <Fail>취소하기</Fail>
-        <Success></Success>
+        <Success 
+        onClick={()=>{
+          
+          dispatch({
+            type:BOARD_WRITE_REQUEST,
+            data:{
+              uid:LOGIN_data.uid,
+              title:title,
+              detail:Board_Content,
+              category:Selected
+            }
+          })
+          }}
+        >작성하기</Success>
        </ButtonMore>
        </ContentWrapper>
 
@@ -148,7 +205,6 @@ background-color: #fff;
 border: 1px solid #dddfe4;
 width: 154px;
 height: 48px;
-margin-left:20px;
 }
 `
 const Success =styled.button`
