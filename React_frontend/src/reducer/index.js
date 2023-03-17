@@ -7,6 +7,7 @@ import movie from "./movie";
 import seat from "./seat";
 import TimeTable from "./TimeTable";
 import R_mypage_movie from "./R_mypage_movie";
+import Board from "./Board";
 
 // 리듀서 파일 생성 시 여기 추가하면 됨.
 const rootReducer = combineReducers({
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   movie,
   seat,
   TimeTable,
-  R_mypage_movie
+  R_mypage_movie,
+  Board
 });
 
 export default rootReducer;
