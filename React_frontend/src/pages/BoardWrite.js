@@ -1,5 +1,5 @@
 import React from "react";
-import Writing from "../components/\bBoard/Writing";
+import Writing from "../components/Board/Writing";
 const BoardWrite = ()=>{
     return(
         <>
@@ -7,4 +7,5 @@ const BoardWrite = ()=>{
       </>
     )
 }
+
 export default BoardWrite;

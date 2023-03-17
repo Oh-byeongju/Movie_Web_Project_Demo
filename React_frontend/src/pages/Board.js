@@ -1,8 +1,8 @@
 import React from "react"
-import BoardList from "../components/\bBoard/BordList"
+import BoardList from "../components/Board/BordList"
 import styled from "styled-components"
-import SideBar from "../components/\bBoard/SideBar"
-import ContentHeader from "../components/\bBoard/ContentHeader"
+import SideBar from "../components/Board/SideBar"
+import ContentHeader from "../components/Board/ContentHeader"
 import { Outlet } from "react-router-dom";
 
 const Board = () =>{

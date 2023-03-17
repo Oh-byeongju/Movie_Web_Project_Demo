@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { EditTwoTone ,FireTwoTone,StarTwoTone ,QrcodeOutlined,SearchOutlined } from "@ant-design/icons";
 import { QrCodeTwoTone } from "@mui/icons-material";
+import { useLocation, Link } from "react-router-dom";
+
 const ContentHeader =()=>{
     return (
     <ContentWrapper>
@@ -9,7 +11,7 @@ const ContentHeader =()=>{
         <SubMenuHeader>
             <h2>관람후기</h2>
             <ul className="header">
-                <li><EditTwoTone style={{fontSize:'25px' }}/></li></ul>
+                <li><Link to="/Board/write"><EditTwoTone style={{fontSize:'25px' }}/></Link></li></ul>
             <SubMenuFooter>
                 <ul>
                     <li>
@@ -17,7 +19,7 @@ const ContentHeader =()=>{
                     </li>
 
                     <li>
-                    <a><QrcodeOutlined style={{fontSize:'25px', position:'relative', top:'4px' ,paddingRight:'5px'}}  twoToneColor="grey"/>TOP</a>
+                    <a><QrcodeOutlined style={{fontSize:'25px', position:'relative', top:'4px' ,paddingRight:'5px'}}  twoToneColor="grey"/>최신순</a>
                     </li>
 
                     <li>

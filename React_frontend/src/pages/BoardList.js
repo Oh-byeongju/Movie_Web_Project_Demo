@@ -1,5 +1,5 @@
 import React from "react";
-import Content from "../components/\bBoard/Content";
+import Content from "../components/Board/Content";
 const BoardList =()=>{
     return(
         <>
