@@ -35,6 +35,8 @@ const TopButtons = () => {
       type: USER_LOGOUT_REQUEST,
     });
     
+
+    // 이거 아직 이상함 우째 할지 고민해보기
     window.location.assign('/');
   }, [dispatch]);
 

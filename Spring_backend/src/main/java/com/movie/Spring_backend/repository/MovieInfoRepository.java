@@ -1,5 +1,6 @@
 package com.movie.Spring_backend.repository;
 
+import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.entity.MovieEntity;
 import com.movie.Spring_backend.entity.MovieInfoEntity;
 import com.movie.Spring_backend.entity.MovieMemberEntity;
@@ -86,12 +87,9 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
             "where tid = :tid) ")
     List <MovieInfoEntity> findTimeTheater(@Param("miday") Date miday ,@Param("tid")Long tid);
 
-
-    // 이거 해쉬셋으로 중복 없애야할듯
-    // 특정 사용자가 예매후 관람이 끝난
-    // true false 봐줘야하는데 이러면
+    // 특정 사용자가 예매후 관람이 끝난 영화 정보를 들고오는 메소드
     @Query(value = "SELECT mi FROM MovieInfoEntity as mi LEFT OUTER JOIN mi.reservations rs " +
-            "where mi.miendtime <= NOW() AND rs.member = 'temp22' ")
-    List<MovieInfoEntity> findMemberPossible();
+            "where mi.miendtime <= NOW() AND rs.rstate = 1 AND rs.member = :member")
+    List<MovieInfoEntity> findMemberPossible(@Param("member") MemberEntity member);
 }
 

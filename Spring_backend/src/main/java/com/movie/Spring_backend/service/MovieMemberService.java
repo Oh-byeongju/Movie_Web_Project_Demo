@@ -40,6 +40,7 @@ public class MovieMemberService {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
 
+        // 이거 아이디 안받아오게 만들기
         // requestMap 안에 정보를 추출
         String User_id = requestMap.get("uid");
         String Movie_id = requestMap.get("mid");
@@ -100,11 +101,8 @@ public class MovieMemberService {
         // 상영이 끝난 영화정보 튜플 검색
         List<MovieInfoEntity> MovieInfos = movieInfoRepository.findInfoBeforeToday(movie);
 
-        // 상영이 끝난 영화들 중 사용자가 영화를 관람한 기록이 있는지 조회
-
-        //여기서 true false 확인
-
-        List<ReservationEntity> Reservations = reservationRepository.findByMemberAndMovieInfoIn(member, MovieInfos);
+        // 상영이 끝난 영화들 중 사용자가 영화를 관람한 기록이 있는지 조회 (예매취소 한것 제외)
+        List<ReservationEntity> Reservations = reservationRepository.findByRstateTrueAndMemberAndMovieInfoIn(member, MovieInfos);
 
         // 관람기록이 존재하지 않을경우 예외처리
         if (Reservations.isEmpty()) {

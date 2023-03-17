@@ -6,6 +6,8 @@ package com.movie.Spring_backend.repository;
 import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.entity.MovieEntity;
 import com.movie.Spring_backend.entity.MovieMemberEntity;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,9 +19,17 @@ import java.util.Optional;
 
 @Repository
 public interface MovieMemberRepository extends JpaRepository<MovieMemberEntity, Long> {
+//    @NotNull
+//    @Override
+//    @EntityGraph(attributePaths = {"movie"})
+//    List<MovieMemberEntity> findAll();
+    // 내일 이거 수정해서 써보기
 
     // 사용자가 좋아요 누른 영화 목록 구하는 메소드
     List<MovieMemberEntity> findByUmlikeTrueAndMember(MemberEntity member);
+
+    // 사용자가 작성한 관람평 목록을 구하는 메소드
+    List<MovieMemberEntity> findByUmcommentIsNotNullAndMember(MemberEntity member);
 
     // MovieMember 테이블에 튜플이 있는지 확인하는 메소드
     Optional<MovieMemberEntity> findByMovieAndMember(MovieEntity movie, MemberEntity member);

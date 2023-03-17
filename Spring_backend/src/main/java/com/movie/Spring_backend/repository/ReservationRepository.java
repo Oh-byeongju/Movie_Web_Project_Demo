@@ -12,9 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long> {
-    // 사용자 id와 영화정보 id를 이용하여 엔티티 조회하는 메소드
-    List<ReservationEntity> findByMemberAndMovieInfoIn(MemberEntity member, List<MovieInfoEntity> movieInfos);
+    // 사용자 id와 영화정보 id를 이용하여 엔티티 조회하는 메소드 (예매 취소된것 제외)
+    List<ReservationEntity> findByRstateTrueAndMemberAndMovieInfoIn(MemberEntity member, List<MovieInfoEntity> movieInfos);
 
-   ReservationEntity findByRpayid(String rpayid);
+    ReservationEntity findByRpayid(String rpayid);
 
 }
