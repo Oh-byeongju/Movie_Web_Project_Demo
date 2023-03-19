@@ -1,33 +1,8 @@
-export const initalState = {
-  allmovie_loading: false,
-  allmovie_done: false,
-  allmovie_error: null,
-  screenmovie_loading: false,
-  screenmovie_done: false,
-  screenmovie_error: null,
-  comingmovie_loading: false,
-  comingmovie_done: false,
-  comingmovie_error: null,
-  detail_movie_loading: false,
-  detail_movie_done: false,
-  detail_movie_error: null,
-  detail_comment_recent_loading: false,
-  detail_comment_recent_done: false,
-  detail_comment_recent_error: null,
-  detail_comment_like_loading: false,
-  detail_comment_like_done: false,
-  detail_comment_like_error: null,
-  allMovie: [],
-  screenMovie: [],
-  comingMovie: [],
-  detailMovie: [],
-  detailComment: []
-};
-
 // 전체 영화 리스트
 export const ALLMOVIE_REQUEST = "ALLMOVIE_REQUEST";
 export const ALLMOVIE_SUCCESS = "ALLMOVIE_SUCCESS";
 export const ALLMOVIE_FAILURE = "ALLMOVIE_FAILURE";
+export const ALLMOVIE_SETTING = "ALLMOVIE_SETTING";
 
 // 현재 상영작 리스트
 export const SCREENMOVIE_REQUEST = "SCREENMOVIE_REQUEST";
@@ -38,6 +13,11 @@ export const SCREENMOVIE_FAILURE = "SCREENMOVIE_FAILURE";
 export const COMINGMOVIE_REQUEST = "COMINGMOVIE_REQUEST";
 export const COMINGMOVIE_SUCCESS = "COMINGMOVIE_SUCCESS";
 export const COMINGMOVIE_FAILURE = "COMINGMOVIE_FAILURE";
+
+// 영화 좋아요 케이스들
+export const USER_MLIKE_REQUEST = "USER_MLIKE_REQUEST"
+export const USER_MLIKE_SUCCESS = "USER_MLIKE_SUCCESS"
+export const USER_MLIKE_FAILURE = "USER_MLIKE_FAILURE"
 
 // 영화 세부정보 리스트
 export const DETAIL_MOVIE_REQUEST = "DETAIL_MOVIE_REQUEST";
@@ -54,6 +34,48 @@ export const DETAIL_COMMENT_LIKE_REQUEST = "DETAIL_COMMENT_LIKE_REQUEST";
 export const DETAIL_COMMENT_LIKE_SUCCESS = "DETAIL_COMMENT_LIKE_SUCCESS";
 export const DETAIL_COMMENT_LIKE_FAILURE = "DETAIL_COMMENT_LIKE_FAILURE";
 
+
+export const initalState = {
+  allmovie_loading: false,
+  allmovie_done: false,
+  allmovie_error: null,
+  allMovieKey: '',
+  allMovieSortRate: true,
+  allMovieSortLike: false,
+  allMovieLimit: 8,
+  allMovieId: 'No_login',
+  allMovieSearch: '',
+
+  screenmovie_loading: false,
+  screenmovie_done: false,
+  screenmovie_error: null,
+
+
+  comingmovie_loading: false,
+  comingmovie_done: false,
+  comingmovie_error: null,
+
+  MLIKE_loading: false,
+  MLIKE_done: false,
+  MLIKE_error: null,
+
+
+  detail_movie_loading: false,
+  detail_movie_done: false,
+  detail_movie_error: null,
+  detail_comment_recent_loading: false,
+  detail_comment_recent_done: false,
+  detail_comment_recent_error: null,
+  detail_comment_like_loading: false,
+  detail_comment_like_done: false,
+  detail_comment_like_error: null,
+  allMovie: [],
+  screenMovie: [],
+  comingMovie: [],
+  detailMovie: [],
+  detailComment: [],
+};
+
 const movie = (state = initalState, action) => {
   switch (action.type) {
     // 전체 영화 케이스들
@@ -62,7 +84,10 @@ const movie = (state = initalState, action) => {
         ...state, 
         allmovie_loading: true,
         allmovie_done: false,
-        allmovie_error: null
+        allmovie_error: null,
+        allMovieKey: action.data.key,
+        allMovieId: action.data.uid,
+        allMovieSearch: action.data.search
       };
     case ALLMOVIE_SUCCESS:
       return {
@@ -80,6 +105,19 @@ const movie = (state = initalState, action) => {
         allmovie_error: action.error,
         allMovie: []
       };
+    case ALLMOVIE_SETTING:
+      return {
+        ...state,
+        allMovieKey: action.data.key,
+        allMovieSortRate: action.data.rate,
+        allMovieSortLike: action.data.like,
+        allMovieLimit: action.data.limit,
+        allMovieId: action.data.uid,
+        allMovieSearch: action.data.search
+      };
+
+    
+    
     // 현재 상영작 영화 케이스들
     case SCREENMOVIE_REQUEST:
       return {
@@ -128,6 +166,42 @@ const movie = (state = initalState, action) => {
         comingmovie_error: action.error,
         comingMovie: []
       };
+
+
+    // 영화 좋아요 누르는 케이스들
+		case USER_MLIKE_REQUEST:
+			return {
+				...state,
+				MLIKE_loading: true,
+				MLIKE_done: false,
+				MLIKE_error: false
+			};
+		case USER_MLIKE_SUCCESS:
+
+      if(action.data.type === "all") {
+        return {
+          ...state,
+          allMovie: state.allMovie.map(movie => 
+            movie.id === action.data.mid ? {...movie, likes: action.data.mlikes, like: action.data.mlike} : movie
+          )
+        }
+      }
+
+			return {
+				...state,
+				MLIKE_loading: false,
+				MLIKE_done: true,
+				MLIKE_error: false
+			};
+		case USER_MLIKE_FAILURE:
+			return {
+				...state,
+				MLIKE_loading: false,
+				MLIKE_done: false,
+				MLIKE_error: true,
+			};
+    
+
     // 영화 세부정보 케이스들
     case DETAIL_MOVIE_REQUEST:
       return {

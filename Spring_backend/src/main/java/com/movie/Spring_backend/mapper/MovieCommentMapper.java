@@ -28,4 +28,24 @@ public class MovieCommentMapper {
                 .upcnt(entity.getCntCommentLike())
                 .like(like).build();
     }
+
+    // 사용자가 작성한 관람평을 영화 정보와 같이 매핑해주는 메소드(마이 페이지)
+    public CommentInfoDto toDtoMyPage(MovieMemberEntity entity, boolean like) {
+
+        // 예외처리
+        if (entity == null) {
+            return null;
+        }
+
+        return CommentInfoDto.builder()
+                .umid(entity.getUmid())
+                .umscore(entity.getUmscore())
+                .umcomment(entity.getUmcomment())
+                .umcommenttime(entity.getUmcommenttime())
+                .uid(entity.getMember().getUid())
+                .upcnt(entity.getCntCommentLike())
+                .like(like)
+                .mtitle(entity.getMovie().getMtitle())
+                .mimagepath(entity.getMovie().getMimagepath()).build();
+    }
 }

@@ -33,6 +33,7 @@ public class MovieMemberEntity {
 
     // 관람평 좋아요 개수 추출
     // 테이블에는 존재하지 않고 Formula 어노테이션으로 테이블을 join 시켜서 들고옴
+    @Basic(fetch = FetchType.LAZY)
     @Formula("(select count(ci.cuid) from comment_info ci where ci.umid = umid)")
     private Integer cntCommentLike;
 

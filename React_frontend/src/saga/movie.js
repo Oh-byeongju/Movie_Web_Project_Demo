@@ -9,6 +9,9 @@ import {
   COMINGMOVIE_REQUEST,
   COMINGMOVIE_SUCCESS,
   COMINGMOVIE_FAILURE,
+  USER_MLIKE_REQUEST,
+	USER_MLIKE_SUCCESS,
+	USER_MLIKE_FAILURE,
   DETAIL_MOVIE_REQUEST,
   DETAIL_MOVIE_SUCCESS,
   DETAIL_MOVIE_FAILURE,
@@ -168,6 +171,33 @@ async function LoadComingMovie(data) {
     });
 }
 
+// 영화 좋아요 toggle 함수
+function* MovieLikeToggle(action) {
+  const result = yield call(CallMovieLikeToggle, action.data);
+  if (result.status === 200) {
+    yield put({
+      type: USER_MLIKE_SUCCESS,
+      data: result.data
+    });
+  } 
+  else {
+    yield put({
+      type: USER_MLIKE_FAILURE,
+    });
+  }
+}
+
+// 유저 정보를 전달한 뒤 좋아요 기록 변경(백엔드 연결)
+async function CallMovieLikeToggle(data) {
+  return await http.post("/MovieMember/auth/LikeToggle", data)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
 // 영화 세부내용 검색을 위한 함수
 function* DetailMovieLoad(action) {
   const result = yield call(DetailMovie, action.data);
@@ -298,6 +328,11 @@ function* comingMovie() {
   yield takeLatest(COMINGMOVIE_REQUEST, ComingMovieLoad);
 }
 
+function* USER_MLIKE_TOGGLE() {
+  yield takeLatest(USER_MLIKE_REQUEST, MovieLikeToggle);
+}
+
+
 function* detailMovie() {
   yield takeLatest(DETAIL_MOVIE_REQUEST, DetailMovieLoad);
 }
@@ -311,5 +346,6 @@ function* detailCommentLike() {
 }
 
 export default function* movieSaga() {
-  yield all([fork(allMovie), fork(screenMovie), fork(comingMovie), fork(detailMovie), fork(detailCommentRecent), fork(detailCommentLike)]);
+  yield all([fork(allMovie), fork(screenMovie), fork(comingMovie), fork(USER_MLIKE_TOGGLE), 
+            fork(detailMovie), fork(detailCommentRecent), fork(detailCommentLike)]);
 }

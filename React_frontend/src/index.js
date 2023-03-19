@@ -26,7 +26,7 @@ const root = createRoot(container);
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <ScrollTop />
+      <ScrollTop /> 
       <App />
     </BrowserRouter>
   </Provider>

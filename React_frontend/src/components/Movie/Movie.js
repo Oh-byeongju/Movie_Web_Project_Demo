@@ -3,12 +3,12 @@
   23-02-08 사용자가 누른 Like 적용(오병주)
   23-02-15 페이지 css 수정(오병주)
 */
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
+import { USER_MLIKE_REQUEST } from "../../reducer/movie";
 import { useLocation } from "react-router-dom";
 
 import {
@@ -17,7 +17,7 @@ import {
   MOVIE_DATA,
 } from "../../reducer/ticket";
 
-const Movie = ({ movie }) => {
+const Movie = ({ movie, type }) => {
   // 반올림 없이 소수점 생성해주는 함수
   const getNotRoundDecimalNumber = (number, decimalPoint = 1) => {
     let num = typeof number === "number" ? String(number) : number;
@@ -33,15 +33,7 @@ const Movie = ({ movie }) => {
   // 리덕스 로그인 상태 정보
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
   const dispatch = useDispatch();
-
-  // 사용자가 보이는 like UI 변경을 위한 변수
-  const [like, setlike] = useState(false);
-  const [likes, setlikes] = useState("");
-
-  useEffect(() => {
-    setlike(movie.like);
-    setlikes(movie.likes);
-  }, [movie]);
+  const location = useLocation();
 
   const OnClickReserve = (data) => {
     //allmovie(태초상태)
@@ -71,21 +63,12 @@ const Movie = ({ movie }) => {
       type: USER_MLIKE_REQUEST,
       data: {
         mid: movie.id,
-        mlike: like,
-        uid: LOGIN_data.uid,
-      },
+        type: type
+      }
     });
 
-    // 백엔드를 한번 더 호출하지 않고 like와 likes의 변수만 변경하여 사용자가 보고 있는 브라우저 UI를 변경
-    if (like) {
-      setlike(false);
-      setlikes(likes - 1);
-    } else {
-      setlike(true);
-      setlikes(likes + 1);
-    }
-  }, [movie.id, LOGIN_data.uid, like, likes, dispatch]);
-  const location = useLocation();
+  }, [movie, type, LOGIN_data.uid, dispatch]);
+
   return (
     <LI>
       <div className="Image">
@@ -125,16 +108,16 @@ const Movie = ({ movie }) => {
         <Button>
           <Like onClick={LikeChange}>
             <span>
-              {like === true ? (
+              {movie.like === true ? (
                 <HeartFilled style={{ color: "red" }} />
               ) : (
                 <HeartOutlined />
               )}
             </span>
             <span>
-              {likes > 999
-                ? getNotRoundDecimalNumber(likes / 1000) + "K"
-                : likes}
+              {movie.likes > 999
+                ? getNotRoundDecimalNumber(movie.likes / 1000) + "K"
+                : movie.likes}
             </span>
           </Like>
           <Link to="/reserve" state={{ state: location.pathname }}>

@@ -7,6 +7,7 @@ package com.movie.Spring_backend.controller;
 
 import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.dto.MemberDto;
+import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.service.MovieMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,10 @@ public class MovieMemberController {
 
     private final MovieMemberService movieMemberService;
 
-    // 좋아요 토글을 위한 메소드, 토글을 성공할 경우 noContent 리턴
+    // 좋아요 토글을 위한 메소드, 좋아요 누른 영화정보 리턴
     @PostMapping("/auth/LikeToggle")
-    public ResponseEntity<String> LikeToggle(@RequestBody Map<String, String> requestMap, HttpServletRequest request) {
-        movieMemberService.MovieLikeUpdate(requestMap, request);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<MovieDto> LikeToggle(@RequestBody MovieDto requestDto, HttpServletRequest request) {
+        return ResponseEntity.ok().body(movieMemberService.MovieLikeUpdate(requestDto, request));
     }
 
     // 관람평 작성을 위한 메소드, 작성에 성공할 경우 noContent 리턴

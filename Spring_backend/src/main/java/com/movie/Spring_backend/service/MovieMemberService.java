@@ -6,16 +6,17 @@
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.CommentInfoDto;
+import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.error.exception.BusinessException;
 import com.movie.Spring_backend.error.exception.EntityNotFoundException;
 import com.movie.Spring_backend.error.exception.ErrorCode;
+import com.movie.Spring_backend.exceptionlist.MemberNotFoundException;
 import com.movie.Spring_backend.exceptionlist.MovieCommentNotFoundException;
+import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
-import com.movie.Spring_backend.repository.CommentInfoRepository;
-import com.movie.Spring_backend.repository.MovieInfoRepository;
-import com.movie.Spring_backend.repository.MovieMemberRepository;
-import com.movie.Spring_backend.repository.ReservationRepository;
+import com.movie.Spring_backend.repository.*;
+import com.movie.Spring_backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ import java.util.*;
 @Service
 public class MovieMemberService {
 
+    private final MovieRepository movieRepository;
     private final MovieMemberRepository movieMemberRepository;
     private final MovieInfoRepository movieInfoRepository;
     private final ReservationRepository reservationRepository;
@@ -36,39 +38,61 @@ public class MovieMemberService {
 
     // 사용자가 영화 좋아요를 누를 때 실행되는 메소드
     @Transactional
-    public void MovieLikeUpdate(Map<String, String> requestMap, HttpServletRequest request) {
+    public MovieDto MovieLikeUpdate(MovieDto requestDto, HttpServletRequest request) {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
 
-        // 이거 아이디 안받아오게 만들기
-        // requestMap 안에 정보를 추출
-        String User_id = requestMap.get("uid");
-        String Movie_id = requestMap.get("mid");
-        String like = requestMap.get("mlike");
+        // authentication 객체에서 아이디 확보
+        String currentMemberId = SecurityUtil.getCurrentMemberId();
 
-        // JPA를 사용하기 위해 Movie_id 와 User_id 를 entity형으로 변환
-        MovieEntity movie = MovieEntity.builder().mid(Long.valueOf(Movie_id)).build();
-        MemberEntity member = MemberEntity.builder().uid(User_id).build();
+        // requestDto 안에 영화 id 추출
+        Long Movie_id = requestDto.getMid();
 
-        // like가 true면 이미 튜플이 존재하므로 update 쿼리 실행
-        if (like.equals("true")) {
-            movieMemberRepository.MovieLikeChangeFalse(member, movie);
+        // JPA를 사용 하기 위해 Movie_id 와 User_id 를 entity형으로 변환(영화는 검색)
+        MovieEntity movie = movieRepository.findById(Movie_id).orElseThrow(() -> new MovieNotFoundException("영화 정보가 존재하지 않습니다."));
+        MemberEntity member = MemberEntity.builder().uid(currentMemberId).build();
+
+        // 사용자의 영화 좋아요 기록 컬럼 조회
+        MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
+
+        // 여기 타임 넣어야함 (시간)
+        // 튜플이 존재하지 않는 경우 entity를 가공 후 insert 쿼리 실행
+        if (MovieMember == null) {
+            MovieMember = MovieMemberEntity.builder()
+                    .umlike(true)
+                    .movie(movie)
+                    .member(member).build();
+            movieMemberRepository.save(MovieMember);
+
+            // 프론트단에서 사용할 정보 리턴
+            return MovieDto.builder()
+                    .mid(movie.getMid())
+                    .mlike(true)
+                    .mlikes(movie.getCntMovieLike() + 1)
+                    .type(requestDto.getType()).build();
         }
         else {
-            // like가 거짓이면 튜플의 존재 여부를 먼저 파악
-            MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
+            // 튜플의 like가 true일 경우 false로 update
+            if (MovieMember.getUmlike()) {
+                movieMemberRepository.MovieLikeChangeFalse(member, movie);
 
-            // 튜플이 존재하지 않는 경우 entity를 가공 후 insert 쿼리 실행
-            if (MovieMember == null) {
-                MovieMember = MovieMemberEntity.builder()
-                        .umlike(true)
-                        .movie(movie)
-                        .member(member).build();
-                movieMemberRepository.save(MovieMember);
+                // 프론트단에서 사용할 정보 리턴
+                return MovieDto.builder()
+                        .mid(movie.getMid())
+                        .mlike(false)
+                        .mlikes(movie.getCntMovieLike() - 1)
+                        .type(requestDto.getType()).build();
             }
-            // 튜플이 존재하는 경우 좋아요 기록을 바꾸는 update 쿼리 실행
+            // 튜플의 like가 false일 경우 true로 update
             else {
                 movieMemberRepository.MovieLikeChangeTrue(member, movie);
+
+                // 프론트단에서 사용할 정보 리턴
+                return MovieDto.builder()
+                        .mid(movie.getMid())
+                        .mlike(true)
+                        .mlikes(movie.getCntMovieLike() + 1)
+                        .type(requestDto.getType()).build();
             }
         }
     }
@@ -141,8 +165,10 @@ public class MovieMemberService {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
 
+        // authentication 객체에서 아이디 확보
+        String currentMemberId = SecurityUtil.getCurrentMemberId();
+
         // commentInfoDto 안에 정보를 추출
-        String User_id = commentInfoDto.getUid();
         Long MovieMember_id = commentInfoDto.getUmid();
         boolean like = commentInfoDto.getLike();
 
@@ -154,10 +180,13 @@ public class MovieMemberService {
             throw new MovieCommentNotFoundException("정보가 존재하지 않습니다.");
         }
 
-        // JPA를 사용하기 위해 User_id 와 MovieMember_id 를 entity형으로 변환
-        MemberEntity Member = MemberEntity.builder().uid(User_id).build();
+        // JPA를 사용하기 위해 현재 아이디와 MovieMember_id 를 entity형으로 변환
+        MemberEntity Member = MemberEntity.builder().uid(currentMemberId).build();
         MovieMemberEntity MovieMember = MovieMemberEntity.builder().umid(MovieMember_id).build();
 
+
+        // 이거도 수정 바람
+        // 리액트에서 준 like를 믿지말고 직접검색해서 확인해야함
         // like가 true면 이미 튜플이 존재하므로 delete 쿼리 실행
         if (like) {
             commentInfoRepository.deleteByMemberAndMoviemember(Member, MovieMember);

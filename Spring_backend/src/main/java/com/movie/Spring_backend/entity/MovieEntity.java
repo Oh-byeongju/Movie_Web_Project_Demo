@@ -43,14 +43,17 @@ public class MovieEntity {
     private String mimagepath;
 
     // 좋아요 개수 추출
+    @Basic(fetch = FetchType.LAZY)
     @Formula("(select count(*) from movie_member mm where mm.umlike = true and mm.mid = mid)")
     private Integer cntMovieLike;
 
     // 평점 추출
+    @Basic(fetch = FetchType.LAZY)
     @Formula("(select avg(mm.umscore) from movie_member mm where mm.mid = mid)")
     private Float avgScore; // 평점의 평균
 
     // 영화의 예매기록 갯수 (예매 취소 제외)
+    @Basic(fetch = FetchType.LAZY)
     @Formula("(select count(*) from movie_reservation mr where mr.rstate = 1 and mr.miid in " +
              "(select mi.miid from movie_information mi where mi.mid = mid))")
     private Integer cntReserve;

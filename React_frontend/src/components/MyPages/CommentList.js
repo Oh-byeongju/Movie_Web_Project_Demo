@@ -7,44 +7,7 @@ import CommentMovie from './CommentMovie';
 import CommentReview from './CommentReview';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { USER_MOVIE_POSSIBLE_REQUEST } from '../../reducer/R_mypage_movie';
-
-const datas2 = [
-	{
-		rid: "1",
-		mtitle: "타이타닉",
-		cinema: "서울-강남점 2관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "A1, A2",
-		price: "100",
-		comment: '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)',
-		poster: "img/ranking/5.jpg"
-	},
-	{
-		rid: "1",
-		mtitle: "상견니",
-		cinema: "서울-강남점 2관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "A1, A2",
-		price: "100",
-		comment: '와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요! 와 재밌어요!',
-		poster: "img/ranking/3.jpg"
-	},
-	{
-		rid: "1",
-		mtitle: "두다다쿵",
-		cinema: "서울-강남점 2관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "A1, A2",
-		price: "100",
-		comment: '와 재밌어요!',
-		poster: "img/ranking/8.jpg"
-	}
-	
-]
+import { USER_MOVIE_POSSIBLE_REQUEST, USER_MY_COMMENT_SEARCH_REQUEST } from '../../reducer/R_mypage_movie';
 
 const CommentList = () => {
 	const dispatch = useDispatch();
@@ -52,7 +15,10 @@ const CommentList = () => {
 	// 관람평 작성 가능 영화 상태
   const { possibleMovie } = useSelector((state) => state.R_mypage_movie);
 
-	// 관람평 작성 가능 영화 요청
+	// 작성한 관람평 상태
+	const { MY_COMMENT_List } = useSelector((state) => state.R_mypage_movie);
+
+	// 관람평 작성 가능 영화 요청 (첫 랜더링)
   useEffect(() => {
     dispatch({
       type: USER_MOVIE_POSSIBLE_REQUEST
@@ -65,23 +31,25 @@ const CommentList = () => {
 
 	// 작성 가능 영화 버튼 누를 때
 	const clickpossible = useCallback(()=> {
-		
+
+		dispatch({
+      type: USER_MOVIE_POSSIBLE_REQUEST
+    });
+
 		setpossiblebutton(true);
 		setreviewbutton(false);
-		console.log("작성버튼");
-    
-	}, [])
+	}, [dispatch])
 
 	// 작성한 관람평 버튼 누를 때
 	const clickreview = useCallback(()=> {
-		
+
+		dispatch({
+      type: USER_MY_COMMENT_SEARCH_REQUEST
+    });
+
 		setpossiblebutton(false);
 		setreviewbutton(true);
-		console.log("관람평버튼");
-    
-	}, [])
-
-
+	}, [dispatch])
 
 	return (
 		<Content>
@@ -119,9 +87,9 @@ const CommentList = () => {
 			</ContentDetails>:
 			 <ContentDetails>
 				<span className='total'>
-					총 {datas2.length}개
+					총 {MY_COMMENT_List.length}개
 				</span>
-				{datas2.length !== 0 ? datas2.map((data, index) => <CommentReview data={data} key={index} />) : 
+				{MY_COMMENT_List.length !== 0 ? MY_COMMENT_List.map((comment, index) => <CommentReview comment={comment} key={index} />) : 
 				<NoContent>
 					<span className='None'>
 						<InfoCircleOutlined/>
