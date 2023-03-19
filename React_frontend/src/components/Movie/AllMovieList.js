@@ -4,52 +4,100 @@
  23-03-07 영화 정렬 추가(오병주)
 */
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { ALLMOVIE_REQUEST } from "../../reducer/movie";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { ALLMOVIE_REQUEST, ALLMOVIE_SETTING } from "../../reducer/movie";
 import Movie from "./Movie";
 import MovieSearchLoading from "../Common_components/MovieSearchLoading";
 import styled from "styled-components";
 import { Input } from "antd";
 import { DownOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router-dom";
 const { Search } = Input;
 
 const AllMovieList = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  // 리덕스에 있는 allmovie 상태들
+  const { allMovie, allmovie_loading, allMovieKey, allMovieSortRate, allMovieSortLike, 
+    allMovieLimit, allMovieId, allMovieSearch } = useSelector(
+    state => ({
+      allMovie: state.movie.allMovie,
+      allmovie_loading: state.movie.allmovie_loading,
+      allMovieKey: state.movie.allMovieKey,
+      allMovieSortRate: state.movie.allMovieSortRate,
+      allMovieSortLike: state.movie.allMovieSortLike,
+      allMovieLimit: state.movie.allMovieLimit,
+      allMovieId: state.movie.allMovieId,
+      allMovieSearch: state.movie.allMovieSearch
+    }),
+    shallowEqual
+  );
+
+  // 로그인 리덕스 상태
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
   // UL의 높이를 구하기 위한 useRef
   const UL_Ref = useRef();
   const [Height, setHeight] = useState(962.2);
-
-  const [Limit, setLimit] = useState(8); //더보기 리미트
-  const L = 8;
-
-  const { allMovie } = useSelector((state) => state.movie);
-  const { allmovie_loading } = useSelector((state) => state.movie);
-
-  // 로그인 리덕스 상태
-  const { LOGIN_data } = useSelector((state) => state.R_user_login);
-  
-  // 로그인 상태에 따라 전체 검색이 다름(좋아요 표시 때문)
-  useEffect(() => {
-    dispatch({
-      type: ALLMOVIE_REQUEST,
-      data: {
-        uid: LOGIN_data.uid,
-        button: 'rate',
-        search: ''
-      }
-    });
-  }, [LOGIN_data.uid, dispatch]);
+  const [Limit, setLimit] = useState(allMovieLimit); // 더보기 리미트
 
   // 검색칸 내용 변수
-  const [search, setsearch] = useState("");
+  const [search, setsearch] = useState(allMovieSearch);
   const handleSearchChange = e => {
     setsearch(e.target.value);
   };
 
   // 정렬 버튼 css 변수
-	const [ratebutton, setratebutton] = useState(true);
-	const [likebutton, setlikebutton] = useState(false);
+	const [ratebutton, setratebutton] = useState(allMovieSortRate);
+	const [likebutton, setlikebutton] = useState(allMovieSortLike);
+
+  // 로그인 상태에 따라 전체 검색이 다름(좋아요 표시 때문)
+  useEffect(() => {
+    // 사용자가 브라우저에 있는 뒤로가기 또는 앞으로가기 버튼을 누른것을 감지
+    if (allMovieKey !== location.key) {
+      dispatch({
+        type: ALLMOVIE_REQUEST,
+        data: {
+          uid: LOGIN_data.uid,
+          button: 'rate',
+          search: '',
+          key: location.key
+        }
+      });
+      setratebutton(true);
+      setlikebutton(false);
+      setLimit(8);
+    }
+
+    // 리덕스 상태에 있는 사용자 아이디가 바뀐것을 감지
+    if (allMovieId !== LOGIN_data.uid) {
+      dispatch({
+        type: ALLMOVIE_REQUEST,
+        data: {
+          uid: LOGIN_data.uid,
+          button: 'rate',
+          search: '',
+          key: location.key
+        }
+      });
+    }
+
+    // 페이지를 탈출할 때 현재 페이지의 정보를 리덕스에 저장
+    return () => {
+      dispatch({
+        type: ALLMOVIE_SETTING,
+        data: {
+          key: location.key,
+          rate: ratebutton,
+          like: likebutton,
+          limit: Limit,
+          uid: LOGIN_data.uid,
+          search: search
+        }
+      });
+    };
+  }, [allMovieKey, allMovieId, location, LOGIN_data, search, ratebutton, likebutton, Limit, dispatch]);
 
   // 최신순 버튼을 누를 때
 	const clickrate = useCallback(()=> {
@@ -58,19 +106,20 @@ const AllMovieList = () => {
       data: {
         uid: LOGIN_data.uid,
         button: 'rate',
-        search: search.trim()
+        search: search.trim(),
+        key: location.key
       }
     });
 		setratebutton(true);
 		setlikebutton(false);
 
-    setLimit(L);
+    setLimit(8);
     // UL의 높이 갱신
     var UL_Ref_style = window.getComputedStyle(UL_Ref.current);
     var UL_Ref_height = UL_Ref_style.getPropertyValue("height");
     setHeight(parseInt(UL_Ref_height) + 32.4);
 
-	}, [LOGIN_data.uid, search, dispatch])
+	}, [LOGIN_data.uid, search, location, dispatch])
 
 	// 공감순 버튼을 누를 때
 	const clicklike = useCallback(()=> {
@@ -79,19 +128,20 @@ const AllMovieList = () => {
       data: {
         uid: LOGIN_data.uid,
         button: 'like',
-        search: search.trim()
+        search: search.trim(),
+        key: location.key
       }
     });
 		setlikebutton(true);
 		setratebutton(false);
 
-    setLimit(L);
+    setLimit(8);
     // UL의 높이 갱신
     var UL_Ref_style = window.getComputedStyle(UL_Ref.current);
     var UL_Ref_height = UL_Ref_style.getPropertyValue("height");
     setHeight(parseInt(UL_Ref_height) + 32.4);
-    
-	}, [LOGIN_data.uid, search, dispatch])
+
+	}, [LOGIN_data.uid, search, location, dispatch])
 
   // 검색 버튼 누를때 실행되는 함수
   const onSearch = useCallback(() => {
@@ -103,7 +153,8 @@ const AllMovieList = () => {
         data: {
           uid: LOGIN_data.uid,
           button: 'rate',
-          search: search.trim()
+          search: search.trim(),
+          key: location.key
         }
       });
     }
@@ -114,17 +165,18 @@ const AllMovieList = () => {
         data: {
           uid: LOGIN_data.uid,
           button: 'like',
-          search: search.trim()
+          search: search.trim(),
+          key: location.key
         }
       });
     }
 
-    setLimit(L);
+    setLimit(8);
     // UL의 높이 갱신
     var UL_Ref_style = window.getComputedStyle(UL_Ref.current);
     var UL_Ref_height = UL_Ref_style.getPropertyValue("height");
     setHeight(parseInt(UL_Ref_height) + 32.4);
-  }, [LOGIN_data.uid, ratebutton, search, dispatch]);
+  }, [LOGIN_data.uid, ratebutton, search, location, dispatch]);
 
   // 더보기 버튼을 누를경우 limit를 증가시켜줌
   const onMoreClick = useCallback(() => {
@@ -133,6 +185,9 @@ const AllMovieList = () => {
 
   return (
     <Container>
+      <button onClick={()=>console.log(allMovie)}>
+        asasas
+      </button>
       <InnerWraps>
         <div className="titleMenu">
           <h1>전체영화</h1>
@@ -182,7 +237,7 @@ const AllMovieList = () => {
               {allMovie.length !== 0 ? (
                 allMovie
                   .slice(0, Limit)
-                  .map((movie) => <Movie movie={movie} key={movie.id} />)
+                  .map((movie) => <Movie movie={movie} key={movie.id} type="all" />)
               ) : (
                 <NoSearch>
                   <p>현재 상영중인 영화가 없습니다.</p>

@@ -3,17 +3,21 @@
 */
 package com.movie.Spring_backend.service;
 
+import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.error.exception.BusinessException;
 import com.movie.Spring_backend.error.exception.ErrorCode;
 import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
+import com.movie.Spring_backend.mapper.MovieCommentMapper;
 import com.movie.Spring_backend.mapper.MovieMapper;
+import com.movie.Spring_backend.repository.CommentInfoRepository;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
 import com.movie.Spring_backend.repository.MovieMemberRepository;
 import com.movie.Spring_backend.repository.MovieRepository;
 import com.movie.Spring_backend.util.SecurityUtil;
+import io.netty.channel.SimpleUserEventChannelHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +34,9 @@ public class MyPageMovieService {
     private final MovieInfoRepository movieInfoRepository;
     private final MovieRepository movieRepository;
     private final MovieMemberRepository movieMemberRepository;
+    private final CommentInfoRepository commentInfoRepository;
     private final MovieMapper movieMapper;
+    private final MovieCommentMapper movieCommentMapper;
     private final JwtValidCheck jwtValidCheck;
 
     // 사용자가 관람평을 작성할 수 있는 영화 목록을 불러오는 메소드
@@ -146,9 +152,9 @@ public class MyPageMovieService {
 
     // 마이페이지에서 작성한 관람평을 조회하는 메소드
     @Transactional
-    public void MovieCommentSearch(HttpServletRequest request) {
-//        // Access Token에 대한 유효성 검사
-//        jwtValidCheck.JwtCheck(request, "ATK");
+    public List<CommentInfoDto> MovieCommentSearch(HttpServletRequest request) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
 
         // authentication 객체에서 아이디 확보
         String currentMemberId = SecurityUtil.getCurrentMemberId();
@@ -156,16 +162,21 @@ public class MyPageMovieService {
         // JPA를 사용하기 위해 현재 아이디를 entity형으로 변환
         MemberEntity member = MemberEntity.builder().uid(currentMemberId).build();
 
-        // 사용자가 작성한 관람평 목록 조회
-        List<MovieMemberEntity> MovieMembers = movieMemberRepository.findAll();
+        // 사용자가 작성한 관람평 목록 조회(영화 내용까지 들고옴)
+        List<MovieMemberEntity> MovieMembers = movieMemberRepository.findByUmcommentIsNotNullAndMemberOrderByUmcommenttimeDesc(member);
 
-        for (int i = 0; i < 10; i++) {
-            System.out.println(MovieMembers.get(i).getMovie().getMtitle());
+        // 사용자가 좋아요 누른 영화 관람평 검색
+        List<CommentInfoEntity> CommentLikes = commentInfoRepository.findByMember(member);
+
+        // 좋아요 누른 관람평 목록의 관람평 기본키를 List로 변환
+        List<Long> CommentLikeList = new ArrayList<>();
+        for (CommentInfoEntity CI : CommentLikes) {
+            CommentLikeList.add(CI.getMoviemember().getUmid());
         }
-        // 내일 수정해서 쓰기 이거
 
-
-
+        // 관람평 목록과 좋아요 기록을 mapping 후 리턴
+        return MovieMembers.stream().map(MovieMember ->
+                movieCommentMapper.toDtoMyPage(MovieMember, CommentLikeList.contains(MovieMember.getUmid()))).collect(Collectors.toList());
     }
 }
 

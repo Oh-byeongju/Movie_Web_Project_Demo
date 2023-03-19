@@ -8,7 +8,10 @@ import {
 	USER_MOVIE_POSSIBLE_FAILURE,
   USER_MY_COMMENT_WRITE_REQUEST,
 	USER_MY_COMMENT_WRITE_SUCCESS,
-	USER_MY_COMMENT_WRITE_FAILURE
+	USER_MY_COMMENT_WRITE_FAILURE,
+  USER_MY_COMMENT_SEARCH_REQUEST,
+	USER_MY_COMMENT_SEARCH_SUCCESS,
+	USER_MY_COMMENT_SEARCH_FAILURE
 } from "../reducer/R_mypage_movie";
 import { http } from "../lib/http";
 
@@ -20,7 +23,8 @@ function* Possible_movie() {
       type: USER_MOVIE_POSSIBLE_SUCCESS,
       data: result.data,
     });
-  } else {
+  } 
+  else {
     yield put({
       type: USER_MOVIE_POSSIBLE_FAILURE
     });
@@ -67,6 +71,33 @@ async function CallCommentInsert(data) {
     });
 }
 
+// 작성한 관람평 조회 메소드
+function* CommentSearch() {
+  const result = yield call(CallCommentSearch);
+  if (result.status === 200) {
+    yield put({
+      type: USER_MY_COMMENT_SEARCH_SUCCESS,
+      data: result.data,
+    });
+  } 
+  else {
+    yield put({
+      type: USER_MY_COMMENT_SEARCH_FAILURE
+    });
+  }
+}
+
+// 작성한 관람평 조회 백엔드 호출
+async function CallCommentSearch() {
+  return await http
+    .get("/MyPageMovie/auth/GetComment")
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
 
 function* USER_POSSIBLE() {
   yield takeLatest(USER_MOVIE_POSSIBLE_REQUEST, Possible_movie);
@@ -76,6 +107,10 @@ function* USER_WRITE() {
   yield takeLatest(USER_MY_COMMENT_WRITE_REQUEST, CommentInsert);
 }
 
+function* USER_SEARCH() {
+  yield takeLatest(USER_MY_COMMENT_SEARCH_REQUEST, CommentSearch);
+}
+
 export default function* S_mypage_movie() {
-  yield all([fork(USER_POSSIBLE), fork(USER_WRITE)]);
+  yield all([fork(USER_POSSIBLE), fork(USER_WRITE), fork(USER_SEARCH)]);
 }

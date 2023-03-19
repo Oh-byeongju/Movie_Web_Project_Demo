@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { HeartOutlined, HeartFilled, StarFilled } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { DETAIL_MOVIE_REQUEST } from "../../reducer/movie";
-import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
+import { USER_MLIKE_REQUEST } from "../../reducer/movie";
 
 const Details = () => {
   const location = useLocation();  
@@ -62,9 +62,7 @@ const Details = () => {
     dispatch({
       type: USER_MLIKE_REQUEST,
       data: {
-        mid: detailMovie.mid,
-        mlike: like,
-        uid: LOGIN_data.uid
+        mid: detailMovie.mid
       }
     })
 

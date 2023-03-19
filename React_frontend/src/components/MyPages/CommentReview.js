@@ -1,37 +1,72 @@
 /*
  23-03-12 마이페이지 css 구축(오병주)
+ 23-03-18 영화 상세정보 관람평 백엔드 연결(오병주)
 */
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Rate } from 'antd';
 import { DeleteOutlined, LikeOutlined, LikeFilled } from '@ant-design/icons';
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { USER_COMMENT_LIKE_REQUEST, USER_COMMENT_DELETE_REQUEST } from '../../reducer/R_user_movie';
 
-const CommentReview = ({ data }) => {
+const CommentReview = ({ comment }) => {
+	const dispatch = useDispatch();
+	const location = useLocation();
 
+	// 사용자가 보이는 like UI 변경을 위한 변수
+  const [like, setlike] = useState(false);
+  const [likes, setlikes] = useState(0);
 
-	const comment = {
-		umscore: 9,
-		uid: 'temp1',
-		umcommenttime: '2023-03-12 08:11:21',
-		umcomment: ' 람평을 관람평 관람평을 관람평 관람평을 관람평관람평람평을 관람평 관람평을 관람평 관람평을 관람평 관람asdasda평을 관람평 관람평을 관람평 관람평을 관람평 관람평을 관람평',
-	};
+  useEffect(() => {
+    setlike(comment.like);
+    setlikes(comment.upcnt);
+  }, [comment]);
 
-	const LOGIN_data = {
-		uid: 'temp1'
-	};
+	// 사용자가 관람평의 좋아요를 누를 때 호출되는 함수
+  const LikeChange = useCallback(() => {
+
+    dispatch({
+      type: USER_COMMENT_LIKE_REQUEST,
+      data: {
+        umid: comment.umid,
+        like: like
+      },
+    });
+
+    // 백엔드를 한번 더 호출하지 않고 like와 likes의 변수만 변경하여 사용자가 보고 있는 브라우저 UI를 변경
+    if (like) {
+      setlike(false);
+      setlikes(likes - 1);
+    } else {
+      setlike(true);
+      setlikes(likes + 1);
+    }
+  }, [comment.umid, like, likes, dispatch]);
+
+	// 관람평 삭제 버튼 누르면 실행되는 함수
+	const CommentDelete = useCallback(() => {
+		if (!window.confirm("관람평을 삭제하시겠습니까?")) {
+      return;
+    };
+
+		dispatch({
+      type: USER_COMMENT_DELETE_REQUEST,
+			data: comment.umid
+    });
+		
+		window.location.replace(location.pathname);
+	}, [dispatch, comment.umid, location.pathname]);
 
 	return (
 		<>
-
 		<CommentElement>
 			<div className='img'>
-				<Poster src={`/${data.poster}`} alt="Poster">
-
-				</Poster>
+				<Poster src={`/${comment.mimagepath}`} alt="Poster"/>
 			</div>
 			<div className='top'>
 				<span className='name'>
-					영화 : {data.mtitle}
+					영화 : {comment.mtitle}
 				</span>
 				<span className='score'>
 					<RateCustom allowHalf value={comment.umscore/2}/> 
@@ -44,37 +79,33 @@ const CommentReview = ({ data }) => {
 				</span>
 			</div>
 			<div className='middle'>
-				{data.comment}
+				{comment.umcomment}
 			</div>
 			<div className='bottom'>
 				{/* 공백을 넣어줘서 간격을 벌림 */}
 				<span>
 					&nbsp;
 				</span>
-				<ButtonCustom style={{paddingLeft: "1px"}} >
+				<ButtonCustom style={{paddingLeft: "1px"}} onClick={LikeChange}>
 					<span className='cnt'>
-						7
+						{likes}
 					</span>
-					{false ? <LikeFilled style={{color: "#e61919"}}/> : <LikeOutlined/>}
+					{like ? <LikeFilled style={{color: "#e61919"}}/> : <LikeOutlined/>}
 				</ButtonCustom>			
-				{comment.uid === LOGIN_data.uid && <ButtonCustom style={{marginLeft: "2px"}}>
+				<ButtonCustom style={{marginLeft: "2px"}} onClick={CommentDelete}>
 					<DeleteOutlined/>
-				</ButtonCustom>}
+				</ButtonCustom>
 			</div>
 		</CommentElement>
 		</>
 	);
 };
 
-
 const Poster = styled.img`
   display: block;
   width: 91px;
   height: 150px;
 `;
-
-
-
 
 const CommentElement = styled.div`
 	position: relative;

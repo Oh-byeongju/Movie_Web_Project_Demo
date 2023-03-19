@@ -74,6 +74,7 @@ CREATE TABLE `movie_actor` (
 CREATE TABLE `movie_member` (
 	`umid`	INT	NOT NULL AUTO_INCREMENT,
 	`umlike`	BOOLEAN 	NULL,
+	`umliketime` DATETIME NULL,
 	`umscore`	INT 	NULL,
 	`umcomment`	VARCHAR(200) NULL,
 	`umcommenttime` DATETIME NULL,
@@ -873,7 +874,8 @@ BEGIN
    	-- 50개 짜리 자리
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 9 DAY),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 10:20:00"),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 12:00:00"), "3", 5);
    	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 9 DAY),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 14:00:00"),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 16:00:00"), "4", 5);
-   -- 타이타닉, 카운트, 상견니, 젠틀맨은 이것들 기록으로 관람평 적을 수 있게 만드는거
+   	INSERT INTO `movie_information`(`miday`,`mistarttime`,`miendtime`,`mid`,`cid`) VALUES(DATE_SUB(NOW(), INTERVAL 9 DAY),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 13:00:00"),  DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 9 DAY), "%Y-%m-%d 16:00:00"), "5", 5);
+   -- 타이타닉, 카운트, 상견니, 젠틀맨, 아바타는 이것들 기록으로 관람평 적을 수 있게 만드는거
 	
    WHILE (i1 <= 78) DO
    	-- 이거 아래꺼 예매 기록 넣기 (70개 전부) --> 아이디 넣을때 좀 섞어서 넣기
@@ -1215,11 +1217,19 @@ BEGIN
       SET i = i + 1;
    END WHILE;
    
+   -- 아바타 (현재 상영중인 영화 예매 기록 추가(오늘이전))
+   SET i = 1;
+   WHILE (i <= 7) DO 
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 10 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '6', val);      
+      SET i = i + 1;
+   END WHILE;
+   
    -- 타이타닉 (현재 상영중인 영화 예매 기록 추가(오늘))
    SET i = 71;
    WHILE (i <= 140) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '6', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '7', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1227,7 +1237,7 @@ BEGIN
    SET i = 81;
    WHILE (i <= 150) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '7', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '8', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1235,7 +1245,7 @@ BEGIN
    SET i = 151;
    WHILE (i <= 220) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '8', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '9', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1243,7 +1253,7 @@ BEGIN
    SET i = 71;
    WHILE (i <= 126) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '9', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '10', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1251,7 +1261,7 @@ BEGIN
    SET i = 201;
    WHILE (i <= 220) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '10', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '11', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1259,7 +1269,7 @@ BEGIN
    SET i = 231;
    WHILE (i <= 245) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '11', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 2 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '12', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1267,7 +1277,7 @@ BEGIN
    SET i = 246;
    WHILE (i <= 260) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '12', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '13', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1275,7 +1285,7 @@ BEGIN
    SET i = 281;
    WHILE (i <= 295) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '13', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '14', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1283,7 +1293,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 38) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '14', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '15', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1291,7 +1301,7 @@ BEGIN
    SET i = 901;
    WHILE (i <= 970) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '25', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '26', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1299,15 +1309,15 @@ BEGIN
    SET i = 1;
    WHILE (i <= 48) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '26', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '27', val);      
       SET i = i + 1;
    END WHILE;
    
    -- 장화신은 고양이 (현재 상영중인 영화 예매 기록 추가(4일지남 -> 개봉직후))
    SET i = 1;
-   WHILE (i <= 43) DO 
+   WHILE (i <= 47) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '28', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '29', val);      
       SET i = i + 1;
    END WHILE;
    
@@ -1315,7 +1325,7 @@ BEGIN
    SET i = 501;
    WHILE (i <= 530) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '1335', val); 
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '1336', val); 
       SET i = i + 1;
    END WHILE;
    
@@ -1323,7 +1333,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 35) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '1339', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '1340', val);      
       SET i = i + 1;
    END WHILE;
 
@@ -1331,7 +1341,7 @@ BEGIN
    SET i = 901;
    WHILE (i <= 920) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2060', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2061', val);      
       SET i = i + 1;
    END WHILE;
   
@@ -1339,7 +1349,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 27) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2065', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2066', val);      
       SET i = i + 1;
    END WHILE;
   
@@ -1347,7 +1357,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 24) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2066', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2067', val);      
       SET i = i + 1;
    END WHILE;
   
@@ -1355,7 +1365,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 17) DO 
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2067', val);      
+   	INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(NOW(), '30', '어른 1명', '1', 'temporary_value', 'temporary_value', '테스트', '1', '2068', val);      
       SET i = i + 1;
    END WHILE;
   
@@ -1461,31 +1471,15 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
    
-   -- 타이타닉  A1 ~ C10
-   SET j1 = 1;
-   WHILE (j1 <= 88) DO 
+   -- 아바타 A1 ~ A7
+   SET j1 = 152;
+   WHILE (j1 <= 170) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "6", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
    
-   -- 타이타닉 D1 ~ E10
-   SET j2 = 91;
-   WHILE (j2 <= 129) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "6", i);
-   	SET j2 = j2 + 2;
-   	SET i = i + 1;
-   END WHILE;
-
-   -- 타이타닉 F1 ~ G10
-   SET j3 = 131;
-   WHILE (j3 <= 150) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "6", i);
-   	SET j3 = j3 + 1;
-   	SET i = i + 1;
-   END WHILE;
-   
-   -- 카운트 A1 ~ C10
+   -- 타이타닉  A1 ~ C10
    SET j1 = 1;
    WHILE (j1 <= 88) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "7", i);
@@ -1493,7 +1487,7 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
    
-   -- 카운트 D1 ~ E10
+   -- 타이타닉 D1 ~ E10
    SET j2 = 91;
    WHILE (j2 <= 129) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "7", i);
@@ -1501,7 +1495,7 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
 
-   -- 카운트 F1 ~ G10
+   -- 타이타닉 F1 ~ G10
    SET j3 = 131;
    WHILE (j3 <= 150) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "7", i);
@@ -1509,7 +1503,7 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
    
-   -- 상견니  A1 ~ C10
+   -- 카운트 A1 ~ C10
    SET j1 = 1;
    WHILE (j1 <= 88) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "8", i);
@@ -1517,7 +1511,7 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
    
-   -- 상견니 D1 ~ E10
+   -- 카운트 D1 ~ E10
    SET j2 = 91;
    WHILE (j2 <= 129) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "8", i);
@@ -1525,7 +1519,7 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
 
-   -- 상견니 F1 ~ G10
+   -- 카운트 F1 ~ G10
    SET j3 = 131;
    WHILE (j3 <= 150) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "8", i);
@@ -1533,7 +1527,7 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
    
-   -- 젠틀맨  A1 ~ C10
+   -- 상견니  A1 ~ C10
    SET j1 = 1;
    WHILE (j1 <= 88) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "9", i);
@@ -1541,7 +1535,7 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
    
-   -- 젠틀맨 D1 ~ E10
+   -- 상견니 D1 ~ E10
    SET j2 = 91;
    WHILE (j2 <= 129) DO 
    	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "9", i);
@@ -1549,10 +1543,34 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
 
+   -- 상견니 F1 ~ G10
+   SET j3 = 131;
+   WHILE (j3 <= 150) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "9", i);
+   	SET j3 = j3 + 1;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 젠틀맨  A1 ~ C10
+   SET j1 = 1;
+   WHILE (j1 <= 88) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "10", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+   
+   -- 젠틀맨 D1 ~ E10
+   SET j2 = 91;
+   WHILE (j2 <= 129) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "10", i);
+   	SET j2 = j2 + 2;
+   	SET i = i + 1;
+   END WHILE;
+
    -- 젠틀맨 F1 ~ F6
    SET j3 = 131;
    WHILE (j3 <= 136) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "9", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "10", i);
    	SET j3 = j3 + 1;
    	SET i = i + 1;
    END WHILE;
@@ -1560,7 +1578,7 @@ BEGIN
    -- 타이타닉  A1 ~ B10
    SET j1 = 1;
    WHILE (j1 <= 58) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "10", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "11", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1568,7 +1586,7 @@ BEGIN
    -- 카운트 A1 ~ B5
    SET j1 = 1;
    WHILE (j1 <= 43) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "11", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "12", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1576,7 +1594,7 @@ BEGIN
    -- 상견니  A1 ~ B5
    SET j1 = 1;
    WHILE (j1 <= 43) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "12", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "13", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1584,7 +1602,7 @@ BEGIN
    -- 젠틀맨  A1 ~ B5
    SET j1 = 1;
    WHILE (j1 <= 43) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "13", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "14", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1592,7 +1610,7 @@ BEGIN
    -- 아바타 A1 ~ C10
    SET j1 = 1;
    WHILE (j1 <= 88) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "14", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "15", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1600,32 +1618,8 @@ BEGIN
    -- 아바타 D1 ~ D8
    SET j2 = 91;
    WHILE (j2 <= 105) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "14", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "15", i);
    	SET j2 = j2 + 2;
-   	SET i = i + 1;
-   END WHILE;
-      
-   -- 유령 A1 ~ C10
-   SET j1 = 1;
-   WHILE (j1 <= 88) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "25", i);
-   	SET j1 = j1 + 3;
-   	SET i = i + 1;
-   END WHILE;
-   
-   -- 유령 D1 ~ E10
-   SET j2 = 91;
-   WHILE (j2 <= 129) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "25", i);
-   	SET j2 = j2 + 2;
-   	SET i = i + 1;
-   END WHILE;
-
-   -- 유령 F1 ~ G10
-   SET j3 = 131;
-   WHILE (j3 <= 150) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "25", i);
-   	SET j3 = j3 + 1;
    	SET i = i + 1;
    END WHILE;
       
@@ -1637,10 +1631,34 @@ BEGIN
    	SET i = i + 1;
    END WHILE;
    
+   -- 유령 D1 ~ E10
+   SET j2 = 91;
+   WHILE (j2 <= 129) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "26", i);
+   	SET j2 = j2 + 2;
+   	SET i = i + 1;
+   END WHILE;
+
+   -- 유령 F1 ~ G10
+   SET j3 = 131;
+   WHILE (j3 <= 150) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j3, "26", i);
+   	SET j3 = j3 + 1;
+   	SET i = i + 1;
+   END WHILE;
+      
+   -- 유령 A1 ~ C10
+   SET j1 = 1;
+   WHILE (j1 <= 88) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "27", i);
+   	SET j1 = j1 + 3;
+   	SET i = i + 1;
+   END WHILE;
+   
    -- 유령 D1 ~ E8
    SET j2 = 91;
    WHILE (j2 <= 125) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "26", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "27", i);
    	SET j2 = j2 + 2;
    	SET i = i + 1;
    END WHILE;
@@ -1648,15 +1666,15 @@ BEGIN
    -- 장화신은 고양이 A1 ~ C10
    SET j1 = 1;
    WHILE (j1 <= 88) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "28", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "29", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
    
-   -- 장화신은 고양이 D1 ~ E3
+   -- 장화신은 고양이 D1 ~ E7
    SET j2 = 91;
-   WHILE (j2 <= 115) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "28", i);
+   WHILE (j2 <= 123) DO 
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "29", i);
    	SET j2 = j2 + 2;
    	SET i = i + 1;
    END WHILE;
@@ -1664,7 +1682,7 @@ BEGIN
    -- 타이타닉 A1 ~ C5
    SET j1 = 2;
    WHILE (j1 <= 74) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "1335", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "1336", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1672,7 +1690,7 @@ BEGIN
    -- 타이타닉 D1 ~ D5
    SET j2 = 92;
    WHILE (j2 <= 100) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "1335", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "1336", i);
    	SET j2 = j2 + 2;
    	SET i = i + 1;
    END WHILE;
@@ -1680,7 +1698,7 @@ BEGIN
    -- 어메이징 모리스 B1 ~ C10
    SET j1 = 32;
    WHILE (j1 <= 89) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "1339", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "1340", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1688,7 +1706,7 @@ BEGIN
    -- 어메이징 모리스 D1 ~ E5
    SET j2 = 92;
    WHILE (j2 <= 120) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "1339", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j2, "1340", i);
    	SET j2 = j2 + 2;
    	SET i = i + 1;
    END WHILE;
@@ -1696,7 +1714,7 @@ BEGIN
    -- 타이타닉 A1 ~ B10
    SET j1 = 3;
    WHILE (j1 <= 60) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2060", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2061", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1704,7 +1722,7 @@ BEGIN
    -- 영웅 A1 ~ C7
    SET j1 = 3;
    WHILE (j1 <= 81) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2065", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2066", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1712,7 +1730,7 @@ BEGIN
    -- 오늘밤, 세계에서 A1 ~ C4
    SET j1 = 3;
    WHILE (j1 <= 72) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2066", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2067", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;
@@ -1720,7 +1738,7 @@ BEGIN
 	-- 교섭 A1 ~ B7
    SET j1 = 3;
    WHILE (j1 <= 51) DO 
-   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2067", i);
+   	INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(j1, "2068", i);
    	SET j1 = j1 + 3;
    	SET i = i + 1;
    END WHILE;   
@@ -1736,21 +1754,21 @@ BEGIN
    -- 타이타닉 관람평 45개 추가
    WHILE (i <= 46) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 9, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 6 DAY), 1, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 5 MINUTE), 9, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)", DATE_SUB(NOW(), INTERVAL 6 DAY), 1, val);
       SET i = i + 1;
    END WHILE;
    
    -- 타이타닉 관람평 23개 추가
    WHILE (i <= 69) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 10, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 6 DAY), 1, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 5 MINUTE), 10, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)", DATE_SUB(NOW(), INTERVAL 6 DAY), 1, val);
       SET i = i + 1;
    END WHILE;
    
    -- 타이타닉 좋아요 추가
    WHILE (i <= 1120) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 1, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 5 MINUTE), 1, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1758,43 +1776,43 @@ BEGIN
    SET i = 2;
    WHILE (i <= 31) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 8, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 3 DAY), 2, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 8 MINUTE), 8, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)", DATE_SUB(NOW(), INTERVAL 3 DAY), 2, val);
       SET i = i + 1;
    END WHILE;
    
    -- 카운트 관람평 27개 추가
    WHILE (i <= 58) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 10, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 3 DAY), 2, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 8 MINUTE), 10, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)", DATE_SUB(NOW(), INTERVAL 3 DAY), 2, val);
       SET i = i + 1;
    END WHILE;
    
    -- 카운트 좋아요 추가
    WHILE (i <= 1000) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 2, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 8 MINUTE), 2, val);
       SET i = i + 1; 
    END WHILE;
    
    -- 상견니 관람평 30개 추가
-   SET i = 2;
-   WHILE (i <= 31) DO
+   SET i = 1;
+   WHILE (i <= 30) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 10, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 3, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 12 MINUTE), 10, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 3, val);
       SET i = i + 1;
    END WHILE;
    
    -- 상견니 관람평 12개 추가
-   WHILE (i <= 43) DO
+   WHILE (i <= 42) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 7, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 3, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 12 MINUTE), 7, "관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 3, val);
       SET i = i + 1;
    END WHILE;
    
    -- 상견니 좋아요 추가
-   WHILE (i <= 251) DO 
+   WHILE (i <= 250) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 3, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 12 MINUTE), 3, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1802,29 +1820,36 @@ BEGIN
    SET i = 1;
    WHILE (i <= 20) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 9, "관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 4, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 16 MINUTE), 9, "관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 4, val);
       SET i = i + 1;
    END WHILE;
    
    -- 젠틀맨 관람평 10개 추가
    WHILE (i <= 30) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, 7, "관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 4, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 16 MINUTE), 7, "관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 4, val);
       SET i = i + 1;
    END WHILE;
    
    -- 젠틀맨 좋아요 추가
    WHILE (i <= 190) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 4, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 16 MINUTE), 4, val);
       SET i = i + 1; 
    END WHILE;
    
-   -- 아바타 좋아요 추가
-   SET i = 1;
-   WHILE (i <= 350) DO 
+   -- 아바타 관람평 6개 추가
+   SET i = 2;
+   WHILE (i <= 7) DO
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 5, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 15 MINUTE), 8, "관람평을 위한 유령 관람평(작성예시는 id : temp1,  pw : temp123456 으로 진행 --> 아바타 가능)", DATE_SUB(NOW(), INTERVAL 2 DAY), 5, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 아바타 좋아요 추가
+   WHILE (i <= 351) DO 
+   	SET val = CONCAT("temp", i);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 15 MINUTE), 5, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1832,7 +1857,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 180) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 6, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 22 MINUTE), 6, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1840,7 +1865,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 150) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 7, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 18 MINUTE), 7, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1848,7 +1873,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 90) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 8, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 35 MINUTE), 8, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1856,7 +1881,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 80) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 9, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 38 MINUTE), 9, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1864,7 +1889,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 300) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 15, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 25 MINUTE), 15, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1872,7 +1897,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 310) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 16, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 23 MINUTE), 16, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1880,7 +1905,7 @@ BEGIN
    SET i = 1;
    WHILE (i <= 5) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 20, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 45 MINUTE), 20, val);
       SET i = i + 1; 
    END WHILE;
    
@@ -1888,9 +1913,27 @@ BEGIN
    SET i = 1;
    WHILE (i <= 7) DO 
    	SET val = CONCAT("temp", i);
-      INSERT INTO `movie_member`(`umlike`, `mid`, `uid`) VALUES(1, 23, val);
+      INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 40 MINUTE), 23, val);
       SET i = i + 1; 
    END WHILE;
+   
+   -- 똑똑평 관람평 20개 추가 (예외 케이스)
+   SET i = 1;
+   WHILE (i <= 20) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 20 DAY), 8, "관람평을 위한 유령 관람평", DATE_SUB(NOW(), INTERVAL 20 DAY), 24, val);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 똑똑평 관람평 5개 추가 (예외 케이스)
+   WHILE (i <= 25) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 18 DAY), 7, "관람평을 위한 유령 관람평", DATE_SUB(NOW(), INTERVAL 18 DAY), 24, val);
+      SET i = i + 1;
+   END WHILE;
+	
+	-- temp1 계정 아바타 좋아요 추가 (예외 케이스)
+	INSERT INTO `movie_member`(`umlike`, `umliketime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 15 MINUTE), 5, 'temp1');   
 END $$
 
 -- 관람평에 좋아요 추가하는 프로시저
@@ -1971,7 +2014,7 @@ BEGIN
       SET i = i + 1;
    END WHILE;
    
-   -- 상견니 관람평 좋아요 추가(temp42 작성)
+   -- 상견니 관람평 좋아요 추가(temp41 작성)
    SET i = 1;
    WHILE (i <= 10) DO
    	SET val = CONCAT("temp", i);
@@ -1979,7 +2022,7 @@ BEGIN
       SET i = i + 1;
    END WHILE;
    
-   -- 상견니 관람평 좋아요 추가(temp41 작성)
+   -- 상견니 관람평 좋아요 추가(temp40 작성)
    SET i = 1;
    WHILE (i <= 7) DO
    	SET val = CONCAT("temp", i);
@@ -1987,15 +2030,15 @@ BEGIN
       SET i = i + 1;
    END WHILE;
    
-   -- 상견니 관람평 좋아요 추가(temp3 작성)
+   -- 상견니 관람평 좋아요 추가(temp1 작성)
    SET i = 1;
    WHILE (i <= 9) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2120);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2119);
       SET i = i + 1;
    END WHILE;
    
-   -- 상견니 관람평 좋아요 추가(temp17 작성)
+   -- 상견니 관람평 좋아요 추가(temp16 작성)
    SET i = 1;
    WHILE (i <= 6) DO
    	SET val = CONCAT("temp", i);
@@ -2028,10 +2071,26 @@ BEGIN
    END WHILE;
    
    -- 젠틀맨 관람평 좋아요 추가(temp1 작성)
-   SET i = 2;
+   SET i = 1;
    WHILE (i <= 16) DO
    	SET val = CONCAT("temp", i);
    	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2369);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 아바타 관람평 좋아요 추가(temp2 작성)
+   SET i = 1;
+   WHILE (i <= 8) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2559);
+      SET i = i + 1;
+   END WHILE;
+   
+   -- 아바타 관람평 좋아요 추가(temp6 작성)
+   SET i = 10;
+   WHILE (i <= 21) DO
+   	SET val = CONCAT("temp", i);
+   	INSERT INTO `comment_info`(`uid`, `umid`) VALUES(val, 2563);
       SET i = i + 1;
    END WHILE;
 END $$
@@ -2086,7 +2145,6 @@ WHERE MID = 4 AND uid = 'temp8';
 UPDATE movie_member
 SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
 WHERE MID = 4 AND uid = 'temp17';
-
 
 /*
 SELECT *

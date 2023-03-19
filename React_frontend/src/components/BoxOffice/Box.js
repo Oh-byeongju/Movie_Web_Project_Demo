@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback } from "react";
-import { USER_MLIKE_REQUEST } from "../../reducer/R_user_movie";
+import { USER_MLIKE_REQUEST } from "../../reducer/movie";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -49,9 +49,7 @@ const Box = ({ movie }) => {
     dispatch({
       type: USER_MLIKE_REQUEST,
       data: {
-        mid: movie.id,
-        mlike: like,
-        uid: LOGIN_data.uid
+        mid: movie.id
       }
     })
 

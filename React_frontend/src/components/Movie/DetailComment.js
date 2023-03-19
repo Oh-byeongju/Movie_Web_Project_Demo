@@ -36,9 +36,8 @@ const DetailComment = ({ comment }) => {
     dispatch({
       type: USER_COMMENT_LIKE_REQUEST,
       data: {
-				uid: LOGIN_data.uid,
         umid: comment.umid,
-        like: like,
+        like: like
       },
     });
 

@@ -3,6 +3,7 @@
 */
 package com.movie.Spring_backend.controller;
 
+import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.service.MyPageMovieService;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,9 @@ public class MyPageMovieController {
         return ResponseEntity.noContent().build();
     }
 
-    // 사용자가 작성한 관람평 가져오는 메소드    // 나중에 auth로 바꾸기
-    @GetMapping("/normal/GetComment")
-    public ResponseEntity<String> MemberGetComment(HttpServletRequest request) {
-        myPageMovieService.MovieCommentSearch(request);
-        return ResponseEntity.noContent().build();
+    // 사용자가 작성한 관람평 가져오는 메소드
+    @GetMapping("/auth/GetComment")
+    public ResponseEntity<List<CommentInfoDto>> MemberGetComment(HttpServletRequest request) {
+        return ResponseEntity.ok().body(myPageMovieService.MovieCommentSearch(request));
     }
 }

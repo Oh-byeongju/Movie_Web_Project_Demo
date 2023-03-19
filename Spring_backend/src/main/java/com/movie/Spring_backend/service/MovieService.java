@@ -213,6 +213,15 @@ public class MovieService {
             cnt += m.getCntReserve();
         }
 
+        // 예매가 가능한 영화들의 기본키 추출
+        List<Long> Movie_id = new ArrayList<>();
+        for (MovieEntity M : Movies) {
+            Movie_id.add(M.getMid());
+        }
+
+        // 현재 영화가 예매가 가능 하다면 true, 아니면 false
+        boolean Screen = Movie_id.contains(mid);
+
         // 영화에 출연하는 출연진 정보 검색
         List<MovieActorEntity> MovieActor = movieActorRepository.findByMovie(movie);
 
@@ -242,12 +251,6 @@ public class MovieService {
 
         // 사용자의 현재 영화 평가 기록 검색
         MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
-
-        // 현재 영화가 예매가 가능한지 검색
-        List<MovieInfoEntity> ScreenInfos = movieInfoRepository.findMovieScreen(movie);
-
-        // 예매가 가능한 영화가 존재하면 true, 아니면 false
-        boolean Screen = !ScreenInfos.isEmpty();
 
         // 위에서 검색한 내용들 + 사용자의 영화 평가가 없을 경우 좋아요 여부를 false 로 전달
         if (MovieMember == null) {
@@ -309,15 +312,15 @@ public class MovieService {
         // 사용자가 좋아요 누른 영화 관람평 검색
         List<CommentInfoEntity> CommentLikes = commentInfoRepository.findByMember(member);
 
-        // 좋아요 누른 관람평 목록을 HashSet 으로 변환
-        Set<Long> CommentLikeSet = new HashSet<>();
+        // 좋아요 누른 관람평 목록의 관람평 기본키를 List로 변환
+        List<Long> CommentLikeList = new ArrayList<>();
         for (CommentInfoEntity CI : CommentLikes) {
-            CommentLikeSet.add(CI.getMoviemember().getUmid());
+            CommentLikeList.add(CI.getMoviemember().getUmid());
         }
 
         // 관람평 목록과 좋아요 기록을 mapping 후 리턴
         return MovieMembers.stream().map(MovieMember ->
-                movieCommentMapper.toDto(MovieMember, CommentLikeSet.contains(MovieMember.getUmid()))).collect(Collectors.toList());
+                movieCommentMapper.toDto(MovieMember, CommentLikeList.contains(MovieMember.getUmid()))).collect(Collectors.toList());
     }
 
     // 영화 세부내용 관람평 메소드(공감순)
