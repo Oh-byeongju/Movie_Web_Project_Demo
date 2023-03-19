@@ -56,6 +56,7 @@ public class MovieMemberService {
         MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
 
         // 여기 타임 넣어야함 (시간)
+        // 시간넣으면서 업데이트 삭제 케이스도 보기
         // 튜플이 존재하지 않는 경우 entity를 가공 후 insert 쿼리 실행
         if (MovieMember == null) {
             MovieMember = MovieMemberEntity.builder()
