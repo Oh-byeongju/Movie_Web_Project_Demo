@@ -66,6 +66,7 @@ const Writing = () =>{
   const modules = useMemo (
     () => ({
       toolbar: {
+        
         container : [
           [{ 'header': [1, 2, false] }],
           ['bold', 'italic', 'underline','strike', 'blockquote'],
@@ -79,6 +80,7 @@ const Writing = () =>{
           image: imageHandler,
         },
       }, 
+      
   }),
   []);
 

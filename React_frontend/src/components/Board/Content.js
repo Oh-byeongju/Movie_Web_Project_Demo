@@ -1,32 +1,73 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { EditTwoTone ,FireTwoTone,StarTwoTone ,QrcodeOutlined,SearchOutlined,CaretUpOutlined } from "@ant-design/icons";
-import { QrCodeTwoTone } from "@mui/icons-material";
+import { Pagination } from "@mui/material";
 import ContentHeader from "./ContentHeader";
 import { useDispatch ,useSelector} from "react-redux"
 import { BOARD_READ_REQUEST } from "../../reducer/Board";
+import { Link } from "react-router-dom";
 const Content= ()=>{
     const dispatch = useDispatch();
+
+    const { board, board_read_loading,board_read_done } = useSelector((state) => state.Board);
+    const [currentPage, setCurrentPage] = useState(1);
+    const handleChange = (event, value) => {
+        setCurrentPage(value);
+        console.log(currentPage)
+      };
+
+      
+    const detailDate = (a) => {
+        const milliSeconds = new Date() - a;
+        const seconds = milliSeconds / 1000;
+        if (seconds < 60) return `방금 전`;
+        const minutes = seconds / 60;
+        if (minutes < 60) return `${Math.floor(minutes)}분 전`;
+        const hours = minutes / 60;
+        if (hours < 24) return `${Math.floor(hours)}시간 전`;
+        const days = hours / 24;
+        if (days < 7) return `${Math.floor(days)}일 전`;
+        const weeks = days / 7;
+        if (weeks < 5) return `${Math.floor(weeks)}주 전`;
+        const months = days / 30;
+        if (months < 12) return `${Math.floor(months)}개월 전`;
+        const years = days / 365;
+        return `${Math.floor(years)}년 전`;
+    };
     useEffect(()=>{
         dispatch({
-            type:BOARD_READ_REQUEST
+            type:BOARD_READ_REQUEST,
+            data:{
+                page:currentPage-1
+            }
         })
-    },[])
-    const { board } = useSelector((state) => state.Board);
+    },[currentPage])
 
+if(board_read_loading){
+    return(
+        <div>로딩중</div>
+    )
+}
+else if(!board_read_loading && board_read_done){
     return(
         <ContentWrapper>
             <ContentHeader />
-            {board.map((data)=>(
-            <Card>
+            
+            {board.content.map((data)=>(
+            <Link to ={`/board/normal/content/${data.bid}/${data.btitle}`} >
+            <Card >
                 <Number><CaretUpOutlined twoToneColor="grey"/><div>{data.bid}</div></Number>
                 <Detail><a><div><span>{data.btitle} [{data.commentCount}5]</span></div></a></Detail>
-                <Item><div className="category">{data.bcategory}</div><div className="date"><span>{data.bdate}</span></div><div className="name">{data.uid}</div></Item>
-                <Image><a><img src={"img/carousel/first.png"} alt="영화" /></a></Image>
-            </Card>))
+                <Item><div className="category">{data.bcategory}</div><div className="date"><span>{detailDate(new Date(data.bdate))}</span></div><div className="name">{data.uid}</div></Item>
+            </Card>
+            </Link>
+))
 }
+
+        <Pagination count={board.totalPages} page={currentPage} onChange={handleChange} />
         </ContentWrapper>
     )
+}
 }
 const ContentWrapper = styled.div`
 width:728px;
@@ -39,6 +80,9 @@ width:728px;
     font-size: 14px;
     color: #7b858e;
     box-shadow: 0 1px 3px 0 rgba(0,0,0,.15);
+    a{
+        text-decoration:none;
+    }
 `
 const Card = styled.div`
 position: relative;
@@ -92,10 +136,9 @@ padding-top:5px;
     display: inline-block;
     font-size: 14px;
     color: #98a0a7; 
-    position:absolute;
     height:13px;
-    width:70px;
     line-height: 12px;
+    padding-right:15px;
     border-right:1px solid #98a0a7;
 }
 .date{
@@ -103,23 +146,24 @@ padding-top:5px;
     display: inline-block;
     font-size: 14px;
     color: #98a0a7;
-    position:absolute;
-    left:160px;
+    padding-right:15px;
+    padding-left:15px;
     height:13px;
-    width:100px;
+    padding-right:15px;
     line-height: 12px;
     border-right:1px solid #98a0a7;
 
 }
 .name{
+    float:left;
     display: inline-block;
-    line-height: 12px;
-    height:13px;
-
     font-size: 14px;
     color: #98a0a7;
-    position:absolute;
-    left:280px;
+    padding-right:15px;
+    padding-left:15px;
+    height:13px;
+    padding-right:15px;
+    line-height: 12px;
 
 
 }

@@ -1,11 +1,14 @@
-import React from "react";
+import React ,{useEffect}from "react";
 import ContentCard from "../components/Board/ContentCard";
 
+
 const BoardCard = () =>{
+
+   
     return(
         <>
-        <ContentCard />
+        <ContentCard/>
         </>
-    )
-}
+    )}
+
 export default BoardCard;

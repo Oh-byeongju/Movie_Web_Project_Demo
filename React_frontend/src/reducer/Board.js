@@ -3,6 +3,10 @@ export const initalState = {
     board_read_done:false,
     board_read_error:null,
 
+    content_read_loading:false,
+    content_read_done:false,
+    content_read_error:null,
+
     board_write_loading:false,
     board_write_done:false,
     board_write_error:null,
@@ -11,7 +15,8 @@ export const initalState = {
     board_delete_done:false,
     board_delete_error:null,
 
-    board:[]
+    board:[],
+    content:[]
 
 
   };
@@ -19,7 +24,10 @@ export const initalState = {
   export const BOARD_READ_REQUEST = "BOARD_READ_REQUEST"
   export const BOARD_READ_SUCCESS = "BOARD_READ_SUCCESS"
   export const BOARD_READ_FAILURE = "BOARD_READ_FAILURE"
-
+ 
+  export const CONTENT_READ_REQUEST = "CONTENT_READ_REQUEST"
+  export const CONTENT_READ_SUCCESS = "CONTENT_READ_SUCCESS"
+  export const CONTENT_READ_FAILURE = "CONTENT_READ_FAILURE"
 
   export const BOARD_WRITE_REQUEST = "BOARD_WRITE_REQUEST"
   export const BOARD_WRITE_SUCCESS = "BOARD_WRITE_SUCCESS"
@@ -53,7 +61,31 @@ export const initalState = {
                 board_read_loading:false,
                 board_read_done:false,
                 board_read_error:action.error,
+        } 
+
+        case CONTENT_READ_REQUEST:
+            return{
+                ...state,
+                content_read_loading:true,
+                content_read_done:false,
+                content_read_error:null,
+         }
+            case CONTENT_READ_SUCCESS:
+                return{
+                    ...state,
+                    content_read_loading:false,
+                    content_read_done:true,
+                    content_read_error:null,
+                    content:action.data
+                }
+            case CONTENT_READ_FAILURE:
+                return{
+                ...state,
+                content_read_loading:false,
+                content_read_done:false,
+                content_read_error:action.error,
         }  
+
         case BOARD_WRITE_REQUEST:
             return{
                 ...state,
