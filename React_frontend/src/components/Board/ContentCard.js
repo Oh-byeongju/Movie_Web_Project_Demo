@@ -1,29 +1,78 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { LikeTwoTone,DislikeTwoTone,SyncOutlined} from "@ant-design/icons";
+import { LikeTwoTone,DislikeTwoTone,SyncOutlined,EyeOutlined } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
+import { useDispatch ,useSelector} from "react-redux"
+import { CONTENT_READ_REQUEST } from "../../reducer/Board";
+
 const ContentCard = () => {
+        const dispatch = useDispatch();
+    
+        const {id,title} = useParams();
+    
+        useEffect(()=>{
+            dispatch({
+                type:CONTENT_READ_REQUEST,
+                data:{
+                    id:id,
+                    title:title
+                }
+            })
+        },[])
+        const {content,content_read_loading,content_read_done} = useSelector((state)=>state.Board)
+   
+        const detailDate = (a) => {
+            const milliSeconds = new Date() - a;
+            const seconds = milliSeconds / 1000;
+            if (seconds < 60) return `방금 전`;
+            const minutes = seconds / 60;
+            if (minutes < 60) return `${Math.floor(minutes)}분 전`;
+            const hours = minutes / 60;
+            if (hours < 24) return `${Math.floor(hours)}시간 전`;
+            const days = hours / 24;
+            if (days < 7) return `${Math.floor(days)}일 전`;
+            const weeks = days / 7;
+            if (weeks < 5) return `${Math.floor(weeks)}주 전`;
+            const months = days / 30;
+            if (months < 12) return `${Math.floor(months)}개월 전`;
+            const years = days / 365;
+            return `${Math.floor(years)}년 전`;
+        };
+
+   
+        //api에 있는 detailPost.createdAt를 바꿔주는 것
+
+    if(content_read_loading ){
+        return(
+            <div>대기중</div>
+        )
+    }
+    else if(!content_read_loading && content_read_done){
     return(
         <Content>
             <Aricle>
                 <Header>
-                    <Title>
-                        가나다라마바사아자카타파하
-                    </Title>
+                    <Title
+                    onClick={()=>{
+                       console.log(detailDate(new Date(content[0].bdate)))
+                    }}>
+                        {content[0].btitle}
+                     </Title>
                     <SubTitle>
                         <MetaListLeft>
-                        <div className="category">유머</div>
-                        <div className="time">10 시간 전</div>
-                        <div className="name">달빛조각사</div>
+                        <div className="category">{content[0].bcategory}</div>
+                        <div className="time">{detailDate(new Date(content[0].bdate))}</div>
+                        <div className="name">{content[0].uid}</div>
                         </MetaListLeft>
                         <MetaListRight>
-                        <div className="inq">조회 61,677</div>
+                        <div className="inq"><EyeOutlined style={{position:'relative',top:'-2px'}}/><span>{content[0].bclickindex}</span></div>
                         <div className="comment">댓글 100</div>
                         <div className="top">추천 1,000</div>
                         </MetaListRight>
                     </SubTitle>
                 </Header>   
                 <ContentWrapper>
-                    <ArticleContent>
+                    <ArticleContent  dangerouslySetInnerHTML={{__html:content[0].bdetail}}>
 
                     </ArticleContent>
                     <AricleBox>
@@ -31,11 +80,11 @@ const ContentCard = () => {
                             <ArticleVote>
                                 <button className="up">
                                     <span className="like"><LikeTwoTone  style={{fontSize:"15px"}}/></span>
-                                    <span className="number">1091</span>
+                                    <span className="number">{content[0].blike}</span>
                                 </button>
                                 <button className="down">
                                     <span className="like"><DislikeTwoTone   style={{fontSize:"15px"}}/></span>
-                                    <span className="number">1091</span>
+                                    <span className="number">{content[0].bunlike}</span>
                                 </button>
                             </ArticleVote>
                         </Vote>
@@ -67,6 +116,16 @@ const ContentCard = () => {
                         <li>
                             <div className="comment">
                                     <div className="number">5</div>
+                                    <div className="name">
+                                        <span className="id">rkdrudahr12</span>
+                                        <span className="time">10시간 전</span>
+                                    </div>
+                                    <div className="comment-content">
+                                        <div >
+                                            
+                                        </div>
+                                    </div>
+                                    <div className="comment-comment">답글쓰기</div>
                             </div>
                         </li>
                     </CommentData>
@@ -74,6 +133,7 @@ const ContentCard = () => {
             </Aricle>
         </Content>
     )
+                }
 }
 const Content = styled.div`
     float: right;
@@ -111,8 +171,8 @@ const MetaListLeft = styled.div`
         display: inline-block;
         font-size: 14px;
         color: #98a0a7;
-        width:50px;
         height:13px;
+        padding-right:15px;
         line-height: 12px;
         border-right:1px solid #98a0a7;
 }
@@ -123,10 +183,9 @@ const MetaListLeft = styled.div`
         position: relative;
         margin-left: 8px;
         padding-left: 9px;
-        width:70px;
         height:13px;
         line-height: 10px;
-
+        padding-right:15px;
         border-right:1px solid #98a0a7;
     }        
 
@@ -149,12 +208,14 @@ const MetaListRight = styled.div`
         display: inline-block;
         vertical-align: middle;
         position: relative;
-        width:100px;
         height:13px;
-        line-height: 10px;
-
         border-right:1px solid #98a0a7;
        
+        span{
+            position:relative;
+            top:-3px;
+            padding-right:10px;
+        }
     }
     
     .comment{
@@ -316,9 +377,11 @@ const Right = styled.div`
 }
 `
 const CommentList =styled.div`
+height:48px;
+border-bottom: 1px solid #dddfe4;
+
 `
 const Sort = styled.div`
-border-bottom: 1px solid #dddfe4;
     ul{
         list-style: none;
         
@@ -356,10 +419,45 @@ li{
         padding: 12px 12px 12px 64px;
         .number{
             
-            width: 64px;
+            position: absolute;
+            left: 0;
+            top: 12px;
             text-align: center;
         }
+        .name{
+            line-height: 17px;
+            font-size: 14px;
+            color: #7b858e;
+
+            .id{
+                display:inline-block;
+                font-weight: 700;
+                color: #1e2022;
+                word-wrap: break-word;
+                word-break: break-all;
+                padding-right:20px;
+                line-height:10px;
+                height:12px;
+                border-right:1px solid #98a0a7;
+            }
+            .time{
+                padding-left:20px;
+            }
+        }
     }
+}
+.comment-content{
+    margin-top: 8px;
+    line-height: 20px;
+    font-size: 14px;
+    color: #1e2022;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: auto;
+    max-height: 400px;
+}
+.comment-comment{
+    margin-top:8px;
 }
 `
 export default ContentCard

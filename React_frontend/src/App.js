@@ -40,7 +40,7 @@ function App() {
         <Route element={<Board />}>
           <Route path="/Board/list" element={<BoardList />}></Route>
           <Route path="/Board/write" element={<BoardWrite />}></Route>
-          <Route path="/Board/content" element={<BoardCard />}></Route>
+          <Route path="/Board/normal/content/:id/:title" element={<BoardCard />}></Route>
         </Route>
         <Route element={<Mypage />}>
           <Route path="/Mypage/Reserve" element={<MyPageReserve />}></Route>
