@@ -185,9 +185,6 @@ const AllMovieList = () => {
 
   return (
     <Container>
-      <button onClick={()=>console.log(allMovie)}>
-        asasas
-      </button>
       <InnerWraps>
         <div className="titleMenu">
           <h1>전체영화</h1>
