@@ -11,7 +11,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link ,useNavigate} from "react-router-dom";
 import {
   USER_LOGOUT_REQUEST,
 } from "../../reducer/R_user_login";
@@ -20,7 +20,7 @@ const TopButtons = () => {
   // 로그인 상태확인용 리덕스 상태
   const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
-
+  const navigate = useNavigate();
   // 현재 페이지의 정보와 페이지 이동을 위해 선언 
   const location = useLocation();
 
@@ -170,7 +170,7 @@ const TopButtons = () => {
               <div className="menu_category">
                 <div className="title_category">게시판</div>
                 <div className="category">    
-                <Link to="/Board/list">게시판</Link></div>
+                <Link to="/Board/list/all/1">게시판</Link></div>
               </div>
               <div className="menu_category">
                 <div className="title_category">이벤트</div>

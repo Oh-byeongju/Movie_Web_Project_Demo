@@ -6,9 +6,10 @@ import { useSelector ,useDispatch} from "react-redux";
 import axios from "axios";
 import { http } from "../../lib/http";
 import { BOARD_WRITE_REQUEST } from "../../reducer/Board";
-
+import { useNavigate } from "react-router-dom";
 const Writing = () =>{
     const dispatch = useDispatch();
+    const navigate =useNavigate();
     const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
     const selectList = ["자유 게시판", "영화 뉴스", "인터뷰", "동영상"];
@@ -123,7 +124,6 @@ const Writing = () =>{
         <Fail>취소하기</Fail>
         <Success 
         onClick={()=>{
-          
           dispatch({
             type:BOARD_WRITE_REQUEST,
             data:{
