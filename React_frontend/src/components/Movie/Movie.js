@@ -3,21 +3,20 @@
   23-02-08 사용자가 누른 Like 적용(오병주)
   23-02-15 페이지 css 수정(오병주)
 */
-import React, { useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { USER_MLIKE_REQUEST } from "../../reducer/movie";
 import { useLocation } from "react-router-dom";
-
 import {
   SELECT_DAY_REQUEST,
   SELECT_THEATER_REQUEST,
   MOVIE_DATA,
 } from "../../reducer/ticket";
 
-const Movie = ({ movie, type }) => {
+const Movie = ({ movie }) => {
   // 반올림 없이 소수점 생성해주는 함수
   const getNotRoundDecimalNumber = (number, decimalPoint = 1) => {
     let num = typeof number === "number" ? String(number) : number;
@@ -35,16 +34,19 @@ const Movie = ({ movie, type }) => {
   const dispatch = useDispatch();
   const location = useLocation();
 
+  // 영화 좋아요 실패 여부 상태
+  const { MLIKE_error } = useSelector((state) => state.movie);
+
   const OnClickReserve = (data) => {
     //allmovie(태초상태)
     //영화 클릭시 날짜 극장 검색해주면 됨
     dispatch({
       type: SELECT_THEATER_REQUEST,
-      data: data.id,
+      data: data.mid,
     });
     dispatch({
       type: SELECT_DAY_REQUEST,
-      data: data.id,
+      data: data.mid,
     });
     dispatch({
       type: MOVIE_DATA,
@@ -62,27 +64,36 @@ const Movie = ({ movie, type }) => {
     dispatch({
       type: USER_MLIKE_REQUEST,
       data: {
-        mid: movie.id,
-        type: type
+        mid: movie.mid,
       }
     });
 
-  }, [movie, type, LOGIN_data.uid, dispatch]);
+  }, [movie.mid, LOGIN_data.uid, dispatch]);
+
+  // UI에는 변경되지 않았지만 삭제된 영화 좋아요 누를 경우
+  useEffect(()=> {
+
+    if (MLIKE_error === movie.mid) {
+      alert("존재하지 않는 영화입니다.");
+      window.location.replace(location.pathname);
+    }
+
+  }, [MLIKE_error, movie.mid, location.pathname])
 
   return (
     <LI>
       <div className="Image">
         <div className="banner_img">
-          <Link to={`/moviedetail/${movie.id}`}>
-            <Img className="img2" src={movie.imagepath} alt="영화" />
+          <Link to={`/moviedetail/${movie.mid}`}>
+            <Img className="img2" src={movie.mimagepath} alt="영화" />
           </Link>
           <div className="middle">
-            <Link to={`/moviedetail/${movie.id}`}>
+            <Link to={`/moviedetail/${movie.mid}`}>
               <Text className="hover_text">상세정보</Text>
               <TextScore>
                 관람평 : &nbsp;
                 <span>
-                  {movie.score ? movie.score.toFixed(1) : (0.0).toFixed(1)}
+                  {movie.mscore ? movie.mscore.toFixed(1) : (0.0).toFixed(1)}
                 </span>
               </TextScore>
             </Link>
@@ -92,32 +103,32 @@ const Movie = ({ movie, type }) => {
           <div className="title">
             <img
               className="rating"
-              src={`img/age/${movie.rating}.png`}
+              src={`img/age/${movie.mrating}.png`}
               alt="rating"
               style={{ width: "30px", height: "30px" }}
             />
-            <span>{movie.title}</span>
+            <span>{movie.mtitle}</span>
           </div>
           <div className="infomation">
             <span className="rate">
               예매율 {movie.reserveRate ? movie.reserveRate.toFixed(1) : (0.0).toFixed(1)}%
             </span>
-            <span className="date">개봉일 {movie.date}</span>
+            <span className="date">개봉일 {movie.mdate}</span>
           </div>
         </Des>
         <Button>
           <Like onClick={LikeChange}>
             <span>
-              {movie.like === true ? (
+              {movie.mlike === true ? (
                 <HeartFilled style={{ color: "red" }} />
               ) : (
                 <HeartOutlined />
               )}
             </span>
             <span>
-              {movie.likes > 999
-                ? getNotRoundDecimalNumber(movie.likes / 1000) + "K"
-                : movie.likes}
+              {movie.mlikes > 999
+                ? getNotRoundDecimalNumber(movie.mlikes / 1000) + "K"
+                : movie.mlikes}
             </span>
           </Like>
           <Link to="/reserve" state={{ state: location.pathname }}>

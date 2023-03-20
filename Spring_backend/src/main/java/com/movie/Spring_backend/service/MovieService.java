@@ -201,7 +201,7 @@ public class MovieService {
 
         // 영화가 없을경우 예외처리
         if (movie == null) {
-            throw new MovieNotFoundException("검색된 영화가 없습니다.");
+            throw new MovieNotFoundException("영화가 없습니다.");
         }
 
         // 영화 테이블에서 현재 예매가 가능한 영화들 조회

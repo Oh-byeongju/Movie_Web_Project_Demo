@@ -44,14 +44,14 @@ public interface MovieMemberRepository extends JpaRepository<MovieMemberEntity, 
     // 사용자의 좋아요 기록을 true에서 false로 바꾸는 메소드
     @Modifying
     @Query("UPDATE MovieMemberEntity mm " +
-            "SET mm.umlike = false " +
+            "SET mm.umlike = false, mm.umliketime = null " +
             "WHERE mm.member = :member AND mm.movie = :movie")
     void MovieLikeChangeFalse(@Param("member") MemberEntity member, @Param("movie") MovieEntity movie);
 
     // 사용자의 좋아요 기록을 false에서 true로 바꾸는 메소드
     @Modifying
     @Query("UPDATE MovieMemberEntity mm " +
-            "SET mm.umlike = true " +
+            "SET mm.umlike = true, mm.umliketime = NOW() " +
             "WHERE mm.member = :member AND mm.movie = :movie")
     void MovieLikeChangeTrue(@Param("member") MemberEntity member, @Param("movie") MovieEntity movie);
 

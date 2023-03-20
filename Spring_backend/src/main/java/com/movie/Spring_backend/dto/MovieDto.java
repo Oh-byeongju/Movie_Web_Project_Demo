@@ -30,12 +30,11 @@ public class MovieDto {
     private List<String> actors; // 영화에 출연하는 배우들
     private Boolean reserve;    // 예매 가능 여부
     private Float reserveRate;  // 예매율
-    private String type;        // 좋아요 누른 영화의 위치 (리듀서 상태)
 
     @Builder
     public MovieDto(Long mid, String mtitle, String mdir, String mgenre, int mtime, Date mdate, String mrating,
                     String mstory , String mimagepath, Integer mlikes, Float mscore, Boolean mlike,
-                    String able, List<String> actors, Boolean reserve, Float reserveRate, String type) {
+                    String able, List<String> actors, Boolean reserve, Float reserveRate) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir = mdir;
@@ -52,7 +51,6 @@ public class MovieDto {
         this.actors = actors;
         this.reserve = reserve;
         this.reserveRate = reserveRate;
-        this.type = type;
     }
 }
 

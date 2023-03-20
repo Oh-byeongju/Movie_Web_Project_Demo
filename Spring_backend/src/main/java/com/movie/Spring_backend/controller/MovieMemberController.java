@@ -36,11 +36,10 @@ public class MovieMemberController {
         return ResponseEntity.noContent().build();
     }
 
-    // 관람평 좋아요 토글을 위한 메소드, 토글을 성공할 경우 noContent 리턴
+    // 관람평 좋아요 토글을 위한 메소드, 좋아요 누른 관람평 정보 리턴
     @PostMapping("/auth/CommentLikeToggle")
-    public ResponseEntity<String> CommentLikeToggle(@RequestBody CommentInfoDto requestDto, HttpServletRequest request) {
-        movieMemberService.CommentLikeUpdate(requestDto, request);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CommentInfoDto> CommentLikeToggle(@RequestBody CommentInfoDto requestDto, HttpServletRequest request) {
+        return ResponseEntity.ok().body(movieMemberService.CommentLikeUpdate(requestDto, request));
     }
 
     // 관람평을 삭제할때 사용되는 메소드, 삭제에 성공할 경우 noContent 리턴

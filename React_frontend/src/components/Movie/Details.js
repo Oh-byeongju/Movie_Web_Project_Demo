@@ -2,13 +2,12 @@
  23-02-11 영화 상세내용 페이지 구현(오병주)
  23-02-15 페이지 css 수정(오병주)
 */
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { HeartOutlined, HeartFilled, StarFilled } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { DETAIL_MOVIE_REQUEST } from "../../reducer/movie";
-import { USER_MLIKE_REQUEST } from "../../reducer/movie";
+import { DETAIL_MOVIE_REQUEST, USER_MLIKE_REQUEST  } from "../../reducer/movie";
 
 const Details = () => {
   const location = useLocation();  
@@ -28,6 +27,10 @@ const Details = () => {
 
   // 로그인 리덕스 상태
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
+  // 영화 좋아요 실패 여부 상태
+  const { MLIKE_error } = useSelector((state) => state.movie);
+   // 영화의 상세내용 상태
+   const { detailMovie } = useSelector((state) => state.movie);
 
   // 로그인 상태에 따라 영화 검색이 다름(좋아요 표시 때문)
   useEffect(() => {
@@ -39,18 +42,6 @@ const Details = () => {
       }
     });
   }, [LOGIN_data.uid, location.pathname, dispatch]);
-
-  // 영화의 상세내용 상태
-  const { detailMovie } = useSelector((state) => state.movie);
-
-  // 사용자가 보이는 like UI 변경을 위한 변수
-  const [like, setlike] = useState(false);
-  const [likes, setlikes] = useState("");
-
-  useEffect(() => {
-    setlike(detailMovie.mlike);
-    setlikes(detailMovie.mlikes);
-  }, [detailMovie]);
 
   // 사용자가 영화의 좋아요를 누를 때 호출되는 함수
   const LikeChange = useCallback(() => {
@@ -65,17 +56,18 @@ const Details = () => {
         mid: detailMovie.mid
       }
     })
+    
+  }, [detailMovie.mid, LOGIN_data.uid, dispatch]);
 
-    // 백엔드를 한번 더 호출하지 않고 like와 likes의 변수만 변경하여 사용자가 보고 있는 브라우저 UI를 변경
-    if (like) {
-      setlike(false);
-      setlikes(likes - 1);
+  // UI에는 변경되지 않았지만 삭제된 영화 좋아요 누를 경우
+  useEffect(()=> {
+
+    if (MLIKE_error === detailMovie.mid) {
+      alert("존재하지 않는 영화입니다.");
+      window.location.assign('/');
     }
-    else {
-      setlike(true);
-      setlikes(likes + 1);
-    }
-  }, [detailMovie.mid, LOGIN_data.uid, like, likes, dispatch]);
+
+  }, [MLIKE_error, detailMovie.mid, location.pathname])
 
   // 감독 또는 배우 클릭시 링크 만드는 함수
   const anchor = (value) => {
@@ -171,10 +163,10 @@ const Details = () => {
                 <Likes onClick={LikeChange}>
                   <div>
                     <span>
-                      {like === true ? <HeartFilled style={{color: "red"}} /> : <HeartOutlined />}
+                      {detailMovie.mlike === true ? <HeartFilled style={{color: "red"}} /> : <HeartOutlined />}
                     </span>
                     <span>
-                      {likes > 999 ? getNotRoundDecimalNumber(likes / 1000) + "K" : likes}
+                      {detailMovie.mlikes > 999 ? getNotRoundDecimalNumber(detailMovie.mlikes / 1000) + "K" : detailMovie.mlikes}
                     </span> 
                   </div>
                 </Likes>

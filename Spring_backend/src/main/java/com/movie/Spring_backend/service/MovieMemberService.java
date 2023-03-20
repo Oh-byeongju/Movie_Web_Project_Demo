@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -55,12 +56,16 @@ public class MovieMemberService {
         // 사용자의 영화 좋아요 기록 컬럼 조회
         MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
 
-        // 여기 타임 넣어야함 (시간)
-        // 시간넣으면서 업데이트 삭제 케이스도 보기
+        // 현재 시간을 sql에 사용할 수 있게 매핑
+        Date nowDate = new Date();
+        SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String day = DateFormat.format(nowDate);
+
         // 튜플이 존재하지 않는 경우 entity를 가공 후 insert 쿼리 실행
         if (MovieMember == null) {
             MovieMember = MovieMemberEntity.builder()
                     .umlike(true)
+                    .umliketime(day)
                     .movie(movie)
                     .member(member).build();
             movieMemberRepository.save(MovieMember);
@@ -69,8 +74,7 @@ public class MovieMemberService {
             return MovieDto.builder()
                     .mid(movie.getMid())
                     .mlike(true)
-                    .mlikes(movie.getCntMovieLike() + 1)
-                    .type(requestDto.getType()).build();
+                    .mlikes(movie.getCntMovieLike() + 1).build();
         }
         else {
             // 튜플의 like가 true일 경우 false로 update
@@ -81,8 +85,7 @@ public class MovieMemberService {
                 return MovieDto.builder()
                         .mid(movie.getMid())
                         .mlike(false)
-                        .mlikes(movie.getCntMovieLike() - 1)
-                        .type(requestDto.getType()).build();
+                        .mlikes(movie.getCntMovieLike() - 1).build();
             }
             // 튜플의 like가 false일 경우 true로 update
             else {
@@ -92,8 +95,7 @@ public class MovieMemberService {
                 return MovieDto.builder()
                         .mid(movie.getMid())
                         .mlike(true)
-                        .mlikes(movie.getCntMovieLike() + 1)
-                        .type(requestDto.getType()).build();
+                        .mlikes(movie.getCntMovieLike() + 1).build();
             }
         }
     }
@@ -135,9 +137,8 @@ public class MovieMemberService {
         }
         // 관람기록이 존재하는 경우
         else {
-            // 현재 시간변수
-            Date nowDate = new Date();
             // 현재 시간을 sql에 사용할 수 있게 매핑
+            Date nowDate = new Date();
             SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String day = DateFormat.format(nowDate);
 
@@ -162,43 +163,52 @@ public class MovieMemberService {
 
     // 사용자가 관람평 좋아요를 누를 때 실행되는 메소드
     @Transactional
-    public void CommentLikeUpdate(CommentInfoDto commentInfoDto, HttpServletRequest request) {
+    public CommentInfoDto CommentLikeUpdate(CommentInfoDto requestDto, HttpServletRequest request) {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
 
         // authentication 객체에서 아이디 확보
         String currentMemberId = SecurityUtil.getCurrentMemberId();
 
-        // commentInfoDto 안에 정보를 추출
-        Long MovieMember_id = commentInfoDto.getUmid();
-        boolean like = commentInfoDto.getLike();
+        // requestDto 안에 정보를 추출
+        Long MovieMember_id = requestDto.getUmid();
 
-        // 관람평 id를 이용해서 관람평 튜플 검색
-        MovieMemberEntity ExceptionMovieMember = movieMemberRepository.findById(MovieMember_id).orElse(null);
+        // JPA를 사용하기 위해 현재 아이디와 MovieMember_id 를 entity형으로 변환(사용자 기록은 검색)
+        MemberEntity Member = MemberEntity.builder().uid(currentMemberId).build();
+        MovieMemberEntity MovieMember = movieMemberRepository.findById(MovieMember_id)
+                .orElseThrow(()-> new MovieCommentNotFoundException("정보가 존재하지 않습니다."));
 
-        // 예외처리
-        if (ExceptionMovieMember == null) {
+        // 영화 좋아요 기록만 존재하고 관람평이 존재하지 않을경우 예외 처리
+        if (MovieMember.getUmcomment() == null) {
             throw new MovieCommentNotFoundException("정보가 존재하지 않습니다.");
         }
 
-        // JPA를 사용하기 위해 현재 아이디와 MovieMember_id 를 entity형으로 변환
-        MemberEntity Member = MemberEntity.builder().uid(currentMemberId).build();
-        MovieMemberEntity MovieMember = MovieMemberEntity.builder().umid(MovieMember_id).build();
+        // 사용자의 특정 관람평 좋아요 기록 조회
+        CommentInfoEntity CommentInfo = commentInfoRepository.findByMemberAndMoviemember(Member, MovieMember).orElse(null);
 
-
-        // 이거도 수정 바람
-        // 리액트에서 준 like를 믿지말고 직접검색해서 확인해야함
-        // like가 true면 이미 튜플이 존재하므로 delete 쿼리 실행
-        if (like) {
-            commentInfoRepository.deleteByMemberAndMoviemember(Member, MovieMember);
-        }
-        // like가 false면 튜플을 insert
-        else {
+        // 좋아요 기록이 존재하지 않을경우 튜플을 insert
+        if (CommentInfo == null) {
             // Entity 생성후 insert
             CommentInfoEntity commentInfo = CommentInfoEntity.builder()
                     .member(Member)
                     .moviemember(MovieMember).build();
             commentInfoRepository.save(commentInfo);
+
+            // 프론트단에서 사용할 정보 리턴
+            return CommentInfoDto.builder()
+                    .umid(MovieMember.getUmid())
+                    .upcnt(MovieMember.getCntCommentLike() + 1)
+                    .like(true).build();
+        }
+        // 좋아요 기록이 존재할 경우 튜플을 delete
+        else {
+            commentInfoRepository.deleteByMemberAndMoviemember(Member, MovieMember);
+
+            // 프론트단에서 사용할 정보 리턴
+            return CommentInfoDto.builder()
+                    .umid(MovieMember.getUmid())
+                    .upcnt(MovieMember.getCntCommentLike() - 1)
+                    .like(false).build();
         }
     }
 

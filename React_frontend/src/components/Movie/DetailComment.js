@@ -2,13 +2,15 @@
 	23-02-18 영화 상세정보 관람평 분리(오병주)
 	23-02-23 영화 상세정보 관람평 백엔드 연결(오병주)
 */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { Rate } from 'antd';
 import { SmileFilled, MehFilled, FrownFilled, DeleteOutlined, LikeOutlined, LikeFilled } from '@ant-design/icons';
 import { useDispatch, useSelector } from "react-redux";
-import { USER_COMMENT_LIKE_REQUEST, USER_COMMENT_DELETE_REQUEST } from '../../reducer/R_user_movie';
+import { USER_COMMENT_LIKE_REQUEST } from '../../reducer/movie';
+import { USER_COMMENT_DELETE_REQUEST } from '../../reducer/R_user_movie';
 import { useLocation } from "react-router-dom";
+import { useEffect } from 'react';
 
 const DetailComment = ({ comment }) => {
 	const dispatch = useDispatch();
@@ -16,15 +18,8 @@ const DetailComment = ({ comment }) => {
 
 	// 로그인 리덕스 상태
 	const { LOGIN_data } = useSelector((state) => state.R_user_login);
-
-	// 사용자가 보이는 like UI 변경을 위한 변수
-  const [like, setlike] = useState(false);
-  const [likes, setlikes] = useState(0);
-
-  useEffect(() => {
-    setlike(comment.like);
-    setlikes(comment.upcnt);
-  }, [comment]);
+	// 관람평 좋아요 실패 여부 상태
+	const { COMMENT_LIKE_error } = useSelector((state) => state.movie);
 
 	// 사용자가 관람평의 좋아요를 누를 때 호출되는 함수
   const LikeChange = useCallback(() => {
@@ -36,20 +31,11 @@ const DetailComment = ({ comment }) => {
     dispatch({
       type: USER_COMMENT_LIKE_REQUEST,
       data: {
-        umid: comment.umid,
-        like: like
+        umid: comment.umid
       },
     });
 
-    // 백엔드를 한번 더 호출하지 않고 like와 likes의 변수만 변경하여 사용자가 보고 있는 브라우저 UI를 변경
-    if (like) {
-      setlike(false);
-      setlikes(likes - 1);
-    } else {
-      setlike(true);
-      setlikes(likes + 1);
-    }
-  }, [LOGIN_data.uid, comment.umid, like, likes, dispatch]);
+  }, [LOGIN_data.uid, comment.umid, dispatch]);
 
 	// 관람평 삭제 버튼 누르면 실행되는 함수
 	const CommentDelete = useCallback(() => {
@@ -64,6 +50,16 @@ const DetailComment = ({ comment }) => {
 		
 		window.location.replace(location.pathname);
 	}, [dispatch, comment.umid, location.pathname]);
+
+	// UI에는 변경되지 않았지만 삭제된 관람평을 좋아요 누를 경우
+	useEffect(()=> {
+		
+		if (COMMENT_LIKE_error === comment.umid) {
+			alert("존재하지 않는 관람평입니다.");
+			window.location.replace(location.pathname);
+		}
+
+	}, [COMMENT_LIKE_error, comment.umid, location.pathname])
 
 	return (
 		<>
@@ -96,9 +92,9 @@ const DetailComment = ({ comment }) => {
 					</span>
 					<ButtonCustom style={{paddingLeft: "1px"}} onClick={LikeChange}>
 						<span className='cnt'>
-							{likes}
+							{comment.upcnt}
 						</span>
-						{like ? <LikeFilled style={{color: "#e61919"}}/> : <LikeOutlined/>}
+						{comment.like ? <LikeFilled style={{color: "#e61919"}}/> : <LikeOutlined/>}
 					</ButtonCustom>			
 					{comment.uid === LOGIN_data.uid && <ButtonCustom style={{marginLeft: "2px"}} onClick={CommentDelete}>
 						<DeleteOutlined/>

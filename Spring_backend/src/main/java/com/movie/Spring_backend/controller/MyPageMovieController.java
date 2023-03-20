@@ -21,7 +21,7 @@ public class MyPageMovieController {
 
     private final MyPageMovieService myPageMovieService;
 
-    // 전체 영화 가져오는 메소드
+    // 관람평 작성이 가능한 영화 가져오는 메소드
     @GetMapping("/auth/moviePossible")
     public ResponseEntity<List<MovieDto>> MovieMemberPossible(HttpServletRequest request) {
         return ResponseEntity.ok().body(myPageMovieService.MoviePossibleGet(request));
@@ -38,5 +38,11 @@ public class MyPageMovieController {
     @GetMapping("/auth/GetComment")
     public ResponseEntity<List<CommentInfoDto>> MemberGetComment(HttpServletRequest request) {
         return ResponseEntity.ok().body(myPageMovieService.MovieCommentSearch(request));
+    }
+
+    // 사용자가 좋아요 누른 영화 가져오는 메소드
+    @GetMapping("/auth/movieLike")
+    public ResponseEntity<List<MovieDto>> MovieMemberLike(HttpServletRequest request) {
+        return ResponseEntity.ok().body(myPageMovieService.MovieLikeGet(request));
     }
 }

@@ -3,14 +3,14 @@
  23-02-08 사용자가 누른 Like 적용(오병주)
  23-02-15 페이지 css 수정(오병주)
 */
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback } from "react";
 import { USER_MLIKE_REQUEST } from "../../reducer/movie";
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Box = ({ movie }) => {
 
@@ -29,15 +29,10 @@ const Box = ({ movie }) => {
   // 리덕스 로그인 상태 정보
   const { LOGIN_data } = useSelector((state) => state.R_user_login)
   const dispatch = useDispatch();
+  const location = useLocation();
 
-  // 사용자가 보이는 like UI 변경을 위한 변수
-  const [like, setlike] = useState(false);
-  const [likes, setlikes] = useState("");
-
-  useEffect(() => {
-    setlike(movie.like);
-    setlikes(movie.likes);
-  },[movie]);
+  // 영화 좋아요 실패 여부 상태
+  const { MLIKE_error } = useSelector((state) => state.movie);
 
   // 사용자가 영화의 좋아요를 누를 때 호출되는 함수
   const LikeChange = useCallback(() => {
@@ -49,39 +44,40 @@ const Box = ({ movie }) => {
     dispatch({
       type: USER_MLIKE_REQUEST,
       data: {
-        mid: movie.id
+        mid: movie.mid
       }
     })
 
-    // 백엔드를 한번 더 호출하지 않고 like와 likes의 변수만 변경하여 사용자가 보고 있는 브라우저 UI를 변경
-    if (like) {
-      setlike(false);
-      setlikes(likes - 1);
+  }, [movie.mid, LOGIN_data.uid, dispatch]);
+
+  // UI에는 변경되지 않았지만 삭제된 영화 좋아요 누를 경우
+  useEffect(()=> {
+
+    if (MLIKE_error === movie.mid) {
+      alert("존재하지 않는 영화입니다.");
+      window.location.replace(location.pathname);
     }
-    else {
-      setlike(true);
-      setlikes(likes + 1);
-    }
-  }, [movie.id, LOGIN_data.uid, like, likes, dispatch]);
+
+  }, [MLIKE_error, movie.mid, location.pathname])
 
   return (
     <LI>
       <div className="Image">
         <div className="banner_img">
-          <Link to={`/moviedetail/${movie.id}`}>
+          <Link to={`/moviedetail/${movie.mid}`}>
             <Img
             className="imggg"
-            src={`${movie.imagepath}`}
+            src={`${movie.mimagepath}`}
             alt="영화"
             />
           </Link>
           <div className="middle">
-            <Link to={`/moviedetail/${movie.id}`}>
+            <Link to={`/moviedetail/${movie.mid}`}>
               <Text className="hover_text">
                 상세정보
               </Text>
               <TextScore>
-                관람평 : &nbsp;<span>{movie.score ? movie.score.toFixed(1) : 0.0.toFixed(1)}</span>
+                관람평 : &nbsp;<span>{movie.mscore ? movie.mscore.toFixed(1) : 0.0.toFixed(1)}</span>
               </TextScore> 
             </Link>
           </div>
@@ -89,10 +85,10 @@ const Box = ({ movie }) => {
         <Button>
           <Like onClick={LikeChange}>
             <span>
-              {like === true ? <HeartFilled style={{color: "red"}} /> : <HeartOutlined />}
+              {movie.mlike === true ? <HeartFilled style={{color: "red"}} /> : <HeartOutlined />}
             </span>
             <span>
-              {likes > 999 ? getNotRoundDecimalNumber(likes / 1000) + "K" : likes}
+              {movie.mlikes > 999 ? getNotRoundDecimalNumber(movie.mlikes / 1000) + "K" : movie.mlikes}
             </span>
           </Like>
           <Ticket>
