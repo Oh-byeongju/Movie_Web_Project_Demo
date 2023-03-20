@@ -27,6 +27,16 @@ const datas = [
 		price: "500",
 		poster: "img/ranking/8.jpg"
 	},
+	{
+		rid: "50",
+		mtitle: "상견니",
+		cinema: "서울-홍대점 7관",
+		rdate: "2023.03.09",
+		watchdate: "2023-03-10 (금) 17:00",
+		seat: "G7, G8",
+		price: "500",
+		poster: "img/ranking/8.jpg"
+	},
 ]
 
 const ReserveList = () => {
