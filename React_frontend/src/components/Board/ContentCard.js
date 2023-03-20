@@ -1,15 +1,18 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { LikeTwoTone,DislikeTwoTone,SyncOutlined,EyeOutlined } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
+import { LikeTwoTone,DislikeTwoTone,SyncOutlined,EyeOutlined ,DeleteOutlined} from "@ant-design/icons";
+import { useParams,useNavigate ,useLocation} from "react-router-dom";
 import { useDispatch ,useSelector} from "react-redux"
-import { CONTENT_READ_REQUEST } from "../../reducer/Board";
+import { CONTENT_DELETE_REQUEST, CONTENT_READ_REQUEST } from "../../reducer/Board";
 
 const ContentCard = () => {
         const dispatch = useDispatch();
-    
+        const navigate = useNavigate();
+        const location = useLocation();
+
         const {id,title} = useParams();
-    
+        const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
         useEffect(()=>{
             dispatch({
                 type:CONTENT_READ_REQUEST,
@@ -38,8 +41,6 @@ const ContentCard = () => {
             const years = days / 365;
             return `${Math.floor(years)}년 전`;
         };
-
-   
         //api에 있는 detailPost.createdAt를 바꿔주는 것
 
     if(content_read_loading ){
@@ -54,7 +55,7 @@ const ContentCard = () => {
                 <Header>
                     <Title
                     onClick={()=>{
-                       console.log(detailDate(new Date(content[0].bdate)))
+                       console.log(location)
                     }}>
                         {content[0].btitle}
                      </Title>
@@ -86,6 +87,21 @@ const ContentCard = () => {
                                     <span className="like"><DislikeTwoTone   style={{fontSize:"15px"}}/></span>
                                     <span className="number">{content[0].bunlike}</span>
                                 </button>
+                                {LOGIN_data.uid===content[0].uid ?
+                                <div className="delete"
+                                onClick={()=>{
+                                    if (
+                                        !window.confirm(
+                                          "삭제하시겠습니까?"
+                                        )
+                                      ) {
+                                        return;
+                                      } else {
+                                    dispatch({
+                                        type:CONTENT_DELETE_REQUEST,
+                                        data:{bid:content[0].bid}
+                                    })}
+                                }}><DeleteOutlined /><span>삭제하기</span></div>: ""}
                             </ArticleVote>
                         </Vote>
                     </AricleBox>
@@ -280,7 +296,7 @@ const ArticleVote  =styled.div`
         font-size: 14px;
         height: 43px;
         color: #1e2022;
-        margin-left: 8px;
+        margin-left: 80px;
         .like{
             width: 16px;
             height: 16px;
@@ -321,6 +337,14 @@ const ArticleVote  =styled.div`
             display: inline-block;
             transition: all .3s;
         }
+    }
+    .delete{
+        float:right;
+        padding-top:10px;
+        padding-right:20px;
+        color:#7b858e;
+        font-size:13px;
+        cursor:pointer;
     }
 `
 const Comment = styled.div`

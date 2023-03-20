@@ -23,6 +23,7 @@ import Board from "./pages/Board";
 import BoardList from "./pages/BoardList";
 import BoardWrite from "./pages/BoardWrite";
 import BoardCard from "./pages/BoardCard";
+import BoardSearch from "./pages/BoardSearch";
 
 // TopButton과 Footer가 있어야 하는 페이지이면 Layout 사이에 넣고 아니면 따로 빼기
 function App() {
@@ -38,12 +39,13 @@ function App() {
         <Route path="/comingmovie" element={<ComingMovie />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
         <Route element={<Board />}>
-          <Route path="/Board/list" element={<BoardList />}></Route>
+          <Route path="/Board/list/:free/:page" element={<BoardList />}></Route>
           <Route path="/Board/write" element={<BoardWrite />}></Route>
-          <Route path="/Board/normal/content/:id/:title" element={<BoardCard />}></Route>
+          <Route path="/Board/content/:id/:title" element={<BoardCard />}></Route>
+          <Route path="/Board/search/:target/:title/:page" element={<BoardSearch />} ></Route>
         </Route>
         <Route element={<Mypage />}>
-          <Route path="/Mypage/Reserve" element={<MyPageReserve />}></Route>
+          <Route path="/Mypage/Reserve" element={<MyPageReserve x/>}></Route>
           <Route path="/Mypage/Cancle" element={<MyPageCancel />}></Route>
           <Route path="/Mypage/ReserveDetail/:id" element={<MyPageReserveDetail />}></Route>
           <Route path="/Mypage/CancleDetail/:id" element={<MyPageCancleDetail />}></Route>

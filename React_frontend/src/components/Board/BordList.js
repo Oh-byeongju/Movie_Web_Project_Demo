@@ -4,11 +4,7 @@ import Content from "./Content";
 import ContentHeader from "./ContentHeader";
 import SideBar from "./SideBar";
 const BoardList = () =>{
-    const dummydata= [
-        {id: "dummy",
-        data: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    
-}]
+ 
     //사이드 메뉴 
     
     //관람 후기, 영화 뉴스, 인터뷰, 동영상

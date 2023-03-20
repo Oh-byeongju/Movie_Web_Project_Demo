@@ -21,47 +21,44 @@ import java.util.Map;
 public class BoardController {
     private final BoardService boardService;
 
-    //게시판에 모든 글을 불러오는 컨트롤러
-    //번호 기준 내림차순
+    //게시판에 글을 불러오는 컨트롤러
     @GetMapping("/normal/boardall")
-    public Page<BoardDto> BoardWrite(@RequestParam("page") String page) {
-        return boardService.findByAllBoard(Integer.valueOf(page));
+    public Page<BoardDto> BoardWrite(@RequestParam("page") String page ,@RequestParam("sort") String sort) {
+
+        //최신순
+        if(sort.equals("all")){
+            return boardService.PaginationBid(Integer.valueOf(page));
+        }
+
+        //인기순
+        else if(sort.equals("top")){
+            return boardService.PaginationIndex(Integer.valueOf(page));
+        }
+        return null;
     }
 
     //게시판 상세 페이지 , 주소는 id/title로 지정
     @GetMapping("/normal/content/{id}/{title}")
-    public List<BoardDto> BoardContent(@PathVariable Long id, @PathVariable String title, HttpServletRequest request, HttpServletResponse response){
-        Cookie[]cookies = request.getCookies();
-        Cookie oldcookie =null;
+    public List<BoardDto> BoardContent(@PathVariable Long id, @PathVariable String title){
 
-        //쿠키를 활용한 조회수 중복 방지
-        if(cookies!=null){                                    //쿠키가 널값인지 체크를 한다
-            for(Cookie cookie :cookies){
-                if(cookie.getName().equals("postView")){      //쿠키가 널값이 아니라면 이름에 postView가 있는지 체크
-                    oldcookie=cookie;                         //있다면 oldcookie로 가져온다.
-                }
-            }
-        }
+        return boardService.findByContent(id,title);
+    }
 
-        //포스트뷰에 id값이 일치하면 아무반응도 일어나지 않음.
-        if(oldcookie!=null){                                                      //oldcookie가 존재하면서 = postview가 있다
-            if(!oldcookie.getValue().contains("["+ id.toString() +"]")){          //value에 현재 조회글의 번호가 있는지 확
-                boardService.UpdateViews(id);                                     //없다면 조회수 +1
-                oldcookie.setValue(oldcookie.getValue() + "_[" + id + "]");
-                oldcookie.setPath("/");
-                oldcookie.setMaxAge(60 * 60 * 24);
-                response.addCookie(oldcookie);
-            }
+    //게시판내에서 검색하는 메소드
+    @GetMapping("/normal/search")
+    public Page<BoardDto> Search(@RequestParam("page") String page, @RequestParam("title") String title,@RequestParam("category") String category){
+        System.out.println(page);
+        System.out.println(title);
+        System.out.println(category);
+
+        if(category.equals("title")) {
+            return boardService.SearchTitle(Integer.valueOf(page), title);
         }
-        //포스트뷰가 없으면 생성
-        else{
-            boardService.UpdateViews(id);                                           //oldcookie가 없다
-            Cookie newCookie = new Cookie("postView","[" + id + "]");   //조회수를 올려주고
-            newCookie.setPath("/");
-            newCookie.setMaxAge(60 * 60 * 24);
-            response.addCookie(newCookie);                                          //id를 감싼 쿠리를 생성해  response에 전달
+        else if(category.equals("name")){
+            return boardService.SearchUid(Integer.valueOf(page), title);
+
         }
-        return boardService.findByContent(id,title, request,response);
+        return null;
     }
 
     //게시판에 글을 작성하는 컨트롤러
@@ -71,4 +68,8 @@ public class BoardController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/auth/delete")
+    public void DeleteBoard(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
+        boardService.deleteBoard(requestMap,request);
+    }
 }

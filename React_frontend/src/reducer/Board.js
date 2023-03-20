@@ -3,9 +3,17 @@ export const initalState = {
     board_read_done:false,
     board_read_error:null,
 
+    board_search_loading:false,
+    board_search_done:false,
+    board_search_error:null,
+
     content_read_loading:false,
     content_read_done:false,
     content_read_error:null,
+
+    content_delete_loading:false,
+    content_delete_done:false,
+    content_delete_error:null,
 
     board_write_loading:false,
     board_write_done:false,
@@ -24,10 +32,18 @@ export const initalState = {
   export const BOARD_READ_REQUEST = "BOARD_READ_REQUEST"
   export const BOARD_READ_SUCCESS = "BOARD_READ_SUCCESS"
   export const BOARD_READ_FAILURE = "BOARD_READ_FAILURE"
+
+  export const BOARD_SEARCH_REQUEST = "BOARD_SEARCH_REQUEST"
+  export const BOARD_SEARCH_SUCCESS = "BOARD_SEARCH_SUCCESS"
+  export const BOARD_SEARCH_FAILURE = "BOARD_SEARCH_FAILURE"
  
   export const CONTENT_READ_REQUEST = "CONTENT_READ_REQUEST"
   export const CONTENT_READ_SUCCESS = "CONTENT_READ_SUCCESS"
   export const CONTENT_READ_FAILURE = "CONTENT_READ_FAILURE"
+
+  export const CONTENT_DELETE_REQUEST = "CONTENT_DELETE_REQUEST"
+  export const CONTENT_DELETE_SUCCESS = "CONTENT_DELETE_SUCCESS"
+  export const CONTENT_DELETE_FAILURE = "CONTENT_DELETE_FAILURE"
 
   export const BOARD_WRITE_REQUEST = "BOARD_WRITE_REQUEST"
   export const BOARD_WRITE_SUCCESS = "BOARD_WRITE_SUCCESS"
@@ -62,6 +78,28 @@ export const initalState = {
                 board_read_done:false,
                 board_read_error:action.error,
         } 
+        case BOARD_SEARCH_REQUEST:
+            return{
+                ...state,
+                board_search_loading:true,
+                board_search_done:false,
+                board_search_error:null,
+         }
+            case BOARD_SEARCH_SUCCESS:
+                return{
+                    ...state,
+                    board_search_loading:false,
+                    board_search_done:true,
+                    board_search_error:null,
+                    board:action.data
+                }
+            case BOARD_SEARCH_FAILURE:
+                return{
+                ...state,
+                board_search_loading:false,
+                board_search_done:false,
+                board_search_error:action.error,
+        } 
 
         case CONTENT_READ_REQUEST:
             return{
@@ -84,6 +122,28 @@ export const initalState = {
                 content_read_loading:false,
                 content_read_done:false,
                 content_read_error:action.error,
+        }  
+
+        case CONTENT_DELETE_REQUEST:
+            return{
+                ...state,
+                content_delete_loading:true,
+                content_delete_done:false,
+                content_delete_error:null,
+         }
+            case CONTENT_DELETE_SUCCESS:
+                return{
+                    ...state,
+                    content_delete_loading:false,
+                    content_delete_done:true,
+                    content_delete_error:null,
+                }
+            case CONTENT_DELETE_FAILURE:
+                return{
+                ...state,
+                content_delete_loading:false,
+                content_delete_done:false,
+                content_delete_error:action.error,
         }  
 
         case BOARD_WRITE_REQUEST:

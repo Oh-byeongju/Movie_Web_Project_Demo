@@ -6,14 +6,16 @@ import ContentHeader from "./ContentHeader";
 import { useDispatch ,useSelector} from "react-redux"
 import { BOARD_READ_REQUEST } from "../../reducer/Board";
 import { Link } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+
 const Content= ()=>{
     const dispatch = useDispatch();
-
-    const { board, board_read_loading,board_read_done } = useSelector((state) => state.Board);
-    const [currentPage, setCurrentPage] = useState(1);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const {page, free} = useParams();
+    const { board, board_read_loading,board_read_done,board_write_done } = useSelector((state) => state.Board);
     const handleChange = (event, value) => {
-        setCurrentPage(value);
-        console.log(currentPage)
+        navigate(`/board/list/${free}/${value}`)
       };
 
       
@@ -38,12 +40,14 @@ const Content= ()=>{
         dispatch({
             type:BOARD_READ_REQUEST,
             data:{
-                page:currentPage-1
+                page:page-1,
+                sort:free,
+                
             }
         })
-    },[currentPage])
+    },[page,free])
 
-if(board_read_loading){
+if(board_read_loading &&!board_read_done){
     return(
         <div>로딩중</div>
     )
@@ -51,20 +55,19 @@ if(board_read_loading){
 else if(!board_read_loading && board_read_done){
     return(
         <ContentWrapper>
-            <ContentHeader />
             
             {board.content.map((data)=>(
-            <Link to ={`/board/normal/content/${data.bid}/${data.btitle}`} >
-            <Card >
+            <Card 
+            onClick={()=>
+            navigate(`/board/content/${data.bid}/${data.btitle}`,{state:location})}>
                 <Number><CaretUpOutlined twoToneColor="grey"/><div>{data.bid}</div></Number>
                 <Detail><a><div><span>{data.btitle} [{data.commentCount}5]</span></div></a></Detail>
                 <Item><div className="category">{data.bcategory}</div><div className="date"><span>{detailDate(new Date(data.bdate))}</span></div><div className="name">{data.uid}</div></Item>
             </Card>
-            </Link>
 ))
 }
 
-        <Pagination count={board.totalPages} page={currentPage} onChange={handleChange} />
+        <Pagination count={board.totalPages} page={parseInt(page,10)} onChange={handleChange} />
         </ContentWrapper>
     )
 }
@@ -72,7 +75,6 @@ else if(!board_read_loading && board_read_done){
 const ContentWrapper = styled.div`
 width:728px;
     margin-top: 0;
-    margin-left:20px;
     border-top: 1px solid #ebeef1;
     background: #f8f9fa;
     margin-top: 8px;
@@ -91,6 +93,7 @@ table-layout: fixed;
 width: 100%;
 min-height: 78px;
 box-sizing: border-box;
+cursor:pointer;
 border-top: 1px solid #ebeef1;
 background-color: #fff;
 padding: 8px 0;

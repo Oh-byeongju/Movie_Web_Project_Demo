@@ -33,32 +33,54 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
 
-    //게시글을 전체 불러오는 메소드
+    //게시글을 전체 불러오는 메소드 ,최신순
     @Transactional
-    public Page<BoardDto> findByAllBoard(Integer index){
+    public Page<BoardDto> PaginationBid(Integer index){
 
         PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
-        Page<BoardEntity> pages = boardRepository.Pagination(page);
+        Page<BoardEntity> pages = boardRepository.PaginationBid(page);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
-                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build());
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build());
+    }
+    //게시글 전체 불러오는 메소드, top순
+    @Transactional
+    public Page<BoardDto> PaginationIndex(Integer index){
+
+        PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
+        Page<BoardEntity> pages = boardRepository.PaginationIndex(page);
+        return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build());
     }
 
+
     //게시글 상세 페이지를 불러오느 메소드
+    //게시글 조회수 +1
     @Transactional
-    public List<BoardDto> findByContent(Long id , String title,HttpServletRequest request,HttpServletResponse response){
+    public List<BoardDto> findByContent(Long id , String title){
+        boardRepository.updateViews(id);
         List<BoardEntity> datas = boardRepository.findByContent(id,title);
         return datas.stream().map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build()).collect(Collectors.toList());
-
     }
 
-
-
-    //게시글 조회수 +1 메소드
+    //페이지내 제목으로 검색하는 메소드
     @Transactional
-    public void UpdateViews(Long id ) {
-        boardRepository.updateViews(id);
+    public Page<BoardDto> SearchTitle(Integer index, String title){
+        PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
+        Page<BoardEntity> pages = boardRepository.SearchTitle(page, title);
+        return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build());
     }
+
+    //페이지내 제목으로 검색하는 메소드
+    @Transactional
+    public Page<BoardDto> SearchUid(Integer index, String uid){
+        PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
+        Page<BoardEntity> pages = boardRepository.SearchUid(page, uid);
+        return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build());
+    }
+
     //게시판에 글을 작성하는 메소드
     @Transactional
     public void BoardWrite(Map<String, String> requestMap, HttpServletRequest request) {
@@ -87,5 +109,14 @@ public class BoardService {
                     .bunlike(0)
                     .member(member).build();
         boardRepository.save(Board);
+    }
+
+    @Transactional
+    public void deleteBoard(Map<String, String> requestMap, HttpServletRequest request){
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        String bid = requestMap.get("bid");
+
+        boardRepository.deleteBoard(Long.valueOf(bid));
     }
 }

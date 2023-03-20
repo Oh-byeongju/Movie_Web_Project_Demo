@@ -1,10 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { EditTwoTone ,FireTwoTone,StarTwoTone ,QrcodeOutlined,SearchOutlined } from "@ant-design/icons";
 import { QrCodeTwoTone } from "@mui/icons-material";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation,useNavigate, Link, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const ContentHeader =()=>{
+    const {page, free} = useParams();
+    const dispatch= useDispatch();
+    const menu =[
+        {icon:QrcodeOutlined, sort:'최신순', category:'all'},
+        {icon:FireTwoTone, sort:'인기', category:'hot'},
+        {icon:StarTwoTone, sort:'TOP', category:'top'}
+    ]
+   
+    //제목과 작성자로 검색
+    const selectList = ["제목", "작성자"];
+    const [Selected, setSelected] = useState("title");
+    const handleSelect = (e) => {
+        if(e.target.value==="제목"){
+            setSelected("title");
+        }
+        else if(e.target.value==="작성자"){
+            setSelected("name")
+        }
+      };
+
+      //검색값
+    const [text, setText] = useState("");
+    const onChangeText  = (e)=>{
+        setText(e.target.value)
+        console.log(text);
+    }
+    const navigate = useNavigate();
+    const onClickIcon  =(category )=>{
+        navigate(`/board/list/${category}/1`)
+    }
+
+    const onClickSearch= ()=>{
+        navigate(`/Board/search/${Selected}/${text}/1`)
+        //boaard/search/category/text/page
+    }
+ 
     return (
     <ContentWrapper>
     <SubMenu>
@@ -13,27 +50,32 @@ const ContentHeader =()=>{
             <ul className="header">
                 <li><Link to="/Board/write"><EditTwoTone style={{fontSize:'25px' }}/></Link></li></ul>
             <SubMenuFooter>
-                <ul>
-                    <li>
-                    <a><FireTwoTone style={{fontSize:'25px', position:'relative', top:'4px' ,paddingRight:'5px'}} twoToneColor="grey"/>인기</a>
-                    </li>
-
-                    <li>
-                    <a><QrcodeOutlined style={{fontSize:'25px', position:'relative', top:'4px' ,paddingRight:'5px'}}  twoToneColor="grey"/>최신순</a>
-                    </li>
-
-                    <li>
-                    <a><StarTwoTone style={{fontSize:'25px', position:'relative', top:'4px' ,paddingRight:'5px'}}  twoToneColor="grey"/>TOP</a>
-                    </li>
-                </ul>
+            <ul>
+                {menu.map((data)=>{
+                    return(
+                        <Li onClick={()=>{onClickIcon(data.category)}}
+                        category={data.category}
+                        data={free}
+                        > 
+                            <a><data.icon style={{fontSize:'25px', position:'relative', top:'4px' ,paddingRight:'5px'}} twoToneColor="grey"/>{data.sort}</a>
+                        </Li>
+                    )
+                })}
+            </ul>
+            
                 <Search>
                     <form>
-                        <select>
-                            <option>제목</option>
-                            <option>작성자</option>
+                        <select onChange={handleSelect}>
+                            {selectList.map((select)=>{
+                                return(
+                                    <option
+                                    >{select}</option>
+                                )
+                            })}
+                                
                         </select>
-                        <input type="text" placeholder="검색"></input>
-                        <button><SearchOutlined style={{fontSize:'20px'}}/></button>
+                        <input type="text" placeholder="검색"value={text} onChange={onChangeText}></input>
+                        <button onClick={onClickSearch}><SearchOutlined style={{fontSize:'20px'}}/></button>
                     </form>
                 </Search>
             </SubMenuFooter>
@@ -83,12 +125,15 @@ position:relative;
 left:-10px;
 ul{
     list-style-type:none;
-    li{
-        float:left;
-        padding-right:40px;
-    }
 }
 `
+const Li = styled.li`
+float:left;
+padding-right:40px;
+cursor:pointer;
+color: ${(props) =>
+    props.category === props.data ? "green" : ""};
+`;
 const Search = styled.div`
 display: block;
     position: absolute;
