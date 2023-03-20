@@ -9,9 +9,6 @@ import {
   USER_COMMENT_WRITE_REQUEST,
   USER_COMMENT_WRITE_SUCCESS,
   USER_COMMENT_WRITE_FAILURE,
-  USER_COMMENT_LIKE_REQUEST,
-  USER_COMMENT_LIKE_SUCCESS,
-  USER_COMMENT_LIKE_FAILURE,
   USER_COMMENT_DELETE_REQUEST,
   USER_COMMENT_DELETE_SUCCESS,
   USER_COMMENT_DELETE_FAILURE
@@ -38,32 +35,6 @@ function* CommentInsert(action) {
 // 관람평 내용을 전달한 뒤 저장(백엔드 연결)
 async function CallCommentInsert(data) {
   return await http.post("/MovieMember/auth/InsertComment", data)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      return error.response;
-    });
-}
-
-// 관람평 좋아요 toggle 함수
-function* CommentLikeToggle(action) {
-  const result = yield call(CallCommentLikeToggle, action.data);
-  if (result.status === 204) {
-    yield put({
-      type: USER_COMMENT_LIKE_SUCCESS,
-    });
-  } 
-  else {
-    yield put({
-      type: USER_COMMENT_LIKE_FAILURE,
-    });
-  }
-}
-
-// 유저 정보를 전달한 뒤 관람평 좋아요 기록 변경(백엔드 연결)
-async function CallCommentLikeToggle(data) {
-  return await http.post("/MovieMember/auth/CommentLikeToggle", data)
     .then((response) => {
       return response;
     })
@@ -106,14 +77,10 @@ function* USER_COMMENT_INSERT() {
   yield takeLatest(USER_COMMENT_WRITE_REQUEST, CommentInsert);
 }
 
-function* USER_COMMENT_LIKE_TOGGLE() {
-  yield takeLatest(USER_COMMENT_LIKE_REQUEST, CommentLikeToggle);
-}
-
 function* USER_COMMENT_DELETE() {
   yield takeLatest(USER_COMMENT_DELETE_REQUEST, CommentDelete);
 }
 
 export default function* S_user_movie() {
-  yield all([fork(USER_COMMENT_INSERT), fork(USER_COMMENT_LIKE_TOGGLE), fork(USER_COMMENT_DELETE)]);
+  yield all([fork(USER_COMMENT_INSERT), fork(USER_COMMENT_DELETE)]);
 }

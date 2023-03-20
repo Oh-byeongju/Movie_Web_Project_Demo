@@ -25,6 +25,8 @@ public class MovieMemberEntity {
 
     private Boolean umlike;
 
+    private String umliketime;
+
     private Integer umscore;
 
     private String umcomment;
@@ -54,10 +56,11 @@ public class MovieMemberEntity {
     private List<CommentInfoEntity> commentInfos = new ArrayList<>();
 
     @Builder
-    public MovieMemberEntity(Long umid, Boolean umlike, Integer umscore , String umcomment, String umcommenttime,
+    public MovieMemberEntity(Long umid, Boolean umlike, String umliketime, Integer umscore , String umcomment, String umcommenttime,
                              Integer cntCommentLike, MovieEntity movie, MemberEntity member, List<CommentInfoEntity> commentInfos) {
         this.umid = umid;
         this.umlike = umlike;
+        this.umliketime = umliketime;
         this.umscore = umscore;
         this.umcomment = umcomment;
         this.umcommenttime = umcommenttime;

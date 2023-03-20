@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { ALLMOVIE_REQUEST } from "../../reducer/movie";
+import { BOXMOVIE_REQUEST } from "../../reducer/movie";
 
 const BoxList = () => {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const BoxList = () => {
   // 로그인 상태에 따라 전체 검색이 다름(좋아요 표시 때문)
   useEffect(() => {
     dispatch({
-      type: ALLMOVIE_REQUEST,
+      type: BOXMOVIE_REQUEST,
       data: {
         uid: LOGIN_data.uid,
         button: 'rate',
@@ -29,7 +29,7 @@ const BoxList = () => {
   }, [LOGIN_data.uid, dispatch]);
 
   // 영화 리덕스 상태
-  const { allMovie } = useSelector((state) => state.movie);
+  const { boxMovie } = useSelector((state) => state.movie);
 
   return (
     <CardList>
@@ -42,8 +42,8 @@ const BoxList = () => {
         </Link>
       </div>
       <UL>
-        {allMovie.slice(0, 4).map((movie) => (
-          <Box movie={movie} key={movie.id} />
+        {boxMovie.slice(0, 4).map((movie) => (
+          <Box movie={movie} key={movie.mid} />
         ))}
       </UL>
     </CardList>

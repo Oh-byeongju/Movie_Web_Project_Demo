@@ -234,7 +234,7 @@ const AllMovieList = () => {
               {allMovie.length !== 0 ? (
                 allMovie
                   .slice(0, Limit)
-                  .map((movie) => <Movie movie={movie} key={movie.id} type="all" />)
+                  .map((movie) => <Movie movie={movie} key={movie.mid}/>)
               ) : (
                 <NoSearch>
                   <p>현재 상영중인 영화가 없습니다.</p>

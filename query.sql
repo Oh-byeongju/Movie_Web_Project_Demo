@@ -1917,18 +1917,18 @@ BEGIN
       SET i = i + 1; 
    END WHILE;
    
-   -- 똑똑평 관람평 20개 추가 (예외 케이스)
+   -- 똑똑똑 관람평 20개 추가 (예외 케이스)
    SET i = 1;
    WHILE (i <= 20) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 20 DAY), 8, "관람평을 위한 유령 관람평", DATE_SUB(NOW(), INTERVAL 20 DAY), 24, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 20 DAY), 8, "관람평을 위한 유령 관람평(이 영화는 상영했다가 종료한 영화입니다.)", DATE_SUB(NOW(), INTERVAL 20 DAY), 24, val);
       SET i = i + 1;
    END WHILE;
    
-   -- 똑똑평 관람평 5개 추가 (예외 케이스)
+   -- 똑똑똑 관람평 5개 추가 (예외 케이스)
    WHILE (i <= 25) DO
    	SET val = CONCAT("temp", i);
-   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 18 DAY), 7, "관람평을 위한 유령 관람평", DATE_SUB(NOW(), INTERVAL 18 DAY), 24, val);
+   	INSERT INTO `movie_member`(`umlike`, `umliketime`, `umscore`, `umcomment`, `umcommenttime`, `mid`, `uid`) VALUES(1, DATE_SUB(NOW(), INTERVAL 18 DAY), 7, "관람평을 위한 유령 관람평(이 영화는 상영했다가 종료한 영화입니다.)", DATE_SUB(NOW(), INTERVAL 18 DAY), 24, val);
       SET i = i + 1;
    END WHILE;
 	
@@ -2152,6 +2152,15 @@ FROM movie_information
 WHERE miendtime <= '2023-03-18' AND miid IN (SELECT miid
 												  FROM movie_reservation
 												  WHERE uid = 'temp22');
+
+select *
+from movie_member
+where uid = 'temp1' and umlike = true
+order by umliketime desc;
+
+
+
+
 
 -- 여기서 뽑은 mid를 검색
 

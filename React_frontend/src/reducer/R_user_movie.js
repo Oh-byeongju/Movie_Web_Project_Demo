@@ -7,9 +7,6 @@
 export const USER_COMMENT_WRITE_REQUEST = "USER_COMMENT_WRITE_REQUEST"
 export const USER_COMMENT_WRITE_SUCCESS = "USER_COMMENT_WRITE_SUCCESS"
 export const USER_COMMENT_WRITE_FAILURE = "USER_COMMENT_WRITE_FAILURE"
-export const USER_COMMENT_LIKE_REQUEST = "USER_COMMENT_LIKE_REQUEST"
-export const USER_COMMENT_LIKE_SUCCESS = "USER_COMMENT_LIKE_SUCCESS"
-export const USER_COMMENT_LIKE_FAILURE = "USER_COMMENT_LIKE_FAILURE"
 export const USER_COMMENT_WRITE_RESET = "USER_COMMENT_WRITE_RESET"
 export const USER_COMMENT_DELETE_REQUEST = "USER_COMMENT_DELETE_REQUEST"
 export const USER_COMMENT_DELETE_SUCCESS = "USER_COMMENT_DELETE_SUCCESS"
@@ -20,9 +17,6 @@ const initalState = {
   COMMENT_WRITE_done: false,
   COMMENT_WRITE_error: false,
 	WRITE_code: '',
-	COMMENT_LIKE_loading: false,
-  COMMENT_LIKE_done: false,
-  COMMENT_LIKE_error: false,
 	COMMENT_DELETE_loading: false,
   COMMENT_DELETE_done: false,
   COMMENT_DELETE_error: false
@@ -61,28 +55,6 @@ const R_user_movie = (state = initalState, action) => {
 				COMMENT_WRITE_done: false,
 				COMMENT_WRITE_error: false,
 				WRITE_code: ''
-			};
-		// 영화 관람평 좋아요 케이스들
-		case USER_COMMENT_LIKE_REQUEST:
-			return {
-				...state,
-				COMMENT_LIKE_loading: true,
-				COMMENT_LIKE_done: false,
-				COMMENT_LIKE_error: false
-			};
-		case USER_COMMENT_LIKE_SUCCESS:
-			return {
-				...state,
-				COMMENT_LIKE_loading: false,
-				COMMENT_LIKE_done: true,
-				COMMENT_LIKE_error: false,
-			};
-		case USER_COMMENT_LIKE_FAILURE:
-			return {
-				...state,
-				COMMENT_LIKE_loading: false,
-				COMMENT_LIKE_done: false,
-				COMMENT_LIKE_error: true,
 			};
 		// 영화 관람평 삭제 케이스들
 		case USER_COMMENT_DELETE_REQUEST:

@@ -11,7 +11,10 @@ import {
 	USER_MY_COMMENT_WRITE_FAILURE,
   USER_MY_COMMENT_SEARCH_REQUEST,
 	USER_MY_COMMENT_SEARCH_SUCCESS,
-	USER_MY_COMMENT_SEARCH_FAILURE
+	USER_MY_COMMENT_SEARCH_FAILURE,
+  USER_MY_COMMENT_LIKE_REQUEST,
+  USER_MY_COMMENT_LIKE_SUCCESS,
+  USER_MY_COMMENT_LIKE_FAILURE
 } from "../reducer/R_mypage_movie";
 import { http } from "../lib/http";
 
@@ -99,6 +102,34 @@ async function CallCommentSearch() {
     });
 }
 
+// 관람평 좋아요 toggle 함수
+function* CommentLike(action) {
+  const result = yield call(CallCommentLike, action.data);
+  if (result.status === 200) {
+    yield put({
+      type: USER_MY_COMMENT_LIKE_SUCCESS,
+      data: result.data
+    });
+  } 
+  else {
+    yield put({
+      type: USER_MY_COMMENT_LIKE_FAILURE,
+      data: action.data
+    });
+  }
+}
+
+// 유저 정보를 전달한 뒤 관람평 좋아요 기록 변경(백엔드 연결)
+async function CallCommentLike(data) {
+  return await http.post("/MovieMember/auth/CommentLikeToggle", data)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
 function* USER_POSSIBLE() {
   yield takeLatest(USER_MOVIE_POSSIBLE_REQUEST, Possible_movie);
 }
@@ -111,6 +142,10 @@ function* USER_SEARCH() {
   yield takeLatest(USER_MY_COMMENT_SEARCH_REQUEST, CommentSearch);
 }
 
+function* USER_LIKE() {
+  yield takeLatest(USER_MY_COMMENT_LIKE_REQUEST, CommentLike);
+}
+
 export default function* S_mypage_movie() {
-  yield all([fork(USER_POSSIBLE), fork(USER_WRITE), fork(USER_SEARCH)]);
+  yield all([fork(USER_POSSIBLE), fork(USER_WRITE), fork(USER_SEARCH), fork(USER_LIKE)]);
 }
