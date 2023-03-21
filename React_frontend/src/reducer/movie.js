@@ -285,6 +285,9 @@ const movie = (state = initalState, action) => {
         comingMovie: state.comingMovie.map(movie => 
           movie.mid === action.data.mid ? {...movie, mlikes: action.data.mlikes, mlike: action.data.mlike} : movie
         ),
+        likeMovie: state.likeMovie.map(movie => 
+          movie.mid === action.data.mid ? {...movie, mlikes: action.data.mlikes, mlike: action.data.mlike} : movie
+        ),
         detailMovie: state.detailMovie.mid === action.data.mid ?
          {...state.detailMovie, mlikes: action.data.mlikes, mlike: action.data.mlike } : state.detailMovie,
         MLIKE_loading: false,

@@ -2147,6 +2147,18 @@ SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시�
 WHERE MID = 4 AND uid = 'temp17';
 
 /*
+-- 여기에 join 시네마랑 극장 붙여서 보내면 됨  + 몇개만 뽑아서 검색하는거 고민
+SELECT *
+FROM movie LEFT JOIN movie_information ON movie.mid = movie_information.mid LEFT JOIN movie_reservation ON movie_information.miid = movie_reservation.miid
+WHERE movie_reservation.uid = 'temp1' AND movie_reservation.rstate = 1
+ORDER BY movie_reservation.rdate desc
+
+-- 임의 데이터(몇개 더 넣어보기)
+INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '40', '어른 1명, 아이 1명', '2', 'temporary_value', 'temporary_value', '테스트', '1', '30', 'temp1');
+INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(1, "30", 981);
+INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(4, "30", 981);
+
+
 SELECT *
 FROM movie_information
 WHERE miendtime <= '2023-03-18' AND miid IN (SELECT miid

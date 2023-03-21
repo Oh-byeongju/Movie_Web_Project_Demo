@@ -10,10 +10,19 @@ export const USER_MY_COMMENT_WRITE_FAILURE = "USER_MY_COMMENT_WRITE_FAILURE"
 export const USER_MY_COMMENT_SEARCH_REQUEST = "USER_MY_COMMENT_SEARCH_REQUEST"
 export const USER_MY_COMMENT_SEARCH_SUCCESS = "USER_MY_COMMENT_SEARCH_SUCCESS"
 export const USER_MY_COMMENT_SEARCH_FAILURE = "USER_MY_COMMENT_SEARCH_FAILURE"
+
 // 마이페이지 영화 관람평 좋아요 리스트
 export const USER_MY_COMMENT_LIKE_REQUEST = "USER_MY_COMMENT_LIKE_REQUEST"
 export const USER_MY_COMMENT_LIKE_SUCCESS = "USER_MY_COMMENT_LIKE_SUCCESS"
 export const USER_MY_COMMENT_LIKE_FAILURE = "USER_MY_COMMENT_LIKE_FAILURE"
+
+// 마이페이지 영화 관람평 삭제 리스트
+export const USER_MY_COMMENT_DELETE_REQUEST = "USER_MY_COMMENT_DELETE_REQUEST"
+export const USER_MY_COMMENT_DELETE_SUCCESS = "USER_MY_COMMENT_DELETE_SUCCESS"
+export const USER_MY_COMMENT_DELETE_FAILURE = "USER_MY_COMMENT_DELETE_FAILURE"
+
+// 마이페이지 영화 관람평 내역 버튼 상태 Setting
+export const USER_MY_COMMENT_SETTING = "USER_MY_COMMENT_SETTING"
 
 const initalState = {
   MOVIE_POSSIBLE_loading: false,
@@ -31,6 +40,13 @@ const initalState = {
 	MY_COMMENT_LIKE_loading: false,
   MY_COMMENT_LIKE_done: false,
   MY_COMMENT_LIKE_error: false,
+	MY_COMMENT_DELETE_loading: false,
+  MY_COMMENT_DELETE_done: false,
+  MY_COMMENT_DELETE_error: false,
+
+	// 관람평 내역 버튼 상태
+	Possiblebuttonstate: true,
+	Reviewbuttonstate: false
 };
 
 const R_mypage_movie = (state = initalState, action) => {
@@ -117,6 +133,7 @@ const R_mypage_movie = (state = initalState, action) => {
 		case USER_MY_COMMENT_LIKE_SUCCESS:
 			return {
 				...state,
+				// 좋아요 버튼을 누른 관람평의 내용을 수정
 				MY_COMMENT_List: state.MY_COMMENT_List.map(comment => 
           comment.umid === action.data.umid ? {...comment, like: action.data.like, upcnt: action.data.upcnt} : comment
         ),
@@ -130,6 +147,37 @@ const R_mypage_movie = (state = initalState, action) => {
 				MY_COMMENT_LIKE_loading: false,
 				MY_COMMENT_LIKE_done: false,
 				MY_COMMENT_LIKE_error: action.data.umid
+			};
+		// 작성한 관람평 삭제 케이스들
+		case USER_MY_COMMENT_DELETE_REQUEST:
+			return {
+				...state,
+				MY_COMMENT_DELETE_loading: true,
+				MY_COMMENT_DELETE_done: false,
+				MY_COMMENT_DELETE_error: false
+			};
+		case USER_MY_COMMENT_DELETE_SUCCESS:
+			return {
+				...state,
+				// 삭제 버튼을 누른 관람평을 제거
+				MY_COMMENT_List: state.MY_COMMENT_List.filter(comment => comment.umid !== action.data),
+				MY_COMMENT_DELETE_loading: false,
+				MY_COMMENT_DELETE_done: true,
+				MY_COMMENT_DELETE_error: false,
+			};
+		case USER_MY_COMMENT_DELETE_FAILURE:
+			return {
+				...state,
+				MY_COMMENT_DELETE_loading: false,
+				MY_COMMENT_DELETE_done: false,
+				MY_COMMENT_DELETE_error: action.data
+			};
+		// 마이페이지 영화 관람평 내역 버튼 상태 케이스
+		case USER_MY_COMMENT_SETTING:
+			return {
+				...state,
+				Possiblebuttonstate: action.data.possible,
+				Reviewbuttonstate: action.data.review
 			};
 		default:
       return state;

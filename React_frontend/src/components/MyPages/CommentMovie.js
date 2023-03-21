@@ -141,7 +141,7 @@ const Title = styled.div`
     vertical-align: middle;
 		text-overflow: ellipsis;
     white-space: nowrap;
-		width: 180px;
+		width: 177px;
 		display: inline-block;
 		overflow: hidden;
   }
@@ -150,8 +150,8 @@ const Title = styled.div`
 	font-size: 13px;
 	position: relative;
 	vertical-align: middle;
-	margin: 0 13px 0 65px;
-	padding: 0 13px 0 0;
+	margin: 0 13px 0 68px;
+	padding: 0 14px 0 0;
 
 	::after {
 		content: '';
@@ -176,7 +176,9 @@ const Title = styled.div`
 		font-size: 12px;
 		position: relative;
 		vertical-align: middle;
-		margin-left: 30px;
+		float: right;
+		margin-top: 6px;
+		margin-right: 4px;
 
 		a {
 			text-decoration: none;

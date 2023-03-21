@@ -1,57 +1,38 @@
 /*
  23-03-11 마이페이지 css 구축(오병주)
 */
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Like from './Like';
 import { InfoCircleOutlined } from '@ant-design/icons';
-
-const datas = [
-	{
-		rid: "1",
-		mtitle: "타이타닉",
-		cinema: "서울-강남점 2관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "A1, A2",
-		price: "100",
-		poster: "img/ranking/5.jpg"
-	},
-	{
-		rid: "50",
-		mtitle: "상견니",
-		cinema: "서울-홍대점 7관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "G7, G8",
-		price: "500",
-		poster: "img/ranking/8.jpg"
-	},
-	{
-		rid: "50",
-		mtitle: "상견니",
-		cinema: "서울-홍대점 7관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "G7, G8",
-		price: "500",
-		poster: "img/ranking/8.jpg"
-	},
-]
+import { useDispatch, useSelector } from 'react-redux';
+import { USER_MY_MOVIE_SEARCH_REQUEST } from '../../reducer/movie';
 
 const LikeList = () => {
+	const dispatch = useDispatch();
+
+	// 좋아요 누른 영화 상태
+	const { likeMovie } = useSelector((state) => state.movie);
+
+	// 찜한 영화 요청
+  useEffect(() => {
+    dispatch({
+      type: USER_MY_MOVIE_SEARCH_REQUEST
+    });
+  }, [dispatch]);
+
 	return (
 		<Content>
 			<ContentTitle>
 				<ContentLeft>
 					<h2>
-						찜한 영화 ({datas.length})
+						찜한 영화 ({likeMovie.length})
 					</h2>
 				</ContentLeft>
 			</ContentTitle>
 			<ContentLine/>
 			<ContentDetails>
-				{datas.length !== 0 ? datas.map((data, index) => <Like data={data} key={index} />) : 
+				{likeMovie.length !== 0 ? likeMovie.map((movie, index) => <Like movie={movie} key={index}/>) : 
 				<NoContent>
 					<span>
 						<InfoCircleOutlined/>

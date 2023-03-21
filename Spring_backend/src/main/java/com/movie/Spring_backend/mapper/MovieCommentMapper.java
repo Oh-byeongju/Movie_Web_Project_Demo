@@ -45,6 +45,7 @@ public class MovieCommentMapper {
                 .uid(entity.getMember().getUid())
                 .upcnt(entity.getCntCommentLike())
                 .like(like)
+                .mid(entity.getMovie().getMid())
                 .mtitle(entity.getMovie().getMtitle())
                 .mimagepath(entity.getMovie().getMimagepath()).build();
     }
