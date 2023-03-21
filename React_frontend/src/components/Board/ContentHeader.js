@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { EditTwoTone ,FireTwoTone,StarTwoTone ,QrcodeOutlined,SearchOutlined } from "@ant-design/icons";
 import { QrCodeTwoTone } from "@mui/icons-material";
 import { useLocation,useNavigate, Link, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 
 const ContentHeader =()=>{
     const {page, free} = useParams();
@@ -13,7 +13,7 @@ const ContentHeader =()=>{
         {icon:FireTwoTone, sort:'인기', category:'hot'},
         {icon:StarTwoTone, sort:'TOP', category:'top'}
     ]
-   
+    const { LOGIN_data } = useSelector((state) => state.R_user_login);
     //제목과 작성자로 검색
     const selectList = ["제목", "작성자"];
     const [Selected, setSelected] = useState("title");
@@ -48,7 +48,24 @@ const ContentHeader =()=>{
         <SubMenuHeader>
             <h2>관람후기</h2>
             <ul className="header">
-                <li><Link to="/Board/write"><EditTwoTone style={{fontSize:'25px' }}/></Link></li></ul>
+                <li
+                onClick={()=>{
+                    if (LOGIN_data.uid === "No_login") {
+                        if (
+                          !window.confirm(
+                            "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?"
+                          )
+                        ) {
+                          return;
+                        } else {
+                          navigate(`/UserLogin`,{state:'/board/write'})
+                        }
+                }
+                else{
+                    navigate('/board/write')
+                }
+                }}><EditTwoTone style={{fontSize:'25px' }}/></li>
+                </ul>
             <SubMenuFooter>
             <ul>
                 {menu.map((data)=>{

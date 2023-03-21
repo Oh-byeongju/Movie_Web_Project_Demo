@@ -91,17 +91,17 @@ const LoginForm = () => {
 
   // 로그인의 성공 여부를 알리는 useEffect
   useEffect(() => {
+    console.log("login 페이지");
+    console.log(location);
 
     if (LOGIN_data.uname === "error!!") {
       alert("존재하지 않는 회원입니다.");
       dispatch({ type: USER_LOGIN_RESET });
       return;
     }
-    
     // 로그인에 성공했을 경우 메인페이지 또는 이전 페이지로 넘어가게 함
     if (LOGIN_data.uname !== "" && LOGIN_data.uname !== "error!!") {
       if (location.state === null || location.state.url === "/UserJoin") {
-        console.log("ㄹㄹ :" + location);
         navigate(`/`);
       } else if (location.state.pathname === "/reserve") {
         console.log("reserve에서 왔니?");
@@ -114,7 +114,11 @@ const LoginForm = () => {
           ReserveLogin.f1(location.state, dispatch);
         }
         navigate(location.state.pathname, { state: location.pathname });
-      } else {
+      } 
+      else if(location.state==='/board/write'){
+        navigate(location.state)
+      }
+      else {
         navigate(`${location.state.url}`);
       }
     }

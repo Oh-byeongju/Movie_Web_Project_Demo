@@ -13,7 +13,7 @@ const Content= ()=>{
     const navigate = useNavigate();
     const location = useLocation();
     const {page, free} = useParams();
-    const { board, board_read_loading,board_read_done,board_write_done } = useSelector((state) => state.Board);
+    const { board, board_read_loading,board_read_done,board_write_done ,content_delete_done} = useSelector((state) => state.Board);
     const handleChange = (event, value) => {
         navigate(`/board/list/${free}/${value}`)
       };
@@ -45,7 +45,8 @@ const Content= ()=>{
                 
             }
         })
-    },[page,free])
+        
+    },[page,free,board_write_done,content_delete_done])
 
 if(board_read_loading &&!board_read_done){
     return(
