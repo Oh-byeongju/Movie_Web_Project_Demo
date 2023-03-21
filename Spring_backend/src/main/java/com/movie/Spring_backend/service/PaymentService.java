@@ -8,6 +8,7 @@ import com.movie.Spring_backend.repository.MovieInfoSeatRepository;
 import com.movie.Spring_backend.repository.RedisSeatRepository;
 import com.movie.Spring_backend.repository.ReservationRepository;
 import com.movie.Spring_backend.util.RemoveLastChar;
+import com.movie.Spring_backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,16 +43,17 @@ public class PaymentService {
         jwtValidCheck.JwtCheck(request, "ATK");
 
         String token = payment.getToken();
-        System.out.println("토큰 : " + token);
-
-        String User_id = requestMap.get("uid");  //user_id
+        String User_id = SecurityUtil.getCurrentMemberId();
         String impUid = requestMap.get("impUid"); //결제 정보
         String miid = requestMap.get("miid");     //movieinfo_id
         String pay = requestMap.get("amount");    //pay
         String people = requestMap.get("people");
-        String rpeople= RemoveLastChar.removeLast(people);
-        System.out.println(rpeople);
-        int payamount = Integer.parseInt(pay);  //비교를 위한 형변환
+        String ticket = requestMap.get("ticket");
+
+    String people2= RemoveLastChar.removeLast(people);
+        String rpeople= RemoveLastChar.removeLast(people2);
+
+    int payamount = Integer.parseInt(pay);  //비교를 위한 형변환
         MemberEntity member = MemberEntity.builder().uid(User_id).build();   //entity형태로 변환
         MovieInfoEntity info = MovieInfoEntity.builder().miid(Long.valueOf(miid)).build(); //entity형태로 변환
         Date nowDate = new Date();
@@ -66,7 +68,7 @@ public class PaymentService {
         }
         //결제 정보 저장
         int amount = payment.paymentInfo(impUid, token);  //토큰과 결제정보로 추출한 amount
-    ReservationEntity reservationEntity;
+        ReservationEntity reservationEntity;
 
         try{
             //아이디가 있어야 함
@@ -77,8 +79,11 @@ public class PaymentService {
                             .rdate(day)
                             .rprice(payamount)
                             .rpeople(rpeople)
+                            .rticket(Integer.valueOf(ticket))
                             .rtoken(token)
                             .rpayid(impUid)
+                            .rpaytype("카드 결제")
+                            .rstate(true)
                             .movieInfo(info)
                             .member(member)
                             .build();
@@ -108,6 +113,8 @@ public class PaymentService {
                     //    .umlike(true)
                     //      .movie(movie)
                     //        .member(member).build();
+                    System.out.println("3333333333333");
+
                     return new ResponseEntity<>(data.getRid(), HttpStatus.OK);
                 }
                 else {

@@ -49,9 +49,22 @@ const seat = (state = initalState, action) => {
         total: 0,
       };
     case SEAT_CHOICE:
+      let data =[...state.choiceSeat, action.data];
+      let nameresult = data.sort(function (a,b){ //정렬 
+        let x =a.seat_id;
+        let y =b.seat_id;
+        if(x<y){
+          return -1
+        }
+        if( x>y){
+          return 1
+        }
+        return 0;
+      })
+
       return {
         ...state,
-        choiceSeat: [...state.choiceSeat, action.data],
+        choiceSeat: nameresult
       };
 
     case SEAT_REMOVE:

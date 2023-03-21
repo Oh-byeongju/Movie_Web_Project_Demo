@@ -53,7 +53,7 @@ public class SeatService {
         for (RedisSeatEntity r : datad) {
             if (r != null) {//null 값 제외하고 받아옴
                 String[] SeatNumber = r.getKey().split(","); //레디스의 데이터를 매핑해서 객체 형식으로 만듬
-                ocuppyMappers.add(new OcuppyMapper(Long.parseLong(SeatNumber[0]),  Long.parseLong(SeatNumber[1])));
+                ocuppyMappers.add(new OcuppyMapper(Long.parseLong(SeatNumber[0].trim()),  Long.parseLong(SeatNumber[1].trim())));
               }
             //miid seatid로 추출해서 매핑
         }
@@ -106,13 +106,11 @@ public class SeatService {
         //구조를 변경해야함
 
         if (datad.isEmpty()) {//
-            System.out.println("레디스가 비어있음");
             //무조건 삽입을 해야함 데이터가 없으니까
             //get()으로 검색이 가능함
             for (String k : SeatNumber) {
                 String keys = "";
                 keys = name + "," + k;
-                System.out.println("안에 겹치는 데이터가 없으므로 key 삽입");
                 RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, user);
                 //레디스에 데이터가 아무것도 없으니까 다른 검사 없이 삽입해준다.
                 redisSeatRepository.save(redisSeatEntity);
@@ -134,12 +132,9 @@ public class SeatService {
                 } else {
                     //seated가 있는데 아이디값이 같으면 예외처리를 하지않고
                     if (user.equals(seated.get().getUser())) {
-                        System.out.println("예외 x");
                         check=true;
                     } else {
                         //아이디값이 다르면 예외를 던진다.
-                        System.out.println("예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외");
-                        System.out.println("예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외예외");
                         check=true;
                         throw new SeatOccupyException("점유된 자리입니다.");
                     }
@@ -148,7 +143,6 @@ public class SeatService {
         }
         if(check==false) {
             for (String k : SeatNumber) {
-                System.out.println("xxxxxxx");
                 String keys = "";
                 keys = name + "," + k;
                 RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, user);
