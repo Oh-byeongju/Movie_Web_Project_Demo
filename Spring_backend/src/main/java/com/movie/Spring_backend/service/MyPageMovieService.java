@@ -1,5 +1,6 @@
 /*
   23-03-17 마이페이지에 있는 영화 관련 메소드 생성(오병주)
+  23-03-21 마이페이지에 있는 영화 좋아요 구현(오병주)
 */
 package com.movie.Spring_backend.service;
 
