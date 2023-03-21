@@ -23,8 +23,17 @@ export const initalState = {
     board_delete_done:false,
     board_delete_error:null,
 
+    comment_read_loading:false,
+    comment_read_done:false,
+    comment_read_error:false,
+
+    comment_write_loading:false,
+    comment_write_done:false,
+    comment_write_error:null,
+
     board:[],
-    content:[]
+    content:[],
+    comment:[],
 
 
   };
@@ -52,7 +61,14 @@ export const initalState = {
   export const BOARD_DELETE_REQUEST = "BOARD_DELETE_REQUEST"
   export const BOARD_DELETE_SUCCESS = "BOARD_DELETE_SUCCESS"
   export const BOARD_DELETE_FAILURE = "BOARD_DELETE_FAILURE"
+
+  export const COMMENT_READ_REQUEST = "COMMENT_READ_REQUEST"
+  export const COMMENT_READ_SUCCESS = "COMMENT_READ_SUCCESS"
+  export const COMMENT_READ_FAILURE = "COMMENT_READ_FAILURE"
   
+  export const COMMENT_WRITE_REQUEST = "COMMENT_WRITE_REQUEST"
+  export const COMMENT_WRITE_SUCCESS = "COMMENT_WRITE_SUCCESS"
+  export const COMMENT_WRITE_FAILURE = "COMMENT_WRITE_FAILURE"
   const Board = (state = initalState, action) => {
     switch (action.type) {
       //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
@@ -190,6 +206,52 @@ export const initalState = {
                 board_delete_done:false,
                 board_delete_error:action.error,
                 }    
+
+
+                case COMMENT_READ_REQUEST:
+                    return{
+                        ...state,
+                        comment_read_loading:true,
+                        comment_read_done:false,
+                        comment_read_error:null,
+                    }
+                case COMMENT_READ_SUCCESS:
+                    return{
+                            ...state,
+                            comment_read_loading:false,
+                            comment_read_done:true,
+                            comment_read_error:null,
+                            comment:action.data
+                        }
+                case COMMENT_READ_FAILURE:
+                    return{
+                        ...state,
+                        comment_read_loading:false,
+                        comment_read_done:false,
+                        comment_read_error:action.error,
+                    }  
+                    
+                case COMMENT_WRITE_REQUEST:
+                    return{
+                        ...state,
+                        comment_write_loading:true,
+                        comment_write_done:false,
+                        comment_write_error:null,
+                    }
+                case COMMENT_WRITE_SUCCESS:
+                    return{
+                            ...state,
+                            comment_write_loading:false,
+                            comment_write_done:true,
+                            comment_write_error:null,
+                        }
+                case COMMENT_WRITE_FAILURE:
+                    return{
+                        ...state,
+                        comment_write_loading:false,
+                        comment_write_done:false,
+                        comment_write_error:action.error,
+                    }  
       default:
         return state;
     }

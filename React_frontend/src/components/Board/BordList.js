@@ -18,7 +18,7 @@ const BoardList = () =>{
     return(
        <BoardWrapper>
         <Header>
-            <h1>영화 커뮤니티</h1>
+            <h1></h1>
         </Header>
         <ContentWrapper>
             <SideBar />

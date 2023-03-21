@@ -112,13 +112,13 @@ export function paymentCard(data, dispatch, uid, choiceSeat, miid,아이,학생,
         data.amount = rsp.paid_amount;
         let people = "";
         if(아이 !==0 ){
-          people += "아이 "+Object.values({아이})+"명,"
+          people += "아이 "+Object.values({아이})+"명, "
         }
         if(학생 !==0 ){
-          people += "학생 "+Object.values({학생})+"명,"
+          people += "학생 "+Object.values({학생})+"명, "
         }
         if(어른 !==0 ){
-          people += "어른 "+Object.values({어른})+"명,"
+          people += "어른 "+Object.values({어른})+"명, "
         }
         console.log(people);
         let seatnumber = "";
@@ -126,6 +126,7 @@ export function paymentCard(data, dispatch, uid, choiceSeat, miid,아이,학생,
         data.sid = seatnumber;
         data.miid = miid;
         data.people = people;
+        data.ticket= 아이+학생+어른;
         paymentComplete(data, dispatch);
       } else {
         // 결제 실패 시 로직,

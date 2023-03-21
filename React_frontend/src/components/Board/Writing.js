@@ -124,15 +124,26 @@ const Writing = () =>{
         <Fail>취소하기</Fail>
         <Success 
         onClick={()=>{
-          dispatch({
-            type:BOARD_WRITE_REQUEST,
-            data:{
-              uid:LOGIN_data.uid,
-              title:title,
-              detail:Board_Content,
-              category:Selected
-            }
-          })
+          if (
+            !window.confirm(
+              "작성하시겠습니까?"
+            )
+          ) {
+            return;
+          } else {
+            dispatch({
+              type:BOARD_WRITE_REQUEST,
+              data:{
+                uid:LOGIN_data.uid,
+                title:title,
+                detail:Board_Content,
+                category:Selected
+              }
+            })
+            alert('작성완료되었습니다.')
+            navigate('/board/list/all/1')
+    }
+    
           }}
         >작성하기</Success>
        </ButtonMore>

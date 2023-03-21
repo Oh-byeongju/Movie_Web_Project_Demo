@@ -202,7 +202,7 @@ const PaymentModal = ({ closeModal }) => {
             <Reserve onClick={() => {
                   if(check1&&check2&&check3&&check4){
                 let seatnumber = "";
-                choiceSeat.map((seat) => (seatnumber += seat.seat_id + ",")); //레디스
+                choiceSeat.map((seat) => (seatnumber += seat.seat_id + ", ")); //레디스
                 console.log(seatnumber)
                 dispatch({
                   type: CHECK_SEAT_REQUEST,
