@@ -14,7 +14,10 @@ import {
 	USER_MY_COMMENT_SEARCH_FAILURE,
   USER_MY_COMMENT_LIKE_REQUEST,
   USER_MY_COMMENT_LIKE_SUCCESS,
-  USER_MY_COMMENT_LIKE_FAILURE
+  USER_MY_COMMENT_LIKE_FAILURE,
+  USER_MY_COMMENT_DELETE_REQUEST,
+  USER_MY_COMMENT_DELETE_SUCCESS,
+  USER_MY_COMMENT_DELETE_FAILURE
 } from "../reducer/R_mypage_movie";
 import { http } from "../lib/http";
 
@@ -130,6 +133,38 @@ async function CallCommentLike(data) {
     });
 }
 
+// 관람평 삭제 함수
+function* CommentDelete(action) {
+  const result = yield call(CallCommentDelete, action.data);
+  if (result.status === 204) {
+    yield put({
+      type: USER_MY_COMMENT_DELETE_SUCCESS,
+      data: action.data
+    });
+  } 
+  else {
+    yield put({
+      type: USER_MY_COMMENT_DELETE_FAILURE,
+      data: action.data
+    });
+  }
+}
+
+// 관람평 정보를 전달한 뒤 관람평 제거(백엔드 연결)
+async function CallCommentDelete(data) {
+  return await http.delete("/MovieMember/auth/CommentDelete",{
+    params: {
+      umid: data
+    }
+  })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
 function* USER_POSSIBLE() {
   yield takeLatest(USER_MOVIE_POSSIBLE_REQUEST, Possible_movie);
 }
@@ -146,6 +181,10 @@ function* USER_LIKE() {
   yield takeLatest(USER_MY_COMMENT_LIKE_REQUEST, CommentLike);
 }
 
+function* USER_DELETE() {
+  yield takeLatest(USER_MY_COMMENT_DELETE_REQUEST, CommentDelete);
+}
+
 export default function* S_mypage_movie() {
-  yield all([fork(USER_POSSIBLE), fork(USER_WRITE), fork(USER_SEARCH), fork(USER_LIKE)]);
+  yield all([fork(USER_POSSIBLE), fork(USER_WRITE), fork(USER_SEARCH), fork(USER_LIKE), fork(USER_DELETE)]);
 }

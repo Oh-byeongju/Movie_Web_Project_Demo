@@ -8,8 +8,8 @@ import { Rate } from 'antd';
 import { DeleteOutlined, LikeOutlined, LikeFilled } from '@ant-design/icons';
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { USER_MY_COMMENT_LIKE_REQUEST } from '../../reducer/R_mypage_movie';
-import { USER_COMMENT_DELETE_REQUEST } from '../../reducer/R_user_movie';
+import { USER_MY_COMMENT_LIKE_REQUEST, USER_MY_COMMENT_DELETE_REQUEST } from '../../reducer/R_mypage_movie';
+import { Link } from 'react-router-dom';
 
 const CommentReview = ({ comment }) => {
 	const dispatch = useDispatch();
@@ -17,6 +17,8 @@ const CommentReview = ({ comment }) => {
 
 	// 관람평 좋아요 실패 여부 상태
 	const { MY_COMMENT_LIKE_error } = useSelector((state) => state.R_mypage_movie);
+	// 관람평 삭제 실패 여부 상태
+	const { MY_COMMENT_DELETE_error } = useSelector((state) => state.R_mypage_movie);
 
 	// 사용자가 관람평의 좋아요를 누를 때 호출되는 함수
   const LikeChange = useCallback(() => {
@@ -37,12 +39,11 @@ const CommentReview = ({ comment }) => {
     };
 
 		dispatch({
-      type: USER_COMMENT_DELETE_REQUEST,
+      type: USER_MY_COMMENT_DELETE_REQUEST,
 			data: comment.umid
     });
 		
-		window.location.replace(location.pathname);
-	}, [dispatch, comment.umid, location.pathname]);
+	}, [dispatch, comment.umid]);
 
 	// UI에는 변경되지 않았지만 삭제된 관람평을 좋아요 누를 경우
 	useEffect(()=> {
@@ -54,15 +55,29 @@ const CommentReview = ({ comment }) => {
 
 	}, [MY_COMMENT_LIKE_error, comment.umid, location.pathname])
 
+	// UI에는 변경되지 않았지만 삭제된 관람평을 삭제 할 경우
+	useEffect(()=> {
+
+		if (MY_COMMENT_DELETE_error === comment.umid) {
+			alert("존재하지 않는 관람평입니다.");
+			window.location.replace(location.pathname);
+		}
+
+	}, [MY_COMMENT_DELETE_error, comment.umid, location.pathname])
+
 	return (
 		<>
 			<CommentElement>
 				<div className='img'>
-					<Poster src={`/${comment.mimagepath}`} alt="Poster"/>
+					<Link to={`/moviedetail/${comment.mid}`}>
+						<Poster src={`/${comment.mimagepath}`} alt="Poster"/>
+					</Link>
 				</div>
 				<div className='top'>
 					<span className='name'>
-						영화 : {comment.mtitle}
+						<Link to={`/moviedetail/${comment.mid}`}>
+							{comment.mtitle}
+						</Link>
 					</span>
 					<span className='score'>
 						<RateCustom allowHalf value={comment.umscore/2}/> 
@@ -97,12 +112,6 @@ const CommentReview = ({ comment }) => {
 	);
 };
 
-const Poster = styled.img`
-  display: block;
-  width: 91px;
-  height: 150px;
-`;
-
 const CommentElement = styled.div`
 	position: relative;
 	padding: 15px 0 14px 110px;
@@ -116,6 +125,7 @@ const CommentElement = styled.div`
     left: 0px;
     width: 91px;
     height: 150px;
+		cursor: pointer;
 	}
 
 	.top {
@@ -127,6 +137,11 @@ const CommentElement = styled.div`
 			font-size: 15px;
 			margin-bottom: 1px;
 			font-weight: 600;
+
+			a {
+        text-decoration: none;
+				color: #020715;
+    	}
 		}
 
 		.score {
@@ -176,6 +191,12 @@ const CommentElement = styled.div`
 			margin-left: 8px;
 		}
 	}
+`;
+
+const Poster = styled.img`
+  display: block;
+  width: 91px;
+  height: 150px;
 `;
 
 const RateCustom = styled(Rate)`

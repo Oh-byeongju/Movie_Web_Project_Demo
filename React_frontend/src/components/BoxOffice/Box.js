@@ -66,7 +66,7 @@ const Box = ({ movie }) => {
         <div className="banner_img">
           <Link to={`/moviedetail/${movie.mid}`}>
             <Img
-            className="imggg"
+            className="img2"
             src={`${movie.mimagepath}`}
             alt="영화"
             />
@@ -119,7 +119,7 @@ const LI = styled.li`
       text-align: center;
     }
 
-    &:hover .imggg {
+    &:hover .img2 {
       filter: brightness(0.2);
     }
 

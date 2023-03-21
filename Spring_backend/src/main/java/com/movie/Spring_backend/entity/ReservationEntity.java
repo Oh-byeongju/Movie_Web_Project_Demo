@@ -42,7 +42,6 @@ public class ReservationEntity {
     @Column(nullable = false)
     private Boolean rstate;
 
-    @Column
     private String rcancledate;
 
     @ManyToOne(fetch = FetchType.LAZY)

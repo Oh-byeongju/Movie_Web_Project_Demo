@@ -29,8 +29,8 @@ const Details = () => {
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
   // 영화 좋아요 실패 여부 상태
   const { MLIKE_error } = useSelector((state) => state.movie);
-   // 영화의 상세내용 상태
-   const { detailMovie } = useSelector((state) => state.movie);
+  // 영화의 상세내용 상태
+  const { detailMovie } = useSelector((state) => state.movie);
 
   // 로그인 상태에 따라 영화 검색이 다름(좋아요 표시 때문)
   useEffect(() => {

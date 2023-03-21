@@ -192,34 +192,29 @@ public class MyPageMovieService {
         // JPA를 사용하기 위해 현재 아이디를 entity형으로 변환
         MemberEntity member = MemberEntity.builder().uid(currentMemberId).build();
 
+        // 사용자가 좋아요 누른 영화 목록 검색
+        List<MovieEntity> Movies = movieRepository.findMemberLikeMovieDESC(member);
 
-        // 여기서 부터 봐야할꺼
-        // 리덕스는 다 만들어 놨고 url도 맞춰둠
-        // 아래 영화 항목조회를 umliketime 기준으로 내림차순으로 들고와야하는데
-        // 그거에 맞춰서 하려면 jpql로 leftjoin해야할꺼 같기도함
-        // 쿼리문 생각해보기
-        // 그리고 좋아요 누르고  리턴 받을 때 리덕스에 상태 갱신 해줘야함 (좋아요 메소드 만들고)
-        // 예매 버튼 생기는건 예매율 계산으로 들고온놈들 그걸로 쓰면됨
+        // 영화 테이블에서 현재 예매가 가능한 영화들 조회
+        List<MovieEntity> MovieReserve = movieRepository.findShowMoviesReserve();
 
-        // 사용자가 좋아요 누른 영화 항목 조회
-        List<MovieMemberEntity> MovieMember = movieMemberRepository.findByUmlikeTrueAndMember(member);
+        // 예매가 가능한 영화들의 전체 예매 횟수(예매율 계산시 나누기 할때 사용)
+        float cnt = 0;
+        for (MovieEntity m : MovieReserve) {
+            cnt += m.getCntReserve();
+        }
+        // 람다식에서 사용하기 위해 final 선언
+        final float Cnt = cnt;
 
-        // 좋아요 누른 영화 목록의 ID를 List로 변환
-        List<Long> MovieID = new ArrayList<>();
-        for (MovieMemberEntity mm : MovieMember) {
-            MovieID.add(mm.getMovie().getMid());
+        // 예매가 가능한 영화 ID를 List로 변환
+        // Mapper에서 Screen true, false를 위해 사용
+        List<Long> MovieIDCheck = new ArrayList<>();
+        for (MovieEntity M : MovieReserve) {
+            MovieIDCheck.add(M.getMid());
         }
 
-
-
-
-
-        // 관람평을 작성하지 않은 영화 ID를 이용하여 영화 튜플 검색 (관람객 평점 기준으로 내림차순)
-        List<MovieEntity> Movies = movieRepository.findAll();
-
-
         return Movies.stream().map(Movie ->
-                movieMapper.toDtoMyPage(Movie, true, 4)).collect(Collectors.toList());
+                movieMapper.toDtoMyPage(Movie, MovieIDCheck.contains(Movie.getMid()), Cnt)).collect(Collectors.toList());
     }
 }
 

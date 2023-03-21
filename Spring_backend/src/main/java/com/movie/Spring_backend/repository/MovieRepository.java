@@ -5,6 +5,7 @@
  */
 package com.movie.Spring_backend.repository;
 
+import com.movie.Spring_backend.entity.MemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.movie.Spring_backend.entity.MovieEntity;
@@ -96,6 +97,12 @@ public interface MovieRepository extends JpaRepository<MovieEntity,Long> {
             "WHERE m.mid IN (:mid)" +
             "ORDER BY m.avgScore DESC")
     List<MovieEntity> findMoviesScoreDESC(@Param("mid") Set<Long> mid);
+
+    // 사용자가 좋아요 누른 영화검색 (좋아요 누른 시점 기준으로 내림차순)
+    @Query("SELECT m FROM MovieEntity as m LEFT OUTER JOIN MovieMemberEntity as mm ON m.mid = mm.movie " +
+            "WHERE mm.member = :member AND mm.umlike = 1 " +
+            "ORDER BY mm.umliketime DESC")
+    List<MovieEntity> findMemberLikeMovieDESC(@Param("member") MemberEntity member);
 
     // 극장 클릭 시 영화 id list를 활용하여 검색
     @Query(value ="SELECT m ,'able' as able FROM MovieEntity as m where m.mid IN (:mid) ORDER BY m.cntMovieLike DESC")

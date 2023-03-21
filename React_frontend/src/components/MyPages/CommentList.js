@@ -1,3 +1,4 @@
+/*eslint-disable*/
 /*
  23-03-11 마이페이지 css 구축(오병주)
 */
@@ -6,32 +7,59 @@ import styled from 'styled-components';
 import CommentMovie from './CommentMovie';
 import CommentReview from './CommentReview';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { useDispatch, useSelector } from 'react-redux';
-import { USER_MOVIE_POSSIBLE_REQUEST, USER_MY_COMMENT_SEARCH_REQUEST } from '../../reducer/R_mypage_movie';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { USER_MOVIE_POSSIBLE_REQUEST, USER_MY_COMMENT_SEARCH_REQUEST, USER_MY_COMMENT_SETTING } from '../../reducer/R_mypage_movie';
 
 const CommentList = () => {
 	const dispatch = useDispatch();
 
-	// 관람평 작성 가능 영화 상태
-  const { possibleMovie } = useSelector((state) => state.R_mypage_movie);
-
-	// 작성한 관람평 상태
-	const { MY_COMMENT_List } = useSelector((state) => state.R_mypage_movie);
-
-	// 관람평 작성 가능 영화 요청 (첫 랜더링)
-  useEffect(() => {
-    dispatch({
-      type: USER_MOVIE_POSSIBLE_REQUEST
-    });
-  }, [dispatch]);
+	 // 리덕스에 있는 관람평 상태들
+	 const { possibleMovie, MY_COMMENT_List, Possiblebuttonstate, Reviewbuttonstate } = useSelector(
+    state => ({
+      possibleMovie: state.R_mypage_movie.possibleMovie,
+			MY_COMMENT_List: state.R_mypage_movie.MY_COMMENT_List,
+			Possiblebuttonstate: state.R_mypage_movie.Possiblebuttonstate,
+			Reviewbuttonstate: state.R_mypage_movie.Reviewbuttonstate,
+    }),
+    shallowEqual
+  );
 
 	// 메뉴 버튼 변수
-	const [possiblebutton, setpossiblebutton] = useState(true);
-	const [reviewbutton, setreviewbutton] = useState(false);
+	const [possiblebutton, setpossiblebutton] = useState(Possiblebuttonstate);
+	const [reviewbutton, setreviewbutton] = useState(Reviewbuttonstate);
+
+	// 리덕스에 저장된 버튼 상태에 따른 요청 (첫 렌더링에만 작용)
+  useEffect(() => {
+		// 작성 가능 영화 요청
+		if (Possiblebuttonstate) {
+			
+			dispatch({
+				type: USER_MOVIE_POSSIBLE_REQUEST
+			});
+		}
+		// 작성한 관람평 요청
+		else {
+			dispatch({
+				type: USER_MY_COMMENT_SEARCH_REQUEST
+			});
+		}   
+  }, []);
+
+	// 페이지를 탈출할 때 현재 페이지의 버튼 정보를 저장
+	useEffect(()=> {
+    return () => {
+      dispatch({
+        type: USER_MY_COMMENT_SETTING,
+        data: {
+          possible: possiblebutton,
+					review: reviewbutton
+				}
+      });
+		};
+	}, [possiblebutton, reviewbutton, dispatch])
 
 	// 작성 가능 영화 버튼 누를 때
 	const clickpossible = useCallback(()=> {
-
 		dispatch({
       type: USER_MOVIE_POSSIBLE_REQUEST
     });
@@ -42,7 +70,6 @@ const CommentList = () => {
 
 	// 작성한 관람평 버튼 누를 때
 	const clickreview = useCallback(()=> {
-
 		dispatch({
       type: USER_MY_COMMENT_SEARCH_REQUEST
     });
@@ -68,9 +95,7 @@ const CommentList = () => {
 					작성한 관람평
 				</button>
 			</ButtonList>
-
-			{/* 여기서 버튼에 따라 랜더링 다르게 넣기  하나는 작성가능, 하나는 작성한거*/}
-
+			{/* 여기서 버튼에 따라 렌더링이 다름(작성 가능 영화, 작성한 관람평)*/}
 			{possiblebutton ?  
 			<ContentDetails>
 				<span className='total'>
@@ -94,13 +119,10 @@ const CommentList = () => {
 					<span className='None'>
 						<InfoCircleOutlined/>
 					</span>
-					작성한 관란평이 존재하지 않습니다.						
+					작성한 관람평이 존재하지 않습니다.						
 				</NoContent>
 				}
 			</ContentDetails>}
-
-
-
 		</Content>
 	);
 };

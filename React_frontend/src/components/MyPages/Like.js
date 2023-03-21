@@ -1,34 +1,76 @@
 /*
  23-03-11 마이페이지 css 구축(오병주)
 */
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { HeartOutlined, HeartFilled, StarFilled } from "@ant-design/icons";
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { USER_MLIKE_REQUEST } from '../../reducer/movie';
 
-const Like= ({ data }) => {
+const Like= ({ movie }) => {
+	const location = useLocation();  
+  const dispatch = useDispatch();
+
+	// 반올림 없이 소수점 생성해주는 함수
+  const getNotRoundDecimalNumber = (number, decimalPoint = 1) => {
+    let num = typeof number === "number" ? String(number) : number;
+    const pointPos = num.indexOf(".");
+  
+    if (pointPos === -1) return Number(num).toFixed(decimalPoint);
+  
+    const splitNumber = num.split(".");
+    const rightNum = splitNumber[1].substring(0, decimalPoint);
+    return Number(`${splitNumber[0]}.${rightNum}`).toFixed(decimalPoint);
+  };
+
+	// 영화 좋아요 실패 여부 상태
+  const { MLIKE_error } = useSelector((state) => state.movie);
+
+	// 사용자가 영화의 좋아요를 누를 때 호출되는 함수
+	const LikeChange = useCallback(() => {
+
+		dispatch({
+			type: USER_MLIKE_REQUEST,
+			data: {
+				mid: movie.mid
+			}
+		})
+		
+	}, [movie.mid, dispatch]);
+
+	// UI에는 변경되지 않았지만 삭제된 영화 좋아요 누를 경우
+	useEffect(()=> {
+
+		if (MLIKE_error === movie.mid) {
+			alert("존재하지 않는 영화입니다.");
+			window.location.replace(location.pathname);
+		}
+
+	}, [MLIKE_error, movie.mid, location.pathname])
+
 	return (
 		<ContentDetail>
 			<ContentDetailMiddle>
 				<BoxImage>
-          <Poster src='/img/ranking/5.jpg' alt="Poster" />
+					<Poster src={`/${movie.mimagepath}`} alt="Poster" />
         </BoxImage>
         <BoxContent>
           <Title>
           	<strong>
-              타이타닉
+              {movie.mtitle}
             </strong>
 						<span className="reservation">
-							예매율&nbsp; {data.reserveRate ? data.reserveRate.toFixed(1) : (0.0).toFixed(1)}%
+							예매율&nbsp; {movie.reserveRate ? movie.reserveRate.toFixed(1) : (0.0).toFixed(1)}%
 						</span>
 						<span className="rate">
 							관람객 평점 
 							<StarFilled style={{color :"#fea408", marginLeft: "7px", marginRight: "7px"}}/>
-							{data.mscore ? data.mscore.toFixed(1) : 0.0.toFixed(1)}
+							{movie.mscore ? movie.mscore.toFixed(1) : 0.0.toFixed(1)}
 						</span>	
 						<span className="more">
-							{/* 링크넣기 */}
-							<Link> 
+							<Link to={`/moviedetail/${movie.mid}`}> 
 								영화 상세정보 보기
 							</Link>
 						</span>
@@ -39,51 +81,51 @@ const Like= ({ data }) => {
 								감독 : &nbsp;
 							</dt>
 							<dd>
-								제임스 카메론	
+								{movie.mdir}
 							</dd>
 							<br/>
 							<dt>
 								장르 : &nbsp; 
 							</dt>
 							<dd>
-								로맨스
+								{movie.mgenre}
 							</dd>
 							<br/>
 							<dt>
 								상영 시간 : &nbsp;
 							</dt>
 							<dd>
-								180분
+								{movie.mtime}분
 							</dd>
 							<br/>
 							<dt> 
 								상영 등급 : &nbsp;
 							</dt>
 							<dd>
-								15세 이용가
+								{movie.mrating === '0' ? "전체 이용가" : movie.mrating+"세 이용가"}
 							</dd>
 							<br />
 							<dt>
 								개봉일 : &nbsp;
 							</dt>
 							<dd>
-								2023-02-17
+								{movie.mdate}
 							</dd>
 						</dl>
 					</Spec>
 					<Buttons>
-						<Likes>
+						<Likes onClick={LikeChange}>
 							<div>
 								<span>
-									<HeartFilled style={{color: "red"}} />
+									{movie.mlike === true ? <HeartFilled style={{color: "red"}} /> : <HeartOutlined />}
 								</span>
 								<span>
-									11
+									{movie.mlikes > 999 ? getNotRoundDecimalNumber(movie.mlikes / 1000) + "K" : movie.mlikes}
 								</span> 
 							</div>
 						</Likes>
-						<Ticket disabled={!data.reserve} reserve={data.reserve}>
-							{data.reserve ? '예매' : '상영예정'}
+						<Ticket disabled={!movie.reserve} reserve={movie.reserve}>
+							{movie.reserve ? '예매' : '상영예정'}
 						</Ticket>         
 					</Buttons>
 				</BoxContent>
@@ -144,14 +186,19 @@ const Title = styled.div`
     color: #1a1919;
     font-size: 21px;
     vertical-align: middle;
+		text-overflow: ellipsis;
+    white-space: nowrap;
+		width: 177px;
+		display: inline-block;
+		overflow: hidden;
   }
 
 	.reservation {
 	font-size: 13px;
 	position: relative;
 	vertical-align: middle;
-	margin: 0 13px 0 16px;
-	padding: 0 13px 0 0;
+	margin: 0 13px 0 68px;
+	padding: 0 14px 0 0;
 
 	::after {
 		content: '';
@@ -163,6 +210,7 @@ const Title = styled.div`
 		height: 14px;
 		margin: -6px 0 0 0;
 		background-color: #d9d6c8;
+		
 		}
 	}
 
@@ -176,7 +224,9 @@ const Title = styled.div`
 		font-size: 12px;
 		position: relative;
 		vertical-align: middle;
-		margin-left: 182px;
+		float: right;
+		margin-top: 6px;
+		margin-right: 4px;
 
 		a {
 			text-decoration: none;
