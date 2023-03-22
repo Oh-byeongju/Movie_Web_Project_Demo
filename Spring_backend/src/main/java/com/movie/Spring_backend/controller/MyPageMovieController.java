@@ -5,6 +5,8 @@ package com.movie.Spring_backend.controller;
 
 import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.dto.MovieDto;
+import com.movie.Spring_backend.dto.ReservationDto;
+import com.movie.Spring_backend.entity.MovieInfoSeatEntity;
 import com.movie.Spring_backend.service.MyPageMovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +46,12 @@ public class MyPageMovieController {
     @GetMapping("/auth/movieLike")
     public ResponseEntity<List<MovieDto>> MovieMemberLike(HttpServletRequest request) {
         return ResponseEntity.ok().body(myPageMovieService.MovieLikeGet(request));
+    }
+
+
+    // 테스트 (매핑 url 바꾸고 메소드 이름 바꾸기)
+    @GetMapping("/normal/test")
+    public ResponseEntity<List<ReservationDto>> AllMovie() {
+        return ResponseEntity.ok().body(myPageMovieService.Test());
     }
 }

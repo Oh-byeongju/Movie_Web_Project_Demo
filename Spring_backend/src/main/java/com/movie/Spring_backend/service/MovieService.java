@@ -237,11 +237,11 @@ public class MovieService {
         // 영화 출연진들의 이름 매핑
         List<String> Actors = new ArrayList<>();
         for (ActorEntity A : Actor) {
-            Actors.add(A.getAname()+",");
+            Actors.add(A.getAname() + ",");
         }
 
         // List의 마지막 요소에 콤마를 제거
-        if (!Actors.isEmpty()){
+        if (!Actors.isEmpty()) {
             Actors.set(Actor.size()-1, Actors.get(Actor.size()-1).replaceAll(",$", ""));
         }
 

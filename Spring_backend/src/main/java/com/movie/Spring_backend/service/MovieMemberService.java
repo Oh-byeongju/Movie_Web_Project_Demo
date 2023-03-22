@@ -16,6 +16,7 @@ import com.movie.Spring_backend.exceptionlist.MovieCommentNotFoundException;
 import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.repository.*;
+import com.movie.Spring_backend.util.DateUtil;
 import com.movie.Spring_backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,9 +58,7 @@ public class MovieMemberService {
         MovieMemberEntity MovieMember = movieMemberRepository.findByMovieAndMember(movie, member).orElse(null);
 
         // 현재 시간을 sql에 사용할 수 있게 매핑
-        Date nowDate = new Date();
-        SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String day = DateFormat.format(nowDate);
+        String day = DateUtil.getNow();
 
         // 튜플이 존재하지 않는 경우 entity를 가공 후 insert 쿼리 실행
         if (MovieMember == null) {
@@ -138,9 +137,7 @@ public class MovieMemberService {
         // 관람기록이 존재하는 경우
         else {
             // 현재 시간을 sql에 사용할 수 있게 매핑
-            Date nowDate = new Date();
-            SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String day = DateFormat.format(nowDate);
+            String day = DateUtil.getNow();
 
             // 관람평을 쓰는 사용자가 영화에 대한 좋아요 기록이 있을 경우
             if (MovieMember != null && MovieMember.getUmlike() != null) {
