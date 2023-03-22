@@ -2147,11 +2147,40 @@ SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시�
 WHERE MID = 4 AND uid = 'temp17';
 
 /*
--- 여기에 join 시네마랑 극장 붙여서 보내면 됨  + 몇개만 뽑아서 검색하는거 고민
+-- 예매 취소한 것들 확인하는 쿼리
+SELECT *
+FROM movie LEFT JOIN movie_information ON movie.mid = movie_information.mid LEFT JOIN movie_reservation ON movie_information.miid = movie_reservation.miid
+WHERE movie_reservation.uid = 'temp1' AND movie_reservation.rstate = 0
+ORDER BY movie_reservation.rcancledate desc
+
+// 모든 쿼리 걸때 6개월 이전 제한도 있어야함 **
+-- 취소된거 확인할때는 rdate가 아니라 cancledate순으로 정렬 fasle랑(이건 취소된 쿼리)
+SELECT mis.*
+FROM movie_reservation AS mr LEFT JOIN movie_infoseat AS mis ON mr.rid = mis.rid
+WHERE mr.uid = 'temp1' AND mr.rstate = false
+ORDER BY rcancledate DESC;
+
+
+
+
+-- 여기에 join 시네마랑 극장 붙여서 보내면 됨  + 몇개만 뽑아서 검색하는거 고민(시간 붙이면 현재예매, 지난예매)
 SELECT *
 FROM movie LEFT JOIN movie_information ON movie.mid = movie_information.mid LEFT JOIN movie_reservation ON movie_information.miid = movie_reservation.miid
 WHERE movie_reservation.uid = 'temp1' AND movie_reservation.rstate = 1
 ORDER BY movie_reservation.rdate desc
+-- 여기있는 수대로 나옴
+
+-- 사용자가 예매한 좌석 불러오는 쿼리(스프링에선 entitygraph로 좌석 다 불러와야함)
+SELECT mis.*
+FROM movie_reservation AS mr LEFT JOIN movie_infoseat AS mis ON mr.rid = mis.rid
+WHERE mr.uid = 'temp1' AND mr.rstate = true
+ORDER BY rdate DESC;
+
+
+
+
+
+
 
 -- 임의 데이터(몇개 더 넣어보기)
 INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '40', '어른 1명, 아이 1명', '2', 'temporary_value', 'temporary_value', '테스트', '1', '30', 'temp1');

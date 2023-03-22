@@ -6,17 +6,18 @@ package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.dto.MovieDto;
+import com.movie.Spring_backend.dto.ReservationDto;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.error.exception.BusinessException;
 import com.movie.Spring_backend.error.exception.ErrorCode;
+import com.movie.Spring_backend.error.exception.InvalidValueException;
 import com.movie.Spring_backend.exceptionlist.MovieNotFoundException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.mapper.MovieCommentMapper;
 import com.movie.Spring_backend.mapper.MovieMapper;
-import com.movie.Spring_backend.repository.CommentInfoRepository;
-import com.movie.Spring_backend.repository.MovieInfoRepository;
-import com.movie.Spring_backend.repository.MovieMemberRepository;
-import com.movie.Spring_backend.repository.MovieRepository;
+import com.movie.Spring_backend.mapper.ReservationMapper;
+import com.movie.Spring_backend.repository.*;
+import com.movie.Spring_backend.util.DateUtil;
 import com.movie.Spring_backend.util.SecurityUtil;
 import io.netty.channel.SimpleUserEventChannelHandler;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +38,11 @@ public class MyPageMovieService {
     private final MovieRepository movieRepository;
     private final MovieMemberRepository movieMemberRepository;
     private final CommentInfoRepository commentInfoRepository;
+    private final ReservationRepository reservationRepository;
+    private final MovieInfoSeatRepository movieInfoSeatRepository;
     private final MovieMapper movieMapper;
     private final MovieCommentMapper movieCommentMapper;
+    private final ReservationMapper reservationMapper;
     private final JwtValidCheck jwtValidCheck;
 
     // 사용자가 관람평을 작성할 수 있는 영화 목록을 불러오는 메소드
@@ -130,9 +134,7 @@ public class MyPageMovieService {
         }
 
         // 현재 시간을 sql에 사용할 수 있게 매핑
-        Date nowDate = new Date();
-        SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String day = DateFormat.format(nowDate);
+        String day = DateUtil.getNow();
 
         // 관람평을 쓰는 사용자가 영화에 대한 좋아요 기록이 있을 경우
         if (MovieMember != null && MovieMember.getUmlike() != null) {
@@ -216,6 +218,26 @@ public class MyPageMovieService {
 
         return Movies.stream().map(Movie ->
                 movieMapper.toDtoMyPage(Movie, MovieIDCheck.contains(Movie.getMid()), Cnt)).collect(Collectors.toList());
+    }
+
+
+    // 테스트(메소드 이름 바꾸기)
+    @Transactional
+    public List<ReservationDto> Test() {
+
+        // 조회 시점만 바꾸고
+        // state, uid 매개변수로 던질꺼 확인하고
+        // 메소드 이름들만 바꾸면 될듯
+
+        // 현재 시점으로 부터 6개월 전 날짜 조회((이거는 내일 쓰기))
+        String BeforeMonth = DateUtil.ChangeDate(0, -6, 0);
+        System.out.println(BeforeMonth);
+
+
+        List<ReservationEntity> test = reservationRepository.TEST();
+        List<MovieInfoSeatEntity> test2 = movieInfoSeatRepository.TEST();
+
+        return reservationMapper.MyPageReserve(test, test2);
     }
 }
 

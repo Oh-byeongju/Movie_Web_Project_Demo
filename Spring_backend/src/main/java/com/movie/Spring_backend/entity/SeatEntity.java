@@ -16,6 +16,7 @@ public class SeatEntity {
 
     @Column(nullable = false, length = 20)
     private String sname;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cid") //조인할 컬럼 이름
     private CinemaEntity cinema;
