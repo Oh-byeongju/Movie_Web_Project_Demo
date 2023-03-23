@@ -22,8 +22,8 @@ public class BoardCommentController {
 
     //댓글을 불러오는 메소드
     @GetMapping("/normal/comment")
-    public List<BoardCommentDto> commentAll(@RequestParam("bid")Long bid){
-        return boardCommentService.findByComment(bid);
+    public ResponseEntity<List<BoardCommentDto>> commentAll(@RequestParam("bid")Long bid){
+        return ResponseEntity.ok().body(boardCommentService.findByComment(bid));
     }
 
     //댓글을 입력하는 메소드
