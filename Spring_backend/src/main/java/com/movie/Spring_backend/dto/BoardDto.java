@@ -34,6 +34,7 @@ public class BoardDto {
 
     private String uid;
 
+
     @Builder //클래스 레벨에 붙이거나 생성자에 붙여주면 파라미터를 활용하여 빌더 패턴을 자동으로 생성해준다
     public BoardDto(Long bid, String btitle, String bdetail, String bdate, String bcategory,Integer bclickindex, Integer blike, Integer bunlike, MemberEntity member
     ,String uid) {

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { LikeTwoTone,DislikeTwoTone,SyncOutlined,EyeOutlined ,DeleteOutlined} from "@ant-design/icons";
+import { SyncOutlined,MessageOutlined} from "@ant-design/icons";
 import { useParams,useNavigate ,useLocation,} from "react-router-dom";
 import { useDispatch ,useSelector} from "react-redux"
-import { COMMENT_READ_REQUEST, COMMENT_WRITE_REQUEST, CONTENT_DELETE_REQUEST, CONTENT_READ_REQUEST } from "../../reducer/Board";
-
+import { COMMENT_READ_REQUEST, COMMENT_WRITE_REQUEST, } from "../../reducer/Board";
+import ReplyComment from "./ReplyComment";
 const ContentComment = () =>{
 
     const dispatch = useDispatch();
@@ -18,6 +18,7 @@ const ContentComment = () =>{
         setText(e.target.value)
         setCount(e.target.value.length)
     }
+
     const {content,comment,comment_read_loading, comment_read_done,comment_write_done} = useSelector((state)=>state.Board)
    
         useEffect(()=>{
@@ -39,11 +40,9 @@ const ContentComment = () =>{
                 dispatch({
                     type:COMMENT_WRITE_REQUEST,
                     data:{
-                        uid:LOGIN_data.uid,
                         text:text,
-                        group:content[0].bid,
+                        parent:"",
                         bid:content[0].bid,
-                        deep:0
                     }
                 })
             alert('작성완료되었습니다.')
@@ -67,7 +66,7 @@ const ContentComment = () =>{
                     <CommentHeader >
                         <Left>
                             <h2>댓글</h2>
-                            <span>총 <em>89</em>개</span>
+                            <span>총 <em>{comment.length}</em>개</span>
                         </Left>
                         <Right>
                             <button>
@@ -121,13 +120,13 @@ const ContentComment = () =>{
                                             <span className="id">{data.uid}</span>
                                             <span className="time">10시간 전</span>
                                         </div>
-                                        <div className="comment-content">
-                                            <div >
-                                            </div>
-                                        </div>
                                         <div className="comment-comment"> <p>{data.bccomment}</p>
+
+                                      
                                     </div>
                                 </div>
+                                <ReplyComment /> 
+
                             </li>
                             
                             )
@@ -276,6 +275,13 @@ li{
     word-break: break-all;
     overflow: auto;
     max-height: 400px;
+    .no{
+        float:left;
+        padding-right:30px;
+    }
+    .comment_to_comment{
+        
+    }
 }
 .comment-comment{
     margin-top: 8px;

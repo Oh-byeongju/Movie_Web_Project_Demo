@@ -68,7 +68,7 @@ const ContentCard = () => {
                         </MetaListLeft>
                         <MetaListRight>
                         <div className="inq"><EyeOutlined style={{position:'relative',top:'-2px'}}/><span>{content[0].bclickindex}</span></div>
-                        <div className="comment">댓글 100</div>
+                        <div className="comment">댓글 {content.length}</div>
                         <div className="top">추천 1,000</div>
                         </MetaListRight>
                     </SubTitle>
@@ -201,14 +201,13 @@ const MetaListRight = styled.div`
     
     .comment{
         display: inline-block;
-
         vertical-align: middle;
         position: relative;
         margin-left: 8px;
         padding-left: 9px;
-        width:70px;
+        padding-right:20px;
         height:13px;
-        line-height: 10px;
+        line-height: 12px;
 
         border-right:1px solid #98a0a7;
     }
@@ -263,7 +262,6 @@ const ArticleVote  =styled.div`
         color: #1e2022;
         margin-left: 80px;
         .like{
-            width: 16px;
             height: 16px;
             background-size: 16px;
             vertical-align: top;
@@ -288,7 +286,6 @@ const ArticleVote  =styled.div`
         cursor:pointer;
 
         .like{
-            width: 16px;
             height: 16px;
             background-size: 16px;
             vertical-align: top;

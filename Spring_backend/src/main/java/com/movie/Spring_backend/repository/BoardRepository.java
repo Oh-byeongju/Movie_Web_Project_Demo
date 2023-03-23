@@ -1,5 +1,6 @@
 package com.movie.Spring_backend.repository;
 
+import com.movie.Spring_backend.entity.BoardCommentEntity;
 import com.movie.Spring_backend.entity.BoardEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,4 +48,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     //게시판 검색 ,uid
     @Query("select board from BoardEntity as board where board.member.uid =:uid  order by bid desc")
     public Page<BoardEntity> SearchUid(Pageable pageable, @Param("uid") String uid);
+
+    @Query("select board from BoardEntity as board where bid = :bid ")
+    public BoardEntity booleanCheck(@Param("bid") Long bid);
 }

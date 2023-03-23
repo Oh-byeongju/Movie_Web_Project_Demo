@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,16 +22,8 @@ public class BoardCommentEntity {
     @Column
     private String bcdate;
 
-    @Column(nullable = false)
-    private Integer bcparent;
-
     @Column(nullable = false, length = 200)
     private String bccomment;
-    @Column(nullable = false, length = 20)
-    private Integer bcgroup;
-
-    @Column(nullable = false, length = 20)
-    private Integer deep;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="bid") //조인할 컬럼 이름
@@ -39,16 +33,22 @@ public class BoardCommentEntity {
     @JoinColumn(name="uid") //조인할 컬럼 이름
     private MemberEntity member;
 
+
+    //계층형 구조를 위한 컬럼
+    @Column
+    private Long parent_id;
+
+    public void updateParent(Long parent_id){
+        this.parent_id = parent_id;
+    }
     @Builder
-    public BoardCommentEntity(Long bcid, String bcdate, Integer bcparent,String bccomment, Integer bcgroup, Integer deep , BoardEntity board,
-                              MemberEntity member) {
+    public BoardCommentEntity(Long bcid, String bcdate,String bccomment, BoardEntity board,
+                              MemberEntity member,Long parent_id) {
         this.bcid=bcid;
         this.bcdate = bcdate;
-        this.bcparent = bcparent;
         this.bccomment=bccomment;
-        this.bcgroup=bcgroup;
-        this.deep=deep;
         this.board=board;
         this.member=member;
+        this.parent_id=parent_id;
     }
 }
