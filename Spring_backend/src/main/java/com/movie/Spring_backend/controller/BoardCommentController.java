@@ -3,6 +3,8 @@ package com.movie.Spring_backend.controller;
 import com.movie.Spring_backend.dto.BoardCommentDto;
 import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.entity.BoardCommentEntity;
+import com.movie.Spring_backend.mapper.CommentMapper;
+import com.movie.Spring_backend.mapper.CountCommentMapper;
 import com.movie.Spring_backend.service.BoardCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,7 @@ public class BoardCommentController {
 
     //댓글을 불러오는 메소드
     @GetMapping("/normal/comment")
-    public ResponseEntity<List<BoardCommentDto>> commentAll(@RequestParam("bid")Long bid){
+    public ResponseEntity<CountCommentMapper> commentAll(@RequestParam("bid")Long bid){
         return ResponseEntity.ok().body(boardCommentService.findByComment(bid));
     }
 

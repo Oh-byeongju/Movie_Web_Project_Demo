@@ -62,7 +62,7 @@ else if(!board_read_loading && board_read_done){
             onClick={()=>
             navigate(`/board/content/${data.bid}/${data.btitle}`,{state:location})}>
                 <Number><CaretUpOutlined twoToneColor="grey"/><div>{data.bid}</div></Number>
-                <Detail><a><div><span>{data.btitle} [{data.commentCount}5]</span></div></a></Detail>
+                <Detail><a><div><span>{data.btitle} [{data.commentcount}]</span></div></a></Detail>
                 <Item><div className="category">{data.bcategory}</div><div className="date"><span>{detailDate(new Date(data.bdate))}</span></div><div className="name">{data.uid}</div></Item>
             </Card>
 ))

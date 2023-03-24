@@ -27,13 +27,17 @@ public class BoardCommentDto  {
     private MemberEntity member;
     private String uid;
     private Long bid;
-    private Long parent_id;
+    private Long parent;
 
     private List<BoardCommentEntity> children = new ArrayList<>();
 
+    private Integer commentcount;
+
     @Builder
     public BoardCommentDto(Long bcid, String bcdate,String bccomment, BoardEntity board,Long bid,
-                              MemberEntity member, String uid, Long parent_id,  List<BoardCommentEntity> children
+                              MemberEntity member, String uid, Long parent,  List<BoardCommentEntity> children,
+                           Integer commentcount
+
 ) {
         this.bcid=bcid;
         this.bcdate = bcdate;
@@ -42,9 +46,20 @@ public class BoardCommentDto  {
         this.member=member;
         this.bid=bid;
         this.uid=uid;
-        this.parent_id=parent_id;
+        this.parent=parent;
+        this.commentcount=commentcount;
     }
 
 
-
+    @Builder
+    public BoardCommentDto(BoardCommentEntity com) {
+        this.bcid=com.getBcid();
+        this.bcdate = com.getBcdate();
+        this.bccomment=com.getBccomment();
+        this.bid=com.getBoard().getBid();
+        this.uid=com.getMember().getUid();
+        this.parent=com.getParent();
+        this.children=com.getChildren();
+    this.commentcount=com.getCommentcount();
+    }
 }

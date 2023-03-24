@@ -11,6 +11,7 @@ import com.movie.Spring_backend.util.RemoveLastChar;
 import com.movie.Spring_backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class PaymentService {
     private final JwtValidCheck jwtValidCheck;
     private final ReservationRepository reservationRepository;
     private final RedisSeatRepository redisSeatRepository;
+
 
     @Transactional
     public ResponseEntity<?> getPayment(Map<String, String> requestMap,
@@ -99,12 +101,9 @@ public class PaymentService {
                                .reserve(data)
                                .build();
                        infoseat.add(movieInfoSeatEntity);
-
-                       String keys = "";
-                       keys = miid + "," + ss;
+                       String keys =miid + ", " + ss;
                        RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, User_id);
                        redisSeatRepository.delete(redisSeatEntity);
-
                    }
 
 
