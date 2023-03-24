@@ -6,6 +6,8 @@ import com.movie.Spring_backend.entity.BoardCommentEntity;
 import com.movie.Spring_backend.entity.BoardEntity;
 import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
+import com.movie.Spring_backend.mapper.CommentMapper;
+import com.movie.Spring_backend.mapper.CountCommentMapper;
 import com.movie.Spring_backend.repository.BoardCommentRepository;
 import com.movie.Spring_backend.repository.BoardRepository;
 import com.movie.Spring_backend.util.SecurityUtil;
@@ -31,13 +33,31 @@ public class BoardCommentService {
 
     //댓글을 불러오는 메소드
     @Transactional
-    public List<BoardCommentDto>  findByComment(Long bid){
+    public CountCommentMapper  findByComment(Long bid){
         List<BoardCommentEntity> datas =boardCommentRepository.findByComment(bid);
+        List<BoardCommentEntity> comment = boardCommentRepository.CommentToComment(bid);
+        CountCommentMapper countCommentMapper= null;
+        //전체 댓글 데이터
+        List<CommentMapper> result = new ArrayList<>();
+        Map<Long, CommentMapper> map = new HashMap<>();
+        Integer count = 0;
+        if(comment==null) {
+            System.out.println("예외처리");
+        }
+        for(BoardCommentEntity com : comment){
+            count++;
+            CommentMapper dto = new CommentMapper(com);
+            map.put(dto.getBcid(),dto);
+            if(com.getParent()!=null){
+                map.get(com.getParent()).getChild().add(dto);
+            }
+            else{
+                result.add(dto);
+            }
+        }
+        countCommentMapper=new CountCommentMapper(result,count);
+        return countCommentMapper;
 
-
-        return datas.stream().map(data -> BoardCommentDto.builder().bcid(data.getBcid()).bccomment(data.getBccomment())
-                .bcdate(data.getBcdate())
-                .uid(data.getMember().getUid()).build()).collect(Collectors.toList());
     }
     //댓글을 작성하는 메소드
    /* @Transactional
@@ -78,6 +98,7 @@ public class BoardCommentService {
         String text = requestMap.get("text").trim();
         String bid = requestMap.get("bid").trim();
         String parentcomment = requestMap.get("parent").trim();
+        System.out.println(parentcomment);
 
         BoardEntity boardId = BoardEntity.builder().bid(Long.valueOf(bid)).build();  //
 
@@ -101,7 +122,7 @@ public class BoardCommentService {
                     .bcdate(day)
                     .bccomment(text)
                     .board(boardId)
-                    .parent_id(Long.valueOf(parentcomment))
+                    .parent(Long.valueOf(parentcomment))
                     .member(member).build();
             boardCommentRepository.save(comment);
         }

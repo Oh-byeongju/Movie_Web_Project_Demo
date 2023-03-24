@@ -12,6 +12,10 @@ const ContentCard = () => {
         const {id,title} = useParams();
         const { LOGIN_data } = useSelector((state) => state.R_user_login);
            
+    
+        const {content,content_read_loading,content_read_done,comment
+        } = useSelector((state)=>state.Board)
+   
         useEffect(()=>{
             dispatch({
                 type:CONTENT_READ_REQUEST,
@@ -22,9 +26,6 @@ const ContentCard = () => {
             })
           
         },[])
-        const {content,content_read_loading,content_read_done
-        } = useSelector((state)=>state.Board)
-   
         const detailDate = (a) => {
             const milliSeconds = new Date() - a;
             const seconds = milliSeconds / 1000;
@@ -68,7 +69,7 @@ const ContentCard = () => {
                         </MetaListLeft>
                         <MetaListRight>
                         <div className="inq"><EyeOutlined style={{position:'relative',top:'-2px'}}/><span>{content[0].bclickindex}</span></div>
-                        <div className="comment">댓글 {content.length}</div>
+                        <div className="comment">댓글 {comment.length}</div>
                         <div className="top">추천 1,000</div>
                         </MetaListRight>
                     </SubTitle>

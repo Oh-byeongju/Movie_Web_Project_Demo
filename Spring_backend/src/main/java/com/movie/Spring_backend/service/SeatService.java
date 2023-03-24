@@ -52,6 +52,7 @@ public class SeatService {
         //레디스의 점유 좌석을 매핑해줌
         for (RedisSeatEntity r : datad) {
             if (r != null) {//null 값 제외하고 받아옴
+                System.out.println(r.getKey());
                 String[] SeatNumber = r.getKey().split(","); //레디스의 데이터를 매핑해서 객체 형식으로 만듬
                 ocuppyMappers.add(new OcuppyMapper(Long.parseLong(SeatNumber[0].trim()),  Long.parseLong(SeatNumber[1].trim())));
               }
@@ -101,6 +102,7 @@ public class SeatService {
         //name : miid , age : seatid
         jwtValidCheck.JwtCheck(request, "ATK");
         boolean check = false;
+        age = age.substring(0, age.length()-1);
         String[] SeatNumber = age.split(",");
         List<RedisSeatEntity> datad = redisSeatRepository.findAll();
         //구조를 변경해야함
@@ -109,6 +111,7 @@ public class SeatService {
             //무조건 삽입을 해야함 데이터가 없으니까
             //get()으로 검색이 가능함
             for (String k : SeatNumber) {
+                System.out.println(k);
                 String keys = "";
                 keys = name + "," + k;
                 RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, user);

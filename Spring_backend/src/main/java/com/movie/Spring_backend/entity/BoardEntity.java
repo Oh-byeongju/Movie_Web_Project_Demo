@@ -3,6 +3,7 @@ package com.movie.Spring_backend.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -41,9 +42,12 @@ public class BoardEntity {
     @JoinColumn(name="uid") //조인할 컬럼 이름
     private MemberEntity member;
 
+    @Formula("(select count(comment.bcid) from board_comment comment where comment.bid = bid)")
+    private Integer commentcount;
 
     @Builder //클래스 레벨에 붙이거나 생성자에 붙여주면 파라미터를 활용하여 빌더 패턴을 자동으로 생성해준다
     public BoardEntity(Long bid, String btitle, String bdetail, String bdate, String bcategory, Integer bclickindex, Integer blike, Integer bunlike, MemberEntity member
+                       ,Integer commentcount
 
     ) {
         this.bid=bid;
@@ -55,5 +59,6 @@ public class BoardEntity {
         this.blike=blike;
         this.bunlike=bunlike;
         this.member=member;
+        this.commentcount=commentcount;
     }
 }

@@ -40,7 +40,8 @@ public class BoardService {
         PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
         Page<BoardEntity> pages = boardRepository.PaginationBid(page);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
-                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build());
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                .blike(data.getBlike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
     //게시글 전체 불러오는 메소드, top순
     @Transactional
@@ -49,7 +50,8 @@ public class BoardService {
         PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
         Page<BoardEntity> pages = boardRepository.PaginationIndex(page);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
-                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build());
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                .blike(data.getBlike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
 
 
@@ -60,7 +62,8 @@ public class BoardService {
         boardRepository.updateViews(id);
         List<BoardEntity> datas = boardRepository.findByContent(id,title);
         return datas.stream().map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
-                .bcategory(data.getBcategory()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build()).collect(Collectors.toList());
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike())
+                .bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build()).collect(Collectors.toList());
     }
 
     //페이지내 제목으로 검색하는 메소드
@@ -69,7 +72,8 @@ public class BoardService {
         PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
         Page<BoardEntity> pages = boardRepository.SearchTitle(page, title);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
-                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build());
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                .blike(data.getBlike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
 
     //페이지내 제목으로 검색하는 메소드
@@ -78,7 +82,8 @@ public class BoardService {
         PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
         Page<BoardEntity> pages = boardRepository.SearchUid(page, uid);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
-                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike()).bunlike(data.getBunlike()).uid(data.getMember().getUid()).build());
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                .blike(data.getBlike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
 
     //게시판에 글을 작성하는 메소드
