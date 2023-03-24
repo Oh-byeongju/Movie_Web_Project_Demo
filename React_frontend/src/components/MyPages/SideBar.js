@@ -34,7 +34,6 @@ const SideBar = () => {
       [location.pathname.substring(8)]: true
     });
 
-		console.log(state);
 	}, [])
 
 	return (
