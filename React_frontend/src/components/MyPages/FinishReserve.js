@@ -1,20 +1,20 @@
 /*
  23-03-10 마이페이지 css 구축(오병주)
- 23-03-24 사용자가 예매한 영화 내역 조회 구현(오병주)
+ 23-03-24 사용자가 예매한 지난 관람영화 내역 조회 구현(오병주)
 */
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import * as date from "../../lib/date.js";
 
-const Reserve = ({ reserve }) => {
+const FinishReserve = ({ reserve }) => {
 	return (
 		<ContentDetail>
 			<ContentDetailTop>
 				<span>
 					예매일시 : &nbsp;{reserve.rdate.substr(0, 10)} ({date.getDayOfWeek(reserve.rdate)})
 				</span>
-				<Link to={`/Mypage/ReserveDetail/${reserve.rid}`}>
+				<Link to={`/Mypage/FinishDetail/${reserve.rid}`}>
 					예매내역 상세보기
 				</Link>
 			</ContentDetailTop>
@@ -183,4 +183,4 @@ const ContentDetailMiddleInfo = styled.div`
 	}
 `;
 
-export default Reserve;
+export default FinishReserve;

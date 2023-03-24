@@ -42,7 +42,7 @@ public class ReservationEntity {
     @Column(nullable = false)
     private Boolean rstate;
 
-    private String rcancledate;
+    private String rcanceldate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="miid")
@@ -60,7 +60,7 @@ public class ReservationEntity {
 
     @Builder
     public ReservationEntity(Long rid, String rdate, Integer rprice, String rpeople, Integer rticket, String rpayid,
-                             String rtoken, String rpaytype, Boolean rstate, String rcancledate, MovieInfoEntity movieInfo,
+                             String rtoken, String rpaytype, Boolean rstate, String rcanceldate, MovieInfoEntity movieInfo,
                              MemberEntity member, List<MovieInfoSeatEntity> infoSeats) {
         this.rid = rid;
         this.rdate = rdate;
@@ -71,7 +71,7 @@ public class ReservationEntity {
         this.rtoken = rtoken;
         this.rpaytype = rpaytype;
         this.rstate = rstate;
-        this.rcancledate = rcancledate;
+        this.rcanceldate = rcanceldate;
         this.movieInfo = movieInfo;
         this.member = member;
         this.infoSeats = infoSeats;

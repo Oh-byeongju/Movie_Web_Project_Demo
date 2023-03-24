@@ -22,15 +22,34 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
 
     ReservationEntity findByRpayid(String rpayid);
 
-    // 테스트
-    // 사용자가 예매한 정보들을 가져오는 메소드(예매시간 순으로 내림차순) --> 이름 매개변수로 바꾸고 나중에 취소, 지난, 현재 이거 하려면 시간도 넣기
-    // rstate도 매개변수로 쓰면 쿼리 여러개 안해도 되겠네
+    // 사용자가 예매한 영화 정보들을 가져오는 메소드(예매시간 순으로 내림차순, 아직 영화가 끝나지 않은 예매들)
     @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
             "ON rs.movieInfo = mi.miid " +
-            "WHERE rs.member = 'temp1' AND rs.rstate = true " +
+            "WHERE rs.member = :member AND rs.rstate = true AND rs.rdate > :rdate AND mi.miendtime > now() " +
             "ORDER BY rs.rdate DESC")
     @EntityGraph(attributePaths = {"movieInfo.movie", "movieInfo.cinema", "movieInfo.cinema.theater"})
-    List<ReservationEntity> TEST();
+    List<ReservationEntity> findMyPageReserve(@Param("member") MemberEntity member, @Param("rdate") String rdate);
 
+    // 사용자가 예매취소한 영화 정보들을 가져오는 메소드(취소시간 순으로 내림차순)
+    @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
+             "ON rs.movieInfo = mi.miid " +
+             "WHERE rs.member = :member AND rs.rstate = false AND rs.rcanceldate > :rcanceldate " +
+             "ORDER BY rs.rcanceldate DESC")
+    @EntityGraph(attributePaths = {"movieInfo.movie", "movieInfo.cinema", "movieInfo.cinema.theater"})
+    List<ReservationEntity> findMyPageReserveCancel(@Param("member") MemberEntity member, @Param("rcanceldate") String rcanceldate);
 
+    // 사용자가 예매한 지난 관람내역들을 가져오는 메소드(예매시간 순으로 내림차순, 영화가 끝난 예매들)
+    @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
+            "ON rs.movieInfo = mi.miid " +
+            "WHERE rs.member = :member AND rs.rstate = true AND rs.rdate > :rdate AND mi.miendtime <= now() " +
+            "ORDER BY rs.rdate DESC")
+    @EntityGraph(attributePaths = {"movieInfo.movie", "movieInfo.cinema", "movieInfo.cinema.theater"})
+    List<ReservationEntity> findMyPageReserveFinish(@Param("member") MemberEntity member, @Param("rdate") String rdate);
+
+    // 사용자가 예매한 영화의 세부내역을 가져오는 메소드
+    @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
+            "ON rs.movieInfo = mi.miid " +
+            "WHERE rs.rid = :rid")
+    @EntityGraph(attributePaths = {"movieInfo.movie", "movieInfo.cinema", "movieInfo.cinema.theater"})
+    Optional<ReservationEntity> findMyPageReserveDetail(@Param("rid") Long rid);
 }

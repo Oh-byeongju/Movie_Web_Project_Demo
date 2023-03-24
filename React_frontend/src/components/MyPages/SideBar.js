@@ -1,13 +1,41 @@
 /*
  23-03-10 마이페이지 css 구축(오병주)
 */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { RightOutlined } from "@ant-design/icons";
+import { useLocation } from 'react-router-dom';
 
 // 마이페이지 왼쪽 사이드바
 const SideBar = () => {
+	const location = useLocation();
+
+	const [state, setState] = useState({
+    Reserve: false,
+    Cancel: false,
+		Finish: false,
+		Like: false,
+		Comment: false,
+		Modify: false
+  });
+
+	const { Reserve, Cancel, Finish, Like, Comment, Modify } = state;
+
+	// 이걸로 처음 렌더링때만 true 해주고 나머지는 버튼 누를 때 마다 바꿔줘야할듯
+	// 내일은 예매 취소하는거 메소드 만들고 어찌저찌하면 마이페이지 끝
+	// 내 정보 조회를 만들지 말지 고민
+	// 이거 생각좀 해봐야할듯
+	useEffect(()=> {
+		console.log(location.pathname.substring(8))
+
+		setState({
+      ...state, 
+      [location.pathname.substring(8)]: true
+    });
+
+	}, [])
+
 	return (
 		<SideBarLayout>
 			<SideTitle>
@@ -23,8 +51,16 @@ const SideBar = () => {
 					</Link>
 				</li>
 				<li>
-					<Link to="/Mypage/Cancle">
+					<Link to="/Mypage/Cancel">
 						예매 취소내역
+						<span>
+							<RightOutlined/>
+						</span>
+					</Link>
+				</li>
+				<li>
+					<Link to="/Mypage/Finish">
+						지난 관람내역
 						<span>
 							<RightOutlined/>
 						</span>

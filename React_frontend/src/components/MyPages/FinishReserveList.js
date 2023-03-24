@@ -1,24 +1,24 @@
 /*
  23-03-10 마이페이지 css 구축(오병주)
- 23-03-24 사용자가 예매한 영화 내역 조회 구현(오병주)
+ 23-03-24 사용자가 예매한 지난 관람영화 내역 조회 구현(오병주)
 */
 import React, { useEffect }  from 'react';
 import styled from 'styled-components';
-import Reserve from './Reserve';
+import FinishReserve from './FinishReserve';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { USER_RESERVE_SEARCH_REQUEST } from '../../reducer/R_mypage_reserve';
+import { USER_RESERVE_FINISH_SEARCH_REQUEST } from '../../reducer/R_mypage_reserve';
 
-const ReserveList = () => {
+const FinishReserveList = () => {
 	const dispatch = useDispatch();
 
-	// 리덕스에 있는 예매내역 상태
-	const { RESERVE_SEARCH } = useSelector((state) => state.R_mypage_reserve);
+	// 리덕스에 있는 지난 관람내역 상태
+	const { RESERVE_FINISH_SEARCH } = useSelector((state) => state.R_mypage_reserve);
 
-	// 예매 내역 조회 useEffect
+	// 지난 관람내역 조회 useEffect
 	useEffect(()=> {
 		dispatch({
-      type: USER_RESERVE_SEARCH_REQUEST
+      type: USER_RESERVE_FINISH_SEARCH_REQUEST
     });
 	}, [dispatch])
 
@@ -27,21 +27,21 @@ const ReserveList = () => {
 			<ContentTitle>
 				<ContentLeft>
 					<h2>
-						예매내역
+						지난 관람내역
 					</h2>
 					<span>
-						최대 6개월까지의 예매 내역이 출력됩니다.
+						최대 6개월까지의 관람 내역이 출력됩니다.
 					</span>
 				</ContentLeft>
 			</ContentTitle>
 			<ContentLine/>
 			<ContentDetails>
-				{RESERVE_SEARCH.length !== 0 ? RESERVE_SEARCH.map((reserve, index) => <Reserve reserve={reserve} key={index} />) : 
+				{RESERVE_FINISH_SEARCH.length !== 0 ? RESERVE_FINISH_SEARCH.map((reserve, index) => <FinishReserve reserve={reserve} key={index} />) : 
 				<NoContent>
 					<span>
 						<InfoCircleOutlined/>
 					</span>
-						예매내역이 존재하지 않습니다.						
+						지난 관람내역이 존재하지 않습니다.
 				</NoContent>
 				}
 			</ContentDetails>
@@ -127,4 +127,4 @@ const NoContent = styled.div`
 	}
 `;
 
-export default ReserveList;
+export default FinishReserveList;

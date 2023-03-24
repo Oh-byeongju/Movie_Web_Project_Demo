@@ -1,35 +1,27 @@
 /*
  23-03-11 마이페이지 css 구축(오병주)
+ 23-03-24 사용자가 예매취소한 영화 내역 조회 구현(오병주)
 */
-import React from 'react';
+import React, { useEffect }  from 'react';
 import styled from 'styled-components';
-import Cancle from './Cancle';
+import Cancel from './Cancel';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { USER_RESERVE_CANCEL_SEARCH_REQUEST } from '../../reducer/R_mypage_reserve';
 
-const datas = [
-	{
-		rid: "3",
-		mtitle: "두다다쿵",
-		cinema: "서울-강남점 11관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "A1, A2",
-		price: "100",
-		poster: "img/ranking/9.jpg"
-	},
-	{
-		rid: "9",
-		mtitle: "앤트맨",
-		cinema: "서울-강남점 11관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		seat: "A1, A2",
-		price: "100",
-		poster: "img/ranking/11.jpg"
-	},
-]
+const CancelList = () => {
+	const dispatch = useDispatch();
 
-const CancleList = () => {
+	// 리덕스에 있는 예매 취소내역 상태
+	const { RESERVE_CANCEL_SEARCH } = useSelector((state) => state.R_mypage_reserve);
+
+	// 예매 취소내역 조회 useEffect
+	useEffect(()=> {
+		dispatch({
+      type: USER_RESERVE_CANCEL_SEARCH_REQUEST
+    });
+	}, [dispatch])
+
 	return (
 		<Content>
 			<ContentTitle>
@@ -44,7 +36,7 @@ const CancleList = () => {
 			</ContentTitle>
 			<ContentLine/>
 			<ContentDetails>
-				{datas.length !== 0 ? datas.map((data, index) => <Cancle data={data} key={index} />) : 
+				{RESERVE_CANCEL_SEARCH.length !== 0 ? RESERVE_CANCEL_SEARCH.map((reserve, index) => <Cancel reserve={reserve} key={index} />) : 
 				<NoContent>
 					<span>
 						<InfoCircleOutlined/>
@@ -135,4 +127,4 @@ const NoContent = styled.div`
 	}
 `;
 
-export default CancleList;
+export default CancelList;

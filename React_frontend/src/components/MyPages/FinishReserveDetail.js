@@ -1,94 +1,70 @@
 /*
  23-03-10 마이페이지 css 구축(오병주)
- 23-03-24 사용자가 예매한 영화 상세내역 조회 구현(오병주)
+ 23-03-24 사용자가 예매한 지난 관람영화 내역 조회 구현(오병주)
 */
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { USER_RESERVE_DETAIL_REQUEST } from '../../reducer/R_mypage_reserve';
+import { USER_RESERVE_FINISH_DETAIL_REQUEST } from '../../reducer/R_mypage_reserve';
 import * as date from "../../lib/date.js";
 
-const ReserveDetail = () => {
+const FinishReserveDetail = () => {
 	const dispatch = useDispatch();
 	const location = useLocation();
 
-	// 리덕스에 있는 예매내역 상태
-	const { RESERVE_DETAIL } = useSelector((state) => state.R_mypage_reserve);
-	const { RESERVE_DETAIL_error } = useSelector((state) => state.R_mypage_reserve);
+	// 리덕스에 있는 지난관람내역 상태
+	const { RESERVE_FINISH_DETAIL } = useSelector((state) => state.R_mypage_reserve);
+	const { RESERVE_FINISH_DETAIL_error } = useSelector((state) => state.R_mypage_reserve);
 
 	// 리덕스 로그인 상태 정보
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
-	// 예매내역 상세 조회 useEffect
+	// 지난관람내역 상세 조회 useEffect
 	useEffect(()=> {
 		dispatch({
-			type: USER_RESERVE_DETAIL_REQUEST,
+			type: USER_RESERVE_FINISH_DETAIL_REQUEST,
 			data: {
 				pathname: location.pathname.substring(7)
 			}
 		});
 	}, [location.pathname, dispatch]);
 
-	// 현재 시간에서 30분을 더한 값
-	var now = new Date();
-	now.setMinutes(now.getMinutes() + 30);
-	
-	// 영화 시작시간과 종료시간을 date형으로 변경
-	const starttime = useMemo(() => new Date(RESERVE_DETAIL.mistarttime), [RESERVE_DETAIL.mistarttime]);
-	const endtime = useMemo(() => new Date(RESERVE_DETAIL.miendtime), [RESERVE_DETAIL.miendtime])
+	// 영화 종료시간을 date형으로 변경
+	const endtime = useMemo(() => new Date(RESERVE_FINISH_DETAIL.miendtime), [RESERVE_FINISH_DETAIL.miendtime]);
 
 	// 예매 상태를 다시 확인하는 useEffect
 	useEffect(()=> {
 		
 		// 예매기록이 존재하지 않을 경우
-		if (RESERVE_DETAIL_error) {
+		if (RESERVE_FINISH_DETAIL_error) {
 			alert("존재하지 않는 예매입니다.");
-			window.location.assign('/Mypage/Reserve');
+			window.location.assign('/Mypage/Finish');
 			return;
 		}
 
-		// 이미 취소된 예매를 조회할 때
-		if (RESERVE_DETAIL.rstate !== undefined && !RESERVE_DETAIL.rstate) {
-			alert("이미 취소된 예매입니다.")
-			window.location.assign('/Mypage/Reserve');
+		// 취소된 관람내역을 조회할 경우
+		if (RESERVE_FINISH_DETAIL.rstate !== undefined && !RESERVE_FINISH_DETAIL.rstate) {
+			alert("존재하지 않는 예매입니다.")
+			window.location.assign('/Mypage/Finish');
 			return;
 		}
 
-		// 관람이 끝난 영화 예매를 조회할 경우
-		if (endtime <= new Date()) {
-			alert("이미 관람이 끝난 영화입니다.")
-			window.location.assign('/Mypage/Reserve');
+		// 아직 관람이 끝나지 않은 예매를 조회할 경우
+		if (endtime > new Date()) {
+			alert("관람이 끝나지 않은 영화입니다.")
+			window.location.assign('/Mypage/Finish');
 		}
 
-	}, [RESERVE_DETAIL_error, RESERVE_DETAIL.rstate, endtime]);
-	
-	// 결제취소 버튼을 누를 경우
-	const onCancel = useCallback(() => {
-		// 결제 취소 버튼을 누르는 시점의 시간에서 30분을 더한 값
-		var nowCancel = new Date();
-		nowCancel.setMinutes(nowCancel.getMinutes() + 30);
-
-		// 현재 시간에 30분을 더한값이 영화 시작시간보다 클경우 결제취소를 막는 if문
-		if (nowCancel > starttime) {
-			alert("결제취소 가능 시간이 지났습니다!")
-			window.location.replace(location.pathname);
-			return;
-		}
-
-		// 여기에 취소하는 과정 넣으면됨
-		// 아임포트는 새벽에 취소를 해버리니깐 그 전까지만 취소가 가능한지 아니면 우리가 조정하는게 되는지 봐야함
-		console.log("취소가능");
-
-	}, [location.pathname, starttime]);
+	}, [RESERVE_FINISH_DETAIL_error, RESERVE_FINISH_DETAIL.rstate, RESERVE_FINISH_DETAIL.miendtime, endtime]);
 
 	return (
 		<Content>
 			<ContentTitle>
 				<ContentLeft>
 					<h2>
-						예매내역 상세
+						관람내역 상세
 					</h2>
 				</ContentLeft>
 			</ContentTitle>
@@ -96,24 +72,24 @@ const ReserveDetail = () => {
 				<h3>
 					예매번호 
 					<span>
-						{RESERVE_DETAIL.rid}
+						{RESERVE_FINISH_DETAIL.rid}
 					</span>
 				</h3>
-				<Link to={`/moviedetail/${RESERVE_DETAIL.mid}`}>
+				<Link to={`/moviedetail/${RESERVE_FINISH_DETAIL.mid}`}>
 					영화 상세정보 보기
 				</Link>
 			</ContentDetailTop>
 			<ContentLine/>
 			<ContentDetails>
 				<ContentDetailMiddleInfos>
-				<Poster src={`/${RESERVE_DETAIL.mimagepath}`} alt="Poster" />
+				<Poster src={`/${RESERVE_FINISH_DETAIL.mimagepath}`} alt="Poster" />
 					<ContentDetailMiddleInfo>
 						<dl>
 							<dt>
 								영화명
 							</dt>
 							<dd>
-								{RESERVE_DETAIL.mtitle}
+								{RESERVE_FINISH_DETAIL.mtitle}
 							</dd>
 						</dl>
 						<dl>
@@ -121,7 +97,7 @@ const ReserveDetail = () => {
 								관람극장
 							</dt>
 							<dd>
-								{RESERVE_DETAIL.tarea}-{RESERVE_DETAIL.tname}점 {RESERVE_DETAIL.cname}
+								{RESERVE_FINISH_DETAIL.tarea}-{RESERVE_FINISH_DETAIL.tname}점 {RESERVE_FINISH_DETAIL.cname}
 							</dd>
 						</dl>
 						<dl>
@@ -129,9 +105,9 @@ const ReserveDetail = () => {
 								영화시작시간
 							</dt>
 							<dd>
-								{RESERVE_DETAIL.mistarttime && RESERVE_DETAIL.mistarttime.substr(0, 10)} 
-								&nbsp;({RESERVE_DETAIL.mistarttime && date.getDayOfWeek(RESERVE_DETAIL.mistarttime)})  
-								{RESERVE_DETAIL.mistarttime && RESERVE_DETAIL.mistarttime.substr(10, 6)}
+								{RESERVE_FINISH_DETAIL.mistarttime && RESERVE_FINISH_DETAIL.mistarttime.substr(0, 10)} 
+								&nbsp;({RESERVE_FINISH_DETAIL.mistarttime && date.getDayOfWeek(RESERVE_FINISH_DETAIL.mistarttime)})  
+								{RESERVE_FINISH_DETAIL.mistarttime && RESERVE_FINISH_DETAIL.mistarttime.substr(10, 6)}
 							</dd>
 						</dl>
 						<dl>
@@ -139,9 +115,9 @@ const ReserveDetail = () => {
 								영화종료시간
 							</dt>
 							<dd>
-								{RESERVE_DETAIL.miendtime && RESERVE_DETAIL.miendtime.substr(0, 10)} 
-								&nbsp;({RESERVE_DETAIL.miendtime && date.getDayOfWeek(RESERVE_DETAIL.miendtime)}) 
-								{RESERVE_DETAIL.miendtime && RESERVE_DETAIL.miendtime.substr(10, 6)}
+								{RESERVE_FINISH_DETAIL.miendtime && RESERVE_FINISH_DETAIL.miendtime.substr(0, 10)} 
+								&nbsp;({RESERVE_FINISH_DETAIL.miendtime && date.getDayOfWeek(RESERVE_FINISH_DETAIL.miendtime)}) 
+								{RESERVE_FINISH_DETAIL.miendtime && RESERVE_FINISH_DETAIL.miendtime.substr(10, 6)}
 							</dd>
 						</dl>
 						<dl>
@@ -149,21 +125,21 @@ const ReserveDetail = () => {
 								상영등급
 							</dt>
 							<dd>
-								{RESERVE_DETAIL.mrating === '0' ? "전체 이용가" : RESERVE_DETAIL.mrating+"세 이용가"}
+								{RESERVE_FINISH_DETAIL.mrating === '0' ? "전체 이용가" : RESERVE_FINISH_DETAIL.mrating+"세 이용가"}
 							</dd>
 						</dl>
 						<dl>
 							<dt>
 								관람좌석
 							</dt>
-							{RESERVE_DETAIL.seats && RESERVE_DETAIL.seats.map((seat) => (<dd key={seat} style={{width: "33px"}}> {seat} </dd>))}
+							{RESERVE_FINISH_DETAIL.seats && RESERVE_FINISH_DETAIL.seats.map((seat) => (<dd key={seat} style={{width: "33px"}}> {seat} </dd>))}
 						</dl>
 						<dl>
 							<dt>
 								관람인원
 							</dt>
 							<dd>
-								{RESERVE_DETAIL.rpeople}
+								{RESERVE_FINISH_DETAIL.rpeople}
 							</dd>
 						</dl>
 					</ContentDetailMiddleInfo>
@@ -179,7 +155,7 @@ const ReserveDetail = () => {
 							티켓매수
 						</span>
 						<span className='content'>
-							{RESERVE_DETAIL.rticket} 매
+							{RESERVE_FINISH_DETAIL.rticket} 매
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -187,7 +163,7 @@ const ReserveDetail = () => {
 							결제일시
 						</span>
 						<span className='content'>
-							{RESERVE_DETAIL.rdate}
+							{RESERVE_FINISH_DETAIL.rdate}
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -195,7 +171,7 @@ const ReserveDetail = () => {
 							결제유형
 						</span>
 						<span className='content'>
-							{RESERVE_DETAIL.rpaytype}
+							{RESERVE_FINISH_DETAIL.rpaytype}
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -203,7 +179,7 @@ const ReserveDetail = () => {
 							결제금액
 						</span>
 						<span className='content'>
-							{RESERVE_DETAIL.rprice}원
+							{RESERVE_FINISH_DETAIL.rprice}원
 						</span>
 					</ContentListElement>
 				</ContentList>
@@ -239,27 +215,6 @@ const ReserveDetail = () => {
 					</ContentListElement>
 				</ContentList>
 			</ContentDetails>
-			<ButtonList>
-				<Link to="/Mypage/Reserve">
-					<Button check={false}>
-						<span>
-							예매내역조회
-						</span>
-					</Button>
-				</Link>
-				{/* 현재 시간에 30분을 더한값이 영화 시작시간보다 크면 disable */}
-				<Button onClick={onCancel} disabled={now > starttime} check={now > starttime}>
-					<span>
-						예매취소하기
-					</span>
-				</Button>
-			</ButtonList>
-			<Notice>
-				예매취소는 영화 시작 30분전까지 가능하며 환불이 가능할경우 환불금이 반환됩니다.
-				<div>
-					(결제 라이브러리에서 이미 환불이 되었거나 결제유형이 테스트인 경우 예매 취소만 진행)
-				</div>
-			</Notice>
 		</Content>
 	);
 };
@@ -465,43 +420,4 @@ const ContentListElement = styled.li`
 	}
 `;
 
-const ButtonList = styled.div`
-	display: flex;
-	-webkit-box-pack: center;
-	justify-content: center;
-	margin: 40px 0px 30px 0px;
-
-	a + button {
-		margin-left: 20px;
-	}
-`;
-
-const Button = styled.button`
-	display: block;
-	padding: 0px 10px;
-	text-align: center;
-	overflow: hidden;
-	width: 200px;
-	height: 56px;
-	border-radius: 3px;
-	border: 1px solid #5F0080;
-	background: #fff;
-	border-color: ${props => props.check ? '#cccccc' : '#5F0080;'};
-	color: ${props => props.check ? '#cccccc' : '#5F0080;'};
-  cursor: ${props => props.check ? 'default' : 'pointer'};
-
-	span {
-		display: inline-block;
-    font-size: 16px;
-    font-weight: 550;
-	}
-`;
-
-const Notice = styled.span`
-	display: block;
-	line-height: 1.43;
-	text-align: center;
-	color: rgb(102, 102, 102);
-`;
-
-export default ReserveDetail;
+export default FinishReserveDetail;

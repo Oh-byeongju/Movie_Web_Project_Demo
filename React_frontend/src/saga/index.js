@@ -8,6 +8,7 @@ import seatSaga from "./seat";
 import timeTableSaga from "./TimeTable";
 import S_mypage_movie from "./S_mypage_movie";
 import BoardSaga from "./Board";
+import S_mypage_reserve from "./S_mypage_reserve";
 
 //사가 파일 추가 시 rootSaga 안에 fork해주면 됨
 export default function* rootSaga() {
@@ -20,6 +21,7 @@ export default function* rootSaga() {
     fork(seatSaga),
     fork(timeTableSaga),
     fork(S_mypage_movie),
-    fork(BoardSaga)
+    fork(BoardSaga),
+    fork(S_mypage_reserve)
   ]);
 }
