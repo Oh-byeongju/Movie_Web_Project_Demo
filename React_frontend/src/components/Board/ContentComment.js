@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { LikeTwoTone,DislikeTwoTone,SyncOutlined,EyeOutlined ,DeleteOutlined} from "@ant-design/icons";
+import { SyncOutlined,MessageOutlined} from "@ant-design/icons";
 import { useParams,useNavigate ,useLocation,} from "react-router-dom";
 import { useDispatch ,useSelector} from "react-redux"
-import { COMMENT_READ_REQUEST, COMMENT_WRITE_REQUEST, CONTENT_DELETE_REQUEST, CONTENT_READ_REQUEST } from "../../reducer/Board";
-
+import { COMMENT_READ_REQUEST, COMMENT_WRITE_REQUEST, } from "../../reducer/Board";
+import ReplyComment from "./ReplyComment";
 const ContentComment = () =>{
 
     const dispatch = useDispatch();
@@ -18,6 +18,7 @@ const ContentComment = () =>{
         setText(e.target.value)
         setCount(e.target.value.length)
     }
+
     const {content,comment,comment_read_loading, comment_read_done,comment_write_done} = useSelector((state)=>state.Board)
    
         useEffect(()=>{
@@ -39,11 +40,9 @@ const ContentComment = () =>{
                 dispatch({
                     type:COMMENT_WRITE_REQUEST,
                     data:{
-                        uid:LOGIN_data.uid,
                         text:text,
-                        group:content[0].bid,
+                        parent:"",
                         bid:content[0].bid,
-                        deep:0
                     }
                 })
             alert('작성완료되었습니다.')
@@ -52,6 +51,23 @@ const ContentComment = () =>{
 
             
         }
+        const detailDate = (a) => {
+            const milliSeconds = new Date() - a;
+            const seconds = milliSeconds / 1000;
+            if (seconds < 60) return `방금 전`;
+            const minutes = seconds / 60;
+            if (minutes < 60) return `${Math.floor(minutes)}분 전`;
+            const hours = minutes / 60;
+            if (hours < 24) return `${Math.floor(hours)}시간 전`;
+            const days = hours / 24;
+            if (days < 7) return `${Math.floor(days)}일 전`;
+            const weeks = days / 7;
+            if (weeks < 5) return `${Math.floor(weeks)}주 전`;
+            const months = days / 30;
+            if (months < 12) return `${Math.floor(months)}개월 전`;
+            const years = days / 365;
+            return `${Math.floor(years)}년 전`;
+        };
 
 
         if(comment_read_loading){
@@ -67,7 +83,7 @@ const ContentComment = () =>{
                     <CommentHeader >
                         <Left>
                             <h2>댓글</h2>
-                            <span>총 <em>89</em>개</span>
+                            <span>총 <em>{comment.count}</em>개</span>
                         </Left>
                         <Right>
                             <button>
@@ -112,22 +128,22 @@ const ContentComment = () =>{
                     </CommentList>
                     
                     <CommentData>
-                        {comment.map((data)=>{
+                        {comment.mapper.map((data)=>{
                             return(
                                 <li>
                                 <div className="comment">
                                         <div className="number">{data.bcid}</div>
                                         <div className="name">
-                                            <span className="id">{data.uid}</span>
-                                            <span className="time">10시간 전</span>
-                                        </div>
-                                        <div className="comment-content">
-                                            <div >
-                                            </div>
+                                            <span className="id">{data.member}</span>
+                                            <span className="time">{detailDate(new Date(data.bcdate))}</span>
                                         </div>
                                         <div className="comment-comment"> <p>{data.bccomment}</p>
+
+                                      
                                     </div>
                                 </div>
+                                <ReplyComment id={data.bcid} child={data.child} bid={content[0].bid}/> 
+
                             </li>
                             
                             )
@@ -276,6 +292,13 @@ li{
     word-break: break-all;
     overflow: auto;
     max-height: 400px;
+    .no{
+        float:left;
+        padding-right:30px;
+    }
+    .comment_to_comment{
+        
+    }
 }
 .comment-comment{
     margin-top: 8px;
