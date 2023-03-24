@@ -1,28 +1,53 @@
 /*
  23-03-11 마이페이지 css 구축(오병주)
+ 23-03-24 사용자가 예매취소한 영화 상세내역 조회 구현(오병주)
 */
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { USER_RESERVE_CANCEL_DETAIL_REQUEST } from '../../reducer/R_mypage_reserve';
+import * as date from "../../lib/date.js";
 
+const CancelDetail = () => {
+	const dispatch = useDispatch();
+	const location = useLocation();
 
-const CancleDetail = () => {
+	// 리덕스에 있는 예매취소내역 상태
+	const { RESERVE_CANCEL_DETAIL } = useSelector((state) => state.R_mypage_reserve);
+	const { RESERVE_CANCEL_DETAIL_error } = useSelector((state) => state.R_mypage_reserve);
 
-	const datas = {
-		rid: "3",
-		mtitle: "두다다쿵",
-		cinema: "서울-강남점 2관",
-		rdate: "2023.03.09",
-		watchdate: "2023-03-10 (금) 17:00",
-		people: "성인 1명, 아동 1명",
-		price: "100",
-		poster: "img/ranking/8.jpg",
-		paytype: "테스트15",
-		moviestart: "2023-03-11 02:34:00",
-		movieend: "2023-03-11 02:34:00"
-	}
+	// 리덕스 로그인 상태 정보
+  const { LOGIN_data } = useSelector((state) => state.R_user_login)
 
-	
-	
+	// 예매취소내역 상세 조회 useEffect
+	useEffect(()=> {
+		dispatch({
+			type: USER_RESERVE_CANCEL_DETAIL_REQUEST,
+			data: {
+				pathname: location.pathname.substring(7)
+			}
+		});
+	}, [location.pathname, dispatch])
+
+	// 예매 상태를 다시 확인하는 useEffect
+	useEffect(()=> {
+		
+		// 예매기록이 존재하지 않을 경우
+		if (RESERVE_CANCEL_DETAIL_error) {
+			alert("존재하지 않는 취소내역 입니다.");
+			window.location.assign('/Mypage/Cancel');
+			return;
+		}
+
+		// 취소되지 않은 예매를 조회하는 경우
+		if (RESERVE_CANCEL_DETAIL.rstate !== undefined && RESERVE_CANCEL_DETAIL.rstate) {
+			alert("존재하지 않는 취소내역 입니다.")
+			window.location.assign('/Mypage/Cancel');
+		}
+
+	}, [RESERVE_CANCEL_DETAIL_error, RESERVE_CANCEL_DETAIL.rstate])
+
 
 	return (
 		<Content>
@@ -37,21 +62,21 @@ const CancleDetail = () => {
 				<h3>
 					예매번호 
 					<span>
-						1
+						{RESERVE_CANCEL_DETAIL.rid}
 					</span>
 				</h3>
 			</ContentDetailTop>
 			<ContentLine/>
 			<ContentDetails>
 				<ContentDetailMiddleInfos>
-				<Poster src='/img/ranking/9.jpg' alt="Poster" />
+				<Poster src={`/${RESERVE_CANCEL_DETAIL.mimagepath}`} alt="Poster" />
 					<ContentDetailMiddleInfo>
 						<dl>
 							<dt>
 								영화명
 							</dt>
 							<dd>
-								두다다쿵
+								{RESERVE_CANCEL_DETAIL.mtitle}
 							</dd>
 						</dl>
 						<dl>
@@ -59,7 +84,7 @@ const CancleDetail = () => {
 								관람극장
 							</dt>
 							<dd>
-								서울-강남점 2관
+								{RESERVE_CANCEL_DETAIL.tarea}-{RESERVE_CANCEL_DETAIL.tname}점 {RESERVE_CANCEL_DETAIL.cname}
 							</dd>
 						</dl>
 						<dl>
@@ -67,7 +92,9 @@ const CancleDetail = () => {
 								영화시작시간
 							</dt>
 							<dd>
-								2023-01-30 10:20:00
+								{RESERVE_CANCEL_DETAIL.mistarttime && RESERVE_CANCEL_DETAIL.mistarttime.substr(0, 10)} 
+								&nbsp;({RESERVE_CANCEL_DETAIL.mistarttime && date.getDayOfWeek(RESERVE_CANCEL_DETAIL.mistarttime)})  
+								{RESERVE_CANCEL_DETAIL.mistarttime && RESERVE_CANCEL_DETAIL.mistarttime.substr(10, 6)}
 							</dd>
 						</dl>
 						<dl>
@@ -75,7 +102,9 @@ const CancleDetail = () => {
 								영화종료시간
 							</dt>
 							<dd>
-								2023-01-30 12:00:00
+								{RESERVE_CANCEL_DETAIL.miendtime && RESERVE_CANCEL_DETAIL.miendtime.substr(0, 10)} 
+								&nbsp;({RESERVE_CANCEL_DETAIL.miendtime && date.getDayOfWeek(RESERVE_CANCEL_DETAIL.miendtime)}) 
+								{RESERVE_CANCEL_DETAIL.miendtime && RESERVE_CANCEL_DETAIL.miendtime.substr(10, 6)}
 							</dd>
 						</dl>
 						<dl>
@@ -83,23 +112,21 @@ const CancleDetail = () => {
 								관람등급
 							</dt>
 							<dd>
-								15세 이용가
+								{RESERVE_CANCEL_DETAIL.mrating === '0' ? "전체 이용가" : RESERVE_CANCEL_DETAIL.mrating+"세 이용가"}
 							</dd>
 						</dl>
 						<dl>
 							<dt>
 								관람좌석
 							</dt>
-							<dd>
-								G1, G2
-							</dd>
+							{RESERVE_CANCEL_DETAIL.seats && RESERVE_CANCEL_DETAIL.seats.map((seat) => (<dd key={seat} style={{width: "33px"}}> {seat} </dd>))}
 						</dl>
 						<dl>
 							<dt>
 								관람인원
 							</dt>
 							<dd>
-								성인 1명, 청소년 1명
+								{RESERVE_CANCEL_DETAIL.rpeople}
 							</dd>
 						</dl>
 					</ContentDetailMiddleInfo>
@@ -115,7 +142,7 @@ const CancleDetail = () => {
 							티켓매수
 						</span>
 						<span className='content'>
-							2 매
+							{RESERVE_CANCEL_DETAIL.rticket} 매
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -123,7 +150,7 @@ const CancleDetail = () => {
 							결제일시
 						</span>
 						<span className='content'>
-							2023-03-10 20:27:51
+							{RESERVE_CANCEL_DETAIL.rdate}
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -131,7 +158,7 @@ const CancleDetail = () => {
 							결제유형
 						</span>
 						<span className='content'>
-							{datas.paytype}
+							{RESERVE_CANCEL_DETAIL.rpaytype}
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -139,17 +166,10 @@ const CancleDetail = () => {
 							결제금액
 						</span>
 						<span className='content'>
-							{datas.price}원
+							{RESERVE_CANCEL_DETAIL.rprice}원
 						</span>
 					</ContentListElement>
 				</ContentList>
-
-
-
-				
-
-
-
 				<ContentTitle>
 					<h3>
 						회원정보
@@ -161,7 +181,7 @@ const CancleDetail = () => {
 							성함
 						</span>
 						<span className='content'>
-							오병주
+							{LOGIN_data.uname}
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -169,7 +189,7 @@ const CancleDetail = () => {
 							이메일
 						</span>
 						<span className='content'>
-							dhqudwn0@naver.com
+							{LOGIN_data.uemail}
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -177,12 +197,10 @@ const CancleDetail = () => {
 							휴대전화
 						</span>
 						<span className='content'>
-							010-3333-2222
+							010-{LOGIN_data.utel && LOGIN_data.utel.substr(3, 4)}-{LOGIN_data.utel && LOGIN_data.utel.substr(7, 4)}
 						</span>
 					</ContentListElement>
 				</ContentList>
-
-
 				<ContentTitle>
 					<h3>
 						결제취소정보
@@ -194,7 +212,7 @@ const CancleDetail = () => {
 							취소일시
 						</span>
 						<span className='content'>
-							2023-03-10 20:27:51
+							{RESERVE_CANCEL_DETAIL.rcanceldate}
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -202,7 +220,7 @@ const CancleDetail = () => {
 							환불유형
 						</span>
 						<span className='content'>
-							{datas.paytype}
+							{RESERVE_CANCEL_DETAIL.rpaytype}
 						</span>
 					</ContentListElement>
 					<ContentListElement>
@@ -210,19 +228,11 @@ const CancleDetail = () => {
 							환불금액
 						</span>
 						<span className='content'>
-							{datas.price}원
+							{RESERVE_CANCEL_DETAIL.rprice}원
 						</span>
 					</ContentListElement>
 				</ContentList>
-
-
-
-
-
 			</ContentDetails>
-			<Notice>
-				결제취소 후 환불은 결제취소일 기준 3일 이내에 지급됩니다.
-			</Notice>
 		</Content>
 	);
 };
@@ -370,7 +380,6 @@ const ContentDetailMiddleInfo = styled.div`
 		}
 
 		dd {
-			flex: 1 1 0%;
 			font-weight: 550;
 			color: rgb(51, 51, 51);
 			line-height: 1.36;
@@ -429,11 +438,4 @@ const ContentListElement = styled.li`
 	}
 `;
 
-const Notice = styled.span`
-	display: block;
-	line-height: 1.43;
-	text-align: center;
-	color: rgb(102, 102, 102);
-`;
-
-export default CancleDetail;
+export default CancelDetail;

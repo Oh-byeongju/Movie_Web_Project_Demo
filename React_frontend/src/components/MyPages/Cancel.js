@@ -1,32 +1,34 @@
 /*
  23-03-11 마이페이지 css 구축(오병주)
+ 23-03-24 사용자가 예매취소한 영화 내역 조회 구현(오병주)
 */
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
+import * as date from "../../lib/date.js";
 
-const Cancle = ({ data }) => {
+const Cancel = ({ reserve }) => {
 	return (
 		<ContentDetail>
-			<CancleImg src='/img/cancle.png' alt = "img"/>
+			<CancelImg src='/img/cancel.png' alt = "img"/>
 			<ContentDetailTop>
 				<span>
-					예매취소일시 : &nbsp;{data.rdate}
+					예매취소일시 : &nbsp;{reserve.rcanceldate.substr(0, 10)} ({date.getDayOfWeek(reserve.rcanceldate)})
 				</span>
-				<Link to={`/Mypage/CancleDetail/${data.rid}`}>
+				<Link to={`/Mypage/CancelDetail/${reserve.rid}`}>
 					취소내역 상세보기
 				</Link>
 			</ContentDetailTop>
 			<ContentDetailMiddle>
 				<ContentDetailMiddleInfos>
-					<Poster src={`/${data.poster}`} alt="Poster" />
+					<Poster src={`/${reserve.mimagepath}`} alt="Poster" />
 					<ContentDetailMiddleInfo>
 						<dl>
 							<dt>
 								예매번호
 							</dt>
 							<dd>
-								{data.rid}
+								{reserve.rid}
 							</dd>
 						</dl>
 						<dl>
@@ -34,7 +36,7 @@ const Cancle = ({ data }) => {
 								영화명
 							</dt>
 							<dd>
-								{data.mtitle}
+								{reserve.mtitle}
 							</dd>
 						</dl>
 						<dl>
@@ -42,7 +44,7 @@ const Cancle = ({ data }) => {
 								관람극장
 							</dt>
 							<dd>
-								{data.cinema}
+								{reserve.tarea}-{reserve.tname}점 {reserve.cname}
 							</dd>
 						</dl>
 						<dl>
@@ -50,23 +52,21 @@ const Cancle = ({ data }) => {
 								관람일시
 							</dt>
 							<dd>
-								{data.watchdate}
+								{reserve.mistarttime.substr(0, 10)} ({date.getDayOfWeek(reserve.mistarttime)}) {reserve.mistarttime.substr(10, 6)}
 							</dd>
 						</dl>
 						<dl>
 							<dt>
 								관람좌석
 							</dt>
-							<dd>
-								{data.seat}
-							</dd>
+							{reserve.seats && reserve.seats.map((seat) => (<dd key={seat} style={{width: "33px"}}> {seat} </dd>))}
 						</dl>
 						<dl>
 							<dt>
 								결제금액
 							</dt>
 							<dd>
-								{data.price}원
+								{reserve.rprice}원
 							</dd>
 						</dl>
 					</ContentDetailMiddleInfo>
@@ -87,7 +87,7 @@ const ContentDetail = styled.div`
 	margin-top: 20px;
 `;
 
-const CancleImg = styled.img`
+const CancelImg = styled.img`
 	position: absolute;
 	top: 58%;
 	left: 54%;
@@ -182,7 +182,6 @@ const ContentDetailMiddleInfo = styled.div`
 		}
 
 		dd {
-			flex: 1 1 0%;
 			font-weight: 400;
 			color: #99a0a6;
 			line-height: 1.36;
@@ -200,4 +199,4 @@ const ContentDetailMiddleInfo = styled.div`
 	}
 `;
 
-export default Cancle;
+export default Cancel;

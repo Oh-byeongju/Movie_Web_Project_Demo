@@ -12,8 +12,10 @@ import MovieDetail from "./pages/MovieDetail";
 import Mypage from "./pages/MyPage";
 import MyPageReserve from "./pages/MyPageReserve";
 import MyPageCancel from "./pages/MyPageCancel";
+import MyPageFinish from "./pages/MyPageFinish";
 import MyPageReserveDetail from "./pages/MyPageReserveDetail";
-import MyPageCancleDetail from "./pages/MyPageCancleDetail";
+import MyPageCancelDetail from "./pages/MyPageCancelDetail";
+import MyPageFinishDetail from "./pages/MyPageFinishDetail";
 import MyPageLike from "./pages/MyPageLike";
 import MyPageComment from "./pages/MyPageComment";
 import MyPageModify from "./pages/MyPageModify";
@@ -46,9 +48,11 @@ function App() {
         </Route>
         <Route element={<Mypage />}>
           <Route path="/Mypage/Reserve" element={<MyPageReserve x/>}></Route>
-          <Route path="/Mypage/Cancle" element={<MyPageCancel />}></Route>
+          <Route path="/Mypage/Cancel" element={<MyPageCancel />}></Route>
+          <Route path="/Mypage/Finish" element={<MyPageFinish />}></Route>
           <Route path="/Mypage/ReserveDetail/:id" element={<MyPageReserveDetail />}></Route>
-          <Route path="/Mypage/CancleDetail/:id" element={<MyPageCancleDetail />}></Route>
+          <Route path="/Mypage/CancelDetail/:id" element={<MyPageCancelDetail />}></Route>
+          <Route path="/Mypage/FinishDetail/:id" element={<MyPageFinishDetail />}></Route>
           <Route path="/Mypage/Like" element={<MyPageLike />}></Route>
           <Route path="/Mypage/Comment" element={<MyPageComment />}></Route>
           <Route path="/Mypage/Modify" element={<MyPageModify />}></Route>

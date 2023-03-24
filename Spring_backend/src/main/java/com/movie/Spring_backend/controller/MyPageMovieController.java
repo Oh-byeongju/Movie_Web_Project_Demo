@@ -1,5 +1,6 @@
 /*
   23-03-17 마이페이지에 있는 영화 관련 메소드 생성(오병주)
+  23-03-24 마이페이지에 있는 예매내역 조회 구현(오병주)
 */
 package com.movie.Spring_backend.controller;
 
@@ -48,10 +49,39 @@ public class MyPageMovieController {
         return ResponseEntity.ok().body(myPageMovieService.MovieLikeGet(request));
     }
 
+    // 사용자가 예매한 영화 내역을 불러오는 메소드
+    @GetMapping("/auth/reserve")
+    public ResponseEntity<List<ReservationDto>> MemberGetReserve(HttpServletRequest request) {
+        return ResponseEntity.ok().body(myPageMovieService.MovieReserveSearch(request));
+    }
 
-    // 테스트 (매핑 url 바꾸고 메소드 이름 바꾸기)
-    @GetMapping("/normal/test")
-    public ResponseEntity<List<ReservationDto>> AllMovie() {
-        return ResponseEntity.ok().body(myPageMovieService.Test());
+    // 사용자가 예매한 영화의 세부 내역을 불러오는 메소드
+    @GetMapping("/auth/ReserveDetail/{rid}")
+    public ResponseEntity<ReservationDto> MemberGetReserveDetail(@PathVariable("rid") Long rid, HttpServletRequest request) {
+        return ResponseEntity.ok().body(myPageMovieService.MovieReserveDetailSearch(rid, request));
+    }
+
+    // 사용자가 예매 취소한 영화 내역을 불러오는 메소드
+    @GetMapping("/auth/reserve/cancel")
+    public ResponseEntity<List<ReservationDto>> MemberGetCancel(HttpServletRequest request) {
+        return ResponseEntity.ok().body(myPageMovieService.MovieReserveCancelSearch(request));
+    }
+
+    // 사용자가 예매 취소한 영화의 세부 내역을 불러오는 메소드
+    @GetMapping("/auth/CancelDetail/{rid}")
+    public ResponseEntity<ReservationDto> MemberGetCancelDetail(@PathVariable("rid") Long rid, HttpServletRequest request) {
+        return ResponseEntity.ok().body(myPageMovieService.MovieReserveDetailSearch(rid, request));
+    }
+
+    // 사용자가 예매한 지난 관람내역을 불러오는 메소드
+    @GetMapping("/auth/reserve/finish")
+    public ResponseEntity<List<ReservationDto>> MemberGetFinish(HttpServletRequest request) {
+        return ResponseEntity.ok().body(myPageMovieService.MovieReserveFinishSearch(request));
+    }
+
+    // 사용자가 예매한 지난 관람내역의 세부 내역을 불러오는 메소드
+    @GetMapping("/auth/FinishDetail/{rid}")
+    public ResponseEntity<ReservationDto> MemberGetFinishDetail(@PathVariable("rid") Long rid, HttpServletRequest request) {
+        return ResponseEntity.ok().body(myPageMovieService.MovieReserveDetailSearch(rid, request));
     }
 }

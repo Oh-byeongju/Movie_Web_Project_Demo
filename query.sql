@@ -127,7 +127,7 @@ CREATE TABLE `movie_reservation` (
 	`rtoken` VARCHAR(255) NULL,
 	`rpaytype` VARCHAR(20) NULL,
 	`rstate` BOOLEAN NULL,
-	`rcancledate` DATETIME NULL,
+	`rcanceldate` DATETIME NULL,
 	`miid`	int	NOT NULL,
 	`uid`	varchar(20)	NOT NULL,
 	PRIMARY KEY (`rid`),
@@ -2115,27 +2115,27 @@ CALL comment_like_insert();
 
 -- 최신순 조회 확인을 위한 임의 쿼리
 UPDATE movie_member
-SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 10 MINUTE)
 WHERE MID = 1 AND uid = 'temp21';
 
 UPDATE movie_member
-SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 22 MINUTE)
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 22 MINUTE)
 WHERE MID = 1 AND uid = 'temp24';
 
 UPDATE movie_member
-SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 8 MINUTE)
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 8 MINUTE)
 WHERE MID = 2 AND uid = 'temp10';
 
 UPDATE movie_member
-SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 27 MINUTE)
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 27 MINUTE)
 WHERE MID = 2 AND uid = 'temp15';
 
 UPDATE movie_member
-SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 11 MINUTE)
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 11 MINUTE)
 WHERE MID = 3 AND uid = 'temp5';
 
 UPDATE movie_member
-SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 상견니 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 32 MINUTE)
+SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp1, pw : temp123456 으로 진행 --> 타이타닉, 카운트, 아바타 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 32 MINUTE)
 WHERE MID = 3 AND uid = 'temp22';
 
 UPDATE movie_member
@@ -2151,14 +2151,14 @@ WHERE MID = 4 AND uid = 'temp17';
 SELECT *
 FROM movie LEFT JOIN movie_information ON movie.mid = movie_information.mid LEFT JOIN movie_reservation ON movie_information.miid = movie_reservation.miid
 WHERE movie_reservation.uid = 'temp1' AND movie_reservation.rstate = 0
-ORDER BY movie_reservation.rcancledate desc
+ORDER BY movie_reservation.rcanceldate desc
 
 // 모든 쿼리 걸때 6개월 이전 제한도 있어야함 **
--- 취소된거 확인할때는 rdate가 아니라 cancledate순으로 정렬 fasle랑(이건 취소된 쿼리)
+-- 취소된거 확인할때는 rdate가 아니라 canceldate순으로 정렬 fasle랑(이건 취소된 쿼리)
 SELECT mis.*
 FROM movie_reservation AS mr LEFT JOIN movie_infoseat AS mis ON mr.rid = mis.rid
 WHERE mr.uid = 'temp1' AND mr.rstate = false
-ORDER BY rcancledate DESC;
+ORDER BY rcanceldate DESC;
 
 
 

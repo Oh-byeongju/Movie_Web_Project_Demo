@@ -1,10 +1,10 @@
 import React from 'react';
-import CancleList from '../components/MyPages/CancleList';
+import CancelList from '../components/MyPages/CancelList';
 
 const MyPageCancel = () => {
 	return (
 		<>
-			<CancleList/>
+			<CancelList/>
 		</>
 	);
 };

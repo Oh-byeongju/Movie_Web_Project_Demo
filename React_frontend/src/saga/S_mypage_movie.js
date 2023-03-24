@@ -21,7 +21,7 @@ import {
 } from "../reducer/R_mypage_movie";
 import { http } from "../lib/http";
 
-// 관람평 작성가능 영화 조회 메소드
+// 관람평 작성가능 영화 조회 함수
 function* Possible_movie() {
   const result = yield call(Possible_movie_call);
   if (result.status === 200) {
@@ -77,7 +77,7 @@ async function CallCommentInsert(data) {
     });
 }
 
-// 작성한 관람평 조회 메소드
+// 작성한 관람평 조회 함수
 function* CommentSearch() {
   const result = yield call(CallCommentSearch);
   if (result.status === 200) {
