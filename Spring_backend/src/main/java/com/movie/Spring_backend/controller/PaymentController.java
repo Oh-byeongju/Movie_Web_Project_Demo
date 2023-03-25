@@ -1,6 +1,7 @@
 package com.movie.Spring_backend.controller;
 
 
+import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.entity.MemberEntity;
 
 
@@ -26,7 +27,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v2")
+@RequestMapping("/payment")
 
 public class PaymentController {
 
@@ -39,5 +40,12 @@ public class PaymentController {
         // 1. 아임포트 API 키와 SECRET키로 토큰을 생성
         return paymentService.getPayment(requestMap, request,session);
 
+    }
+
+    // 예매 취소를 위한 메소드
+    @PostMapping("/auth/cancel/ReserveDetail/{rid}")
+    public ResponseEntity<String> PaymentCancel(@PathVariable("rid") Long rid, HttpServletRequest request) {
+        paymentService.CancelPayment(rid, request);
+        return ResponseEntity.noContent().build();
     }
 }

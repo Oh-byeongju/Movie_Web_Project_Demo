@@ -1,9 +1,6 @@
 package com.movie.Spring_backend.repository;
 
-import com.movie.Spring_backend.entity.MemberEntity;
-import com.movie.Spring_backend.entity.MovieInfoEntity;
-import com.movie.Spring_backend.entity.MovieInfoSeatEntity;
-import com.movie.Spring_backend.entity.ReservationEntity;
+import com.movie.Spring_backend.entity.*;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -52,4 +49,12 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             "WHERE rs.rid = :rid")
     @EntityGraph(attributePaths = {"movieInfo.movie", "movieInfo.cinema", "movieInfo.cinema.theater"})
     Optional<ReservationEntity> findMyPageReserveDetail(@Param("rid") Long rid);
+
+    // 예매 취소시 컬럼을 수정하는 메소드(예매 상태를 false, 취소시간을 현재 시간으로)
+    @Modifying
+    @Query("UPDATE ReservationEntity as rs " +
+            "SET rs.rstate = false, rs.rcanceldate = now() " +
+            "WHERE rs.rid = :rid")
+    void UserReservationCancel(@Param("rid") Long rid);
+
 }

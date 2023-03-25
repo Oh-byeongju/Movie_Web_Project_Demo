@@ -11,6 +11,11 @@ export const USER_RESERVE_DETAIL_REQUEST = "USER_RESERVE_DETAIL_REQUEST"
 export const USER_RESERVE_DETAIL_SUCCESS = "USER_RESERVE_DETAIL_SUCCESS"
 export const USER_RESERVE_DETAIL_FAILURE = "USER_RESERVE_DETAIL_FAILURE"
 
+// 마이페이지 예매취소 리스트
+export const USER_RESERVE_DROP_REQUEST = "USER_RESERVE_DROP_REQUEST"
+export const USER_RESERVE_DROP_SUCCESS = "USER_RESERVE_DROP_SUCCESS"
+export const USER_RESERVE_DROP_FAILURE = "USER_RESERVE_DROP_FAILURE"
+
 // 마이페이지 예매 취소내역 조회 리스트
 export const USER_RESERVE_CANCEL_SEARCH_REQUEST = "USER_RESERVE_CANCEL_SEARCH_REQUEST"
 export const USER_RESERVE_CANCEL_SEARCH_SUCCESS = "USER_RESERVE_CANCEL_SEARCH_SUCCESS"
@@ -40,6 +45,10 @@ const initalState = {
   RESERVE_DETAIL_done: false,
   RESERVE_DETAIL_error: false,
 	RESERVE_DETAIL: [],
+	RESERVE_DROP_loading: false,
+  RESERVE_DROP_done: false,
+  RESERVE_DROP_error: false,
+	RESERVE_DROP_status: '',
 	RESERVE_CANCEL_SEARCH_loading: false,
   RESERVE_CANCEL_SEARCH_done: false,
   RESERVE_CANCEL_SEARCH_error: false,
@@ -107,6 +116,30 @@ const R_mypage_reserve = (state = initalState, action) => {
 				RESERVE_DETAIL_done: false,
 				RESERVE_DETAIL_error: true,
 				RESERVE_DETAIL: []
+			};
+		// 마이페이지 예매취소 케이스들
+		case USER_RESERVE_DROP_REQUEST:
+			return {
+				...state,
+				RESERVE_DROP_loading: true,
+				RESERVE_DROP_done: false,
+				RESERVE_DROP_error: false
+			};
+		case USER_RESERVE_DROP_SUCCESS:
+			return {
+				...state,
+				RESERVE_DROP_loading: false,
+				RESERVE_DROP_done: true,
+				RESERVE_DROP_error: false,
+				RESERVE_DROP_status: action.data
+			};
+		case USER_RESERVE_DROP_FAILURE:
+			return {
+				...state,
+				RESERVE_DROP_loading: false,
+				RESERVE_DROP_done: false,
+				RESERVE_DROP_error: true,
+				RESERVE_DROP_status: action.data
 			};
 		// 마이페이지 예매 취소내역 조회 케이스들
 		case USER_RESERVE_CANCEL_SEARCH_REQUEST:

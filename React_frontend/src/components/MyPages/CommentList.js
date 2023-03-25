@@ -24,26 +24,31 @@ const CommentList = () => {
     shallowEqual
   );
 
+	// 리덕스 로그인 상태 정보
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
 	// 메뉴 버튼 변수
 	const [possiblebutton, setpossiblebutton] = useState(Possiblebuttonstate);
 	const [reviewbutton, setreviewbutton] = useState(Reviewbuttonstate);
 
 	// 리덕스에 저장된 버튼 상태에 따른 요청 (첫 렌더링에만 작용)
   useEffect(() => {
-		// 작성 가능 영화 요청
-		if (Possiblebuttonstate) {
-			
-			dispatch({
-				type: USER_MOVIE_POSSIBLE_REQUEST
-			});
+		// 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
+		if (LOGIN_data.uid !== 'No_login') {
+			// 작성 가능 영화 요청
+			if (Possiblebuttonstate) {
+				dispatch({
+					type: USER_MOVIE_POSSIBLE_REQUEST
+				});
+			}
+			// 작성한 관람평 요청
+			else {
+				dispatch({
+					type: USER_MY_COMMENT_SEARCH_REQUEST
+				});
+			}   
 		}
-		// 작성한 관람평 요청
-		else {
-			dispatch({
-				type: USER_MY_COMMENT_SEARCH_REQUEST
-			});
-		}   
-  }, []);
+  }, [LOGIN_data.uid]);
 
 	// 페이지를 탈출할 때 현재 페이지의 버튼 정보를 저장
 	useEffect(()=> {

@@ -14,13 +14,18 @@ const ReserveList = () => {
 
 	// 리덕스에 있는 예매내역 상태
 	const { RESERVE_SEARCH } = useSelector((state) => state.R_mypage_reserve);
+	// 로그인 상태 확인용 리덕스 상태
+	const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
 	// 예매 내역 조회 useEffect
 	useEffect(()=> {
-		dispatch({
-      type: USER_RESERVE_SEARCH_REQUEST
-    });
-	}, [dispatch])
+		// 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
+		if (LOGIN_data.uid !== 'No_login') {
+			dispatch({
+				type: USER_RESERVE_SEARCH_REQUEST
+			});
+		}
+	}, [LOGIN_data.uid, dispatch])
 
 	return (
 		<Content>
