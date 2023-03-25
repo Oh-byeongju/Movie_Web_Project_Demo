@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 @Service
 public class Payment {
@@ -22,11 +24,13 @@ public class Payment {
     @Data
     private class Response{
         private PaymentInfo response;
+
     }
 
     @Data
     private class PaymentInfo{
         private int amount;
+        private String status;
     }
 
 
@@ -104,7 +108,7 @@ public class Payment {
 
     //주문 최소 메소드
     //만약 토큰 , imp_uid , 가격 등 정보가 다를 시 결제를 취소해줘야 함
-    public void payMentCancle(String access_token, String imp_uid, int amount, String reason) throws IOException  {
+    public void paymentCancel(String access_token, String imp_uid, int amount, String reason) throws IOException  {
         System.out.println("결제 취소");
 
         System.out.println(access_token);
@@ -150,6 +154,51 @@ public class Payment {
     }
 
 
+    // 결제 상태 요청(나중에 메소드 합치면될듯 DTO를 만들던가 해서 --> 이거 결제 내역 받으면 카페인지 카드인지 나올수도 있을듯)\
+    // 애시당초 결제 토큰을 디비에 저장할 필요가 없음.
+    // 카카오페이인지 카드인지 나중에 알 수 있을듯
+    public String getState(String imp_uid, String access_token) throws IOException {
 
+        //메소드 호출 결과값을 반환하기 위한 변수
+        String responseData = "";
+        String returnData = "";
 
+        HttpsURLConnection conn = null;
+        URL url = new URL("https://api.iamport.kr/payments/" + imp_uid);
+
+        conn = (HttpsURLConnection) url.openConnection();
+
+        // 저장된 토큰 등록 및 요청방식 지정
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Authorization", access_token);
+        conn.setRequestProperty("Accept", "application/json");
+        conn.connect();
+
+        //http 요청 후 응답 받은 데이터를 버퍼에 쌓는다
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+        StringBuffer sb = new StringBuffer();
+        while ((responseData = br.readLine()) != null) {
+            sb.append(responseData); //StringBuffer에 응답받은 데이터 순차적으로 저장 실시
+        }
+
+        //메소드 호출 완료 시 반환하는 변수에 버퍼 데이터 삽입 실시
+        returnData = sb.toString();
+
+        //http 요청 응답 코드 확인 실시
+        String responseCode = String.valueOf(conn.getResponseCode());
+        System.out.println("http 응답 코드 : "+responseCode);
+        System.out.println("http 응답 데이터 : "+returnData  );
+
+//        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+//
+//        Gson gson = new Gson();
+//
+//        Response response = gson.fromJson(br.readLine(), Response.class);
+//        System.out.println(response);
+//
+//        br.close();
+//        conn.disconnect();
+
+        return "정상";
+    }
 }

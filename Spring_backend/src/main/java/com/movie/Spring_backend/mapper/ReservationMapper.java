@@ -86,8 +86,6 @@ public class ReservationMapper {
                 .rticket(RE.getRticket())
                 .rpaytype(RE.getRpaytype())
                 .rprice(RE.getRprice())
-                .rstate(RE.getRstate())
-                .rpayid(RE.getRpayid())
-                .rtoken(RE.getRtoken()).build();
+                .rstate(RE.getRstate()).build();
     }
 }

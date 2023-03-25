@@ -13,13 +13,18 @@ const LikeList = () => {
 
 	// 좋아요 누른 영화 상태
 	const { likeMovie } = useSelector((state) => state.movie);
+	// 리덕스 로그인 상태 정보
+	const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
 	// 찜한 영화 요청
   useEffect(() => {
-    dispatch({
-      type: USER_MY_MOVIE_SEARCH_REQUEST
-    });
-  }, [dispatch]);
+		// 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
+		if (LOGIN_data.uid !== 'No_login') {
+			dispatch({
+				type: USER_MY_MOVIE_SEARCH_REQUEST
+			});
+		}
+  }, [LOGIN_data.uid, dispatch]);
 
 	return (
 		<Content>

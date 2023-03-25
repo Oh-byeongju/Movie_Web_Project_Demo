@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { USER_RESERVE_DETAIL_REQUEST } from '../../reducer/R_mypage_reserve';
+import { USER_RESERVE_DETAIL_REQUEST, USER_RESERVE_DROP_REQUEST } from '../../reducer/R_mypage_reserve';
 import * as date from "../../lib/date.js";
 
 const ReserveDetail = () => {
@@ -17,19 +17,23 @@ const ReserveDetail = () => {
 	// 리덕스에 있는 예매내역 상태
 	const { RESERVE_DETAIL } = useSelector((state) => state.R_mypage_reserve);
 	const { RESERVE_DETAIL_error } = useSelector((state) => state.R_mypage_reserve);
+	const { RESERVE_DROP_status } = useSelector((state) => state.R_mypage_reserve);
 
 	// 리덕스 로그인 상태 정보
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
 	// 예매내역 상세 조회 useEffect
 	useEffect(()=> {
-		dispatch({
-			type: USER_RESERVE_DETAIL_REQUEST,
-			data: {
-				pathname: location.pathname.substring(7)
-			}
-		});
-	}, [location.pathname, dispatch]);
+		// 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
+		if (LOGIN_data.uid !== 'No_login') {
+			dispatch({
+				type: USER_RESERVE_DETAIL_REQUEST,
+				data: {
+					pathname: location.pathname.substring(7)
+				}
+			});
+		}
+	}, [LOGIN_data.uid, location.pathname, dispatch]);
 
 	// 현재 시간에서 30분을 더한 값
 	var now = new Date();
@@ -70,18 +74,40 @@ const ReserveDetail = () => {
 		var nowCancel = new Date();
 		nowCancel.setMinutes(nowCancel.getMinutes() + 30);
 
-		// 현재 시간에 30분을 더한값이 영화 시작시간보다 클경우 결제취소를 막는 if문
+		// 현재 시간에 30분을 더한값이 영화 시작시간보다 클경우 예매취소를 막는 if문
 		if (nowCancel > starttime) {
 			alert("결제취소 가능 시간이 지났습니다!")
 			window.location.replace(location.pathname);
 			return;
 		}
 
-		// 여기에 취소하는 과정 넣으면됨
-		// 아임포트는 새벽에 취소를 해버리니깐 그 전까지만 취소가 가능한지 아니면 우리가 조정하는게 되는지 봐야함
-		console.log("취소가능");
+		if (!window.confirm("예매를 취소하시겠습니까? (취소하신 예매는 복구가 되지 않습니다.)")) {
+      return;
+    };
 
-	}, [location.pathname, starttime]);
+		// 예매 취소 요청
+		dispatch({
+			type: USER_RESERVE_DROP_REQUEST,
+			data: {
+				pathname: location.pathname.substring(7)
+			}
+		});
+
+	}, [location.pathname, starttime, dispatch]);
+
+	// 예매취소 상태에 따른 alert
+	useEffect(()=> {
+		if (RESERVE_DROP_status === 204) {
+			alert('예매가 취소되었습니다.');
+			window.location.assign('/Mypage/Cancel');
+			return;
+		}
+
+		if (RESERVE_DROP_status === 400 || RESERVE_DROP_status === 500) {
+			alert('예기치 못한 오류가 발생했습니다.');
+			window.location.assign('/Mypage/Reserve');
+		}
+	}, [RESERVE_DROP_status])
 
 	return (
 		<Content>
@@ -156,7 +182,7 @@ const ReserveDetail = () => {
 							<dt>
 								관람좌석
 							</dt>
-							{RESERVE_DETAIL.seats && RESERVE_DETAIL.seats.map((seat) => (<dd key={seat} style={{width: "33px"}}> {seat} </dd>))}
+							{RESERVE_DETAIL.seats && RESERVE_DETAIL.seats.map((seat) => (<dd key={seat}> {seat} </dd>))}
 						</dl>
 						<dl>
 							<dt>
@@ -406,20 +432,21 @@ const ContentDetailMiddleInfo = styled.div`
 			margin-top: 2px;
 		}
 
+		dd:not(:first-of-type) {
+ 		 margin-left: 6px;
+		}
+
 		dd {
+			display: flex;
 			font-weight: 550;
 			color: rgb(51, 51, 51);
 			line-height: 1.36;
-			display: -webkit-box;
-			overflow: hidden;
-			word-break: break-all;
-			white-space: normal;
 			-webkit-line-clamp: 1;
 			-webkit-box-orient: vertical;
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
-			letter-spacing: 1px;
+			letter-spacing: 0.9px;
 		}
 	}
 `;
