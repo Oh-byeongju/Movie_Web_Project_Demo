@@ -5,7 +5,8 @@ import { BOARD_READ_FAILURE, BOARD_READ_REQUEST, BOARD_READ_SUCCESS,
   BOARD_WRITE_FAILURE, BOARD_WRITE_REQUEST, BOARD_WRITE_SUCCESS, 
   CONTENT_READ_FAILURE, CONTENT_READ_REQUEST, CONTENT_READ_SUCCESS 
 ,BOARD_SEARCH_REQUEST, BOARD_SEARCH_SUCCESS, BOARD_SEARCH_FAILURE
-, CONTENT_DELETE_REQUEST,CONTENT_DELETE_SUCCESS,CONTENT_DELETE_FAILURE, COMMENT_WRITE_REQUEST, COMMENT_WRITE_SUCCESS, COMMENT_WRITE_FAILURE, COMMENT_READ_SUCCESS, COMMENT_READ_FAILURE, COMMENT_READ_REQUEST} from "../reducer/Board";
+, CONTENT_DELETE_REQUEST,CONTENT_DELETE_SUCCESS,CONTENT_DELETE_FAILURE, COMMENT_WRITE_REQUEST, COMMENT_WRITE_SUCCESS, COMMENT_WRITE_FAILURE, COMMENT_READ_SUCCESS, COMMENT_READ_FAILURE, COMMENT_READ_REQUEST
+,LIKE_REQUEST,LIKE_FAILURE,LIKE_SUCCESS, COMMENT_DELETE_SUCCESS, COMMENT_DELETE_FAILURE, COMMENT_DELETE_REQUEST} from "../reducer/Board";
 
 //게시판 읽기
 async function BoardReadApi(data) {
@@ -215,6 +216,63 @@ function* CommentWrite(action) {
     });   
   }
 }
+  //게시물, 댓글 좋아요
+  async function LikeApi(data) {
+    return await http
+      .post("/board/auth/like",data)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        return error.response;
+      });
+  }
+  
+  function* Like(action) {
+    console.log(action)
+    const result = yield call(LikeApi, action.data);
+  
+    if (result.status === 200) { 
+      yield put({
+        type: LIKE_SUCCESS,
+        data:result.data
+      });
+    } else {
+      yield put({
+        type: LIKE_FAILURE,
+        data: result.status,
+      });   
+    }
+  }
+
+    //게시물, 댓글 좋아요
+    async function DeleteApi(data) {
+      return await http
+        .post("/board/auth/deletecomment",data)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          return error.response;
+        });
+    }
+    
+    function* Delete(action) {
+      console.log(action)
+      const result = yield call(DeleteApi, action.data);
+    
+      if (result.status === 200) { 
+        yield put({
+          type: COMMENT_DELETE_SUCCESS,
+        });
+      } else {
+        yield put({
+          type: COMMENT_DELETE_FAILURE,
+          data: result.status,
+        });   
+      }
+    }
+  
 
   function* BoardWriteSaga() {
     yield takeLatest(BOARD_WRITE_REQUEST, BoardWrite);
@@ -244,8 +302,15 @@ function* CommentWrite(action) {
   function* CommentWriteSaga() {
     yield takeLatest(COMMENT_WRITE_REQUEST, CommentWrite);
   }
+
+  function* LikeSaga() {
+    yield takeLatest(LIKE_REQUEST, Like);
+  }
+  function* DeleteSaga() {
+    yield takeLatest(COMMENT_DELETE_REQUEST, Delete);
+  }
   
   export default function* BoardSaga() {
     yield all([fork(BoardWriteSaga),fork(BoardReadSaga),fork(ContentWriteSaga),fork(BoardSearchSaga),fork(ContentDeleteSaga),
-    fork(CommentWriteSaga),fork(CommentReadSaga)]);
+    fork(CommentWriteSaga),fork(CommentReadSaga),fork(LikeSaga),fork(DeleteSaga)]);
   }

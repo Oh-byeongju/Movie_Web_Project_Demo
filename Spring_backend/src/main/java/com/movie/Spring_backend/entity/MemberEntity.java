@@ -64,6 +64,8 @@ public class MemberEntity {
             cascade = CascadeType.REMOVE)
     private List<CommentInfoEntity> commentInfos = new ArrayList<>();
 
+
+
     @Builder
     public MemberEntity(String uid, String upw, String uname, String uemail, String utel, String uaddr,
                         String uaddrsecond, Date ubirth, Date ujoindate, Authority uauthority, List<MovieMemberEntity> movieMembers,

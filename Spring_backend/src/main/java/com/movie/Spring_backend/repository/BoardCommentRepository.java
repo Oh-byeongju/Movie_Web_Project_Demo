@@ -26,4 +26,9 @@ public interface BoardCommentRepository extends JpaRepository<BoardCommentEntity
     //where a.bid=103 order by a.parent_id is null desc, a.bcdate desc;
     @Query("select bc from BoardCommentEntity as bc where bc.board.bid = :bid ORDER BY bc.parent DESC NULLS FIRST, bcid desc")
     public List<BoardCommentEntity> CommentToComment(@Param("bid") Long bid);
+
+    //부모로 자식 검색
+    @Query("select bc from BoardCommentEntity as bc where bc.parent = :parent")
+    public List<BoardCommentEntity> commentParent(@Param("parent") Long parent);
+
 }

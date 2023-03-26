@@ -1,46 +1,34 @@
 import React ,{useEffect, useState}from "react";
 import styled from "styled-components";
+import CommentText from "./CommentText";
 import { SyncOutlined,MessageOutlined} from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import { COMMENT_WRITE_REQUEST } from "../../reducer/Board";
+import { useDispatch,useSelector } from "react-redux";
+import { COMMENT_DELETE_REQUEST, COMMENT_WRITE_REQUEST } from "../../reducer/Board";
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-const ReplyComment = ({id,child,bid}) =>
+const ReplyComment = ({id,child,bid,member}) =>
 {
     const [text, setText] =useState("");
     const [count, setCount]  = useState(0)
-    const onChangeText =(e)=>{
-        setText(e.target.value)
-        setCount(e.target.value.length)
-    }    
+
     const [isValid, setIsValid] = useState(false);
+    const [commentvalid, setCommentValid]= useState(false);
     const dispatch = useDispatch();
-   
+   const [validId, setValidId] = useState(0);
+   const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
     const onClickReply = ()=>{
-        
         setIsValid(!isValid);
     }
 
-    const onClickComment=()=>{
+    const onClickCommentReply = (id)=>{
+        setValidId(id)
+        setCommentValid(!commentvalid);
+        console.log(validId)
 
-        if (
-            !window.confirm(
-              "작성하시겠습니까?"
-            )
-          ) {
-            return;
-          } else {
-            dispatch({
-                type:COMMENT_WRITE_REQUEST,
-                data:{
-                    text:text,
-                    parent:id,
-                    bid:bid,
-                }
-            })
-        alert('작성완료되었습니다.')
-        setText("")
-          }
     }
+
+
+   
 
     const detailDate = (a) => {
         const milliSeconds = new Date() - a;
@@ -61,7 +49,17 @@ const ReplyComment = ({id,child,bid}) =>
     };
     return(
         <CommentWrapper>
-            <div className="comment-content">
+            <div className="comment-contentt">
+                {member === LOGIN_data.uid ? <div onClick={()=>{
+                    dispatch({
+                        type:COMMENT_DELETE_REQUEST,
+                        data:{
+                            comment:id
+                        }
+                    })
+                }}>
+                    삭제하기
+                </div>: ""}
                 
                                             <div className="no"
                                             onClick={()=>{
@@ -75,34 +73,9 @@ const ReplyComment = ({id,child,bid}) =>
                                             style={{paddingRight:"5px"}}/>답글쓰기
                                             </div>
                                         </div>
-                                        {isValid? <CommentText>
+                                        {isValid? <CommentText id={id} />
       
-       
-                            <div>
-                            <div className="form">
-                            <div className="text">
-                                <textarea placeholder="작성하세요"
-                                maxLength={200}
-                                value={text}
-                                onChange={onChangeText}
-                                ></textarea>
-                            </div>
-                            <div className="button">
-                                <div className="number">
-                                 {count}/200
-                                </div>
-                                <div className="writebutton">
-                                <button className="write"
-                                  onClick={()=>{
-                                    onClickComment()
-                                }}
-                                >작성하기</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                     
-                    </CommentText>   
+                          
                        :""} 
                         {child.map((data)=>
                         {
@@ -117,10 +90,26 @@ const ReplyComment = ({id,child,bid}) =>
                                                      <span className="time">{detailDate(new Date(data.bcdate))}</span>
                                                  </div>
                                                  <div className="comment-comment"> <p>{data.bccomment}</p>
-         
-                                               
-                                             </div>
-                                         </div>
+                                                 <div className="comment-content">
+                
+                <div className="no"
+                onClick={()=>{
+                    console.log(bid)
+                }}>
+                    신고
+                </div>
+                <div className="comment_to_comment" 
+                onClick={()=>{onClickCommentReply(data.bcid)
+                console.log(id)
+                }}>
+                <MessageOutlined 
+                style={{paddingRight:"5px"}}/>답글쓰기
+                </div>
+                 </div>        
+                        </div>
+                                </div>
+                                         { validId===data.bcid&&commentvalid? <CommentText id={id}/>
+ :""} 
                                 </CommentReply>
                             )
 
@@ -131,12 +120,38 @@ const ReplyComment = ({id,child,bid}) =>
 }
 
 const CommentWrapper = styled.div`
-.comment-content{
+.comment-contentt{
     position:relative;
     top:-20px;
     left:65px;
+        margin-top: 8px;
+        line-height: 20px;
+        font-size: 14px;
+        color: #1e2022;
+        word-wrap: break-word;
+        word-break: break-all;
+        /* overflow: auto; */
+        max-height: 400px;
+
+        .no{
+            float:left;
+            padding-right:50px;
+        }
+        .comment-content{
+            margin-top: 8px;
+            line-height: 20px;
+            font-size: 50px;
+            color: #1e2022;
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow: auto;
+            max-height: 400px;
+        
+        }
+        
+    }
 }`
-const CommentText = styled.div`
+const CommentTextt = styled.div`
 padding: 24px 16px;
 background: #f8f9fa;
 
@@ -226,60 +241,31 @@ const CommentReply = styled.div`
         .comment{
             position: relative;
             padding: 12px 12px 12px 64px;
-            .number{
-                position: absolute;
-                left: 10px;
-                top: 30px;
-                text-align: center;
-            }
-            .name{
-                line-height: 17px;
+            
+            .comment-comment{
+                margin-top: 8px;
+                line-height: 20px;
                 font-size: 14px;
-                color: #7b858e;
-    
-                .id{
-                    display:inline-block;
-                    font-weight: 700;
+                color: #1e2022;
+                word-wrap: break-word;
+                word-break: break-all;
+                /* overflow: auto; */
+                max-height: 400px;
+
+                .comment-content{
+                    margin-top: 8px;
+                    line-height: 20px;
+                    font-size: 50px;
                     color: #1e2022;
                     word-wrap: break-word;
                     word-break: break-all;
-                    padding-right:20px;
-                    line-height:10px;
-                    height:12px;
-                    border-right:1px solid #98a0a7;
+                    overflow: auto;
+                    max-height: 400px;
+                
                 }
-                .time{
-                    padding-left:20px;
-                }
+                
             }
         }
-    }
-    .comment-content{
-        margin-top: 8px;
-        line-height: 20px;
-        font-size: 14px;
-        color: #1e2022;
-        word-wrap: break-word;
-        word-break: break-all;
-        overflow: auto;
-        max-height: 400px;
-        .no{
-            float:left;
-            padding-right:30px;
-        }
-        .comment_to_comment{
-            
-        }
-    }
-    .comment-comment{
-        margin-top: 8px;
-        line-height: 20px;
-        font-size: 14px;
-        color: #1e2022;
-        word-wrap: break-word;
-        word-break: break-all;
-        /* overflow: auto; */
-        max-height: 400px;
     }
 }
     `

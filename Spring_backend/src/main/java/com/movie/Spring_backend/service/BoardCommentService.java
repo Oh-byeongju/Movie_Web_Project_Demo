@@ -59,37 +59,7 @@ public class BoardCommentService {
         return countCommentMapper;
 
     }
-    //댓글을 작성하는 메소드
-   /* @Transactional
-    public void CommentWrite(Map<String, String> requestMap, HttpServletRequest request) {
 
-        // Access Token에 대한 유효성 검사
-        jwtValidCheck.JwtCheck(request, "ATK");
-        String User_id = SecurityUtil.getCurrentMemberId();
-        String text = requestMap.get("text").trim();
-        String group = requestMap.get("group").trim();
-        String board = requestMap.get("bid").trim();
-        System.out.println(text);
-        System.out.println(group);
-        System.out.println(board);
-        Date nowDate = new Date();
-
-        SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String day = DateFormat.format(nowDate);
-        MemberEntity member = MemberEntity.builder().uid(User_id).build();
-        BoardEntity bid = BoardEntity.builder().bid(Long.valueOf(board)).build();
-        BoardCommentEntity Board;
-
-        Board = BoardCommentEntity.builder()
-                .bccomment(text)
-                .bcdate(day)
-                .board(bid)
-                .member(member).build();
-
-
-        boardCommentRepository.save(Board);
-    }
-*/
     //대댓글을 작성하는 메소드
     @Transactional
     public void CommentWrite(Map<String, String> requestMap, HttpServletRequest request) {
@@ -138,4 +108,19 @@ public class BoardCommentService {
         }
 
     }
+
+    @Transactional
+    public void deleteComment(Map<String, String> requestMap, HttpServletRequest request){
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        String comment = requestMap.get("comment");
+        List<BoardCommentEntity> datas = boardCommentRepository.commentParent(Long.valueOf(comment));
+        for(BoardCommentEntity data : datas){
+            boardCommentRepository.delete(data);
+
+        }
+
+        boardCommentRepository.deleteById(Long.valueOf(comment));
+    }
 }
+
