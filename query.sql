@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS `movie_member`;
 DROP TABLE IF EXISTS `movie_actor`;
 DROP TABLE IF EXISTS `actor`;
 DROP TABLE IF EXISTS `movie_theater`;
+DROP TABLE IF EXISTS `board_comment`;
 DROP TABLE IF EXISTS `board`;
 DROP TABLE IF EXISTS `member`;
 DROP TABLE IF EXISTS `movie`;
@@ -165,6 +166,18 @@ CREATE TABLE `board` (
     `uid`	varchar(20)	NOT NULL,
 	FOREIGN KEY (`uid`) REFERENCES `member` (`uid`),
 	PRIMARY KEY (`bid`)
+);
+
+CREATE TABLE `board_comment` (
+	`bcid` INT NOT NULL AUTO_INCREMENT,
+    `bccomment` varchar(30) not null,
+	`bcdate` varchar(300)not null,
+	`parent` int,
+    `bid` int not null,
+    `uid`varchar(20)	NOT NULL,
+	FOREIGN KEY (`uid`) REFERENCES `member` (`uid`),
+	FOREIGN KEY (`bid`) REFERENCES `board` (`bid`),
+	PRIMARY KEY (`bcid`)
 );
 INSERT INTO `movie` (`mtitle`, `mdir`, `mgenre`, `mtime`, `mdate`, `mrating`, `mstory`, `mimagepath`)
 VALUES ('타이타닉', '제임스 카메론', '로맨스', "180", DATE_SUB(NOW(), INTERVAL 15 DAY), '15', '<h2><span style="color: rgb(51, 51, 51);">"내 인생의 가장 큰 행운은 당신을 만난 거야"</span></h2><p><br></p><p><span style="color: rgb(51, 51, 51);">우연한 기회로 티켓을 구해 타이타닉호에 올라탄 자유로운 영혼을 가진 화가 ‘잭’(레오나르도 디카프리오)은</span></p><p><span style="color: rgb(51, 51, 51);">막강한 재력의 약혼자와 함께 1등실에 승선한 ‘로즈’(케이트 윈슬렛)에게 한눈에 반한다.</span></p><p><span style="color: rgb(51, 51, 51);">진실한 사랑을 꿈꾸던 ‘로즈’ 또한 생애 처음 황홀한 감정에 휩싸이고, 둘은 운명 같은 사랑에 빠지는데…</span></p><p><br></p><p><span style="color: rgb(51, 51, 51);">가장 차가운 곳에서 피어난 뜨거운 사랑!</span></p><p><span style="color: rgb(51, 51, 51);">영원히 가라앉지 않는 세기의 사랑이 펼쳐진다!</span></p>', 'img/ranking/5.jpg');

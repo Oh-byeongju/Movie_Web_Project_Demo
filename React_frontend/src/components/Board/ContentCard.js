@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { LikeTwoTone,DislikeTwoTone,SyncOutlined,EyeOutlined ,DeleteOutlined} from "@ant-design/icons";
 import { useParams,useNavigate ,useLocation,} from "react-router-dom";
 import { useDispatch ,useSelector} from "react-redux"
-import { COMMENT_READ_REQUEST, COMMENT_WRITE_REQUEST, CONTENT_DELETE_REQUEST, CONTENT_READ_REQUEST } from "../../reducer/Board";
+import { COMMENT_READ_REQUEST, COMMENT_WRITE_REQUEST, CONTENT_DELETE_REQUEST, CONTENT_READ_REQUEST, LIKE_REQUEST } from "../../reducer/Board";
 
 const ContentCard = () => {
         const dispatch = useDispatch();
@@ -26,6 +26,29 @@ const ContentCard = () => {
             })
           
         },[])
+
+        const  onClickLike =()=>{
+            dispatch({
+                type:LIKE_REQUEST,
+                data:{
+                    like:1,
+                    unlike:0,
+                    uid:LOGIN_data.uid,
+                    board:content[0].bid
+                }
+            })
+        }
+        const  onClickUnLike =()=>{
+            dispatch({
+                type:LIKE_REQUEST,
+                data:{
+                    unlike:1,
+                    like:0,
+                    uid:LOGIN_data.uid,
+                    board:content[0].bid
+                }
+            })
+        }
         const detailDate = (a) => {
             const milliSeconds = new Date() - a;
             const seconds = milliSeconds / 1000;
@@ -81,11 +104,16 @@ const ContentCard = () => {
                     <AricleBox>
                         <Vote>
                             <ArticleVote>
-                                <button className="up">
+                                <button className="up" onClick={()=>{
+                                    onClickLike()
+                                }}>
                                     <span className="like"><LikeTwoTone  style={{fontSize:"15px"}}/></span>
                                     <span className="number">{content[0].blike}</span>
                                 </button>
-                                <button className="down">
+                                <button className="down"
+                                onClick={()=>{
+                                    onClickUnLike()
+                                }}>
                                     <span className="like"><DislikeTwoTone   style={{fontSize:"15px"}}/></span>
                                     <span className="number">{content[0].bunlike}</span>
                                 </button>

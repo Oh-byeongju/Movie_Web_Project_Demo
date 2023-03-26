@@ -73,4 +73,9 @@ public class BoardController {
     public void DeleteBoard(@RequestBody Map<String, String> requestMap, HttpServletRequest request)  {
         boardService.deleteBoard(requestMap,request);
     }
+
+    @PostMapping("/auth/like")
+    public void Like(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
+        boardService.like(requestMap, request);
+    }
 }

@@ -31,6 +31,11 @@ export const initalState = {
     comment_write_done:false,
     comment_write_error:null,
 
+
+    like_loadng:false,
+    like_done:false,
+    like_error:null,
+
     board:[],
     content:[],
     comment:[],
@@ -69,6 +74,10 @@ export const initalState = {
   export const COMMENT_WRITE_REQUEST = "COMMENT_WRITE_REQUEST"
   export const COMMENT_WRITE_SUCCESS = "COMMENT_WRITE_SUCCESS"
   export const COMMENT_WRITE_FAILURE = "COMMENT_WRITE_FAILURE"
+
+  export const LIKE_REQUEST = "LIKE_REQUEST"
+  export const LIKE_SUCCESS = "LIKE_SUCCESS"
+  export const LIKE_FAILURE = "LIKE_FAILURE"
   const Board = (state = initalState, action) => {
     switch (action.type) {
       //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
@@ -252,6 +261,28 @@ export const initalState = {
                         comment_write_done:false,
                         comment_write_error:action.error,
                     }  
+
+                    case LIKE_REQUEST:
+                        return{
+                            ...state,
+                            like_loading:true,
+                            like_done:false,
+                            like_error:null,
+                        }
+                    case LIKE_SUCCESS:
+                        return{
+                                ...state,
+                                like_loading:false,
+                                like_done:true,
+                                like_error:null,
+                            }
+                    case LIKE_FAILURE:
+                        return{
+                            ...state,
+                            like_loading:false,
+                            like_done:false,
+                            like_error:action.error,
+                        }  
       default:
         return state;
     }

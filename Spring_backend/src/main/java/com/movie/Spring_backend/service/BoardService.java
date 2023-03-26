@@ -2,11 +2,9 @@ package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.BoardDto;
 import com.movie.Spring_backend.dto.MovieInfoDto;
-import com.movie.Spring_backend.entity.BoardEntity;
-import com.movie.Spring_backend.entity.MemberEntity;
-import com.movie.Spring_backend.entity.MovieEntity;
-import com.movie.Spring_backend.entity.MovieMemberEntity;
+import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
+import com.movie.Spring_backend.repository.BoardLikeRepository;
 import com.movie.Spring_backend.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +30,8 @@ public class BoardService {
     private final JwtValidCheck jwtValidCheck;
     private final BoardRepository boardRepository;
 
+    private final BoardLikeRepository boardLikeRepository;
+
 
     //게시글을 전체 불러오는 메소드 ,최신순
     @Transactional
@@ -41,7 +41,7 @@ public class BoardService {
         Page<BoardEntity> pages = boardRepository.PaginationBid(page);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
-                .blike(data.getBlike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+                .blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
     //게시글 전체 불러오는 메소드, top순
     @Transactional
@@ -51,7 +51,7 @@ public class BoardService {
         Page<BoardEntity> pages = boardRepository.PaginationIndex(page);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
-                .blike(data.getBlike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+                .blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
 
 
@@ -62,7 +62,7 @@ public class BoardService {
         boardRepository.updateViews(id);
         List<BoardEntity> datas = boardRepository.findByContent(id,title);
         return datas.stream().map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
-                .bcategory(data.getBcategory()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getBlike())
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getLike())
                 .bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build()).collect(Collectors.toList());
     }
 
@@ -73,7 +73,7 @@ public class BoardService {
         Page<BoardEntity> pages = boardRepository.SearchTitle(page, title);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
-                .blike(data.getBlike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+                .blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
 
     //페이지내 제목으로 검색하는 메소드
@@ -83,7 +83,7 @@ public class BoardService {
         Page<BoardEntity> pages = boardRepository.SearchUid(page, uid);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
-                .blike(data.getBlike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+                .blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
 
     //게시판에 글을 작성하는 메소드
@@ -110,10 +110,47 @@ public class BoardService {
                     .bdetail(detail)
                     .bcategory(category)
                     .bclickindex(0)
-                    .blike(0)
-                    .bunlike(0)
                     .member(member).build();
         boardRepository.save(Board);
+    }
+
+    //좋아요 구현 메소드
+    //comment_like
+    @Transactional
+    public void like(Map<String, String> requestMap,HttpServletRequest request){
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        String like = requestMap.get("like");
+        String unlike = requestMap.get("unlike");
+
+        String User_id = requestMap.get("uid");
+        String board = requestMap.get("board");
+
+        BoardEntity bid = BoardEntity.builder().bid(Long.valueOf(board)).build();
+        MemberEntity member = MemberEntity.builder().uid(User_id).build();
+        BoardLikeEntity boardLike = boardLikeRepository.findByLike(Long.valueOf(board), User_id);
+        BoardLikeEntity boardUnLike = boardLikeRepository.findByUnLike(Long.valueOf(board), User_id);
+        BoardLikeEntity boardLikeEntity;
+        boardLikeEntity = BoardLikeEntity.builder().
+                blike(Integer.valueOf(like))
+                .board(bid)
+                .bunlike(Integer.valueOf(unlike))
+                .member(member)
+                .build();
+        if(boardLike==null && like.equals("1")) {
+            System.out.println("추가");
+            boardLikeRepository.save(boardLikeEntity);
+        }
+        else if(boardUnLike==null && unlike.equals("1")){
+            boardLikeRepository.save(boardLikeEntity);
+        }
+        else if (boardUnLike!=null && unlike.equals("1")){
+            boardLikeRepository.Deleted(Long.valueOf(board),User_id,0,1);
+        }
+        else{
+            System.out.println("삭제");
+            boardLikeRepository.Deleted(Long.valueOf(board),User_id,1,0);
+        }
     }
 
     @Transactional

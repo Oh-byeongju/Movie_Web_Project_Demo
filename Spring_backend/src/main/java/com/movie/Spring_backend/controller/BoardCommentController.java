@@ -29,7 +29,6 @@ public class BoardCommentController {
     }
 
     //댓글을 입력하는 메소드
-
     @PostMapping("/auth/commentwrite")
     public ResponseEntity<List<BoardCommentEntity>> CommentWrite(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
         boardCommentService.CommentWrite(requestMap, request);
