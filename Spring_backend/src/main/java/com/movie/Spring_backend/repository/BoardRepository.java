@@ -30,9 +30,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Query("update BoardEntity as board set board.bclickindex=board.bclickindex+1 where board.bid= :bid")
     public void updateViews(@Param("bid") Long bid);
 
-    @Modifying
-    @Query("delete from BoardEntity as board where bid = :bid")
-    public void deleteBoard(@Param("bid") Long bid);
     //페이지 네이션을 위한 메소드 ,번호순
     @Query("select board from BoardEntity as board order by bid desc")
     public Page<BoardEntity> PaginationBid(Pageable pageable);
@@ -51,4 +48,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     @Query("select board from BoardEntity as board where bid = :bid ")
     public BoardEntity booleanCheck(@Param("bid") Long bid);
+
+
 }

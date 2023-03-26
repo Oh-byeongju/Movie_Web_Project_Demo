@@ -29,13 +29,12 @@ public class BoardCommentDto  {
     private Long bid;
     private Long parent;
 
-    private List<BoardCommentEntity> children = new ArrayList<>();
 
     private Integer commentcount;
 
     @Builder
     public BoardCommentDto(Long bcid, String bcdate,String bccomment, BoardEntity board,Long bid,
-                              MemberEntity member, String uid, Long parent,  List<BoardCommentEntity> children,
+                              MemberEntity member, String uid, Long parent,
                            Integer commentcount
 
 ) {
@@ -59,7 +58,6 @@ public class BoardCommentDto  {
         this.bid=com.getBoard().getBid();
         this.uid=com.getMember().getUid();
         this.parent=com.getParent();
-        this.children=com.getChildren();
     this.commentcount=com.getCommentcount();
     }
 }

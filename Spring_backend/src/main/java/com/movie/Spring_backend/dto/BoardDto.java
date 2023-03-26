@@ -36,10 +36,12 @@ public class BoardDto {
 
     private Integer commentcount;
 
+    private boolean likes;
+    private boolean unlikes;
+
     @Builder //클래스 레벨에 붙이거나 생성자에 붙여주면 파라미터를 활용하여 빌더 패턴을 자동으로 생성해준다
     public BoardDto(Long bid, String btitle, String bdetail, String bdate, String bcategory,Integer bclickindex, Integer blike, Integer bunlike,
-                    Integer commentcount,MemberEntity member
-    ,String uid) {
+                    Integer commentcount,MemberEntity member,String uid,boolean likes,boolean unlikes) {
         this.bid=bid;
         this.btitle=btitle;
         this.bdetail=bdetail;
@@ -51,5 +53,7 @@ public class BoardDto {
         this.commentcount=commentcount;
         this.member=member;
         this.uid=uid;
+        this.likes=likes;
+        this.unlikes=unlikes;
     }
 }

@@ -6,6 +6,7 @@ import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.repository.BoardLikeRepository;
 import com.movie.Spring_backend.repository.BoardRepository;
+import com.movie.Spring_backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -61,9 +62,33 @@ public class BoardService {
     public List<BoardDto> findByContent(Long id , String title){
         boardRepository.updateViews(id);
         List<BoardEntity> datas = boardRepository.findByContent(id,title);
+
+        String User_id = SecurityUtil.getCurrentMemberId();
+        boolean liked= false;
+        boolean unliked = false;
+        BoardLikeEntity checklike = boardLikeRepository.findByLike(id, User_id);
+        BoardLikeEntity checkunlike = boardLikeRepository.findByUnLike(id, User_id);
+
+
+        if (checklike == null) {
+            liked=false;
+        }
+        if(checklike !=null){
+            liked=true;
+        }
+        if(checkunlike ==null){
+            unliked=false;
+        }
+        if(checkunlike!=null){
+            unliked=true;
+        }
+
+        boolean finalUnliked = unliked;
+        boolean finalLiked = liked;
         return datas.stream().map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getLike())
-                .bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build()).collect(Collectors.toList());
+                .bunlike(data.getBunlike()).likes(finalLiked).unlikes(finalUnliked)
+                .commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build()).collect(Collectors.toList());
     }
 
     //페이지내 제목으로 검색하는 메소드
@@ -92,7 +117,7 @@ public class BoardService {
 
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
-        String User_id = requestMap.get("uid");
+        String User_id = SecurityUtil.getCurrentMemberId();
         String title = requestMap.get("title").trim();
         String detail = requestMap.get("detail").trim();
         String category = requestMap.get("category").trim();
@@ -116,14 +141,17 @@ public class BoardService {
 
     //좋아요 구현 메소드
     //comment_like
+    //like
     @Transactional
-    public void like(Map<String, String> requestMap,HttpServletRequest request){
+    public BoardDto like(Map<String, String> requestMap,HttpServletRequest request){
         jwtValidCheck.JwtCheck(request, "ATK");
+
+        boolean liked= false;
+        boolean unliked = false;
 
         String like = requestMap.get("like");
         String unlike = requestMap.get("unlike");
-
-        String User_id = requestMap.get("uid");
+        String User_id = SecurityUtil.getCurrentMemberId();
         String board = requestMap.get("board");
 
         BoardEntity bid = BoardEntity.builder().bid(Long.valueOf(board)).build();
@@ -151,6 +179,26 @@ public class BoardService {
             System.out.println("삭제");
             boardLikeRepository.Deleted(Long.valueOf(board),User_id,1,0);
         }
+        BoardEntity datas = boardRepository.booleanCheck(Long.valueOf(board));
+
+
+        BoardLikeEntity checklike = boardLikeRepository.findByLike(Long.valueOf(board), User_id);
+        BoardLikeEntity checkunlike = boardLikeRepository.findByUnLike(Long.valueOf(board), User_id);
+
+
+        if (checklike == null) {
+            liked=false;
+        }
+        if(checklike !=null){
+            liked=true;
+        }
+        if(checkunlike ==null){
+            unliked=false;
+        }
+        if(checkunlike!=null){
+            unliked=true;
+        }
+        return BoardDto.builder().bid(datas.getBid()).likes(liked).unlikes(unliked).blike(datas.getLike()).bunlike(datas.getBunlike()).build();
     }
 
     @Transactional
@@ -159,6 +207,7 @@ public class BoardService {
 
         String bid = requestMap.get("bid");
 
-        boardRepository.deleteBoard(Long.valueOf(bid));
+
+     boardRepository.deleteById(Long.valueOf(bid));
     }
 }

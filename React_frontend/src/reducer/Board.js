@@ -31,6 +31,10 @@ export const initalState = {
     comment_write_done:false,
     comment_write_error:null,
 
+    comment_delete_loading:false,
+    comment_delete_done:false,
+    comment_delete_error:null,
+
 
     like_loadng:false,
     like_done:false,
@@ -39,7 +43,7 @@ export const initalState = {
     board:[],
     content:[],
     comment:[],
-
+    like:[],
 
   };
 
@@ -74,6 +78,10 @@ export const initalState = {
   export const COMMENT_WRITE_REQUEST = "COMMENT_WRITE_REQUEST"
   export const COMMENT_WRITE_SUCCESS = "COMMENT_WRITE_SUCCESS"
   export const COMMENT_WRITE_FAILURE = "COMMENT_WRITE_FAILURE"
+
+  export const COMMENT_DELETE_REQUEST = "COMMENT_DELETE_REQUEST"
+  export const COMMENT_DELETE_SUCCESS = "COMMENT_DELETE_SUCCESS"
+  export const COMMENT_DELETE_FAILURE = "COMMENT_DELETE_FAILURE"
 
   export const LIKE_REQUEST = "LIKE_REQUEST"
   export const LIKE_SUCCESS = "LIKE_SUCCESS"
@@ -262,6 +270,31 @@ export const initalState = {
                         comment_write_error:action.error,
                     }  
 
+                    case COMMENT_DELETE_REQUEST:
+                    return{
+                        ...state,
+                        comment_delete_loading:true,
+    comment_delete_done:false,
+    comment_delete_error:null,
+
+                    }
+                case COMMENT_DELETE_SUCCESS:
+                    return{
+                            ...state,
+                            comment_delete_loading:false,
+                            comment_delete_done:true,
+    comment_delete_error:null,
+
+                        }
+                case COMMENT_DELETE_FAILURE:
+                    return{
+                        ...state,
+                        comment_delete_loading:false,
+                        comment_delete_done:false,
+                        comment_delete_error:action.error,
+                    
+                    }  
+
                     case LIKE_REQUEST:
                         return{
                             ...state,
@@ -270,12 +303,19 @@ export const initalState = {
                             like_error:null,
                         }
                     case LIKE_SUCCESS:
+
+                 
                         return{
                                 ...state,
                                 like_loading:false,
                                 like_done:true,
                                 like_error:null,
-                            }
+                                content: state.content.map(con => 
+                                    con.mid === action.data.mid ? {...con, blike: action.data.blike, bunlike: action.data.bunlike
+                                                                    ,likes:action.data.likes, unlikes:action.data.unlikes
+                                    } : con
+                                  ),                            }
+                                  
                     case LIKE_FAILURE:
                         return{
                             ...state,

@@ -24,16 +24,19 @@ public class BoardCommentController {
 
     //댓글을 불러오는 메소드
     @GetMapping("/normal/comment")
-    public ResponseEntity<CountCommentMapper> commentAll(@RequestParam("bid")Long bid){
+    public ResponseEntity<CountCommentMapper> commentAll(@RequestParam("bid") Long bid) {
         return ResponseEntity.ok().body(boardCommentService.findByComment(bid));
     }
 
     //댓글을 입력하는 메소드
     @PostMapping("/auth/commentwrite")
-    public ResponseEntity<List<BoardCommentEntity>> CommentWrite(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
+    public ResponseEntity<List<BoardCommentEntity>> CommentWrite(@RequestBody Map<String, String> requestMap, HttpServletRequest request) {
         boardCommentService.CommentWrite(requestMap, request);
         return ResponseEntity.noContent().build();
     }
 
-
+    @PostMapping("/auth/deletecomment")
+    public void deleteComment(@RequestBody Map<String, String> requestMap, HttpServletRequest request) {
+        boardCommentService.deleteComment(requestMap, request);
+    }
 }

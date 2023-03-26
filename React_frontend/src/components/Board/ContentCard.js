@@ -92,7 +92,7 @@ const ContentCard = () => {
                         </MetaListLeft>
                         <MetaListRight>
                         <div className="inq"><EyeOutlined style={{position:'relative',top:'-2px'}}/><span>{content[0].bclickindex}</span></div>
-                        <div className="comment">댓글 {comment.length}</div>
+                        <div className="comment">댓글 {content[0].commentcount}</div>
                         <div className="top">추천 1,000</div>
                         </MetaListRight>
                     </SubTitle>
@@ -104,13 +104,13 @@ const ContentCard = () => {
                     <AricleBox>
                         <Vote>
                             <ArticleVote>
-                                <button className="up" onClick={()=>{
+                                <button className={content[0].likes?"true up":"up"} onClick={()=>{
                                     onClickLike()
                                 }}>
                                     <span className="like"><LikeTwoTone  style={{fontSize:"15px"}}/></span>
                                     <span className="number">{content[0].blike}</span>
                                 </button>
-                                <button className="down"
+                                <button className={content[0].unlikes?"true down":"down"}
                                 onClick={()=>{
                                     onClickUnLike()
                                 }}>
@@ -274,6 +274,7 @@ const AricleBox = styled.div`
 `
 const Vote =styled.div`
     padding: 12px 0;
+    padding-right:50px;
 `
 const ArticleVote  =styled.div`
     button{
@@ -281,6 +282,10 @@ const ArticleVote  =styled.div`
         background-color: #fff;
         border: 1px solid #dddfe4;
         cursor:pointer;
+    }
+    .true{
+        background-color:blue;
+
     }
     .up{
         padding: 12px;
@@ -331,8 +336,9 @@ const ArticleVote  =styled.div`
     }
     .delete{
         float:right;
-        padding-top:10px;
-        padding-right:20px;
+        position:relative;
+        left:25px;
+        top:10px;
         color:#7b858e;
         font-size:13px;
         cursor:pointer;

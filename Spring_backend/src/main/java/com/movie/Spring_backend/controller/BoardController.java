@@ -75,7 +75,7 @@ public class BoardController {
     }
 
     @PostMapping("/auth/like")
-    public void Like(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
-        boardService.like(requestMap, request);
+    public BoardDto Like(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
+       return boardService.like(requestMap, request);
     }
 }

@@ -142,7 +142,7 @@ const ContentComment = () =>{
                                       
                                     </div>
                                 </div>
-                                <ReplyComment id={data.bcid} child={data.child} bid={content[0].bid}/> 
+                                <ReplyComment id={data.bcid} child={data.child} bid={content[0].bid} member = {data.member}/> 
 
                             </li>
                             
