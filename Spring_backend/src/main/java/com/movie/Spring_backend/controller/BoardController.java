@@ -1,6 +1,8 @@
 package com.movie.Spring_backend.controller;
 
 import com.movie.Spring_backend.dto.BoardDto;
+import com.movie.Spring_backend.entity.BoardEntity;
+import com.movie.Spring_backend.entity.BoardLikeEntity;
 import com.movie.Spring_backend.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,16 +26,50 @@ public class BoardController {
 
     //게시판에 글을 불러오는 컨트롤러
     @GetMapping("/normal/boardall")
-    public ResponseEntity<Page<BoardDto>> BoardWrite(@RequestParam("page") String page ,@RequestParam("sort") String sort) {
+    public ResponseEntity<Page<BoardDto>> BoardWrite(@RequestParam("page") String page ,@RequestParam("sort") String sort,@RequestParam("category") String category ) {
 
-        //최신순
-        if(sort.equals("all")){
-            return ResponseEntity.ok().body(boardService.PaginationBid(Integer.valueOf(page)));
+        //최신순, 전체
+        if(category.equals("popular") && sort.equals("all")){
+            return ResponseEntity.ok().body(boardService.PaginationBid(Integer.valueOf(page),"자유 게시판"));
         }
 
-        //인기순
-        else if(sort.equals("top")){
-            return ResponseEntity.ok().body(boardService.PaginationIndex(Integer.valueOf(page)));
+        //인기순, 전체
+        else if(category.equals("popular") &&sort.equals("top")){
+            return ResponseEntity.ok().body(boardService.PaginationIndex(Integer.valueOf(page),"자유 게시판"));
+        }
+
+        //좋아요순, 전체
+        else if(category.equals("popular") &&sort.equals("like")){
+            return ResponseEntity.ok().body(boardService.Test1(Integer.valueOf(page),"자유 게시판"));
+        }
+
+        //전체순, 뉴스
+        else if(category.equals("news") && sort.equals("all")){
+            return ResponseEntity.ok().body(boardService.PaginationBid(Integer.valueOf(page),"영화 뉴스"));
+        }
+
+        //인기순, 뉴스
+        else if(category.equals("news") &&sort.equals("top")){
+            return ResponseEntity.ok().body(boardService.PaginationIndex(Integer.valueOf(page),"영화 뉴스"));
+        }
+
+        //좋아요순, 인기
+        else if(category.equals("news") &&sort.equals("like")){
+            return ResponseEntity.ok().body(boardService.Test1(Integer.valueOf(page),"영화 뉴스"));
+        }
+        //전체순, 인터뷰
+        else if(category.equals("interview") && sort.equals("all")){
+            return ResponseEntity.ok().body(boardService.PaginationBid(Integer.valueOf(page),"인터뷰"));
+        }
+
+        //인기순, 인터뷰
+        else if(category.equals("interview") &&sort.equals("top")){
+            return ResponseEntity.ok().body(boardService.PaginationIndex(Integer.valueOf(page),"인터뷰"));
+        }
+
+        //좋아요순, 인터뷰
+        else if(category.equals("interview") &&sort.equals("like")){
+            return ResponseEntity.ok().body(boardService.Test1(Integer.valueOf(page),"인터뷰"));
         }
         return null;
     }
@@ -69,13 +105,21 @@ public class BoardController {
         return ResponseEntity.noContent().build();
     }
 
+    //게시물 삭제 기능
     @PostMapping("/auth/delete")
     public void DeleteBoard(@RequestBody Map<String, String> requestMap, HttpServletRequest request)  {
         boardService.deleteBoard(requestMap,request);
     }
 
+    //좋아요 기능 구현
     @PostMapping("/auth/like")
     public BoardDto Like(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
-       return boardService.like(requestMap, request);
+
+            return boardService.like(requestMap, request);
+
+
     }
+
+
+
 }

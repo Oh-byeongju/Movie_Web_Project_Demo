@@ -170,7 +170,7 @@ const TopButtons = () => {
               <div className="menu_category">
                 <div className="title_category">게시판</div>
                 <div className="category">    
-                <Link to="/Board/list/all/1">게시판</Link></div>
+                <Link to="/Board/list/popular/all/1">게시판</Link></div>
               </div>
               <div className="menu_category">
                 <div className="title_category">이벤트</div>

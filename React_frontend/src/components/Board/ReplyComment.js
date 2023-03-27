@@ -3,7 +3,7 @@ import styled from "styled-components";
 import CommentText from "./CommentText";
 import { SyncOutlined,MessageOutlined} from "@ant-design/icons";
 import { useDispatch,useSelector } from "react-redux";
-import { COMMENT_DELETE_REQUEST, COMMENT_WRITE_REQUEST } from "../../reducer/Board";
+import { COMMENT_DELETE_REQUEST, COMMENT_WRITE_REQUEST ,LIKE_REQUEST} from "../../reducer/Board";
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 const ReplyComment = ({id,child,bid,member}) =>
 {
@@ -19,17 +19,13 @@ const ReplyComment = ({id,child,bid,member}) =>
     const onClickReply = ()=>{
         setIsValid(!isValid);
     }
-
     const onClickCommentReply = (id)=>{
         setValidId(id)
         setCommentValid(!commentvalid);
         console.log(validId)
-
     }
 
-
-   
-
+  
     const detailDate = (a) => {
         const milliSeconds = new Date() - a;
         const seconds = milliSeconds / 1000;
@@ -47,17 +43,29 @@ const ReplyComment = ({id,child,bid,member}) =>
         const years = days / 365;
         return `${Math.floor(years)}년 전`;
     };
+    //대댓글
     return(
         <CommentWrapper>
             <div className="comment-contentt">
-                {member === LOGIN_data.uid ? <div onClick={()=>{
+                {member === LOGIN_data.uid ? <div 
+                style={{color:'red', float:'left', paddingRight:'20px'}}
+                onClick={()=>{
+
+                    if (
+                        !window.confirm(
+                          "삭제하시겠습니까?"
+                        )
+                      ) {
+                        return;
+                      } else {
                     dispatch({
                         type:COMMENT_DELETE_REQUEST,
                         data:{
                             comment:id
                         }
                     })
-                }}>
+                }}
+            }>
                     삭제하기
                 </div>: ""}
                 
@@ -91,6 +99,27 @@ const ReplyComment = ({id,child,bid,member}) =>
                                                  </div>
                                                  <div className="comment-comment"> <p>{data.bccomment}</p>
                                                  <div className="comment-content">
+                                                 {member === LOGIN_data.uid ? <div 
+                style={{color:'red', float:'left', paddingRight:'20px'}}
+                onClick={()=>{
+
+                    if (
+                        !window.confirm(
+                          "삭제하시겠습니까?"
+                        )
+                      ) {
+                        return;
+                      } else {
+                    dispatch({
+                        type:COMMENT_DELETE_REQUEST,
+                        data:{
+                            comment:data.bcid
+                        }
+                    })
+                }}
+            }>
+                    삭제하기
+                </div>: ""}
                 
                 <div className="no"
                 onClick={()=>{
@@ -124,10 +153,10 @@ const CommentWrapper = styled.div`
     position:relative;
     top:-20px;
     left:65px;
+    color: #7b858e;
         margin-top: 8px;
         line-height: 20px;
         font-size: 14px;
-        color: #1e2022;
         word-wrap: break-word;
         word-break: break-all;
         /* overflow: auto; */
@@ -135,17 +164,21 @@ const CommentWrapper = styled.div`
 
         .no{
             float:left;
-            padding-right:50px;
+            cursor:pointer;
+            margin-right:20px;
+            
+
         }
-        .comment-content{
+        .comment_to_comment{
             margin-top: 8px;
             line-height: 20px;
-            font-size: 50px;
-            color: #1e2022;
+            font-size: 14px;
             word-wrap: break-word;
             word-break: break-all;
             overflow: auto;
             max-height: 400px;
+            cursor:pointer;
+
         
         }
         
@@ -251,6 +284,8 @@ const CommentReply = styled.div`
                 word-break: break-all;
                 /* overflow: auto; */
                 max-height: 400px;
+                cursor:pointer;
+
 
                 .comment-content{
                     margin-top: 8px;

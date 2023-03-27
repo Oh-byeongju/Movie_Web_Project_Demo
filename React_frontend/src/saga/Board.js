@@ -6,12 +6,12 @@ import { BOARD_READ_FAILURE, BOARD_READ_REQUEST, BOARD_READ_SUCCESS,
   CONTENT_READ_FAILURE, CONTENT_READ_REQUEST, CONTENT_READ_SUCCESS 
 ,BOARD_SEARCH_REQUEST, BOARD_SEARCH_SUCCESS, BOARD_SEARCH_FAILURE
 , CONTENT_DELETE_REQUEST,CONTENT_DELETE_SUCCESS,CONTENT_DELETE_FAILURE, COMMENT_WRITE_REQUEST, COMMENT_WRITE_SUCCESS, COMMENT_WRITE_FAILURE, COMMENT_READ_SUCCESS, COMMENT_READ_FAILURE, COMMENT_READ_REQUEST
-,LIKE_REQUEST,LIKE_FAILURE,LIKE_SUCCESS, COMMENT_DELETE_SUCCESS, COMMENT_DELETE_FAILURE, COMMENT_DELETE_REQUEST} from "../reducer/Board";
+,LIKE_REQUEST,LIKE_FAILURE,LIKE_SUCCESS, COMMENT_DELETE_SUCCESS, COMMENT_DELETE_FAILURE, COMMENT_DELETE_REQUEST, COMMENT_LIKE_SUCCESS, COMMENT_LIKE_FAILURE, COMMENT_LIKE_REQUEST} from "../reducer/Board";
 
 //게시판 읽기
 async function BoardReadApi(data) {
   return await http
-    .get(`/board/normal/boardall?sort=${data.sort}&page=${data.page}`)
+    .get(`/board/normal/boardall?category=${data.category}&sort=${data.sort}&page=${data.page}`)
     .then((response) => {
       return response;
     })
@@ -160,7 +160,8 @@ async function BoardWriteApi(data) {
 async function CommentReadApi(data) {
   return await http
     .get("/board/normal/comment",{params:{
-      bid:data
+      bid:data.bid,
+      type:data.type
     }})
     .then((response) => {
       return response;
@@ -245,6 +246,35 @@ function* CommentWrite(action) {
     }
   }
 
+   //게시물, 댓글 좋아요
+   async function CommentLikeApi(data) {
+    return await http
+      .post("/board/auth/likecomment",data)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        return error.response;
+      });
+  }
+  
+  function* CommentLike(action) {
+    console.log(action)
+    const result = yield call(CommentLikeApi, action.data);
+  
+    if (result.status === 200) { 
+      yield put({
+        type: COMMENT_LIKE_SUCCESS,
+        data:result.data
+      });
+    } else {
+      yield put({
+        type: COMMENT_LIKE_FAILURE,
+        data: result.status,
+      });   
+    }
+  }
+
     //게시물, 댓글 좋아요
     async function DeleteApi(data) {
       return await http
@@ -306,11 +336,14 @@ function* CommentWrite(action) {
   function* LikeSaga() {
     yield takeLatest(LIKE_REQUEST, Like);
   }
+  function* CommentLikeSaga() {
+    yield takeLatest(COMMENT_LIKE_REQUEST, CommentLike);
+  }
   function* DeleteSaga() {
     yield takeLatest(COMMENT_DELETE_REQUEST, Delete);
   }
   
   export default function* BoardSaga() {
     yield all([fork(BoardWriteSaga),fork(BoardReadSaga),fork(ContentWriteSaga),fork(BoardSearchSaga),fork(ContentDeleteSaga),
-    fork(CommentWriteSaga),fork(CommentReadSaga),fork(LikeSaga),fork(DeleteSaga)]);
+    fork(CommentWriteSaga),fork(CommentReadSaga),fork(LikeSaga),fork(DeleteSaga),fork(CommentLikeSaga)]);
   }

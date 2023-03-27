@@ -41,6 +41,14 @@ public class BoardCommentEntity {
     @Formula("(select count(comment.bcid) from board_comment comment where comment.bid = bid)")
     private Integer commentcount;
 
+    @Formula("(select count(boardlike.blid) from board_like boardlike where boardlike.bid= bid and boardlike.bcid = bcid " +
+            "and boardlike.blike = 1)")
+    private Integer commentlike;
+
+    @Formula("(select count(boardlike.blid) from board_like boardlike where boardlike.bid= bid and boardlike.bcid = bcid " +
+            "and boardlike.bunlike = 1)")
+    private Integer commentUnlike;
+
     @OneToMany(mappedBy = "comment",
             fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardLikeEntity> likes = new ArrayList<>();
@@ -48,7 +56,7 @@ public class BoardCommentEntity {
 
     @Builder
     public BoardCommentEntity(Long bcid, String bcdate,String bccomment, BoardEntity board,
-                              MemberEntity member,Long parent, Integer commentcount) {
+                              MemberEntity member,Long parent, Integer commentcount,Integer commentlike,Integer commentUnlike) {
         this.bcid=bcid;
         this.bcdate = bcdate;
         this.bccomment=bccomment;
@@ -56,5 +64,7 @@ public class BoardCommentEntity {
         this.member=member;
         this.parent=parent;
         this.commentcount=commentcount;
+        this.commentlike=commentlike;
+        this.commentUnlike=commentUnlike;
     }
 }

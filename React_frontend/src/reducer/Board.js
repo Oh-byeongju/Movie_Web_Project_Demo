@@ -39,11 +39,17 @@ export const initalState = {
     like_loadng:false,
     like_done:false,
     like_error:null,
+   
+    comment_like_loadng:false,
+    comment_like_done:false,
+    comment_like_error:null,
 
     board:[],
     content:[],
     comment:[],
     like:[],
+
+    likeslikes:[],
 
   };
 
@@ -86,6 +92,10 @@ export const initalState = {
   export const LIKE_REQUEST = "LIKE_REQUEST"
   export const LIKE_SUCCESS = "LIKE_SUCCESS"
   export const LIKE_FAILURE = "LIKE_FAILURE"
+
+  export const COMMENT_LIKE_REQUEST = "COMMENT_LIKE_REQUEST"
+  export const COMMENT_LIKE_SUCCESS = "COMMENT_LIKE_SUCCESS"
+  export const COMMENT_LIKE_FAILURE = "COMMENT_LIKE_FAILURE"
   const Board = (state = initalState, action) => {
     switch (action.type) {
       //전체 영화 검색 movie reduecer 의 값 변경이 안되서 새로 만듬
@@ -148,6 +158,8 @@ export const initalState = {
                     content_read_done:true,
                     content_read_error:null,
                     content:action.data
+
+
                 }
             case CONTENT_READ_FAILURE:
                 return{
@@ -238,8 +250,13 @@ export const initalState = {
                             comment_read_loading:false,
                             comment_read_done:true,
                             comment_read_error:null,
-                            comment:action.data
-                        }
+                            comment:action.data,
+
+                            content:state.content.map(con=>
+                            con.commentcount !== action.data.count ? {
+                                ...con,commentcount:action.data.count
+                            } : con)
+                            }
                 case COMMENT_READ_FAILURE:
                     return{
                         ...state,
@@ -274,8 +291,8 @@ export const initalState = {
                     return{
                         ...state,
                         comment_delete_loading:true,
-    comment_delete_done:false,
-    comment_delete_error:null,
+                        comment_delete_done:false,
+                        comment_delete_error:null,
 
                     }
                 case COMMENT_DELETE_SUCCESS:
@@ -314,7 +331,7 @@ export const initalState = {
                                     con.mid === action.data.mid ? {...con, blike: action.data.blike, bunlike: action.data.bunlike
                                                                     ,likes:action.data.likes, unlikes:action.data.unlikes
                                     } : con
-                                  ),                            }
+                                  ),                }
                                   
                     case LIKE_FAILURE:
                         return{
@@ -323,6 +340,37 @@ export const initalState = {
                             like_done:false,
                             like_error:action.error,
                         }  
+
+                        case COMMENT_LIKE_REQUEST:
+                            return{
+                                ...state,
+                                comment_like_loading:true,
+                                comment_like_done:false,
+                                comment_like_error:null,
+                            }
+                        case COMMENT_LIKE_SUCCESS:
+
+                       const map = state.comment.mapper.map(con => 
+                            con.bcid === action.data.bcid ? {...con, commentlike: action.data.commentlike
+                                    ,likes:action.data.likes, unlikes:action.data.unlikes
+                            } : con
+                          )     
+                        const commentd = {...state.comment, mapper:map}
+                            return{
+                                    ...state,
+                                    comment_like_loading:false,
+                                    comment_like_done:true,
+                                    comment_like_error:null,
+                                    comment: commentd   
+                                }
+                                      
+                        case COMMENT_LIKE_FAILURE:
+                            return{
+                                ...state,
+                                comment_like_loading:false,
+                                comment_like_done:false,
+                                comment_like_error:action.error,
+                            }  
       default:
         return state;
     }
