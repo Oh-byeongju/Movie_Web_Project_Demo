@@ -29,11 +29,15 @@ public class CommentMapper {
 
     //계층형 구조를 위한 컬럼
     private Long parent;
+    private Integer commentlike;
 
+    private boolean likes;
+    private boolean unlikes;
     List <CommentMapper> child = new ArrayList<>();
     @Builder
     public CommentMapper(Long bcid, String bcdate,String bccomment, Long board,
-                              String member,Long parent,List <CommentMapper> child) {
+                              String member,Long parent,List <CommentMapper> child, Integer commentlike
+    ,boolean likes, boolean unlikes) {
         this.bcid=bcid;
         this.bcdate = bcdate;
         this.bccomment=bccomment;
@@ -41,16 +45,23 @@ public class CommentMapper {
         this.member=member;
         this.parent=parent;
         this.child=child;
+        this.commentlike=commentlike;
+        this.likes=likes;
+        this.unlikes=unlikes;
 
     }
 
 
-    public CommentMapper(BoardCommentEntity com) {
+    public CommentMapper(BoardCommentEntity com, boolean likes,boolean unlikes) {
         this.bcid=com.getBcid();
         this.bcdate = com.getBcdate();
         this.bccomment=com.getBccomment();
         this.board=com.getBoard().getBid();
         this.member=com.getMember().getUid();
         this.parent=com.getParent();
+        this.commentlike=com.getCommentlike();
+        this.likes=likes;
+        this.unlikes=unlikes;
+
     }
 }

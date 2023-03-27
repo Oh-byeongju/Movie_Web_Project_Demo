@@ -28,14 +28,18 @@ public class BoardCommentDto  {
     private String uid;
     private Long bid;
     private Long parent;
-
-
     private Integer commentcount;
+    private Integer commentlike;
+    private Integer commentUnlike;
+    private boolean likes;
+    private boolean unlikes;
+
 
     @Builder
     public BoardCommentDto(Long bcid, String bcdate,String bccomment, BoardEntity board,Long bid,
                               MemberEntity member, String uid, Long parent,
-                           Integer commentcount
+                           Integer commentcount,Integer commentlike,Integer commentUnlike,boolean likes,
+                           boolean unlikes
 
 ) {
         this.bcid=bcid;
@@ -47,6 +51,10 @@ public class BoardCommentDto  {
         this.uid=uid;
         this.parent=parent;
         this.commentcount=commentcount;
+        this.commentlike=commentlike;
+        this.commentUnlike=commentUnlike;
+        this.likes=likes;
+        this.unlikes=unlikes;
     }
 
 
@@ -58,6 +66,6 @@ public class BoardCommentDto  {
         this.bid=com.getBoard().getBid();
         this.uid=com.getMember().getUid();
         this.parent=com.getParent();
-    this.commentcount=com.getCommentcount();
+        this.commentcount=com.getCommentcount();
     }
 }

@@ -41,7 +41,7 @@ function App() {
         <Route path="/comingmovie" element={<ComingMovie />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
         <Route element={<Board />}>
-          <Route path="/Board/list/:free/:page" element={<BoardList />}></Route>
+          <Route path="/Board/list/:category/:free/:page" element={<BoardList />}></Route>
           <Route path="/Board/write" element={<BoardWrite />}></Route>
           <Route path="/Board/content/:id/:title" element={<BoardCard />}></Route>
           <Route path="/Board/search/:target/:title/:page" element={<BoardSearch />} ></Route>

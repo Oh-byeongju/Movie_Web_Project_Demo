@@ -26,7 +26,6 @@ public class ImageController {
 
     //이미지 불러오는 메소드
     @GetMapping("/normal/getImage/{fileId}/{fileType}")
-
     public ResponseEntity<byte[]> getImageFile(@PathVariable("fileId") String fileId, @PathVariable("fileType") String fileType) {
         try {
             FileInputStream imageStream = new FileInputStream(UPLOAD_PATH + "/" + fileId + "." + fileType);

@@ -6,11 +6,11 @@ import { useLocation,useNavigate, Link, useParams } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
 
 const ContentHeader =()=>{
-    const {page, free} = useParams();
+    const {page,category, free} = useParams();
     const dispatch= useDispatch();
     const menu =[
         {icon:QrcodeOutlined, sort:'최신순', category:'all'},
-        {icon:FireTwoTone, sort:'인기', category:'hot'},
+        {icon:FireTwoTone, sort:'인기', category:'like'},
         {icon:StarTwoTone, sort:'TOP', category:'top'}
     ]
     const { LOGIN_data } = useSelector((state) => state.R_user_login);
@@ -33,8 +33,8 @@ const ContentHeader =()=>{
         console.log(text);
     }
     const navigate = useNavigate();
-    const onClickIcon  =(category )=>{
-        navigate(`/board/list/${category}/1`)
+    const onClickIcon  =(sort )=>{
+        navigate(`/board/list/${category}/${sort}/${page}`)
     }
 
     const onClickSearch= ()=>{
@@ -46,7 +46,10 @@ const ContentHeader =()=>{
     <ContentWrapper>
     <SubMenu>
         <SubMenuHeader>
-            <h2>관람후기</h2>
+            <h2>{category==="popular" ? "자유 게시판" :
+                category ==="news" ?"영화 뉴스 ": 
+                category ==="interview" ? "인터뷰" : ""
+            }   </h2>
             <ul className="header">
                 <li
                 onClick={()=>{
@@ -132,6 +135,9 @@ h2{
     margin-top: 16px;
     margin-right: 16px;
     list-style-type:none;
+    li{
+    cursor:pointer;
+    }
 
 }
 `
@@ -141,7 +147,7 @@ padding-bottom:30px;
 position:relative;
 left:-10px;
 ul{
-    list-style-type:none;
+    list-style-type:none; 
 }
 `
 const Li = styled.li`
@@ -159,6 +165,7 @@ display: block;
     bottom: 0;
     margin-right: 6px;
     margin-bottom: 6px;
+    cursor:pointer;
     select{
         float: left;
         width: 82px;
@@ -191,6 +198,7 @@ display: block;
     margin-top: 6px;
     margin-right: 8px;
     border:none;
+    cursor:pointer;
     }
     
 `

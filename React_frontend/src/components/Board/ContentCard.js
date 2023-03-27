@@ -11,7 +11,6 @@ const ContentCard = () => {
         const location = useLocation();
         const {id,title} = useParams();
         const { LOGIN_data } = useSelector((state) => state.R_user_login);
-           
     
         const {content,content_read_loading,content_read_done,comment
         } = useSelector((state)=>state.Board)
@@ -93,7 +92,7 @@ const ContentCard = () => {
                         <MetaListRight>
                         <div className="inq"><EyeOutlined style={{position:'relative',top:'-2px'}}/><span>{content[0].bclickindex}</span></div>
                         <div className="comment">댓글 {content[0].commentcount}</div>
-                        <div className="top">추천 1,000</div>
+                        <div className="top">추천 {content[0].blike}</div>
                         </MetaListRight>
                     </SubTitle>
                 </Header>   
@@ -105,15 +104,40 @@ const ContentCard = () => {
                         <Vote>
                             <ArticleVote>
                                 <button className={content[0].likes?"true up":"up"} onClick={()=>{
+                                     if (LOGIN_data.uid === "No_login") {
+                                        if (
+                                          !window.confirm(
+                                            "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?"
+                                          )
+                                        ) {
+                                          return;
+                                        } else {
+                                          navigate(`/UserLogin`,{state:`/board/content/${id}/${title}`})
+                                        }
+                                }
+                                else{
                                     onClickLike()
+                                }
                                 }}>
                                     <span className="like"><LikeTwoTone  style={{fontSize:"15px"}}/></span>
                                     <span className="number">{content[0].blike}</span>
                                 </button>
                                 <button className={content[0].unlikes?"true down":"down"}
                                 onClick={()=>{
+                                    if (LOGIN_data.uid === "No_login") {
+                                        if (
+                                          !window.confirm(
+                                            "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?"
+                                          )
+                                        ) {
+                                          return;
+                                        } else {
+                                          navigate(`/UserLogin`,{state:`/board/content/${id}/${title}`})
+                                        }
+                                }
+                                else{
                                     onClickUnLike()
-                                }}>
+                                }}}>
                                     <span className="like"><DislikeTwoTone   style={{fontSize:"15px"}}/></span>
                                     <span className="number">{content[0].bunlike}</span>
                                 </button>
