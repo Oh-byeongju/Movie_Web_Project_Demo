@@ -99,6 +99,7 @@ const User = () => {
   // 내일 검색 하면서 로딩창 넣고  아래쪽에 있는거  css 높이 맞춰보기
   // 검색됐을때랑 실패했을때랑 맞추면됨
   // 아마 로딩창도 antd에 있을듯 그거 써도됨
+  // true 등록해둠 이거 빼고 해뿌면된다.
   // .ant-table-expanded-row-fixed{
   //   min-height: 690px !important;
   // }
