@@ -1090,13 +1090,34 @@ END $$
 DELIMITER $$
 CREATE PROCEDURE clone_member()
 BEGIN
-   DECLARE i INT DEFAULT 1; 
-   DECLARE val VARCHAR(20);
-   WHILE (i <= 1120) DO 
-   	SET val = CONCAT("temp", i);
+   DECLARE i1 INT DEFAULT 1; 
+   DECLARE i2 INT DEFAULT 281;
+   DECLARE i3 INT DEFAULT 561;
+   DECLARE i4 INT DEFAULT 841;
+   DECLARE val1 VARCHAR(20);
+   DECLARE val2 VARCHAR(20);
+   DECLARE val3 VARCHAR(20);
+	DECLARE val4 VARCHAR(20);
+   WHILE (i1 <= 280) DO 
+   	SET val1 = CONCAT("temp", i1);
    	-- 멤버를 추가(비밀번호는 temp123456임)
-      INSERT INTO `member` VALUE(val, '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '임시사용자', 'anonymous@naver.com', '01012345678', '부산 부산진구 가야공원로 1', '303호', '1998-01-15', DATE_SUB(NOW(), INTERVAL 3 DAY), 'ROLE_USER');
-      SET i = i + 1;
+      INSERT INTO `member` VALUE(val1, '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '임시계정', 'anonymous@naver.com', '01012345678', '부산 부산진구 가야공원로 1', '303호', '1998-01-15', DATE_SUB(NOW(), INTERVAL 4 DAY), 'ROLE_USER');
+      SET i1 = i1 + 1;
+      
+      SET val2 = CONCAT("temp", i2);
+   	-- 멤버를 추가(비밀번호는 temp123456임)
+      INSERT INTO `member` VALUE(val2, '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '임시사용자', 'anonymous@google.com', '01078654321', '부산 부산진구 가야공원로 3', '102호', '1997-03-15', DATE_SUB(NOW(), INTERVAL 15 DAY), 'ROLE_USER');
+      SET i2 = i2 + 1;
+      
+      SET val3 = CONCAT("temp", i3);
+   	-- 멤버를 추가(비밀번호는 temp123456임)
+      INSERT INTO `member` VALUE(val3, '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '유령계정', 'TempUser@naver.com', '01056781234', '부산 부산진구 가야공원로 5', '1102호', '1999-11-25', DATE_SUB(NOW(), INTERVAL 8 DAY), 'ROLE_USER');
+      SET i3 = i3 + 1;
+      
+      SET val4 = CONCAT("temp", i4);
+   	-- 멤버를 추가(비밀번호는 temp123456임)
+      INSERT INTO `member` VALUE(val4, '$2a$10$5Drrozm9Wdak6PLfZf34jui2tVdhuqNCN5DE7us41hVdbHk12Dfzy', '임시사용자', 'TempUserEmail@naver.com', '01043211234', '부산 부산진구 가야공원로 7', '503호', '2001-08-15', DATE_SUB(NOW(), INTERVAL 11 DAY), 'ROLE_USER');
+      SET i4 = i4 + 1;
     END WHILE;
 END $$
 
@@ -2158,6 +2179,7 @@ WHERE MID = 4 AND uid = 'temp8';
 UPDATE movie_member
 SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
 WHERE MID = 4 AND uid = 'temp17';
+
 
 /*
 -- 예매 취소한 것들 확인하는 쿼리

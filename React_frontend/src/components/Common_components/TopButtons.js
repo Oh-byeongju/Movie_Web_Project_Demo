@@ -141,7 +141,7 @@ const TopButtons = () => {
             />
           </Button>
           <Button>
-            <Link to="/Mypage/Reserve" state={{ url: location.pathname}}>
+            <Link to="/Mypage/Reserve">
               <UserOutlined style={{ fontSize: "25px", color: "white" }} />
             </Link>
           </Button>
@@ -208,7 +208,7 @@ const NavBar = styled.div`
   height: 5.75rem;
   border-bottom: 1px solid #fff;
   background-color: black;
-  z-index: 2;
+  z-index: 999;
 
   .logo {
     position: absolute;
@@ -382,6 +382,7 @@ const NavBar = styled.div`
     z-index: 999;
     top: 93px;
     background-color: black;
+    
     &:hover {
       display: block;
     }

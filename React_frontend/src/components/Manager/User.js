@@ -1,558 +1,27 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import { Space, Table } from 'antd';
-import { Input } from "antd";
+import { Table, Input } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { MANAGER_USER_LIST_REQUEST, MANAGER_USER_DROP_REQUEST } from '../../reducer/R_manager_user';
 const { Search } = Input;
 
-const columns = [
-  {
-    title: '아이디',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <button>{text}</button>,
-  },
-  {
-    title: '이름',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: '이메일',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: '전화번호',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: '가입일',
-    dataIndex: 'address',
-    key: 'address',
-  },
-
-  {
-    title: '관리',
-    key: 'action',
-    render: () => (
-      <Space size="middle">
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '4',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '5',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '7',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '8',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '9',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '10',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '11',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '12',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-  {
-    key: '13',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '14',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '15',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '16',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '17',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '18',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '19',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '20',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '21',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '22',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '23',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '24',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '4',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '5',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '7',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '8',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '9',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '10',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '11',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '12',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-  {
-    key: '13',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '14',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '15',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '16',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '17',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '18',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '19',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '20',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '21',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '22',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '23',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '24',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '4',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '5',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '7',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '8',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '9',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '10',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '11',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '12',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-  {
-    key: '13',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '14',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '15',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '16',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '17',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '18',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '19',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '20',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '21',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-	{
-    key: '22',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '23',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '24',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
-
-
-
 const User = () => {
+  const dispatch = useDispatch();
+
+	// 모든 유저 정보
+	const { USER_LIST } = useSelector((state) => state.R_manager_user);
+	// 리덕스 로그인 상태 정보
+  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+
+  // 모든 유저 조회 useEffect
+  useEffect(()=> {
+    // 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
+    if (LOGIN_data.uid !== 'No_login') {
+      dispatch({
+        type: MANAGER_USER_LIST_REQUEST
+      });
+    }
+  }, [LOGIN_data.uid, dispatch])
 
   // 검색칸 내용 변수
   const [search, setsearch] = useState('');
@@ -563,8 +32,76 @@ const User = () => {
   // 검색 버튼 누를때 실행되는 함수
   const onSearch = useCallback(() => {
 
-    console.log("fdsfdsa");
-  }, []);
+    console.log(USER_LIST);
+  }, [USER_LIST]);
+
+  // 삭제 버튼 누를때 실행되는 함수
+  const onDelete = useCallback((uid) => {
+    if (!window.confirm("사용자를 제거하시겠습니까? (삭제된 사용자는 복구되지 않습니다)")) {
+      return;
+    };
+
+    dispatch({
+      type: MANAGER_USER_DROP_REQUEST,
+      data: {uid: uid}
+    });
+  }, [dispatch])
+
+  // antd css 설정
+  const columns = [
+    {
+      title: '계정',
+      width: 110,
+      dataIndex: 'uid',
+      fixed: 'left',
+    },
+    {
+      title: '이름',
+      width: 120,
+      dataIndex: 'uname',
+      fixed: 'left',
+    },
+    {
+      title: '이메일',
+      width: 210,
+      dataIndex: 'uemail',
+    },
+    {
+      title: '전화번호',
+      width: 120,
+      dataIndex: 'utel',
+    },
+    {
+      title: '주소',
+      width: 340,
+      dataIndex: ['uaddr', 'uaddrsecond'],
+      render: (text, row) => <div> {row["uaddr"]} {row["uaddrsecond"]} </div>,
+    },
+    {
+      title: '생년월일',
+      width: 130,
+      dataIndex: 'ubirth',
+    },
+    {
+      title: '가입일자',
+      width: 110,
+      dataIndex: 'ujoindate',
+      fixed: 'right'
+    },
+    {
+      title: '관리자',
+      fixed: 'right',
+      width: 85,
+      render: (text, row) => <TableButton onClick={()=> onDelete(row.uid)}>delete</TableButton>,
+    },
+  ];  
+
+  // 내일 검색 하면서 로딩창 넣고  아래쪽에 있는거  css 높이 맞춰보기
+  // 검색됐을때랑 실패했을때랑 맞추면됨
+  // 아마 로딩창도 antd에 있을듯 그거 써도됨
+  // .ant-table-expanded-row-fixed{
+  //   min-height: 690px !important;
+  // }
 
 	return (
 		<Container>
@@ -576,23 +113,23 @@ const User = () => {
         </div>
         <div className="search">
           <p>
-            ~~명의 회원이 검색되었습니다.
+            {USER_LIST.length}명의 회원이 검색되었습니다.
           </p>
             <ButtonList>
               <ButtonWrap>
                 <button className={"btn" + (true ? " active" : "")} >
-                  예매순
+                  이름순
                 </button>
               </ButtonWrap>
               <ButtonWrap>
                 <button className={"btn" + (false ? " active" : "")} >
-                  공감순
+                  가입순
                 </button>
               </ButtonWrap>
             </ButtonList>
             <div className="search_button">
             <SearchWarp
-              placeholder="영화명 검색"
+              placeholder="계정명 검색"
               allowClear
               onSearch={onSearch}
               value={search}
@@ -604,11 +141,14 @@ const User = () => {
             />
           </div>
         </div>
-
-
-        <Table columns={columns} dataSource={data} />
+        <TableWrap rowKey="uid"
+          // loading={true} 이거 그 검색에 있는 리덕스 상태 쓰면됨
+          columns={columns}
+          dataSource={USER_LIST}
+          scroll={{
+          x: 1350,
+        }}/>
       </InnerWraps>
-			
      </Container>
 	);
 };
@@ -619,6 +159,7 @@ const Container = styled.div`
   margin : 0 auto;
   box-sizing: border-box; 
   margin-bottom: 0;
+  min-height: 820px;
 `;
 
 const InnerWraps = styled.div`
@@ -715,6 +256,34 @@ const SearchWarp = styled(Search)`
       color: #a0a0a0;
     }
   }
+`;
+
+const TableWrap = styled(Table)`
+  margin-bottom: 30px;
+
+  .ant-table-placeholder {
+    
+    .ant-table-expanded-row-fixed{
+      min-height: 690px !important;
+    }
+
+    .css-dev-only-do-not-override-acm2ia {
+      position:absolute;
+      top: 45%;
+      left: 50%;
+      transform:translate(-50%, -45%); /* translate(x축,y축) */
+    }
+  }
+`;
+
+const TableButton = styled.button`
+  color: #1677ff;
+  text-decoration: none;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.3s;
+  border: none;
 `;
 
 export default User;

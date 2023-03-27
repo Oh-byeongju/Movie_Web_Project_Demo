@@ -9,6 +9,7 @@ import TimeTable from "./TimeTable";
 import R_mypage_movie from "./R_mypage_movie";
 import Board from "./Board";
 import R_mypage_reserve from "./R_mypage_reserve";
+import R_manager_user from "./R_manager_user";
 
 // 리듀서 파일 생성 시 여기 추가하면 됨.
 const rootReducer = combineReducers({
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   TimeTable,
   R_mypage_movie,
   Board,
-  R_mypage_reserve
+  R_mypage_reserve,
+  R_manager_user
 });
 
 export default rootReducer;

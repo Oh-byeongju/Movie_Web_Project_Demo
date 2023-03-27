@@ -71,14 +71,9 @@ const SideBar = () => {
 	useEffect(() => {
 		if (LOGIN_STATUS_error !== null && LOGIN_data.uname === '') {
 			alert("로그인 이후 사용 가능한 페이지입니다.");
-			if (location.state === null) {
-				navigate(`/`);
-			}
-			else {
-				navigate(`${location.state.url}`);
-			}
+			navigate(`/UserLogin`);
     }
-  }, [LOGIN_STATUS_error, LOGIN_data.uname, location.state, navigate, dispatch]);
+  }, [LOGIN_STATUS_error, LOGIN_data.uname, navigate, dispatch]);
 
 	return (
 		<SideBarLayout>
