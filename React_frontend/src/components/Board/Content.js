@@ -12,10 +12,10 @@ const Content= ()=>{
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    const {page, free} = useParams();
+    const {page, free,category} = useParams();
     const { board, board_read_loading,board_read_done,board_write_done ,content_delete_done} = useSelector((state) => state.Board);
     const handleChange = (event, value) => {
-        navigate(`/board/list/${free}/${value}`)
+        navigate(`/board/list/${category}/${free}/${value}`)
       };
 
       
@@ -41,12 +41,13 @@ const Content= ()=>{
             type:BOARD_READ_REQUEST,
             data:{
                 page:page-1,
+                category:category,
                 sort:free,
                 
             }
         })
         
-    },[page,free,board_write_done,content_delete_done])
+    },[page,free,board_write_done,content_delete_done,category])
 
 if(board_read_loading &&!board_read_done){
     return(
@@ -54,16 +55,25 @@ if(board_read_loading &&!board_read_done){
     )
 }
 else if(!board_read_loading && board_read_done){
+
     return(
         <ContentWrapper>
             
+          
+
+
             {board.content.map((data)=>(
+                
             <Card 
             onClick={()=>
             navigate(`/board/content/${data.bid}/${data.btitle}`,{state:location})}>
                 <Number><CaretUpOutlined twoToneColor="grey"/><div>{data.bid}</div></Number>
                 <Detail><a><div><span>{data.btitle} [{data.commentcount}]</span></div></a></Detail>
                 <Item><div className="category">{data.bcategory}</div><div className="date"><span>{detailDate(new Date(data.bdate))}</span></div><div className="name">{data.uid}</div></Item>
+                <Thumbnail dangerouslySetInnerHTML={{__html:data.thumb}}>
+                                    
+                                    </Thumbnail>
+                
             </Card>
 ))
 }
@@ -183,4 +193,20 @@ img{
     display: block;
 }
 `
+const Thumbnail = styled.div`
+display: table-cell;
+width: 70px;
+padding: 0 8px 0 4px;
+vertical-align: middle;
+
+img{
+    display: block;
+    width: 70px;
+    height: 62px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    font-family: "object-fit: cover;";
+}`
+
+
 export default Content;

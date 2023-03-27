@@ -1,13 +1,20 @@
 import React from "react"
 import styled from "styled-components"
+import { useLocation,useNavigate, Link, useParams } from "react-router-dom";
+
 const SideBar = () =>{
     const menus = [
-        { name: "자유 게시판", path: "/" },
-        { name: "영화 뉴스", path: "/" },
-        { name: "인터뷰", path: "/" },
-        { name: "동영상", path: "/"}
+        { name: "자유 게시판", path: "popular" },
+        { name: "영화 뉴스", path: "news" },
+        { name: "인터뷰", path: "interview" },
       ];
-    return(
+      const navigate = useNavigate();
+      const {page,category, free} = useParams();
+
+      const handleChange = (data)=>{
+        navigate(`/board/list/${data}/${free}/1`)
+      }
+      return(
         <SideBarWrapper>
                 <SideBarContent>
                     <SideBarMenu>
@@ -16,7 +23,9 @@ const SideBar = () =>{
                             커뮤니티
                             <ul>
                                 {menus.map((data)=>
-                                 <li><a>{data.name}</a></li>
+                                 <li onClick={()=>{
+                                    handleChange(data.path)
+                                 }}><a>{data.name}</a></li>
                                 
                                 )}
                                

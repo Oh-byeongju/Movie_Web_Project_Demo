@@ -115,7 +115,7 @@ const LoginForm = () => {
         }
         navigate(location.state.pathname, { state: location.pathname });
       } 
-      else if(location.state==='/board/write'){
+      else if(location.state!==""){
         navigate(location.state)
       }
       else {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { SyncOutlined,MessageOutlined} from "@ant-design/icons";
+import { SyncOutlined,CaretUpOutlined, CaretDownOutlined} from "@ant-design/icons";
 import { useParams,useNavigate ,useLocation,} from "react-router-dom";
 import { useDispatch ,useSelector} from "react-redux"
-import { COMMENT_READ_REQUEST, COMMENT_WRITE_REQUEST, } from "../../reducer/Board";
+import { COMMENT_LIKE_REQUEST, COMMENT_LIKE_SUCCESS, COMMENT_READ_REQUEST, COMMENT_WRITE_REQUEST,LIKE_REQUEST } from "../../reducer/Board";
 import ReplyComment from "./ReplyComment";
 const ContentComment = () =>{
 
@@ -18,15 +18,23 @@ const ContentComment = () =>{
         setText(e.target.value)
         setCount(e.target.value.length)
     }
+    const menu = [{name:'최신순',type:"new"}, {name:'인기순',type:"top"}];
+    const [type , setType] = useState("new");
 
-    const {content,comment,comment_read_loading, comment_read_done,comment_write_done} = useSelector((state)=>state.Board)
+    const onClickMenu = (data)=>{
+        setType(data)
+    }
+    const {content,comment,comment_read_loading, comment_read_done,comment_write_done,comment_delete_done} = useSelector((state)=>state.Board)
    
         useEffect(()=>{
             dispatch({
                 type:COMMENT_READ_REQUEST,
-                data:id
+                data:{
+                    bid:id,
+                    type:type
+                }
             })
-        },[comment_write_done])
+        },[comment_write_done,comment_delete_done,type])
         
         const onClickComment=()=>{
 
@@ -93,7 +101,8 @@ const ContentComment = () =>{
                         </Right>
 
                     </CommentHeader>
-                    <CommnetWrite>
+                   
+                   {LOGIN_data.uid!=="No_login"?  <CommnetWrite>
                         <div>
                             <div className="form">
                             <div className="text">
@@ -118,21 +127,92 @@ const ContentComment = () =>{
                             </div>
                         </div>
                     </CommnetWrite>
+        :""}
                     <CommentList>
                         <Sort>
                             <ul>
-                                <li><button className="click">최신순</button></li>
-                                <li><button>인기순</button></li>
+                                {menu.map((data)=>
+                                {
+                                    return(
+                                        <li
+                                       
+                                        ><Li 
+                                        category={data.type}
+                                        type={type}
+                                        onClick={()=>
+                                        {
+                                            onClickMenu(data.type)
+                                        }}>{data.name}</Li></li>
+                                    )
+                                })}
                             </ul>
                         </Sort>
                     </CommentList>
+                    
                     
                     <CommentData>
                         {comment.mapper.map((data)=>{
                             return(
                                 <li>
                                 <div className="comment">
-                                        <div className="number">{data.bcid}</div>
+                                        <div className="number">
+                                            <div 
+                                            className={data.likes? "colorup ": "up"}
+                                            onClick={()=>{
+                                                if (LOGIN_data.uid === "No_login") {
+                                                    if (
+                                                      !window.confirm(
+                                                        "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?"
+                                                      )
+                                                    ) {
+                                                      return;
+                                                    } else {
+                                                      navigate(`/UserLogin`,{state:`/board/content/${id}/${title}`})
+                                                    }
+                                            }
+                                            else{
+                                                dispatch({
+                                                    type:COMMENT_LIKE_REQUEST,
+                                                    data:{
+                                                        like:1,
+                                                        unlike:0,
+                                                        comment:data.bcid,
+                                                        uid:LOGIN_data.uid,
+                                                        board:data.board
+                                                    }
+                                                })}
+                                            }}
+                                            ><CaretUpOutlined/></div>
+                                            <div className="num">{data.commentlike}</div>
+                                            <div 
+                                            className={data.unlikes? "colordown": "down"}
+
+                                             onClick={()=>{
+                                                if (LOGIN_data.uid === "No_login") {
+                                                    if (
+                                                      !window.confirm(
+                                                        "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?"
+                                                      )
+                                                    ) {
+                                                      return;
+                                                    } else {
+                                                      navigate(`/UserLogin`,{state:`/board/content/${id}/${title}`})
+                                                    }
+                                            }
+                                            else{
+                                               
+                                                dispatch({
+                                                    type:COMMENT_LIKE_REQUEST,
+                                                    data:{
+                                                        like:0,
+                                                        unlike:1,
+                                                        comment:data.bcid,
+                                                        uid:LOGIN_data.uid,
+                                                        board:data.board
+                                                    }
+                                                })}
+                                            }}><CaretDownOutlined /></div>
+                                            </div>
                                         <div className="name">
                                             <span className="id">{data.member}</span>
                                             <span className="time">{detailDate(new Date(data.bcdate))}</span>
@@ -142,7 +222,7 @@ const ContentComment = () =>{
                                       
                                     </div>
                                 </div>
-                                <ReplyComment id={data.bcid} child={data.child} bid={content[0].bid} member = {data.member}/> 
+                                <ReplyComment id={data.bcid} child={data.child} bid={data.board} member = {data.member}/> 
 
                             </li>
                             
@@ -219,24 +299,7 @@ const Sort = styled.div`
         
         li{
             float: left;
-            
-            button{
-                padding: 15px 16px 11px;
-                line-height: 19px;
-                font-size: 16px;
-                color: #1e2022;
-                border-bottom: 3px solid transparent;
-                background: none;
-                font-family: inherit;
-                border-right:0;  
-                border-left:0;                
-                border-top:0;                
-
-            }
-            .click{
-                color: #16ae81;
-    border-color: #46cfa7;
-            }
+          
         }
     }
     `
@@ -260,6 +323,12 @@ li{
             left: 27px;
             top: 30px;
             text-align: center;
+            .colorup{
+                color:green;
+            }
+            .colordown{
+                color:green;
+            }
         }
         .name{
             line-height: 17px;
@@ -374,5 +443,25 @@ const CommnetWrite = styled.div`
             }
         }
     }
+`
+const Li = styled.button`
+padding: 15px 16px 11px;
+line-height: 19px;
+font-size: 16px;
+color: #1e2022;
+border-bottom: 3px solid transparent;
+background: none;
+font-family: inherit;
+border-right:0;  
+border-left:0;                
+border-top:0; 
+
+color: ${(props) =>
+    props.category === props.type ? "#16ae81" : ""
+};
+
+border-color: ${(props) =>
+    props.category === props.type ? "#46cfa7" : ""
+};
 `
 export default ContentComment;

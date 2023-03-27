@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,23 +38,43 @@ public class BoardService {
 
     //게시글을 전체 불러오는 메소드 ,최신순
     @Transactional
-    public Page<BoardDto> PaginationBid(Integer index){
+    public Page<BoardDto> PaginationBid(Integer index,String category){
 
         PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
-        Page<BoardEntity> pages = boardRepository.PaginationBid(page);
-        return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
-                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
-                .blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+
+        //자유 게시판
+        Page<BoardEntity> pages = boardRepository.PaginationBid(page,category);
+
+           return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
+                    .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                   .thumb(data.getThumb()).blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).
+                    build());
+
+
     }
     //게시글 전체 불러오는 메소드, top순
     @Transactional
-    public Page<BoardDto> PaginationIndex(Integer index){
+    public Page<BoardDto> PaginationIndex(Integer index, String category){
 
         PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
-        Page<BoardEntity> pages = boardRepository.PaginationIndex(page);
+        Page<BoardEntity> pages = boardRepository.PaginationIndex(page, category);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
-                .blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+                .thumb(data.getThumb()).blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+    }
+    //게시글 전체 불러오는 메소드, 좋아요순
+
+    @Transactional
+    public Page<BoardDto> Test1(Integer index ,String category){
+        PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
+
+        Page<BoardEntity> datas = boardRepository.LikesTop(page,category);
+
+        return datas.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                .thumb(data.getThumb()).blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+
+
     }
 
 
@@ -98,17 +120,17 @@ public class BoardService {
         Page<BoardEntity> pages = boardRepository.SearchTitle(page, title);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
-                .blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+                .thumb(data.getThumb()).blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
 
-    //페이지내 제목으로 검색하는 메소드
+    //페이지내 이름으로 검색하는 메소드
     @Transactional
     public Page<BoardDto> SearchUid(Integer index, String uid){
         PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
         Page<BoardEntity> pages = boardRepository.SearchUid(page, uid);
         return pages.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
-                .blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+                .thumb(data.getThumb()).blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
     }
 
     //게시판에 글을 작성하는 메소드
@@ -129,13 +151,29 @@ public class BoardService {
         MemberEntity member = MemberEntity.builder().uid(User_id).build();
         BoardEntity Board;
 
+        Pattern pattern  =  Pattern.compile("<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>");
+            Matcher match = pattern.matcher(detail);
+
+            String imgTag;
+
+            if (match.find()) { // 이미지 태그를 찾았다면,,
+                imgTag = match.group(0); // 글 내용 중에 첫번째 이미지 태그를 뽑아옴.
+            } else {
+                imgTag = null;
+            }
+            System.out.println("imgTag : " + imgTag);
+
+
+
             Board = BoardEntity.builder()
                     .btitle(title)
                     .bdate(day)
                     .bdetail(detail)
                     .bcategory(category)
                     .bclickindex(0)
-                    .member(member).build();
+                    .member(member)
+                    .thumb(imgTag)
+                    .build();
         boardRepository.save(Board);
     }
 
@@ -210,4 +248,6 @@ public class BoardService {
 
      boardRepository.deleteById(Long.valueOf(bid));
     }
+
+
 }
