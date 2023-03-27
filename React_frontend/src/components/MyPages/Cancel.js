@@ -59,7 +59,7 @@ const Cancel = ({ reserve }) => {
 							<dt>
 								관람좌석
 							</dt>
-							{reserve.seats && reserve.seats.map((seat) => (<dd key={seat} style={{width: "33px"}}> {seat} </dd>))}
+							{reserve.seats && reserve.seats.map((seat) => (<dd key={seat}> {seat} </dd>))}
 						</dl>
 						<dl>
 							<dt>
@@ -181,20 +181,21 @@ const ContentDetailMiddleInfo = styled.div`
 			margin-top: 2px;
 		}
 
+		dd:not(:first-of-type) {
+ 		 margin-left: 6px;
+		}
+
 		dd {
-			font-weight: 400;
-			color: #99a0a6;
+			display: flex;
+			font-weight: 550;
+			color: rgb(51, 51, 51);
 			line-height: 1.36;
-			display: -webkit-box;
-			overflow: hidden;
-			word-break: break-all;
-			white-space: normal;
 			-webkit-line-clamp: 1;
 			-webkit-box-orient: vertical;
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
-			letter-spacing: 1px;
+			letter-spacing: 0.9px;
 		}
 	}
 `;

@@ -22,13 +22,16 @@ const CancelDetail = () => {
 
 	// 예매취소내역 상세 조회 useEffect
 	useEffect(()=> {
-		dispatch({
-			type: USER_RESERVE_CANCEL_DETAIL_REQUEST,
-			data: {
-				pathname: location.pathname.substring(7)
-			}
-		});
-	}, [location.pathname, dispatch])
+		// 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
+		if (LOGIN_data.uid !== 'No_login') {
+			dispatch({
+				type: USER_RESERVE_CANCEL_DETAIL_REQUEST,
+				data: {
+					pathname: location.pathname.substring(7)
+				}
+			});
+		}
+	}, [LOGIN_data.uid, location.pathname, dispatch])
 
 	// 예매 상태를 다시 확인하는 useEffect
 	useEffect(()=> {
@@ -119,7 +122,7 @@ const CancelDetail = () => {
 							<dt>
 								관람좌석
 							</dt>
-							{RESERVE_CANCEL_DETAIL.seats && RESERVE_CANCEL_DETAIL.seats.map((seat) => (<dd key={seat} style={{width: "33px"}}> {seat} </dd>))}
+							{RESERVE_CANCEL_DETAIL.seats && RESERVE_CANCEL_DETAIL.seats.map((seat) => (<dd key={seat}> {seat} </dd>))}
 						</dl>
 						<dl>
 							<dt>
@@ -379,20 +382,21 @@ const ContentDetailMiddleInfo = styled.div`
 			margin-top: 2px;
 		}
 
+		dd:not(:first-of-type) {
+ 		 margin-left: 6px;
+		}
+
 		dd {
+			display: flex;
 			font-weight: 550;
 			color: rgb(51, 51, 51);
 			line-height: 1.36;
-			display: -webkit-box;
-			overflow: hidden;
-			word-break: break-all;
-			white-space: normal;
 			-webkit-line-clamp: 1;
 			-webkit-box-orient: vertical;
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
-			letter-spacing: 1px;
+			letter-spacing: 0.9px;
 		}
 	}
 `;

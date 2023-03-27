@@ -1,6 +1,8 @@
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.entity.*;
+import com.movie.Spring_backend.error.exception.EntityNotFoundException;
+import com.movie.Spring_backend.error.exception.ErrorCode;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.payment.Payment;
 import com.movie.Spring_backend.repository.MemberRepository;
@@ -35,7 +37,6 @@ public class PaymentService {
     private final JwtValidCheck jwtValidCheck;
     private final ReservationRepository reservationRepository;
     private final RedisSeatRepository redisSeatRepository;
-
 
     @Transactional
     public ResponseEntity<?> getPayment(Map<String, String> requestMap,
@@ -84,7 +85,7 @@ public class PaymentService {
                             .rticket(Integer.valueOf(ticket))
                             .rtoken(token)
                             .rpayid(impUid)
-                            .rpaytype("카드 결제")
+                            .rpaytype("카드결제")
                             .rstate(true)
                             .movieInfo(info)
                             .member(member)
@@ -117,20 +118,51 @@ public class PaymentService {
                     return new ResponseEntity<>(data.getRid(), HttpStatus.OK);
                 }
                 else {
-                    payment.payMentCancle(token, impUid, amount, "결제 에러");
+                    payment.paymentCancel(token, impUid, amount, "결제 에러");
                     return new ResponseEntity<String>("결제 오류!", HttpStatus.BAD_REQUEST);
                 }
             }
             else{
 
-                payment.payMentCancle(token, impUid, amount, "결제 에러");
+                payment.paymentCancel(token, impUid, amount, "결제 에러");
                 return new ResponseEntity<String>("결제 오류!", HttpStatus.BAD_REQUEST);
             }
         }catch(Exception e){
-            payment.payMentCancle(token, impUid, amount, "결제 에러");
+            payment.paymentCancel(token, impUid, amount, "결제 에러");
             return new ResponseEntity<String>("결제 오류!", HttpStatus.BAD_REQUEST);
         }
     }
+
+    // 예매 취소 요청시 실행되는 메소드
+    // 디비에 paytoken 필요없는데 나중에 빼기 디비에서
+    @Transactional
+    public void CancelPayment(Long rid, HttpServletRequest request) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // 예매 번호를 이용하여 예매기록 검색
+        ReservationEntity Reservation = reservationRepository.findById(rid).orElseThrow(
+                () -> new EntityNotFoundException("예매 기록이 존재하지 않습니다.", ErrorCode.RESERVE_IS_NONE));
+
+        // 임의의 데이터가 아닌경우에만 결제취소 진행
+        if (!Reservation.getRpayid().equals("temporary_value")) {
+            // 이거 메소드 단에서 throw 던지는거 바꿔야할듯 (get, set 바꾸면서)
+            // 아래꺼 로그로 바꾸고 나중에 뺄꺼면 빼기
+            // 결제 취소 실행
+            try {
+                String token = payment.getToken();
+                payment.paymentCancel(token, Reservation.getRpayid() , Reservation.getRprice(), "예매 취소");
+            } catch (IOException e) {
+                System.out.println("결제 정보가 올바르지 않습니다.");
+                throw new RuntimeException("결제 정보가 올바르지 않습니다.");
+            }
+        }
+
+        // 사용자가 취소한 예매정보를 변경
+        reservationRepository.UserReservationCancel(Reservation.getRid());
     }
+}
+
+
 
 
