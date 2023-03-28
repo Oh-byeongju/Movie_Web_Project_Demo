@@ -40,7 +40,7 @@ public class BoardController {
 
         //좋아요순, 전체
         else if(category.equals("popular") &&sort.equals("like")){
-            return ResponseEntity.ok().body(boardService.Test1(Integer.valueOf(page),"자유 게시판"));
+            return ResponseEntity.ok().body(boardService.PaginationTop(Integer.valueOf(page),"자유 게시판"));
         }
 
         //전체순, 뉴스
@@ -55,7 +55,7 @@ public class BoardController {
 
         //좋아요순, 인기
         else if(category.equals("news") &&sort.equals("like")){
-            return ResponseEntity.ok().body(boardService.Test1(Integer.valueOf(page),"영화 뉴스"));
+            return ResponseEntity.ok().body(boardService.PaginationTop(Integer.valueOf(page),"영화 뉴스"));
         }
         //전체순, 인터뷰
         else if(category.equals("interview") && sort.equals("all")){
@@ -69,7 +69,10 @@ public class BoardController {
 
         //좋아요순, 인터뷰
         else if(category.equals("interview") &&sort.equals("like")){
-            return ResponseEntity.ok().body(boardService.Test1(Integer.valueOf(page),"인터뷰"));
+            return ResponseEntity.ok().body(boardService.PaginationTop(Integer.valueOf(page),"인터뷰"));
+        }
+        else if(category.equals("myinfo")){
+            return ResponseEntity.ok().body(boardService.selectInfo(Integer.valueOf(page)));
         }
         return null;
     }

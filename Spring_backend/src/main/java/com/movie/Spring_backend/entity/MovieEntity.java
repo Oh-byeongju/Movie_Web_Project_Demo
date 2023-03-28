@@ -72,7 +72,7 @@ public class MovieEntity {
         this.mimagepath = mimagepath;
         this.cntMovieLike = cntMovieLike;
         this.avgScore = avgScore;
-        this.cntReserve= cntReserve;
+        this.cntReserve = cntReserve;
     }
 }
 

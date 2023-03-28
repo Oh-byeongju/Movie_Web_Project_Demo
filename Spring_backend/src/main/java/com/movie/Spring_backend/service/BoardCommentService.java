@@ -224,9 +224,16 @@ public class BoardCommentService {
                 .build();
         if(boardLike==null && like.equals("1")) {
             System.out.println("추가");
+            if(boardUnLike!=null){
+                boardLikeRepository.CommentDeleted(Long.valueOf(board),User_id,0,1, Long.valueOf(comment));
+            }
             boardLikeRepository.save(boardLikeEntity);
         }
         else if(boardUnLike==null && unlike.equals("1")){
+            if(boardLike!=null){
+                boardLikeRepository.CommentDeleted(Long.valueOf(board),User_id,1,0, Long.valueOf(comment));
+
+            }
             boardLikeRepository.save(boardLikeEntity);
         }
         else if (boardUnLike!=null && unlike.equals("1")){

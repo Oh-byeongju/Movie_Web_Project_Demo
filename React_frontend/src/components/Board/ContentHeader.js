@@ -45,11 +45,15 @@ const ContentHeader =()=>{
     return (
     <ContentWrapper>
     <SubMenu>
-        <SubMenuHeader>
+        <SubMenuHeader
+        category={category}>
             <h2>{category==="popular" ? "자유 게시판" :
                 category ==="news" ?"영화 뉴스 ": 
-                category ==="interview" ? "인터뷰" : ""
+                category ==="interview" ? "인터뷰" : 
+                category ==="myinfo" ? "내 게시글" : ""
             }   </h2>
+            
+            { category ==="myinfo" ?"" :
             <ul className="header">
                 <li
                 onClick={()=>{
@@ -69,6 +73,9 @@ const ContentHeader =()=>{
                 }
                 }}><EditTwoTone style={{fontSize:'25px' }}/></li>
                 </ul>
+}
+{ category ==="myinfo" ?"" :
+
             <SubMenuFooter>
             <ul>
                 {menu.map((data)=>{
@@ -98,7 +105,7 @@ const ContentHeader =()=>{
                         <button onClick={onClickSearch}><SearchOutlined style={{fontSize:'20px'}}/></button>
                     </form>
                 </Search>
-            </SubMenuFooter>
+            </SubMenuFooter>}
         </SubMenuHeader>
     </SubMenu>
 </ContentWrapper>
@@ -117,6 +124,8 @@ const SubMenuHeader = styled.div`
 padding-top: 18px;
 box-shadow: 0 1px 3px 0 rgba(0,0,0,.15);
 
+height:${(props)=>
+props.category==="myinfo"? "30px" : ""}}
 padding-bottom: 17px;
 h2{
     padding-left: 16px;
