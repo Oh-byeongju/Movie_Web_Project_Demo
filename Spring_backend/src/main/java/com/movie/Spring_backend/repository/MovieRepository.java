@@ -104,11 +104,14 @@ public interface MovieRepository extends JpaRepository<MovieEntity,Long> {
             "ORDER BY mm.umliketime DESC")
     List<MovieEntity> findMemberLikeMovieDESC(@Param("member") MemberEntity member);
 
+    // 모든 영화 조회 (개봉일순으로 내림차순)
+    List<MovieEntity> findAllByOrderByMdateAsc();
+
     // 극장 클릭 시 영화 id list를 활용하여 검색
     @Query(value ="SELECT m ,'able' as able FROM MovieEntity as m where m.mid IN (:mid) ORDER BY m.cntMovieLike DESC")
     List<MovieEntity> findByMidInAble(@Param("mid") List<Long> mid);
 
     @Query(value ="SELECT m ,'disable' as disable From MovieEntity as m where m.mid NOT IN (:mid) ORDER BY m.cntMovieLike DESC" )
-    List<MovieEntity> findByMidInDisAble(@Param("mid") List<Long> mid); 
+    List<MovieEntity> findByMidInDisAble(@Param("mid") List<Long> mid);
 
 }

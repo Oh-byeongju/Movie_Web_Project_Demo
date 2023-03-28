@@ -30,7 +30,6 @@ public class MovieService {
     private final MovieMemberRepository movieMemberRepository;
     private final MovieActorRepository movieActorRepository;
     private final ActorRepository actorRepository;
-    private final MovieInfoRepository movieInfoRepository;
     private final CommentInfoRepository commentInfoRepository;
     private final MovieMapper movieMapper;
     private final MovieCommentMapper movieCommentMapper;

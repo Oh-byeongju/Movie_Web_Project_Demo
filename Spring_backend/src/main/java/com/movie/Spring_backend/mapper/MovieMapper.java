@@ -175,6 +175,41 @@ public class MovieMapper {
         }
     }
 
+    // 예매기록조회에 필요한 영화 내용들을 mapping 해주는 메소드
+    public MovieDto toDtoManagerReserve(MovieEntity entity, boolean Screen) {
+
+        // 예외처리
+        if (entity == null) {
+            return null;
+        }
+
+        // 영화 예매가 불가능 하면 (상영예정)을 이름에 붙여서 보냄
+        if (Screen) {
+            return MovieDto.builder()
+                    .mid(entity.getMid())
+                    .mdir(entity.getMdir())
+                    .mtitle(entity.getMtitle())
+                    .mgenre(entity.getMgenre())
+                    .mtime(entity.getMtime())
+                    .mdate(entity.getMdate())
+                    .mrating(entity.getMrating())
+                    .mimagepath(entity.getMimagepath())
+                    .mscore(entity.getAvgScore()).build();
+        }
+        else {
+            return MovieDto.builder()
+                    .mid(entity.getMid())
+                    .mdir(entity.getMdir())
+                    .mtitle(entity.getMtitle()+"(상영예정)")
+                    .mgenre(entity.getMgenre())
+                    .mtime(entity.getMtime())
+                    .mdate(entity.getMdate())
+                    .mrating(entity.getMrating())
+                    .mimagepath(entity.getMimagepath())
+                    .mscore(entity.getAvgScore()).build();
+        }
+    }
+
     public MovieDto toAble(MovieEntity entity) {
 
         // 예외처리
