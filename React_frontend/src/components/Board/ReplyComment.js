@@ -1,15 +1,15 @@
 import React ,{useEffect, useState}from "react";
 import styled from "styled-components";
 import CommentText from "./CommentText";
-import { SyncOutlined,MessageOutlined} from "@ant-design/icons";
+import { MessageOutlined} from "@ant-design/icons";
 import { useDispatch,useSelector } from "react-redux";
-import { COMMENT_DELETE_REQUEST, COMMENT_WRITE_REQUEST ,LIKE_REQUEST} from "../../reducer/Board";
+import { COMMENT_DELETE_REQUEST} from "../../reducer/Board";
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-const ReplyComment = ({id,child,bid,member}) =>
+import { useNavigate,useParams } from "react-router-dom";
+const ReplyComment = ({idd,child,bid,member}) =>
 {
-    const [text, setText] =useState("");
-    const [count, setCount]  = useState(0)
-
+    const navigate = useNavigate();
+    const {title,id } = useParams();
     const [isValid, setIsValid] = useState(false);
     const [commentvalid, setCommentValid]= useState(false);
     const dispatch = useDispatch();
@@ -61,7 +61,7 @@ const ReplyComment = ({id,child,bid,member}) =>
                     dispatch({
                         type:COMMENT_DELETE_REQUEST,
                         data:{
-                            comment:id
+                            comment:idd
                         }
                     })
                 }}
@@ -76,12 +76,25 @@ const ReplyComment = ({id,child,bid,member}) =>
                                                 신고
                                             </div>
                                             <div className="comment_to_comment" 
-                                            onClick={()=>{onClickReply()}}>
+                                            onClick={()=>{
+                                                if (LOGIN_data.uid === "No_login") {
+                                                    if (
+                                                      !window.confirm(
+                                                        "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?"
+                                                      )
+                                                    ) {
+                                                      return;
+                                                    } else {
+                                                      navigate(`/UserLogin`,{state:`/board/content/${id}/${title}`})
+                                                    }
+                                            }
+                                            else{
+                                                onClickReply()}}}>
                                             <MessageOutlined 
                                             style={{paddingRight:"5px"}}/>답글쓰기
                                             </div>
                                         </div>
-                                        {isValid? <CommentText id={id} />
+                                        {isValid? <CommentText id={idd} idtext={""}/>
       
                           
                        :""} 
@@ -97,7 +110,9 @@ const ReplyComment = ({id,child,bid,member}) =>
                                                      <span className="id">{data.member}</span>
                                                      <span className="time">{detailDate(new Date(data.bcdate))}</span>
                                                  </div>
-                                                 <div className="comment-comment"> <p>{data.bccomment}</p>
+                                                 <div className="comment-comment">
+                                                    <div dangerouslySetInnerHTML={{__html:data.bccomment}}
+></div>
                                                  <div className="comment-content">
                                                  {member === LOGIN_data.uid ? <div 
                 style={{color:'red', float:'left', paddingRight:'20px'}}
@@ -128,8 +143,22 @@ const ReplyComment = ({id,child,bid,member}) =>
                     신고
                 </div>
                 <div className="comment_to_comment" 
-                onClick={()=>{onClickCommentReply(data.bcid)
-                console.log(id)
+                onClick={()=>{
+                    if (LOGIN_data.uid === "No_login") {
+                        if (
+                          !window.confirm(
+                            "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?"
+                          )
+                        ) {
+                          return;
+                        } else {
+                          navigate(`/UserLogin`,{state:`/board/content/${id}/${title}`})
+                        }
+                }
+                else{
+                    onClickCommentReply(data.bcid)
+                console.log(idd)
+                }
                 }}>
                 <MessageOutlined 
                 style={{paddingRight:"5px"}}/>답글쓰기
@@ -137,7 +166,7 @@ const ReplyComment = ({id,child,bid,member}) =>
                  </div>        
                         </div>
                                 </div>
-                                         { validId===data.bcid&&commentvalid? <CommentText id={id}/>
+                                         { validId===data.bcid&&commentvalid? <CommentText id={idd} idtext={data.member}/>
  :""} 
                                 </CommentReply>
                             )
@@ -254,7 +283,13 @@ const CommentReply = styled.div`
     position: relative;
     padding: 12px 12px 12px 64px;
     border-top: 1px solid #ebeef1;
-
+    strong{
+        display: inline-block;
+    font-weight: 400;
+    padding: 0 2px;
+    background: #d1f2e8;
+    color: #16ae81;
+    }
     
    .icon{
     position: absolute;
@@ -285,8 +320,7 @@ const CommentReply = styled.div`
                 /* overflow: auto; */
                 max-height: 400px;
                 cursor:pointer;
-
-
+            
                 .comment-content{
                     margin-top: 8px;
                     line-height: 20px;
@@ -296,6 +330,7 @@ const CommentReply = styled.div`
                     word-break: break-all;
                     overflow: auto;
                     max-height: 400px;
+                    
                 
                 }
                 
