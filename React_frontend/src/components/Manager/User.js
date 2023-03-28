@@ -10,6 +10,8 @@ const User = () => {
 
 	// 모든 유저 정보
 	const { USER_LIST } = useSelector((state) => state.R_manager_user);
+  const { USER_LIST_loading } = useSelector((state) => state.R_manager_user);
+
 	// 리덕스 로그인 상태 정보
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
 
@@ -18,7 +20,11 @@ const User = () => {
     // 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
     if (LOGIN_data.uid !== 'No_login') {
       dispatch({
-        type: MANAGER_USER_LIST_REQUEST
+        type: MANAGER_USER_LIST_REQUEST,
+        data: {
+          search: '', 
+          sort : 'name'
+        }
       });
     }
   }, [LOGIN_data.uid, dispatch])
@@ -29,11 +35,67 @@ const User = () => {
     setsearch(e.target.value);
   };
 
+  // 정렬 버튼 css 변수
+	const [namebutton, setnamebutton] = useState(true);
+	const [joinbutton, setjoinbutton] = useState(false);
+
+   // 이름순 버튼을 누를 때 함수
+	const clickname = useCallback(()=> {
+
+    // 백엔드를 다시 요청
+    dispatch({
+      type: MANAGER_USER_LIST_REQUEST,
+      data: {
+        search: search.trim(),
+        sort : 'name'
+      }
+    });
+    
+		setnamebutton(true);
+		setjoinbutton(false);
+
+	}, [search, dispatch])
+
+	// 가입순 버튼을 누를 때 함수
+	const clickjoin = useCallback(()=> {
+
+    // 백엔드를 다시 요청
+    dispatch({
+      type: MANAGER_USER_LIST_REQUEST,
+      data: {
+        search: search.trim(),
+        sort : 'join'
+      }
+    });
+		
+		setnamebutton(false);
+		setjoinbutton(true);
+	}, [search, dispatch])
+
   // 검색 버튼 누를때 실행되는 함수
   const onSearch = useCallback(() => {
 
-    console.log(USER_LIST);
-  }, [USER_LIST]);
+    // 이름순 버튼이 활성화 되있을경우
+    if (namebutton) {
+      dispatch({
+        type: MANAGER_USER_LIST_REQUEST,
+        data: {
+          search: search.trim(),
+          sort : 'name'
+        }
+      });
+    }
+    // 가입순 버튼이 활성화 되있을경우
+    else {
+      dispatch({
+        type: MANAGER_USER_LIST_REQUEST,
+        data: {
+          search: search.trim(),
+          sort : 'join'
+        }
+      });
+    }
+  }, [namebutton, search, dispatch]);
 
   // 삭제 버튼 누를때 실행되는 함수
   const onDelete = useCallback((uid) => {
@@ -86,7 +148,7 @@ const User = () => {
       title: '가입일자',
       width: 110,
       dataIndex: 'ujoindate',
-      fixed: 'right'
+      fixed: 'right',
     },
     {
       title: '관리자',
@@ -95,14 +157,6 @@ const User = () => {
       render: (text, row) => <TableButton onClick={()=> onDelete(row.uid)}>delete</TableButton>,
     },
   ];  
-
-  // 내일 검색 하면서 로딩창 넣고  아래쪽에 있는거  css 높이 맞춰보기
-  // 검색됐을때랑 실패했을때랑 맞추면됨
-  // 아마 로딩창도 antd에 있을듯 그거 써도됨
-  // true 등록해둠 이거 빼고 해뿌면된다.
-  // .ant-table-expanded-row-fixed{
-  //   min-height: 690px !important;
-  // }
 
 	return (
 		<Container>
@@ -118,12 +172,12 @@ const User = () => {
           </p>
             <ButtonList>
               <ButtonWrap>
-                <button className={"btn" + (true ? " active" : "")} >
+                <button className={"btn" + (namebutton ? " active" : "")} onClick={clickname}>
                   이름순
                 </button>
               </ButtonWrap>
               <ButtonWrap>
-                <button className={"btn" + (false ? " active" : "")} >
+                <button className={"btn" + (joinbutton ? " active" : "")} onClick={clickjoin}>
                   가입순
                 </button>
               </ButtonWrap>
@@ -143,7 +197,7 @@ const User = () => {
           </div>
         </div>
         <TableWrap rowKey="uid"
-          // loading={true} 이거 그 검색에 있는 리덕스 상태 쓰면됨
+          loading={USER_LIST_loading}
           columns={columns}
           dataSource={USER_LIST}
           scroll={{
@@ -263,11 +317,9 @@ const TableWrap = styled(Table)`
   margin-bottom: 30px;
 
   .ant-table-placeholder {
-    
     .ant-table-expanded-row-fixed{
-      min-height: 690px !important;
+      min-height: 600px !important;
     }
-
     .css-dev-only-do-not-override-acm2ia {
       position:absolute;
       top: 45%;

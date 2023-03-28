@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.util.List;
 
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, String> {
@@ -19,4 +20,10 @@ public interface MemberRepository extends JpaRepository<MemberEntity, String> {
     void MemberInfoUpdate(@Param("uid") String uid, @Param("upw") String upw, @Param("uname") String uname,
                             @Param ("uemail") String uemail, @Param("utel") String utel, @Param("uaddr") String uaddr,
                             @Param("uaddrsecond") String uaddrsecond, @Param("ubirth") Date ubirth);
+
+    // 사용자 이름순으로 정렬(오름차순)
+    List<MemberEntity> findByUidContainingOrderByUnameAsc(String uid);
+
+    // 사용자 가입순으로 정렬(오름차순)
+    List<MemberEntity> findByUidContainingOrderByUjoindateAsc(String uid);
 }
