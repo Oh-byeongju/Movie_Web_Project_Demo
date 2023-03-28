@@ -9,6 +9,9 @@ import {
 	USER_RESERVE_DETAIL_REQUEST,
 	USER_RESERVE_DETAIL_SUCCESS,
 	USER_RESERVE_DETAIL_FAILURE,
+  USER_RESERVE_DROP_REQUEST,
+	USER_RESERVE_DROP_SUCCESS,
+	USER_RESERVE_DROP_FAILURE,
   USER_RESERVE_CANCEL_SEARCH_REQUEST,
 	USER_RESERVE_CANCEL_SEARCH_SUCCESS,
 	USER_RESERVE_CANCEL_SEARCH_FAILURE,
@@ -72,6 +75,35 @@ function* ReserveDetailSearch(action) {
 async function ReserveDetailSearchCall(data) {
   return await http
     .get(`/MyPageMovie/auth${data.pathname}`)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
+// 사용자의 예매취소 함수
+function* ReserveDrop(action) {
+  const result = yield call(ReserveDropCall, action.data);
+  if (result.status === 204) {
+    yield put({
+      type: USER_RESERVE_DROP_SUCCESS,
+      data: result.status
+    });
+  } 
+  else {
+    yield put({
+      type: USER_RESERVE_DROP_FAILURE,
+      data: result.status
+    });
+  }
+}
+
+// 사용자의 예매취소 백엔드 호출
+async function ReserveDropCall(data) {
+  return await http
+    .post(`/payment/auth/cancel${data.pathname}`)
     .then((response) => {
       return response;
     })
@@ -200,6 +232,10 @@ function* USER_RESERVE_DETAIL() {
   yield takeLatest(USER_RESERVE_DETAIL_REQUEST, ReserveDetailSearch);
 }
 
+function* USER_RESERVE_DROP() {
+  yield takeLatest(USER_RESERVE_DROP_REQUEST, ReserveDrop);
+}
+
 function* USER_RESERVE_CANCEL_SEARCH() {
   yield takeLatest(USER_RESERVE_CANCEL_SEARCH_REQUEST, ReserveCancelSearch);
 }
@@ -219,6 +255,7 @@ function* USER_RESERVE_FINISH_DETAIL() {
 export default function* S_mypage_reserve() {
   yield all([fork(USER_RESERVE_SEARCH), 
              fork(USER_RESERVE_DETAIL), 
+             fork(USER_RESERVE_DROP),
              fork(USER_RESERVE_CANCEL_SEARCH), 
              fork(USER_RESERVE_CANCEL_DETAIL),
              fork(USER_RESERVE_FINISH_SEARCH),

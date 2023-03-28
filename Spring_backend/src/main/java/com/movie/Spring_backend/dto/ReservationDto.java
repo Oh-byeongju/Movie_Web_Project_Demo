@@ -28,13 +28,11 @@ public class ReservationDto {
     private Integer rprice;
     private Boolean rstate;
     private String rcanceldate;
-    private String rpayid;
-    private String rtoken;
 
     @Builder
     public ReservationDto(Long rid, String rdate, Long mid, String mtitle, String mimagepath, String tarea, String tname,
                           String cname, String mistarttime, String miendtime, String mrating, List<String> seats, String rpeople,
-                          Integer rticket, String rpaytype, Integer rprice, Boolean rstate, String rcanceldate, String rpayid, String rtoken) {
+                          Integer rticket, String rpaytype, Integer rprice, Boolean rstate, String rcanceldate) {
         this.rid = rid;
         this.rdate = rdate;
         this.mid = mid;
@@ -53,7 +51,5 @@ public class ReservationDto {
         this.rprice = rprice;
         this.rstate = rstate;
         this.rcanceldate = rcanceldate;
-        this.rpayid = rpayid;
-        this.rtoken = rtoken;
     }
 }

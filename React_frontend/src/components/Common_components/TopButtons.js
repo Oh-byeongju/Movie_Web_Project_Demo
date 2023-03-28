@@ -11,7 +11,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, Link ,useNavigate} from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   USER_LOGOUT_REQUEST,
 } from "../../reducer/R_user_login";
@@ -20,7 +20,7 @@ const TopButtons = () => {
   // 로그인 상태확인용 리덕스 상태
   const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
-  const navigate = useNavigate();
+
   // 현재 페이지의 정보와 페이지 이동을 위해 선언 
   const location = useLocation();
 
@@ -39,6 +39,8 @@ const TopButtons = () => {
     // 이거 아직 이상함 우째 할지 고민해보기
     window.location.assign('/');
   }, [dispatch]);
+
+
 
   // const [search, setSearch] = useState("");
 
@@ -114,12 +116,12 @@ const TopButtons = () => {
           <ul className="MenuListRight">
             <li className="topMenuLiRight">
               <strong>
-                이벤트
+                관리자1
               </strong>
             </li>
             <li className="topMenuLiRight">
               <strong>
-                혜택
+                관리자2
               </strong>
             </li>
             <li className="topMenuLiRight">
@@ -164,7 +166,7 @@ const TopButtons = () => {
                   <Link to="/reserve">빠른예매</Link>
                 </div>
                 <div className="category">
-                <Link to="/TimeTable">상영시간표</Link>
+                  <Link to="/TimeTable">상영시간표</Link>
                 </div>
               </div>
               <div className="menu_category">
@@ -172,15 +174,18 @@ const TopButtons = () => {
                 <div className="category">    
                 <Link to="/Board/list/popular/all/1">게시판</Link></div>
               </div>
+
               <div className="menu_category">
-                <div className="title_category">이벤트</div>
-                <div className="category">진행 이벤트</div>
-                <div className="category">종료된 이벤트</div>
+                <div className="title_category">관리자1</div>
+                <div className="category">영화관리</div>
+                <div className="category">상영영화관리</div>
               </div>
               <div className="menu_category">
-                <div className="title_category">혜택</div>
-                <div className="category">맴버쉽</div>
-                <div className="category">제휴할인</div>
+                <div className="title_category">관리자2</div>
+                <div className="category">
+                  <Link to="/Manager/User">회원관리</Link>
+                </div>
+                <div className="category">예매기록조회</div>
               </div>
               <div className="menu_category">
                 <div className="title_category">개발진</div>
@@ -204,7 +209,7 @@ const NavBar = styled.div`
   height: 5.75rem;
   border-bottom: 1px solid #fff;
   background-color: black;
-  z-index: 2;
+  z-index: 999;
 
   .logo {
     position: absolute;
@@ -378,6 +383,7 @@ const NavBar = styled.div`
     z-index: 999;
     top: 93px;
     background-color: black;
+    
     &:hover {
       display: block;
     }

@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, put, call,delay } from "redux-saga/effects";
+import { all, takeLatest, fork, put, call } from "redux-saga/effects";
 import {
   T_ALLMOVIE_FAILURE,
   T_ALLMOVIE_SUCCESS,
@@ -535,7 +535,7 @@ function* selectSchedule(action) {
 
 async function paymentApi(data) {
   return await http
-    .post("/v2/auth/payment", data)
+    .post("/payment/auth/payment", data)
     .then((response) => {
       console.log(response);
       return response;

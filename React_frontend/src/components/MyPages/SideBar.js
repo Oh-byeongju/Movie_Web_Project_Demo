@@ -1,3 +1,4 @@
+/*eslint-disable*/
 /*
  23-03-10 마이페이지 css 구축(오병주)
 */
@@ -5,12 +6,22 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { RightOutlined } from "@ant-design/icons";
-import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from "react-router-dom";
 
 // 마이페이지 왼쪽 사이드바
 const SideBar = () => {
-	const location = useLocation();
 
+	// 로그인 상태확인용 리덕스 상태
+	const dispatch = useDispatch();
+	const { LOGIN_data } = useSelector((state) => state.R_user_login);
+	const { LOGIN_STATUS_error } = useSelector((state) => state.R_user_login);
+
+	// 페이지 이동을 위해 선언
+	const location = useLocation();
+	const navigate = useNavigate();	
+
+	// 사이드바의 css 수정을 위한 state
 	const [state, setState] = useState({
     Reserve: false,
     Cancel: false,
@@ -22,19 +33,47 @@ const SideBar = () => {
 
 	const { Reserve, Cancel, Finish, Like, Comment, Modify } = state;
 
-	// 이걸로 처음 렌더링때만 true 해주고 나머지는 버튼 누를 때 마다 바꿔줘야할듯
-	// 내일은 예매 취소하는거 메소드 만들고 어찌저찌하면 마이페이지 끝
-	// 내 정보 조회를 만들지 말지 고민
-	// 이거 생각좀 해봐야할듯
+	// url에 따라 state 수정
 	useEffect(()=> {
-		console.log(location.pathname.substring(8))
+		BarChange(location.pathname.substring(8, 15));
+	}, [location.pathname])
 
-		setState({
-      ...state, 
-      [location.pathname.substring(8)]: true
-    });
+	const BarChange = (name) => {
+		setState ({
+			...state,
+			Reserve: false,
+			Cancel: false,
+			Finish: false,
+			Like: false,
+			Comment: false,
+			Modify: false,
+			[name]: true
+		});
 
-	}, [])
+		// 취소내역 상세 예외
+		if (name === 'CancelD') {
+			setState ({
+				...state,
+				Cancel: true
+			});
+		}
+
+		// 지난관람내역 상세 예외
+		if (name === 'FinishD') {
+			setState ({
+				...state,
+				Finish: true
+			});
+		}
+	}
+
+	// 로그인이 안되어있으면 마이페이지에 진입못하게 하는 useEffect
+	useEffect(() => {
+		if (LOGIN_STATUS_error !== null && LOGIN_data.uname === '') {
+			alert("로그인 이후 사용 가능한 페이지입니다.");
+			navigate(`/UserLogin`);
+    }
+  }, [LOGIN_STATUS_error, LOGIN_data.uname, navigate, dispatch]);
 
 	return (
 		<SideBarLayout>
@@ -43,7 +82,7 @@ const SideBar = () => {
 			</SideTitle>
 			<SideUL>
 				<li>
-					<Link to="/Mypage/Reserve">
+					<Link to="/Mypage/Reserve"className={"btn" + (Reserve ? " active" : "")}>
 						예매내역
 						<span>
 							<RightOutlined/>
@@ -51,7 +90,7 @@ const SideBar = () => {
 					</Link>
 				</li>
 				<li>
-					<Link to="/Mypage/Cancel">
+					<Link to="/Mypage/Cancel" className={"btn" + (Cancel ? " active" : "")}>
 						예매 취소내역
 						<span>
 							<RightOutlined/>
@@ -59,7 +98,7 @@ const SideBar = () => {
 					</Link>
 				</li>
 				<li>
-					<Link to="/Mypage/Finish">
+					<Link to="/Mypage/Finish" className={"btn" + (Finish ? " active" : "")}>
 						지난 관람내역
 						<span>
 							<RightOutlined/>
@@ -67,7 +106,7 @@ const SideBar = () => {
 					</Link>
 				</li>
 				<li>
-					<Link to="/Mypage/Like">
+					<Link to="/Mypage/Like" className={"btn" + (Like ? " active" : "")}>
 						찜한 영화
 						<span>
 							<RightOutlined/>
@@ -75,7 +114,7 @@ const SideBar = () => {
 					</Link>
 				</li>
 				<li>
-					<Link to="/Mypage/Comment">
+					<Link to="/Mypage/Comment" className={"btn" + (Comment ? " active" : "")}>
 						관람평 내역
 						<span>
 							<RightOutlined/>
@@ -83,7 +122,7 @@ const SideBar = () => {
 					</Link>
 				</li>
 				<li>
-					<Link to="/Mypage/Modify">
+					<Link to="/Mypage/Modify" className={"btn" + (Modify ? " active" : "")}>
 						회원정보 수정
 						<span>
 							<RightOutlined/>
@@ -125,7 +164,7 @@ const SideUL = styled.ul`
 		padding: 0;
 		display: list-item;
 
-		a {
+		.btn {
 			cursor: pointer;
 			text-decoration: none;
 			padding: 14px 20px 16px;
@@ -140,6 +179,18 @@ const SideUL = styled.ul`
 			color: rgb(102, 102, 102);
 			box-sizing: border-box;
 			border-bottom: 1px solid rgb(221, 223, 225);
+
+			&.active {
+				background-color: rgb(246, 246, 246);
+				color: black;
+				font-weight: 550;
+			}
+
+			:hover {
+				background-color: rgb(246, 246, 246);
+				color: black;
+				font-weight: 550;
+			}
 		}
 	}
 `;

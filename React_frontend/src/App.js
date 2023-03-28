@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Route, Routes } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
@@ -26,6 +25,7 @@ import BoardList from "./pages/BoardList";
 import BoardWrite from "./pages/BoardWrite";
 import BoardCard from "./pages/BoardCard";
 import BoardSearch from "./pages/BoardSearch";
+
 // TopButton과 Footer가 있어야 하는 페이지이면 Layout 사이에 넣고 아니면 따로 빼기
 function App() {
   return (
@@ -58,6 +58,7 @@ function App() {
         </Route>
         <Route path="/StoryChange" element={<StoryChange />}></Route>
         <Route path="/Timetable" element={<TimeTable />}></Route>
+        <Route path="/Manager/User" element={<ManagerUser />}></Route>
       </Route>
     </Routes>
   );
