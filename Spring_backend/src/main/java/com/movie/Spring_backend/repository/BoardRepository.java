@@ -43,7 +43,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     public Page<BoardEntity> LikesTop(Pageable pageable,@Param("category") String category);
 
     //페이지 네이션 위한 메소드 , 인기순
-    //게시판 검색 ,title
     @Query("select board from BoardEntity as board where btitle LIKE %:title% order by bid desc")
     public Page<BoardEntity> SearchTitle(Pageable pageable, @Param("title") String title);
 

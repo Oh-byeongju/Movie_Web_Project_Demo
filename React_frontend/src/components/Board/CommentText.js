@@ -2,14 +2,16 @@ import React ,{useState}from "react";
 import styled from "styled-components";
 import { COMMENT_WRITE_REQUEST } from "../../reducer/Board";
 import { useDispatch ,useSelector} from "react-redux";
-const CommentText =({id}) =>{
+const CommentText =({id,idtext}) =>{
     const {content} = useSelector((state)=>state.Board)
     const [text, setText] =useState("");
     const [count, setCount]  = useState(0)
     const onChangeText =(e)=>{
         setText(e.target.value)
         setCount(e.target.value.length)
+        console.log(idtext);
     }    
+    
     const [isValid, setIsValid] = useState(false);
     const [commentvalid, setCommentValid]= useState(false);
     const dispatch = useDispatch();
@@ -17,7 +19,7 @@ const CommentText =({id}) =>{
     const onClickReply = ()=>{
         setIsValid(!isValid);
     }
-
+let ptag;
     
 
     const onClickComment=()=>{
@@ -33,7 +35,7 @@ const CommentText =({id}) =>{
             dispatch({
                 type:COMMENT_WRITE_REQUEST,
                 data:{
-                    text:text,
+                    text:`<p>${text}</p>`,
                     parent:"",
                     bid:content[0].bid,
                 }
@@ -44,24 +46,25 @@ const CommentText =({id}) =>{
 
 
     else if( id!==""){
+        if(idtext!==""){
+             ptag= `<p><strong>${idtext}</strong>   ${text}</p>`;
+        }
+        else if(idtext===""){
+            ptag= `<p>${text}</p>`
+        }
     dispatch({
         type:COMMENT_WRITE_REQUEST,
         data:{
-            text:text,
+            text:ptag,
             parent:id,
             bid: content[0].bid,
         }
     })
     alert('작성완료되었습니다2323')
     setText("")
-
-
-}
-        
+}       
     }
 }
-
-
     return(
 <CommentTextt>
       
@@ -69,7 +72,7 @@ const CommentText =({id}) =>{
       <div>
       <div className="form">
       <div className="text">
-          <textarea placeholder="작성하세요"
+          <textarea
           maxLength={200}
           value={text}
           onChange={onChangeText}

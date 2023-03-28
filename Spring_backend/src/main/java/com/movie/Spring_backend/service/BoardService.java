@@ -65,7 +65,7 @@ public class BoardService {
     //게시글 전체 불러오는 메소드, 좋아요순
 
     @Transactional
-    public Page<BoardDto> Test1(Integer index ,String category){
+    public Page<BoardDto> PaginationTop(Integer index ,String category){
         PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
 
         Page<BoardEntity> datas = boardRepository.LikesTop(page,category);
@@ -74,9 +74,20 @@ public class BoardService {
                 .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
                 .thumb(data.getThumb()).blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
 
-
     }
 
+    @Transactional
+    public Page<BoardDto> selectInfo(Integer index){
+        PageRequest page = PageRequest.of(index,20);   //(페이지 순서, 단일 페이지 크기)
+        String User_id = SecurityUtil.getCurrentMemberId();
+
+        Page<BoardEntity> datas = boardRepository.SearchUid(page,User_id);
+
+        return datas.map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                .thumb(data.getThumb()).blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build());
+
+    }
 
     //게시글 상세 페이지를 불러오느 메소드
     //게시글 조회수 +1
@@ -203,16 +214,33 @@ public class BoardService {
                 .bunlike(Integer.valueOf(unlike))
                 .member(member)
                 .build();
+        //좋아요 추가
         if(boardLike==null && like.equals("1")) {
             System.out.println("추가");
+            //싫어요가 된 상태
+            if(boardUnLike != null){
+                boardLikeRepository.Deleted(Long.valueOf(board),User_id,0,1);
+            }
             boardLikeRepository.save(boardLikeEntity);
         }
+
+        // 좋아요 상태에서 싫어요 하면 좋아요 삭제후 싫어요 추가를 해야함
+
+        //안좋아요 추가
         else if(boardUnLike==null && unlike.equals("1")){
+            if(boardLike!=null){
+                //좋아요가 된상태
+                boardLikeRepository.Deleted(Long.valueOf(board),User_id,1,0);
+            }
             boardLikeRepository.save(boardLikeEntity);
         }
+
+        //안좋아요 제거
         else if (boardUnLike!=null && unlike.equals("1")){
             boardLikeRepository.Deleted(Long.valueOf(board),User_id,0,1);
         }
+
+        //좋아요 제거
         else{
             System.out.println("삭제");
             boardLikeRepository.Deleted(Long.valueOf(board),User_id,1,0);

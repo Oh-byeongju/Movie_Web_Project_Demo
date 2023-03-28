@@ -26,7 +26,7 @@ const Writing = () =>{
     setTitle(e.target.value);
     console.log(title)
   };
-	const [Board_Content, setContent] = useState('');
+	const [Board_Content, setContent] = useState("");
 
 	const onEditorChange = (value) => {
 		setContent(value);
@@ -141,7 +141,7 @@ const Writing = () =>{
               }
             })
             alert('작성완료되었습니다.')
-            navigate('/board/list/all/1')
+            navigate('/board/list/popular/all/1')
     }
     
           }}
