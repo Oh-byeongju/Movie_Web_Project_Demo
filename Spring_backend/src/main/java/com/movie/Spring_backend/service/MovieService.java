@@ -265,28 +265,8 @@ public class MovieService {
         }
     }
 
-    //mid로 영화 able disable 나누고 중복제거까지해서 전송
-    @Transactional
-    public List<MovieDto> findByMovieableDisable(List<Long> mid){
 
-        List<MovieEntity> able = movieRepository.findByMidInAble(mid);
-        //여기서 able 에 전체 in 데이터가 넘어감
-        //able dto mapping
-        List<MovieDto> AbleDto= able.stream().map((movie->movieMapper.toAble(movie))).collect(Collectors.toList());
-        //NOTIN cid 구하고
-        List<MovieEntity> disable = movieRepository.findByMidInDisAble(mid);
-        //disable dto mapping
-        List<MovieDto> DisAbleDto= disable.stream().map((movie->movieMapper.toDisable(movie))).collect(Collectors.toList());
 
-        for(MovieDto mm : DisAbleDto){
-            AbleDto.add(mm);
-        }
-        //객체로 중복제거하면 끝
-        List <MovieDto> dedupication = DeduplicationUtil.deduplication(AbleDto,MovieDto::getMid);
-
-        //mid 검색을 통해 무비 조회
-        return dedupication;
-    }
 
     // 영화 세부내용 관람평 메소드(최신순)
     @Transactional

@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,11 @@ public class TheaterController {
     @GetMapping("/normal/area")
     public List<TheaterDto> getData() {
         return theaterService.getInfo();
+    }
+
+    @PostMapping("/normal/inserttheater")
+    public void insert(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
+        theaterService.insert(requestMap,request);
     }
 }
 

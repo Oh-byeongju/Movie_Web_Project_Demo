@@ -27,6 +27,7 @@ import BoardCard from "./pages/BoardCard";
 import BoardSearch from "./pages/BoardSearch";
 import ManagerUser from "./pages/ManagerUser";
 import ManagerReserve from "./pages/ManagerReserve";
+import Manager from "./pages/Manager";
 
 // TopButton과 Footer가 있어야 하는 페이지이면 Layout 사이에 넣고 아니면 따로 빼기
 function App() {
@@ -62,6 +63,7 @@ function App() {
         <Route path="/Timetable" element={<TimeTable />}></Route>
         <Route path="/Manager/User" element={<ManagerUser />}></Route>
         <Route path="/Manager/Reserve" element={<ManagerReserve />}></Route>
+        <Route path="/Manager/Cinema" element={<Manager />}></Route>
       </Route>
     </Routes>
   );

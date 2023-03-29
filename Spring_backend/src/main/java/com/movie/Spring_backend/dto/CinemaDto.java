@@ -22,14 +22,18 @@ public class CinemaDto { //값을 가공 후 전달.
         private String ctype;
         private Integer cseat;
         private TheaterEntity theater;
+        private String tname;
 
+        private Long tid;
         @Builder
-        public CinemaDto(Long cid, String cname, String ctype, Integer cseat ,TheaterEntity theater) {
+        public CinemaDto(Long cid, String cname, String ctype, Integer cseat ,TheaterEntity theater,String tname,Long tid) {
             this.cid = cid;
             this.cname = cname;
             this.ctype = ctype;
             this.cseat = cseat;
             this.theater=theater;
+            this.tname=tname;
+            this.tid=tid;
         }
 
 

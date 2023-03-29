@@ -43,95 +43,77 @@ public class MovieInfoController {
     }
 
 
-    //영화 클릭 시 영화id로 극장 검색
+    //영화로 극장 검색
+    //수정완
     @GetMapping("/normal/movieselect")
     public List<TheaterDto> findByMovie(@RequestParam Long id) {
-        //영화 아이디로 영화 정보 추출 CID를 리스트로 추출
-        Set<Long> datas = movieInfoService.findByMovie(id);
-        List<Long> tid = cinemaService.findByCidIn(datas);
-
-        return theaterService.findByTidIn(tid);
+        return theaterService.findByTidIn(id);
     }
 
     //영화로 날짜 검색
+    //수정완
     @GetMapping("/normal/movieselectday")
     public List<MovieInfoDto> findByMovieToDay(@RequestParam Long id) {
-        //영화 아이디로 영화 정보 추출 CID를 리스트로 추출
-        //여기선 taea를 추출해야함
-        //여기서 같이 영화에 대한 상영정보 전달하
         return movieInfoService.findByMovieToDay(id);
-        //영화 검색 시 해당하는 상영 날짜 추출
     }
 
     //극장으로 날짜 검색
+    //수정완
     @GetMapping("/normal/theaterday")
     public List<MovieInfoDto> getTheaterDay(@RequestParam Long id) {
-        //Long cid에 담겨있음
-
-        //메핑된 cid로 movieinfo 검색
         return movieInfoService.findByCinemaCidIn(id);
-
-    }
-    //영화+극장 날짜검색
-    @GetMapping("/normal/movietheaterday")
-    public List<MovieInfoDto> findByMovieTheaterDay(@RequestParam Long tid, @RequestParam Long mid) {
-
-        List<Long> mappedcid = cinemaService.findByTheaterday(tid);
-
-        return movieInfoService.findByMovieTheaterDay(mappedcid, mid);
     }
 
-    
-    //날짜로 극장이랑 영화를 추출해야한다.
+    //극장으로 영화검색
+    //수정완
+    @GetMapping("/normal/theatertomovie")
+    public List<MovieDto> getData(@RequestParam Long id) {
+        return movieInfoService.findByTheater(id);
+    }
+
+    //날짜로 영화 검색
+    //수정완
     @GetMapping("/normal/daytomovie")
     public List<MovieDto> findByDayToMovie(@RequestParam Date miday) {
-        //우선 날짜로 mid를 추출해야함
-        List<Long> mid = movieInfoService.findByMidayToMid(miday);
-        //mid로 movieentity검색하면서
-        //그리고 able disable을 시키자
-        return movieService.findByMovieableDisable(mid);
+        return movieInfoService.findByMovieableDisable(miday);
     }
 
-
-    //날짜로 극장
-
-
+    //날짜로 극장 검색
+    //수정완
     @GetMapping("/normal/daytotheater")
     public List<TheaterDto> findByDayToTheater(@RequestParam Date miday) {
-        //우선 날짜로 mid를 추출해야함
-        Set<Long> cid = movieInfoService.findByMidayToCid(miday);
-        //cid로 tid를 추출해야한다.
-        List<Long> tid = cinemaService.findByCidIn(cid);
-
-        return theaterService.findByTidIn(tid);
+        return theaterService.findDayToTheater(miday);
     }
 
+    //영화와 극장으로 날짜검색
+    //수정완
+    @GetMapping("/normal/movietheaterday")
+    public List<MovieInfoDto> findByMovieTheaterDay(@RequestParam Long tid, @RequestParam Long mid) {
+        return movieInfoService.findByMovieTheaterDay(tid, mid);
+    }
 
-    //날짜 + 극장 = 영화
+    //날짜와 극장으로 영화를 검색
+    //수정완
     @GetMapping("/normal/daytheatertomovie")
     public List<MovieDto> findByDayTheaterToMovie(@RequestParam Date miday, @RequestParam Long tid) {
-        //우선 tid로 cid를 추출해야함
-        List<Long> cid = cinemaService.findByTheaterday(tid);
-        //이제 cid와 miday로 mid를 추출해야함
-        //여기서 miday와 cid로 mid 추출
-        List<Long> mid = movieInfoService.findByMidayAndCinemaCidIn(miday,cid);
-        return movieService.findByMovieableDisable(mid);
+        return movieInfoService.DayTheaterToMovie(miday,tid);
     }
 
-    //날짜 + 영화 = 극장
+
+    //날짜와 영화로 극장을 검색하는 메소드
+    //수정완
     @GetMapping("/normal/daymovietotheater")
     public List<TheaterDto> findByDayMovieToTheater(@RequestParam Date miday, @RequestParam Long mid){
-        //miday랑 mid로 cid 추출
-        List<Long> cid=movieInfoService.findByMidayAndMovieMid(miday,mid);
-        List<Long> tid= cinemaService.SelectTid(cid);
-
-        return theaterService.findByTidIn(tid);
+        return theaterService.findDayMovieToTheater(miday,mid);
     }
 
+
+    //스케쥴을 불러오는 메소드
+    //영화, 극장, 날짜를 다 선택한 경우
     @GetMapping("normal/Schedule")
     public List<MovieInfoDto> findBySchedule(@RequestParam Date miday , @RequestParam Long mid, @RequestParam Long tid){
         List<Long> cid = cinemaService.findByTheaterday(tid);
-        return movieInfoService.findBySchedule(miday,mid,cid);
+        return movieInfoService.findBySchedule(miday,mid,tid);
     }
 
 

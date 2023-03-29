@@ -9,11 +9,16 @@ import com.movie.Spring_backend.repository.CinemaRepository;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
 import com.movie.Spring_backend.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,86 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CinemaService {
     private final CinemaRepository cinemaRepository;
-    private final MovieInfoRepository movieInfoRepository;
-    private final MovieService movieService;
-    private final MovieRepository movieRepository;
-    private final MovieMapper movieMapper;
 
-    //cid로 tid추출하기
-
-        @Transactional
-    public List<Long> findByCidIn(Set<Long> id) {
-            List<CinemaEntity> datasIn = cinemaRepository.findByCidIn(id);
-            List<CinemaDto> cinemaIn = datasIn.stream().map(data -> CinemaDto.builder()
-                    .cid(data.getCid())
-                    .cname(data.getCname())
-                    .cseat(data.getCseat())
-                    .ctype(data.getCtype())
-                    .theater(data.getTheater())
-                    .build()).collect(Collectors.toList());
-            List<Long> tid = new ArrayList<>();
-            for (CinemaDto tt : cinemaIn) {
-                tid.add(tt.getTheater().getTid());
-            }
-            return tid;
-        }
-
-    @Transactional
-    public List<Long> SelectTid(List<Long> id) {
-        List<CinemaEntity> datasIn = cinemaRepository.findByCidIn(id);
-        List<CinemaDto> cinemaIn = datasIn.stream().map(data -> CinemaDto.builder()
-                .cid(data.getCid())
-                .cname(data.getCname())
-                .cseat(data.getCseat())
-                .ctype(data.getCtype())
-                .theater(data.getTheater())
-                .build()).collect(Collectors.toList());
-        List<Long> tid = new ArrayList<>();
-        for (CinemaDto tt : cinemaIn) {
-            tid.add(tt.getTheater().getTid());
-        }
-        return tid;
-    }
-
-
-
-    //극장으로 cid뽑아서 movie able disable 검색
-    @Transactional
-    public List<MovieDto> findByTheater(Long id) {
-        //외래키 검색을 위해 엔티티 매핑
-
-
-        //cid in을 이용해서 movieinfo에서 mid 추출
-        List <MovieInfoEntity> IndataM = movieInfoRepository.findByCinemaCidIn(id);
-        List<Long> InmappedMid = new ArrayList<>();
-        for(MovieInfoEntity mm :IndataM) {
-            InmappedMid.add(mm.getMovie().getMid());
-        }
-
-        List<MovieEntity> able = movieRepository.findByMidInAble(InmappedMid);
-        //여기서 able 에 전체 in 데이터가 넘어감
-        List<MovieEntity> DisAble = movieRepository.findByMidInDisAble(InmappedMid);
-
-        //able dto mapping
-        List<MovieDto> AbleDto= able.stream().map((movie->movieMapper.toAble(movie))).collect(Collectors.toList());
-        //NOTIN cid 구하고
-
-        //disable dto mapping
-
-        List<MovieDto> DisAbleDto= DisAble.stream().map((movie->movieMapper.toDisable(movie))).collect(Collectors.toList());
-
-        for(MovieDto mm : DisAbleDto){
-            AbleDto.add(mm);
-        }
-        List <MovieDto> dedupication = DeduplicationUtil.deduplication(AbleDto,MovieDto::getMid);
-
-        //mid 검색을 통해 무비 조회
-         return dedupication;
-    }
-
-
-
-    //tid로 cid추출함
     @Transactional
     public List<Long> findByTheaterday(Long id) {
         //외래키 검색을 위해 엔티티 매핑
@@ -116,8 +42,49 @@ public class CinemaService {
         return mappedcid;
     }
 
+    @Transactional
+    public List<CinemaDto> findall(){
 
+        List<CinemaEntity> datas = cinemaRepository.findAll();
 
-
+        return datas.stream().map((data)->
+                CinemaDto.builder().cid(data.getCid()).cname(data.getCname()).ctype(data.getCtype()).cseat(data.getCseat())
+                        .tname(data.getTheater().getTname()).tid(data.getTheater().getTid()).build()).collect(Collectors.toList());
     }
+
+     @Transactional
+     public void insert(@RequestBody Map<String, String> requestMap, HttpServletRequest request) {
+
+            String tid = requestMap.get("tid").trim();
+            String cid = requestMap.get("cid").trim();
+            String name = requestMap.get("cname").trim();
+            String type = requestMap.get("ctype").trim();
+            String seat = requestMap.get("cseat").trim();
+            String state = requestMap.get("state").trim();
+
+            TheaterEntity theater = TheaterEntity.builder().tid(Long.valueOf(tid)).build();
+
+            if(state.equals("insert")){
+            if(!tid.equals("") && !name.equals("") && !type.equals("") && !seat.equals("")) {
+                CinemaEntity cinema;
+                cinema = CinemaEntity.builder()
+                        .cname(name)
+                        .ctype(type)
+                        .cseat(Integer.valueOf(seat))
+                        .theater(theater)
+                        .build();
+                cinemaRepository.save(cinema);
+            }
+            else {
+                System.out.println("입력 불가합니다.");
+        }}
+            else if(state.equals("update")){
+                cinemaRepository.updateCinema(name,type, Integer.valueOf(seat), Long.valueOf(cid));
+            }
+            else if(state.equals("delete")){
+                cinemaRepository.deleteById(Long.valueOf(cid));
+            }
+    }
+
+}
 
