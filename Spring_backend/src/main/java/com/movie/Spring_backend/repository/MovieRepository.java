@@ -7,11 +7,13 @@ package com.movie.Spring_backend.repository;
 
 import com.movie.Spring_backend.entity.MemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import com.movie.Spring_backend.entity.MovieEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -107,11 +109,43 @@ public interface MovieRepository extends JpaRepository<MovieEntity,Long> {
     // 모든 영화 조회 (개봉일순으로 내림차순)
     List<MovieEntity> findAllByOrderByMdateAsc();
 
-    // 극장 클릭 시 영화 id list를 활용하여 검색
-    @Query(value ="SELECT m ,'able' as able FROM MovieEntity as m where m.mid IN (:mid) ORDER BY m.cntMovieLike DESC")
-    List<MovieEntity> findByMidInAble(@Param("mid") List<Long> mid);
+    //날짜로 영화를 검색하는 메소드 able
 
-    @Query(value ="SELECT m ,'disable' as disable From MovieEntity as m where m.mid NOT IN (:mid) ORDER BY m.cntMovieLike DESC" )
-    List<MovieEntity> findByMidInDisAble(@Param("mid") List<Long> mid);
+    @Query("select movie from MovieEntity as movie where movie.mid in " +
+            "(select info.movie.mid from MovieInfoEntity as info where info.mistarttime >= function('addtime', now(), '0:30:00') " +
+            "and info.miday = :miday)")
+    List<MovieEntity> findByMidInAble(@Param("miday") Date miday);
 
+    //날짜로 영화검색하는 메소드 disable
+    @Query("select movie from MovieEntity as movie where movie.mid not in " +
+            "(select info.movie.mid from MovieInfoEntity as info where info.mistarttime >= function('addtime', now(), '0:30:00') " +
+            "and info.miday = :miday )")
+    List<MovieEntity> findByMidInDisAble(@Param("miday") Date miday);
+
+    //날짜와 극장으로 영화를 검색하는 메소드 ,able
+    @Query("select movie from MovieEntity as movie where movie.mid in " +
+            "(select info.movie.mid from MovieInfoEntity as info where info.mistarttime >= function('addtime', now(), '0:30:00') " +
+            "and info.miday = :miday and " +
+            "info.cinema.cid in (select cinema.cid from CinemaEntity as cinema where cinema.theater.tid = :tid ))")
+    List<MovieEntity> findByDayTheaterToMovie(@Param("miday") Date miday, @Param("tid") Long tid);
+
+
+    //날짜와 극장으로 영화를 검색하는 메소드 ,disable
+    @Query("select movie from MovieEntity as movie where movie.mid not in " +
+            "(select info.movie.mid from MovieInfoEntity as info where info.mistarttime >= function('addtime', now(), '0:30:00') " +
+            "and info.miday = :miday and " +
+            "info.cinema.cid in (select cinema.cid from CinemaEntity as cinema where cinema.theater.tid = :tid ))")
+    List<MovieEntity> findByDayTheaterToMovieDis(@Param("miday") Date miday, @Param("tid") Long tid);
+
+    //극장으로 영화를 검색하는 메소드 ,able
+    @Query("select movie from MovieEntity as movie where movie.mid in " +
+            "(select info.movie.mid from MovieInfoEntity as info where info.mistarttime >= function('addtime', now(), '0:30:00')" +
+            " and info.cinema.cid in (select cinema.cid from CinemaEntity as cinema where cinema.theater.tid = :tid))")
+    List<MovieEntity> MovieToTheater(@Param("tid") Long tid);
+
+    //극장으로 영화를 검색하는 메소드, disable
+    @Query("select movie from MovieEntity as movie where movie.mid not in " +
+            "(select info.movie.mid from MovieInfoEntity as info where info.mistarttime >= function('addtime', now(), '0:30:00')" +
+            " and info.cinema.cid in (select cinema.cid from CinemaEntity as cinema where cinema.theater.tid = :tid))")
+    List<MovieEntity> MovieToTheaterDis(@Param("tid") Long tid);
 }

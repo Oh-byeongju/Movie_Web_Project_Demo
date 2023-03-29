@@ -4,200 +4,217 @@ import { Table, Input ,Button,Modal,Form,Select,Layout,} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ALLTHEATER_REQUEST } from '../../reducer/ticket';
 import { PlusOutlined } from '@ant-design/icons';
-import { THEATER_INSERT_LOADING } from '../../reducer/R_manager_theater';
-const { Search } = Input;
+import { CINEMA_INSERT_LOADING, CINEMA_LOADING } from '../../reducer/R_manager_theater';
+//2023-03-29 상영곤 CRUD (강경목)
 
-//2023-03-30 극장 CRUD (강경목)
-const Cinema=()=>{
+
+//
+const Theater = () =>{
     const dispatch= useDispatch();
-  
-    const {allTheater} = useSelector((state)=>state.ticket)
-    const {theater_insert_done} = useSelector((state)=>state.R_manager_theater)
+    
+    const {cinema,cinema_insert_done} = useSelector((state)=>state.R_manager_theater)
+ 
     useEffect(()=>{
-      dispatch({
-          type:ALLTHEATER_REQUEST
-      })
-  },[theater_insert_done])
+        dispatch({
+            type:CINEMA_LOADING
+        })
+    },[cinema_insert_done])
     const [search, setsearch] = useState('');
   const handleSearchChange = e => {
     setsearch(e.target.value);
   };
-  
+  //상영관
   const [name , setName ] = useState('');
   const onChangeName = (e) =>{
     setName(e.target.value)
   }
-  const [addr, setAddr] = useState('');
+  //타입
+  const [type, setType] = useState('');
   const onChangeAddr = (e) =>{
-    setAddr(e.target.value)
+    setType(e.target.value)
   }
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  //좌석수
+  const [seat, setSeat] = useState('');
+  const onChangeSeat = (e) =>{
+    setSeat(e.target.value)
+  }
+
+  //영화관
+  const [area,setArea] = useState('');
+  const [id ,setId]= useState('')
+
+  const handleChange = (value) => {
+  console.log(value); 
+  setArea(value)
+};
   const [able, setAble] = useState(false);
-  //수정 
-  const [modify , setModify] = useState(false);
-  const [tid,setTid] = useState('');
-  const showModal = (area,name,addr,id) => {
-    setName(name)
-    setAddr(addr)
-    setArea(area);
-    setTid(id)
-    setModify(true);
-    setAble(true);
+  const [cid , setCid] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //수정
+  const [modify, setModify] = useState(false);
+  const showModal = (cname, type ,seat, tname,cid,tid) => {
+    setName(cname)
+    setType(type)
+    setSeat(seat)
+    setArea(tname)
+    setId(tid)
+    setCid(cid)
+    setAble(true)
+    setModify(true)
+    setInsert(false)
     setIsModalOpen(true);
   };
 
   //추가
   const [insert, setInsert] = useState(false);
-  const showModdal = () => {
-    setInsert(true)
+  const showModall = () => {
+    setName('')
+    setType('')
+    setSeat('')
+    setArea('')
+    setId('')
+    setModify(false);
+    setInsert(true);
     setAble(false);
     setIsModalOpen(true);
   };
-  
-
-  //확인
   const handleOk = () => {
     setIsModalOpen(false);
-    console.log(name)
-    console.log(addr);
-    console.log(area);
+   if(modify && !insert){
+    console.log(name,type,seat,area,cid,id)
     
-    //수정
-    if(modify && !insert){
-      console.log('update')
-      dispatch({
-        type:THEATER_INSERT_LOADING,
-        data:{
-          tarea:area,
-          tname:name,
-          taddr:addr,
-          state:"update",
-          tid:tid,
-        }
-    })
-    }
-    //추가
-    else if(!modify && insert){
-      console.log('insert')
-      dispatch({
-        type:THEATER_INSERT_LOADING,
-        data:{
-          tarea:area,
-          tname:name,
-          taddr:addr,
-          state:"insert",
-          tid:0,
-        }
-    })
-  }
-    //초기화
-    setAddr('')
-    setName('')
-    setArea('')
-    setModify(false)
-    setInsert(false)
-  };
-  //창 닫을 시 초기화
-  const handleCancel = () => {
-    setAddr('')
-    setName('')
-    setArea('')
-    setModify(false)
-    setInsert(false)
-    setIsModalOpen(false)
-  };
-
-  //삭제
-  const onDelete = () =>{
     dispatch({
-      type:THEATER_INSERT_LOADING,
+      type:CINEMA_INSERT_LOADING,
       data:{
-        tarea:0,
-        tname:0,
-        taddr:0,
-        state:"delete",
-        tid:tid,
+          tid:0,
+          cid:cid,
+          cname:name,
+          ctype:type,
+          cseat:seat,
+          state:"update"
       }
   })
-  setIsModalOpen(false)
+   }
+   else if(!modify && insert){
+    dispatch({
+        type:CINEMA_INSERT_LOADING,
+        data:{
+          tid:id,
+          cid:0,
+          cname:name,
+          ctype:type,
+          cseat:seat,
+          state:"insert"
+        }
+    })
+  }
+  };
+  const handleCancel = () => {
+    setName('')
+    setType('')
+    setSeat('')
+    setArea('')
+    setId('')
+    setModify(false);
+    setInsert(false);
+    setAble(false);
+    setIsModalOpen(false);
+  };
+
+  const onDelete = () =>{
+    dispatch({
+      type:CINEMA_INSERT_LOADING,
+      data:{
+        tid:0,
+        cid:cid,
+        cname:0,
+        ctype:0,
+        cseat:0,
+        state:"delete"
+      }
+  })
+  setIsModalOpen(false);
 
   }
-  // 정렬 버튼 css 변수
-	const [namebutton, setnamebutton] = useState(true);
-	const [joinbutton, setjoinbutton] = useState(false);
-  const datas = allTheater.filter(
-    (arr, index, callback) => index === callback.findIndex(t => t.tarea === arr.tarea)
-  );
-  let mappedArrayObj = datas.map(obj => { 
-    let newObj = {};
-    newObj['text'] = obj.tarea;
-    newObj['value'] = obj.tarea;
-    return newObj;
- });
+    const datas = cinema.filter(
+        (arr, index, callback) => index === callback.findIndex(t => t.tname === arr.tname)
+      );
+      let mappedArrayObj = datas.map(obj => { 
+        let newObj = {};
+        newObj['text'] = obj.tname;
+        newObj['value'] = obj.tname;
+        return newObj;
+     });
 
-const [area,setArea] = useState('');
-const handleChange = (value) => {
-  console.log(value); 
-  setArea(value)// { value: "lucy", key: "lucy", label: "Lucy (101)" }
-};
-  const columns = [
-    {
-      title: '지역',
-      width: 110,
-      dataIndex: 'tarea',
-      fixed: 'left',
+
+    const columns = [
+        {
+          title: '극장',
+          width: 50,
+          dataIndex: 'tname',
+          fixed: 'left',
+          filters:mappedArrayObj,
+        
+        onFilter: (value, record) => record.tname.indexOf(value) === 0,
+        sorter: (a, b) => a.tname.length - b.tname.length,
+        sortDirections: ['descend'],
+        },
+        {
+          title: '상영관명',
+          width: 50,
+          dataIndex: 'cname',
+          fixed: 'left',
+        },
+        {
+          title: '타입',
+          width: 50,
+          dataIndex: 'ctype',
+        },
+        {
+            title: '좌석수',
+            width: 50,
+            dataIndex: 'cseat',
+            
+        },
+        
+
+      ];  
+      const onChange = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+      };
+
+
       
-      filters:mappedArrayObj
-    ,
-    onFilter: (value, record) => record.tarea.indexOf(value) === 0,
-    sorter: (a, b) => a.tarea.length - b.tarea.length,
-    sortDirections: ['descend'],
-    },
-    {
-      title: '영화관',
-      width: 120,
-      dataIndex: 'tname',
-      fixed: 'left',
-    },
-    {
-      title: '주소',
-      width: 210,
-      dataIndex: 'taddr',
-    },
-  ];  
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
     return(
       <Container>
       <InnerWraps>
         <div className="titleMenu">
           <h1>
-             영화관 관리
+             상영관 관리
           </h1>
         </div>
       
         <div className="search">
         <p>
-            {allTheater.length}개의 영화관이 검색되었습니다.
-            더블클릭하면 수정할 수 있음.
+            {cinema.length}개의 영화관이 검색되었습니다.
           </p>
           
             <div className="search_button">
             <Button type="primary" shape="circle" icon={<PlusOutlined />} size={"20"} 
             onChange={onChange}
-            onClick={showModdal}></Button>
+            onClick={showModall}></Button>
           </div>
         </div>
         <TableWrap rowKey="cienma"
           columns={columns}
-          dataSource={allTheater}
+          dataSource={cinema}
           onRow={(record, rowIndex) => {
             return {
                // click row
               onDoubleClick: event => {                 
-                showModal(record.tarea, record.tname, record.taddr,record.tid)
+                showModal(record.cname, record.ctype, record.cseat, record.tname, record.cid,record.tid)
               }, // double click row
               onContextMenu: event => {}, // right button click row
               onMouseEnter: event => {}, // mouse enter row
@@ -206,27 +223,32 @@ const handleChange = (value) => {
           }}
           scroll={{
           x: 1350,
+
+          
         }}/>
       </InnerWraps>
-      <Modal title="영화관 추가" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
+      <Modal title="상영관 추가" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
         <Form>
         <Form.Item label="지역">
         <Select 
       onChange={handleChange}
       defaultValue={area}
       disabled={able}
-      options={datas.map((item) => ({
-        value: item.tarea,
-        label: item.tarea,
-      }))}>
-        
+     options={datas.map((item) => ({
+        value: item.tid,
+        label: item.tname,
+      }))
+    }> 
         </Select>
       </Form.Item>  
-      <Form.Item label="이름" onChange={onChangeName}>
+      <Form.Item label="상영관명" onChange={onChangeName}>
         <Input value={name}/>
       </Form.Item>
-      <Form.Item label="주소" onChange={onChangeAddr}>
-        <Input value={addr}/>
+      <Form.Item label="타입" onChange={onChangeAddr}>
+        <Input value={type}/>
+      </Form.Item>
+      <Form.Item label="좌석수" onChange={onChangeSeat}>
+        <Input value={seat}/>
       </Form.Item>
       {modify ?
       <Form.Item style={{position:'relative', top:'57px'}}>
@@ -324,25 +346,7 @@ const ButtonWrap = styled.li`
 	}
 `;
 
-const SearchWarp = styled(Search)`
-  span {
-    .ant-input-clear-icon {
-      display: none;
-    }
-    .ant-input-affix-wrapper {
-      border-color: #a0a0a0;
-    }
-    .ant-input-group-addon {
-      border-color: #a0a0a0;
-    }
-    .ant-btn {
-      border-color: #a0a0a0;
-    }
-    .ant-input::placeholder {
-      color: #a0a0a0;
-    }
-  }
-`;
+
 
 const TableWrap = styled(Table)`
   margin-bottom: 30px;
@@ -370,4 +374,4 @@ const TableButton = styled.button`
   border: none;
 `;
 
-export default Cinema;
+export default Theater;

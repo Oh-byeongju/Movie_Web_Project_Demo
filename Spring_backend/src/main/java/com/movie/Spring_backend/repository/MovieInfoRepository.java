@@ -25,17 +25,19 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
             "and mi.mistarttime >= function('addtime', now(), '0:30:00') Group by mi.miday Order by mi.miday ASC ")
     public List<MovieInfoEntity> findByMovieToDay(@Param("mid") Long mid);
 
-    //in able을 위해
+    //극장으로 날짜 검색할때 사용하는 메소드
     @Query("SELECT mi From MovieInfoEntity as mi, CinemaEntity as c WHERE " +
             "mi.mistarttime >= function('addtime', now(), '0:30:00') and mi.cinema.cid IN " +
             "(select cid from c where tid= (:tid)) ORDER BY mi.miday ASC")
     public List<MovieInfoEntity> findByCinemaCidIn(@Param("tid") Long tid);
 
     //극장 영화로 day 검색
-    public List<MovieInfoEntity> findByCinemaCidInAndMovieMid(List<Long> cid, Long mid);
+    //select * from movie_information where mid =1 and cid in (select cid from movie_cinema where tid=1);
+    @Query("select info from MovieInfoEntity as info where info.movie.mid = :mid and " +
+            "info.mistarttime >= function('addtime', now(), '0:30:00') and " +
+            "info.cinema.cid in (select cinema.cid from CinemaEntity as cinema where cinema.theater.tid = :tid )")
+    public List<MovieInfoEntity> findByCinemaCidInAndMovieMid(@Param("mid")Long mid, @Param("tid")Long tid);
 
-    //miday로 영화or극장 검색하려고 만듬
-    
     public List<MovieInfoEntity> findByMiday(Date miday);
 
     //mid를 구해야함
@@ -43,16 +45,11 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
 
     public List<MovieInfoEntity> findByMidayAndMovieMid(Date miday, Long mid);
 
-    @Query("Select mi From MovieInfoEntity as mi JOIN FETCH mi.cinema " +
-            "JOIN FETCH mi.movie " +
-            "Where mi.miday = (:miday) AND mi.mistarttime >= function('addtime', now(), '0:30:00') and " +
-            "mi.movie.mid= (:mid) AND "+
-            "mi.cinema.cid IN (:cid) "+
-            "ORDER BY mistarttime asc"
-    )
-    @EntityGraph(attributePaths = {"cinema.theater"})
-    //페치조인을 해서 영화와 극장 정보까지 함께 보내기
-    public List<MovieInfoEntity> findBySchedule(@Param("miday")Date miday,@Param("mid") Long mid, @Param("cid")List<Long> cid);
+    //스케줄 검색
+    @Query("select info from MovieInfoEntity as info where info.mistarttime >= function('addtime', now(), '0:30:00') and " +
+            "info.miday = :miday and info.movie.mid = :mid and info.cinema.cid in " +
+            "(select cinema.cid from CinemaEntity as cinema where cinema.theater.tid = :tid)")
+    public List<MovieInfoEntity> findBySchedule(@Param("miday")Date miday, @Param("mid") Long mid, @Param("tid")Long tid);
 
     // 특정 Movie id를 가지고 현재 예매가 가능한 영화 정보를 들고오는 메소드
     @Query(value = "SELECT mi FROM MovieInfoEntity as mi WHERE mi.movie = :movie AND " +
