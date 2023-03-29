@@ -153,6 +153,8 @@ public class ManagerMemberService {
         jwtValidCheck.JwtCheck(request, "ATK");
 
         System.out.println("ㄹㅇㅁ녈ㅇㄴㅁㄹㅇㄴㅁ여기");
+        // 지금 이거 넘겨받는 속도가 너무 느림
+        // 페이지네이션을 하든 쿼리문을 바꾸든 해야함
 
         // JPA 사용을 위한 형 변환
         TheaterEntity theater = TheaterEntity.builder().tid(tid).build();
