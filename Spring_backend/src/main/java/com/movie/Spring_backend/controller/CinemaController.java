@@ -1,5 +1,6 @@
 package com.movie.Spring_backend.controller;
 
+import com.movie.Spring_backend.dto.BoardDto;
 import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.entity.CinemaEntity;
@@ -11,6 +12,7 @@ import com.movie.Spring_backend.service.CinemaService;
 import com.movie.Spring_backend.service.MovieInfoService;
 import com.movie.Spring_backend.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import com.movie.Spring_backend.dto.CinemaDto;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,19 +30,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/v2")
 public class CinemaController {
-    //리액트 -> 컨트롤러 전달
-    private final CinemaService cinemaservice;
-    private final MovieInfoRepository movieInfoRepository;
-    private final MovieService movieService;
 
-    //끝
-    //옮기기 서비스로 이상x
-    private final MovieInfoService movieInfoService;
-    @GetMapping("/normal/theatertomovie")
-    public List<MovieDto> getData(@RequestParam Long id) {
-        return cinemaservice.findByTheater(id);
+    private final CinemaService cinemaService;
+
+    @GetMapping("/normal/cinemaall")
+    public ResponseEntity<List<CinemaDto>> cinema() {
+        return ResponseEntity.ok().body(cinemaService.findall());
     }
+    @PostMapping("/normal/insertcinema")
+    public void insert(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
 
-    //극장 선택 시 영화 목록 전송
-    //able, disable
+        cinemaService.insert(requestMap,request);
+    }
 }

@@ -157,7 +157,7 @@ function* selectTheater(action) {
 //극장으로 영화 검색
 async function selectTheaterToMovieApi(data) {
   return await http
-    .get("/v2/normal/theatertomovie", {
+    .get("/infomovie/normal/theatertomovie", {
       params: {
         id: data,
       },
