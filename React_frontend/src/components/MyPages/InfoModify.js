@@ -524,7 +524,7 @@ const InfoModify = () => {
 		}
 	};
 
-	// 처음에 랜더링 될때 사용자의 정보를 채워주는 useEffect (의존성 배열을 비워둬서 한번만 실행됨)
+	// 처음에 렌더링 될때 사용자의 정보를 채워주는 useEffect (의존성 배열을 비워둬서 한번만 실행됨)
 	useEffect(()=> {
 		setM_address(LOGIN_data.uaddr);
 		setInputs({

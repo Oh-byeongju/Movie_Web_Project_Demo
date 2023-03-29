@@ -1,17 +1,22 @@
 /*
   23-03-27 관리자 페이지 사용자 관리 구현(오병주)
-  23-03-28 관리자 페이지 사용자 예매 현황 구현(오병주)
+  23-03-28 ~ 29 관리자 페이지 사용자 예매 현황 구현(오병주)
 */
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.MemberDto;
 import com.movie.Spring_backend.dto.MovieDto;
+import com.movie.Spring_backend.dto.ReservationDto;
+import com.movie.Spring_backend.dto.TheaterDto;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.exceptionlist.IdDuplicateException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.mapper.MovieMapper;
+import com.movie.Spring_backend.mapper.ReservationMapper;
 import com.movie.Spring_backend.repository.MemberRepository;
 import com.movie.Spring_backend.repository.MovieRepository;
+import com.movie.Spring_backend.repository.ReservationRepository;
+import com.movie.Spring_backend.repository.TheaterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +36,12 @@ public class ManagerMemberService {
 
     private final MemberRepository memberRepository;
     private final MovieRepository movieRepository;
+    private final TheaterRepository theaterRepository;
+    private final ReservationRepository reservationRepository;
     private final MovieMapper movieMapper;
+    private final ReservationMapper reservationMapper;
     private final JwtValidCheck jwtValidCheck;
+
 
     // 유저 조회 메소드
     @Transactional
@@ -84,14 +93,78 @@ public class ManagerMemberService {
         // 영화 테이블에서 현재 예매가 가능한 영화들 조회
         List<MovieEntity> MoviePossible = movieRepository.findShowMoviesReserve();
 
+        // 예매가 가능한 영화들의 전체 예매 횟수(예매율 계산시 나누기 할때 사용)
+        float cnt = 0;
+        for (MovieEntity m : Movies) {
+            cnt += m.getCntReserve();
+        }
+
+        // 람다식에서 사용하기 위해 final 선언
+        final float Cnt = cnt;
+
         // 예매가 가능한 영화의 기본키를 List로 변환
         List<Long> MoviePossibleList = new ArrayList<>();
         for (MovieEntity m : MoviePossible) {
             MoviePossibleList.add(m.getMid());
         }
 
-        // 위에서 검색한 영화 목록과 예매 가능 여부를 mapping 후 리턴
+        // 위에서 검색한 영화 목록과 예매 가능 여부, 전체 예매 횟수를 mapping 후 리턴
         return Movies.stream().map(movie ->
-                movieMapper.toDtoManagerReserve(movie, MoviePossibleList.contains(movie.getMid()))).collect(Collectors.toList());
+                movieMapper.toDtoManagerReserve(movie, MoviePossibleList.contains(movie.getMid()), Cnt)).collect(Collectors.toList());
+    }
+
+    // 전체 극장 불러오는 메소드
+    @Transactional
+    public List<TheaterDto> AllTheaterSearch(HttpServletRequest request) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // 모든 극장 검색
+        List<TheaterEntity> Theaters = theaterRepository.findAll();
+
+        // 검색한 극장 리턴
+        return Theaters.stream().map(theater -> TheaterDto.builder()
+                        .tid(theater.getTid())
+                        .tname(theater.getTname())
+                        .taddr(theater.getTaddr())
+                        .tarea(theater.getTarea()).build()).collect(Collectors.toList());
+    }
+
+    // 특정 영화의 예매기록을 불러오는 메소드
+    @Transactional
+    public List<ReservationDto> MovieReserveSearch(HttpServletRequest request, Long mid) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // JPA 사용을 위한 형 변환
+        MovieEntity movie = MovieEntity.builder().mid(mid).build();
+
+        // 특정 영화의 모든 예매기록 검색(예매일 순으로 내림차순)
+        List<ReservationEntity> Reservations = reservationRepository.findManagerReserveMovie(movie);
+
+        // 예매기록을 매핑 후 리턴
+        return Reservations.stream().map(reservationMapper::ManagerListMappingMovie).collect(Collectors.toList());
+    }
+
+    // 특정 극장의 예매기록을 불러오는 메소드
+    @Transactional
+    public List<ReservationDto> TheaterReserveSearch(HttpServletRequest request, Long tid) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        System.out.println("ㄹㅇㅁ녈ㅇㄴㅁㄹㅇㄴㅁ여기");
+        // 지금 이거 넘겨받는 속도가 너무 느림
+        // 페이지네이션을 하든 쿼리문을 바꾸든 해야함
+
+        // JPA 사용을 위한 형 변환
+        TheaterEntity theater = TheaterEntity.builder().tid(tid).build();
+
+        // 특정 극장의 모든 예매기록 검색(예매일 순으로 내림차순)
+        List<ReservationEntity> Reservations = reservationRepository.findManagerReserveTheater(theater);
+
+        System.out.println("매핑시작");
+
+        // 예매기록을 매핑 후 리턴
+        return Reservations.stream().map(reservationMapper::ManagerListMappingTheater).collect(Collectors.toList());
     }
 }
