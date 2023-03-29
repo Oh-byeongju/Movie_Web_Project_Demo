@@ -136,7 +136,6 @@ const User = () => {
     {
       title: '주소',
       width: 340,
-      dataIndex: ['uaddr', 'uaddrsecond'],
       render: (text, row) => <div> {row["uaddr"]} {row["uaddrsecond"]} </div>,
     },
     {

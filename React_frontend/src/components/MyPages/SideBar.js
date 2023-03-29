@@ -1,4 +1,3 @@
-/*eslint-disable*/
 /*
  23-03-10 마이페이지 css 구축(오병주)
 */
@@ -35,37 +34,35 @@ const SideBar = () => {
 
 	// url에 따라 state 수정
 	useEffect(()=> {
-		BarChange(location.pathname.substring(8, 15));
-	}, [location.pathname])
 
-	const BarChange = (name) => {
-		setState ({
-			...state,
+		setState (s => ({
+			...s,
 			Reserve: false,
 			Cancel: false,
 			Finish: false,
 			Like: false,
 			Comment: false,
 			Modify: false,
-			[name]: true
-		});
+			[location.pathname.substring(8, 15)]: true
+		}));
 
 		// 취소내역 상세 예외
-		if (name === 'CancelD') {
-			setState ({
-				...state,
+		if (location.pathname.substring(8, 15) === 'CancelD') {
+			setState (s => ({
+				...s,
 				Cancel: true
-			});
+			}));
 		}
 
 		// 지난관람내역 상세 예외
-		if (name === 'FinishD') {
-			setState ({
-				...state,
+		if (location.pathname.substring(8, 15) === 'FinishD') {
+			setState (s => ({
+				...s,
 				Finish: true
-			});
+			}));
 		}
-	}
+
+	}, [location.pathname])
 
 	// 로그인이 안되어있으면 마이페이지에 진입못하게 하는 useEffect
 	useEffect(() => {

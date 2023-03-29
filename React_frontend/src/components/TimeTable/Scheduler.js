@@ -522,7 +522,7 @@ height: 54px;
 border-bottom: 1px solid #d8d9db;
 ul{
     position:relative;
-    right:30px;
+    right:39px;
     list-style-type: none;
     padding-top:24px;
     .menu {

@@ -57,4 +57,22 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             "WHERE rs.rid = :rid")
     void UserReservationCancel(@Param("rid") Long rid);
 
+    // 특정 영화의 예매 기록을 전부 들고오는 메소드(예매시간 순으로 내림차순)
+    @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
+            "ON rs.movieInfo = mi.miid " +
+            "WHERE mi.movie = :movie " +
+            "ORDER BY rs.rdate DESC")
+    @EntityGraph(attributePaths = {"movieInfo.cinema", "movieInfo.cinema.theater"})
+    List<ReservationEntity> findManagerReserveMovie(@Param("movie") MovieEntity movie);
+
+    // 특정 극장의 예매 기록을 전부 들고오는 메소드(예매시간 순으로 내림차순)
+    // 이게 문제임 지금
+    @Query(value = "SELECT rs, mi, ci FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi ON rs.movieInfo = mi.miid " +
+            "LEFT OUTER JOIN CinemaEntity as ci ON mi.cinema = ci.cid " +
+            "WHERE ci.theater = :theater " +
+            "ORDER BY rs.rdate DESC")
+
+    List<ReservationEntity> findManagerReserveTheater(@Param("theater") TheaterEntity theater);
+
+
 }

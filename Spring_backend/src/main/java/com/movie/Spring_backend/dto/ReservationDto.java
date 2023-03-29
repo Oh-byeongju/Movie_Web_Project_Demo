@@ -11,6 +11,7 @@ import java.util.List;
 public class ReservationDto {
 
     private Long rid;
+    private String uid;
     private String rdate;
     private Long mid;
     private String mtitle;
@@ -30,10 +31,11 @@ public class ReservationDto {
     private String rcanceldate;
 
     @Builder
-    public ReservationDto(Long rid, String rdate, Long mid, String mtitle, String mimagepath, String tarea, String tname,
+    public ReservationDto(Long rid, String uid, String rdate, Long mid, String mtitle, String mimagepath, String tarea, String tname,
                           String cname, String mistarttime, String miendtime, String mrating, List<String> seats, String rpeople,
                           Integer rticket, String rpaytype, Integer rprice, Boolean rstate, String rcanceldate) {
         this.rid = rid;
+        this.uid = uid;
         this.rdate = rdate;
         this.mid = mid;
         this.mtitle = mtitle;

@@ -13,9 +13,9 @@ public class TheaterDto {
     private String tname;
     private String taddr;
     private String tarea;
-
     private String able;
     private int count;
+
     @Builder
     public TheaterDto(Long tid, String tname, String taddr, String tarea, String able, int count) {
         this.tid=tid;
