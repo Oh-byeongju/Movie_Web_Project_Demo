@@ -39,7 +39,6 @@ public class CinemaController {
     }
     @PostMapping("/normal/insertcinema")
     public void insert(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
-
         cinemaService.insert(requestMap,request);
     }
 }

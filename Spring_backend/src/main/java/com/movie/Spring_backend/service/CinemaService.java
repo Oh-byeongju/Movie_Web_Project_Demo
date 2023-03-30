@@ -55,17 +55,17 @@ public class CinemaService {
      @Transactional
      public void insert(@RequestBody Map<String, String> requestMap, HttpServletRequest request) {
 
-            String tid = requestMap.get("tid").trim();
+            String tid = requestMap.get("tname").trim();
             String cid = requestMap.get("cid").trim();
             String name = requestMap.get("cname").trim();
             String type = requestMap.get("ctype").trim();
             String seat = requestMap.get("cseat").trim();
             String state = requestMap.get("state").trim();
+         System.out.println("tid" +  tid);
+         if(state.equals("insert")){
+                System.out.println(tid);
+                TheaterEntity theater = TheaterEntity.builder().tid(Long.valueOf(tid)).build();
 
-            TheaterEntity theater = TheaterEntity.builder().tid(Long.valueOf(tid)).build();
-
-            if(state.equals("insert")){
-            if(!tid.equals("") && !name.equals("") && !type.equals("") && !seat.equals("")) {
                 CinemaEntity cinema;
                 cinema = CinemaEntity.builder()
                         .cname(name)
@@ -75,9 +75,6 @@ public class CinemaService {
                         .build();
                 cinemaRepository.save(cinema);
             }
-            else {
-                System.out.println("입력 불가합니다.");
-        }}
             else if(state.equals("update")){
                 cinemaRepository.updateCinema(name,type, Integer.valueOf(seat), Long.valueOf(cid));
             }

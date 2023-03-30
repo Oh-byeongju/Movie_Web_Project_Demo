@@ -6,7 +6,8 @@ import { call, all, takeLatest, fork, put } from "redux-saga/effects";
 import { 
 	CINEMA_LOADING,CINEMA_DONE,CINEMA_ERROR,
     THEATER_INSERT_LOADING,THEATER_INSERT_DONE,THEATER_INSERT_ERROR,
-    CINEMA_INSERT_LOADING,CINEMA_INSERT_DONE,CINEMA_INSERT_ERROR
+    CINEMA_INSERT_LOADING,CINEMA_INSERT_DONE,CINEMA_INSERT_ERROR,
+    MOVIES_REQUEST,MOVIES_SUCCESS,MOVIES_FAILURE
  } from "../reducer/R_manager_theater";
 import { http } from "../lib/http";
 
@@ -93,18 +94,52 @@ function* cinemaInsert(action) {
   }
 
 
+  function* Movie(action) {
+    const result = yield call(MovieApi, action.data);
+    if (result.status === 200) {
+      yield put({
+        type: MOVIES_SUCCESS,
+        data:result.data
+      });
+    } 
+    else {
+      yield put({
+              type: MOVIES_FAILURE,
+              data:result.error
+      });
+    }
+  }
+  
+  // 상영관 추가 백엔드 호출
+  async function MovieApi(data) {
+    return await http.get("manager/normal/movieall", {
+      params: {
+        uid: data,
+        button: 'rate',
+        search: ''
+      },
+    })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        return error.response;
+      });
+  }
 function* ALL_CINEMA() {
   yield takeLatest(CINEMA_LOADING, cinema);
 }
-
 function* THEATER_INSERT() {
     yield takeLatest(THEATER_INSERT_LOADING, theaterInsert);
   }
 function* CINEMA_INSERT() {
     yield takeLatest(CINEMA_INSERT_LOADING, cinemaInsert);
   }
+  function* MOVIE_UPLOAD() {
+    yield takeLatest(MOVIES_REQUEST, Movie);
+  }
 
 
 export default function* S_manager_theater() {
-  yield all([fork(ALL_CINEMA),fork(THEATER_INSERT),fork(CINEMA_INSERT)]);
+  yield all([fork(ALL_CINEMA),fork(THEATER_INSERT),fork(CINEMA_INSERT),fork(MOVIE_UPLOAD)]);
 }
