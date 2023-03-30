@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import { Table, Input ,Button,Modal,Form,Select,Layout,} from 'antd';
+import { Table, Input ,Button,Modal,Form,Select,Layout,message} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ALLTHEATER_REQUEST } from '../../reducer/ticket';
 import { PlusOutlined } from '@ant-design/icons';
@@ -11,7 +11,8 @@ import { CINEMA_INSERT_LOADING, CINEMA_LOADING } from '../../reducer/R_manager_t
 //
 const Theater = () =>{
     const dispatch= useDispatch();
-    
+    const [messageApi, contextHolder] = message.useMessage();
+    const key = 'updatable';
     const {cinema,cinema_insert_done} = useSelector((state)=>state.R_manager_theater)
  
     useEffect(()=>{
@@ -42,12 +43,18 @@ const Theater = () =>{
 
   //영화관
   const [area,setArea] = useState('');
-  const [id ,setId]= useState('')
+  const [tid ,setId]= useState('')
 
   const handleChange = (value) => {
   console.log(value); 
   setArea(value)
+  setId(value)
 };
+
+const handleChangeSeat = (value) => {
+ setSeat(value)
+};
+
   const [able, setAble] = useState(false);
   const [cid , setCid] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,6 +72,7 @@ const Theater = () =>{
     setModify(true)
     setInsert(false)
     setIsModalOpen(true);
+    
   };
 
   //추가
@@ -79,16 +87,16 @@ const Theater = () =>{
     setInsert(true);
     setAble(false);
     setIsModalOpen(true);
+
+ 
   };
   const handleOk = () => {
-    setIsModalOpen(false);
    if(modify && !insert){
-    console.log(name,type,seat,area,cid,id)
-    
+    if(name!=="" && type !=="" && seat !=="" &&cid !==""){
     dispatch({
       type:CINEMA_INSERT_LOADING,
       data:{
-          tid:0,
+        tname:"0",
           cid:cid,
           cname:name,
           ctype:type,
@@ -96,19 +104,42 @@ const Theater = () =>{
           state:"update"
       }
   })
+  setIsModalOpen(false);
+
+}
+else{
+  messageApi.open({
+    type: 'warning',
+    content: '데이터를 전부 입력해야합니다.',
+  });
+
+}
+  
    }
    else if(!modify && insert){
+    if(
+      tid!=="" && name!=="" && type !=="" && seat !=="" 
+    ){
     dispatch({
         type:CINEMA_INSERT_LOADING,
         data:{
-          tid:id,
-          cid:0,
+          tname:tid,
+          cid:"0",
           cname:name,
           ctype:type,
           cseat:seat,
           state:"insert"
         }
     })
+    setIsModalOpen(false);
+
+  }
+  else{
+    messageApi.open({
+      type: 'warning',
+      content: '데이터를 전부 입력해야합니다.',
+    });
+  }
   }
   };
   const handleCancel = () => {
@@ -124,10 +155,11 @@ const Theater = () =>{
   };
 
   const onDelete = () =>{
+    console.log(cid);
     dispatch({
       type:CINEMA_INSERT_LOADING,
       data:{
-        tid:0,
+        tname:"0",
         cid:cid,
         cname:0,
         ctype:0,
@@ -188,7 +220,9 @@ const Theater = () =>{
 
       
     return(
+      
       <Container>
+        {contextHolder}
       <InnerWraps>
         <div className="titleMenu">
           <h1>
@@ -233,12 +267,13 @@ const Theater = () =>{
         <Select 
       onChange={handleChange}
       defaultValue={area}
-      disabled={able}
+      disabled={area}
      options={datas.map((item) => ({
         value: item.tid,
         label: item.tname,
       }))
-    }> 
+    } >  
+
         </Select>
       </Form.Item>  
       <Form.Item label="상영관명" onChange={onChangeName}>
@@ -247,9 +282,21 @@ const Theater = () =>{
       <Form.Item label="타입" onChange={onChangeAddr}>
         <Input value={type}/>
       </Form.Item>
-      <Form.Item label="좌석수" onChange={onChangeSeat}>
-        <Input value={seat}/>
+      <Form.Item label="좌석수" >
+      <Select 
+      onChange={handleChangeSeat}
+      defaultValue={seat}
+     options={[{
+      value: "30",
+      label: "30"
+       },
+     { value: "50",
+      label: "50"},
+      { value: "70",
+        label: "70"}]} /> 
       </Form.Item>
+
+      
       {modify ?
       <Form.Item style={{position:'relative', top:'57px'}}>
       <Button type="primary" danger onClick={()=>{onDelete()}}>

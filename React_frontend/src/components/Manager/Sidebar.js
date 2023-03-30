@@ -3,21 +3,27 @@ import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/i
 import { Layout, Menu, theme } from 'antd';
 import Cinema from "./Cinema";
 import Theater from "./Theater";
+import Movie from "./Movie";
 const { Header, Content, Footer, Sider } = Layout;
 
 const Sidebar = () =>{
     const items = [
         {
             label: '영화관 관리',
-            key: 'movie',
+            key: 'theater',
         },
         {
             label: '상영관 관리',
-            key: 'theater',
+            key: 'cinema',
+        }
+        ,
+        {
+          label:'영화 관리',
+          key:'movies'
         }
     ]
 
-    const [current, setCurrent] = useState("movie");
+    const [current, setCurrent] = useState("theater");
     const onClick = (e) => {
       console.log(e.key);
       setCurrent(e.key);
@@ -55,8 +61,9 @@ const Sidebar = () =>{
                 minHeight: 360,
               }}
             >
-                {current==="movie"
-?              <Cinema /> : <Theater />}
+                {current==="theater"
+?              <Cinema /> : 
+              current ==="cinema" ? <Theater />: <Movie />}
             </div>
           </Content>
      

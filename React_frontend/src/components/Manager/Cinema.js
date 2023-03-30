@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import { Table, Input ,Button,Modal,Form,Select,Layout,} from 'antd';
+import { Table, Input ,Button,Modal,Form,Select,message,} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ALLTHEATER_REQUEST } from '../../reducer/ticket';
 import { PlusOutlined } from '@ant-design/icons';
@@ -10,7 +10,7 @@ const { Search } = Input;
 //2023-03-30 극장 CRUD (강경목)
 const Cinema=()=>{
     const dispatch= useDispatch();
-  
+    const [messageApi, contextHolder] = message.useMessage();
     const {allTheater} = useSelector((state)=>state.ticket)
     const {theater_insert_done} = useSelector((state)=>state.R_manager_theater)
     useEffect(()=>{
@@ -58,14 +58,9 @@ const Cinema=()=>{
 
   //확인
   const handleOk = () => {
-    setIsModalOpen(false);
-    console.log(name)
-    console.log(addr);
-    console.log(area);
-    
     //수정
     if(modify && !insert){
-      console.log('update')
+      if(area !=="" && name !=="" && addr!=="" &&tid !==""){
       dispatch({
         type:THEATER_INSERT_LOADING,
         data:{
@@ -76,10 +71,23 @@ const Cinema=()=>{
           tid:tid,
         }
     })
+    setIsModalOpen(false);    
+    setAddr('')
+    setName('')
+    setArea('')
+    setModify(false)
+    setInsert(false)
     }
+    else{
+      messageApi.open({
+        type: 'warning',
+        content: '데이터를 전부 입력해야합니다.',
+      });
+    }
+  }
     //추가
     else if(!modify && insert){
-      console.log('insert')
+      if(area !=="" && name !=="" && addr!=="" ){
       dispatch({
         type:THEATER_INSERT_LOADING,
         data:{
@@ -90,14 +98,24 @@ const Cinema=()=>{
           tid:0,
         }
     })
-  }
-    //초기화
     setAddr('')
     setName('')
     setArea('')
     setModify(false)
     setInsert(false)
-  };
+    setIsModalOpen(false);    
+
+  }
+  else{
+    messageApi.open({
+      type: 'warning',
+      content: '데이터를 전부 입력해야합니다.',
+    });
+  }
+    //초기화
+  
+  }
+}
   //창 닫을 시 초기화
   const handleCancel = () => {
     setAddr('')
@@ -170,7 +188,7 @@ const handleChange = (value) => {
     console.log('params', pagination, filters, sorter, extra);
   };
     return(
-      <Container>
+      <Container>{contextHolder}
       <InnerWraps>
         <div className="titleMenu">
           <h1>
