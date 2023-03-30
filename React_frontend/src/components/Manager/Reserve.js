@@ -2,33 +2,39 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CoPresentOutlinedIcon from '@mui/icons-material/CoPresentOutlined';
 import MovieOutlinedIcon from '@mui/icons-material/MovieOutlined';
-import { useDispatch, useSelector } from "react-redux";
-import { MANAGER_MOVIE_LIST_REQUEST, MANAGER_MOVIE_SELECT, 
-	MANAGER_THEATER_LIST_REQUEST, MANAGER_THEATER_SELECT, MANAGER_RESERVE_MOVIE_LIST_REQUEST, MANAGER_RESERVE_THEATER_LIST_REQUEST } from '../../reducer/R_manager_user';
-import * as date from "../../lib/date.js";
-import { Table } from 'antd';
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { MANAGER_MOVIE_LIST_REQUEST, 
+	MANAGER_MOVIE_SELECT, 
+	MANAGER_THEATER_LIST_REQUEST, 
+	MANAGER_THEATER_SELECT, 
+	MANAGER_RESERVE_MOVIE_LIST_REQUEST, 
+	MANAGER_RESERVE_THEATER_LIST_REQUEST } from '../../reducer/R_manager_user';
+import ReserveMovie from './ReserveMovie';
+import ReserveTheater from './ReserveTheater';
 
 const Reserve = () => {
 	const dispatch = useDispatch();
 
-	// 로그인 리덕스 상태
-	const { LOGIN_data } = useSelector((state) => state.R_user_login);
-	// 리덕스에 있는 영화 리스트
-  const { MOVIE_LIST } = useSelector((state) => state.R_manager_user);
-	const { MOVIE } = useSelector((state) => state.R_manager_user);
+	// 필요한 리덕스 상태들
+  const { LOGIN_data, MOVIE_LIST, MOVIE, THEATER_LIST, THEATER, RESERVE_THEATER_LIST } = useSelector(
+    state => ({
+      LOGIN_data: state.R_user_login.LOGIN_data,
+      MOVIE_LIST: state.R_manager_user.MOVIE_LIST,
+      MOVIE: state.R_manager_user.MOVIE,
+      THEATER_LIST: state.R_manager_user.THEATER_LIST,
+      THEATER: state.R_manager_user.THEATER,
+      RESERVE_THEATER_LIST: state.R_manager_user.RESERVE_THEATER_LIST
+    }),
+    shallowEqual
+  );
 
-	// 리덕스에 있는 극장 리스트
-  const { THEATER_LIST } = useSelector((state) => state.R_manager_user);
-	const { THEATER } = useSelector((state) => state.R_manager_user);
-
-	// 리덕스에 있는 예매기록 리스트
-	const { RESERVE_MOVIE_LIST } = useSelector((state) => state.R_manager_user);
-	const { RESERVE_MOVIE_LIST_loading } = useSelector((state) => state.R_manager_user);
+	// 극장 선택 페이지네이션 번호
+	const [currentT , setCurrentT] = useState(1);
 
 	// 모든 영화 및 상영관 조회 useEffect
   useEffect(() => {
 		 // 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
-		 if (LOGIN_data.uid !== 'No_login') {
+		 if (LOGIN_data.uid !== 'No_login' && MOVIE_LIST.length === 0 && THEATER_LIST.length === 0) {
       dispatch({
         type: MANAGER_MOVIE_LIST_REQUEST
       });
@@ -36,7 +42,7 @@ const Reserve = () => {
 				type: MANAGER_THEATER_LIST_REQUEST
 			})
     }
-  }, [LOGIN_data.uid, dispatch])
+  }, [LOGIN_data.uid, MOVIE_LIST, THEATER_LIST, dispatch])
 
 	// 예매기록 조회 useEffect (영화 선택)
   useEffect(()=> {
@@ -58,7 +64,8 @@ const Reserve = () => {
       dispatch({
         type: MANAGER_RESERVE_THEATER_LIST_REQUEST,
         data: {
-          tid: THEATER.tid
+          tid: THEATER.tid,
+					page: 0
         }
       });
     }
@@ -106,6 +113,7 @@ const Reserve = () => {
 			type: MANAGER_THEATER_SELECT,
 			data: theater
 		})
+		setCurrentT(1);
 	}, [dispatch])
 
 	// 지역별 극장 개수 설정하는 useEffect
@@ -130,72 +138,7 @@ const Reserve = () => {
 			busan: temp_busan
 		}));
 	}, [THEATER_LIST]);
-
-	// 내일 페이지네이션으로 받아오는거 + formula랑 쿼리문을 좀 봐야할듯
-
-	// antd css 설정
-  const columns = [
-    {
-      title: '계정',
-      width: 110,
-      dataIndex: 'uid',
-      fixed: 'left',
-    },
-    {
-      title: '예매번호',
-      width: 100,
-      dataIndex: 'rid',
-      fixed: 'left',
-    },
-    {
-      title: '예매일시',
-      width: 170,
-      dataIndex: 'rdate',
-    },
-    {
-      title: '관람극장',
-      width: 180,
-      render: (text, row) => <div> {row["tarea"]}-{row["tname"]}점 {row["cname"]}</div>,
-    },
-    {
-      title: '관람일시',
-      width: 190,
-      render: (text, row) => <div> {row["mistarttime"].substr(0, 10)} ({date.getDayOfWeek(row["mistarttime"])}) {row["mistarttime"].substr(10, 6)} </div>,
-    },
-    {
-      title: '관람인원',
-      width: 270,
-			render: (text, row) => <div> {row["rpeople"]} (총 {row["rticket"]}매) </div>,
-    },
-		{
-      title: '결제유형', 
-      width: 105	,
-      dataIndex: 'rpaytype',
-    },
-		{
-      title: '결제금액', 
-      width: 100,
-			render: (text, row) => <div> {row["rprice"]}원 </div>,
-    },
-		{
-      title: '취소일시',
-      width: 170,
-      render: (text, row) => <div> {row["rcanceldate"] ? row["rcanceldate"] : "-"} </div>,
-    },
-    {
-      title: '예매상태',
-      fixed: 'right',
-      width: 90,
-      render: (text, row) => <div> {row["rstate"] ? "예매완료" : "예매취소"} </div>,
-    },
-  ];  
-
-
-	const onchangetemp = () => {
-
-
-	}
-
+	
 	return (
 		<Container>
       <InnerWraps>
@@ -293,23 +236,28 @@ const Reserve = () => {
 						</TheaterWrapper> }
 					</TabCenter>
 				</MovieAreaChoice>
-				{MOVIE.reserve ? 
+				{moviebutton ? 
+				MOVIE.reserve ? 
+				<>
 					<Notice>
 						* 상영중인 영화 예매 <strong>{MOVIE.reserveCntAll}</strong>건 중 <strong>{MOVIE.reserveCnt}</strong>건
 						(예매율 {MOVIE.reserveRate ? MOVIE.reserveRate.toFixed(1) : (0.0).toFixed(1)}%, 취소건 제외)
-					</Notice> :
+					</Notice> 
+					<ReserveMovie/>
+				</> :
+				<>
 					<Notice>
 						* 총 <strong>{MOVIE.reserveCnt}</strong>건 (상영예정인 영화는 예매율이 표시되지 않습니다.)
 					</Notice>
-				}
-				<TableWrap rowKey="rid"
-          loading={RESERVE_MOVIE_LIST_loading}
-          columns={columns}
-          dataSource={RESERVE_MOVIE_LIST}
-					pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '30']}}
-          scroll={{x: 1350,}}
-					/>
-
+					<ReserveMovie/>
+				</> :
+				<>
+					<Notice>
+						* 상영중인 영화 예매 <strong>{MOVIE.reserveCntAll}</strong>건 중 <strong>{RESERVE_THEATER_LIST.totalElements}</strong>건 
+						(예매율 {RESERVE_THEATER_LIST.totalElements ? (RESERVE_THEATER_LIST.totalElements / MOVIE.reserveCntAll * 100).toFixed(1) : (0.0).toFixed(1)}%, 취소건 제외)
+					</Notice>
+					<ReserveTheater currentT={currentT} setCurrentT={setCurrentT}/>
+				</>}
       </InnerWraps>
      </Container>
 	);
@@ -599,22 +547,6 @@ const Notice = styled.div`
 	float: right;
 	margin-bottom: 8px;
 	font-size: 17px;
-`;
-
-const TableWrap = styled(Table)`
-  margin-bottom: 30px;
-
-  .ant-table-placeholder {
-    .ant-table-expanded-row-fixed{
-      min-height: 600px !important;
-    }
-    .css-dev-only-do-not-override-acm2ia {
-      position:absolute;
-      top: 45%;
-      left: 50%;
-      transform:translate(-50%, -45%); /* translate(x축,y축) */
-    }
-  }
 `;
 
 export default Reserve;

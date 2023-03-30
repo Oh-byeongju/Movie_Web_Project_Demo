@@ -1,6 +1,8 @@
 package com.movie.Spring_backend.repository;
 
 import com.movie.Spring_backend.entity.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,7 +22,7 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     ReservationEntity findByRpayid(String rpayid);
 
     // 사용자가 예매한 영화 정보들을 가져오는 메소드(예매시간 순으로 내림차순, 아직 영화가 끝나지 않은 예매들)
-    @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
+    @Query(value = "SELECT rs FROM ReservationEntity as rs INNER JOIN MovieInfoEntity as mi " +
             "ON rs.movieInfo = mi.miid " +
             "WHERE rs.member = :member AND rs.rstate = true AND rs.rdate > :rdate AND mi.miendtime > now() " +
             "ORDER BY rs.rdate DESC")
@@ -28,7 +30,7 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     List<ReservationEntity> findMyPageReserve(@Param("member") MemberEntity member, @Param("rdate") String rdate);
 
     // 사용자가 예매취소한 영화 정보들을 가져오는 메소드(취소시간 순으로 내림차순)
-    @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
+    @Query(value = "SELECT rs FROM ReservationEntity as rs INNER JOIN MovieInfoEntity as mi " +
              "ON rs.movieInfo = mi.miid " +
              "WHERE rs.member = :member AND rs.rstate = false AND rs.rcanceldate > :rcanceldate " +
              "ORDER BY rs.rcanceldate DESC")
@@ -36,7 +38,7 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     List<ReservationEntity> findMyPageReserveCancel(@Param("member") MemberEntity member, @Param("rcanceldate") String rcanceldate);
 
     // 사용자가 예매한 지난 관람내역들을 가져오는 메소드(예매시간 순으로 내림차순, 영화가 끝난 예매들)
-    @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
+    @Query(value = "SELECT rs FROM ReservationEntity as rs INNER JOIN MovieInfoEntity as mi " +
             "ON rs.movieInfo = mi.miid " +
             "WHERE rs.member = :member AND rs.rstate = true AND rs.rdate > :rdate AND mi.miendtime <= now() " +
             "ORDER BY rs.rdate DESC")
@@ -44,7 +46,7 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     List<ReservationEntity> findMyPageReserveFinish(@Param("member") MemberEntity member, @Param("rdate") String rdate);
 
     // 사용자가 예매한 영화의 세부내역을 가져오는 메소드
-    @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
+    @Query(value = "SELECT rs FROM ReservationEntity as rs INNER JOIN MovieInfoEntity as mi " +
             "ON rs.movieInfo = mi.miid " +
             "WHERE rs.rid = :rid")
     @EntityGraph(attributePaths = {"movieInfo.movie", "movieInfo.cinema", "movieInfo.cinema.theater"})
@@ -58,21 +60,19 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     void UserReservationCancel(@Param("rid") Long rid);
 
     // 특정 영화의 예매 기록을 전부 들고오는 메소드(예매시간 순으로 내림차순)
-    @Query(value = "SELECT rs FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi " +
+    @Query(value = "SELECT rs FROM ReservationEntity as rs INNER JOIN MovieInfoEntity as mi " +
             "ON rs.movieInfo = mi.miid " +
             "WHERE mi.movie = :movie " +
             "ORDER BY rs.rdate DESC")
     @EntityGraph(attributePaths = {"movieInfo.cinema", "movieInfo.cinema.theater"})
     List<ReservationEntity> findManagerReserveMovie(@Param("movie") MovieEntity movie);
 
-    // 특정 극장의 예매 기록을 전부 들고오는 메소드(예매시간 순으로 내림차순)
-    // 이게 문제임 지금
-    @Query(value = "SELECT rs, mi, ci FROM ReservationEntity as rs LEFT OUTER JOIN MovieInfoEntity as mi ON rs.movieInfo = mi.miid " +
-            "LEFT OUTER JOIN CinemaEntity as ci ON mi.cinema = ci.cid " +
+
+
+    // 특정 극장의 예매 기록을 들고오는 메소드(예매시간 순으로 내림차순, 10개만 들고옴)
+    @Query(value = "SELECT rs FROM ReservationEntity as rs INNER JOIN MovieInfoEntity as mi ON rs.movieInfo = mi.miid " +
+            "INNER JOIN MovieEntity as m ON mi.movie = m.mid INNER JOIN CinemaEntity as ci ON mi.cinema = ci.cid " +
             "WHERE ci.theater = :theater " +
             "ORDER BY rs.rdate DESC")
-
-    List<ReservationEntity> findManagerReserveTheater(@Param("theater") TheaterEntity theater);
-
-
+    Page<ReservationEntity> findManagerReserveTheater(@Param("theater") TheaterEntity theater, Pageable pageable);
 }

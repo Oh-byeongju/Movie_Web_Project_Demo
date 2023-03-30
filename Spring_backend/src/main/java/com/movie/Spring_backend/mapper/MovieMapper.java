@@ -196,7 +196,8 @@ public class MovieMapper {
                     .mtitle(entity.getMtitle()+"(상영예정)")
                     .mimagepath(entity.getMimagepath())
                     .reserve(false)
-                    .reserveCnt(entity.getCntReserve()).build();
+                    .reserveCnt(entity.getCntReserve())
+                    .reserveCntAll((int) AllReserveCnt).build();
         }
     }
 

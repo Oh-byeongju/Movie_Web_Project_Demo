@@ -2180,7 +2180,6 @@ UPDATE movie_member
 SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
 WHERE MID = 4 AND uid = 'temp17';
 
-
 /*
 -- 예매 취소한 것들 확인하는 쿼리
 SELECT *
@@ -2234,8 +2233,7 @@ from movie_member
 where uid = 'temp1' and umlike = true
 order by umliketime desc;
 
-
-
+      
 
 
 -- 여기서 뽑은 mid를 검색

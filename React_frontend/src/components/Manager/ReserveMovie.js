@@ -1,15 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import * as date from "../../lib/date.js";
 import { Table } from 'antd';
 
 const ReserveMovie = () => {
-	const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-	// 리덕스에 있는 예매기록 리스트
-	const { RESERVE_LIST } = useSelector((state) => state.R_manager_user);
-	const { RESERVE_LIST_loading } = useSelector((state) => state.R_manager_user);
+  // 필요한 리덕스 상태들
+  const { RESERVE_MOVIE_LIST_loading, RESERVE_MOVIE_LIST, MOVIE } = useSelector(
+    state => ({
+      RESERVE_MOVIE_LIST_loading: state.R_manager_user.RESERVE_MOVIE_LIST_loading,
+      RESERVE_MOVIE_LIST: state.R_manager_user.RESERVE_MOVIE_LIST,
+      MOVIE: state.R_manager_user.MOVIE
+    }),
+    shallowEqual
+  );
 
 	// antd css 설정
   const columns = [
@@ -68,26 +74,33 @@ const ReserveMovie = () => {
     },
   ];  
 
+  
+  
+	// reserveTheater rowKey 오류 뜸 알아보기
+	// 내일 영화도 페이지네이션으로 수정하기
+  // ReserveTheater 취소건을 어떻게 구현하지?
+  // 취소를 잡으려면 결국 상영관에 달아서 보내줘야함
+  // 애시당초 취소된것은 확인 안해도 될듯
 
 	return (
 		<>
 			<TableWrap rowKey="rid"
-          loading={RESERVE_LIST_loading}
-          columns={columns}
-          dataSource={RESERVE_LIST}
-          scroll={{
-          x: 1350,
-        }}/>
+        loading={RESERVE_MOVIE_LIST_loading}
+        columns={columns}
+        dataSource={RESERVE_MOVIE_LIST}
+        scroll={{x: 1350}}
+      />
 		</>
 	);
 };
 
 const TableWrap = styled(Table)`
   margin-bottom: 30px;
+  min-height: 693px;
 
   .ant-table-placeholder {
     .ant-table-expanded-row-fixed{
-      min-height: 600px !important;
+      min-height: 603px !important;
     }
     .css-dev-only-do-not-override-acm2ia {
       position:absolute;

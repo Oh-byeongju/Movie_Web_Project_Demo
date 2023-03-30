@@ -40,8 +40,8 @@ public interface MovieInfoSeatRepository  extends JpaRepository<MovieInfoSeatEnt
     List<MovieInfoSeatEntity> findMyPageReserveCancelSeat(@Param("member") MemberEntity member, @Param("rcanceldate") String rcanceldate);
 
     // 사용자가 예매한 지난 관람내역의 좌석들을 가져오는 메소드(예매시간 순으로 내림차순, 영화가 끝난 예매들)
-    @Query(value = "SELECT mis FROM MovieInfoSeatEntity as mis LEFT OUTER JOIN ReservationEntity as rs ON mis.reserve = rs.rid " +
-            "LEFT OUTER JOIN MovieInfoEntity as mi ON rs.movieInfo = mi.miid " +
+    @Query(value = "SELECT mis FROM MovieInfoSeatEntity as mis INNER JOIN ReservationEntity as rs ON mis.reserve = rs.rid " +
+            "INNER JOIN MovieInfoEntity as mi ON rs.movieInfo = mi.miid " +
             "WHERE rs.member = :member AND rs.rstate = true AND rs.rdate > :rdate AND mi.miendtime <= now() " +
             "ORDER BY rs.rdate DESC")
     @EntityGraph(attributePaths = {"seat"})

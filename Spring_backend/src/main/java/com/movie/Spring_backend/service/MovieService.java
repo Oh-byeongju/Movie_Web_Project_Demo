@@ -35,7 +35,6 @@ public class MovieService {
     private final MovieCommentMapper movieCommentMapper;
 
     // 전체 영화 조회 메소드
-    @Transactional
     public List<MovieDto> getAllMovie(Map<String, String> requestMap) {
         // 영화 테이블에서 현재 예매가 가능한 영화들 조회
         List<MovieEntity> Movies = movieRepository.findShowMoviesReserve();
