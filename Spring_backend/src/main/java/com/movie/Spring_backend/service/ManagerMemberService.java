@@ -4,10 +4,7 @@
 */
 package com.movie.Spring_backend.service;
 
-import com.movie.Spring_backend.dto.MemberDto;
-import com.movie.Spring_backend.dto.MovieDto;
-import com.movie.Spring_backend.dto.ReservationDto;
-import com.movie.Spring_backend.dto.TheaterDto;
+import com.movie.Spring_backend.dto.*;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.exceptionlist.IdDuplicateException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
@@ -18,6 +15,8 @@ import com.movie.Spring_backend.repository.MovieRepository;
 import com.movie.Spring_backend.repository.ReservationRepository;
 import com.movie.Spring_backend.repository.TheaterRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Column;
@@ -148,23 +147,22 @@ public class ManagerMemberService {
 
     // 특정 극장의 예매기록을 불러오는 메소드
     @Transactional
-    public List<ReservationDto> TheaterReserveSearch(HttpServletRequest request, Long tid) {
+    public Page<ReservationDto> TheaterReserveSearch(HttpServletRequest request, Long tid, Integer page) {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
 
-        System.out.println("ㄹㅇㅁ녈ㅇㄴㅁㄹㅇㄴㅁ여기");
-        // 지금 이거 넘겨받는 속도가 너무 느림
-        // 페이지네이션을 하든 쿼리문을 바꾸든 해야함
+        // 페이지네이션을 위한 정보
+        PageRequest PageInfo = PageRequest.of(page,10);
 
         // JPA 사용을 위한 형 변환
         TheaterEntity theater = TheaterEntity.builder().tid(tid).build();
 
-        // 특정 극장의 모든 예매기록 검색(예매일 순으로 내림차순)
-        List<ReservationEntity> Reservations = reservationRepository.findManagerReserveTheater(theater);
-
-        System.out.println("매핑시작");
+        // 특정 극장의 예매기록 검색(예매일 순으로 내림차순)
+        Page<ReservationEntity> Reservations = reservationRepository.findManagerReserveTheater(theater, PageInfo);
 
         // 예매기록을 매핑 후 리턴
-        return Reservations.stream().map(reservationMapper::ManagerListMappingTheater).collect(Collectors.toList());
+        return Reservations.map(reservationMapper::ManagerListMappingTheater);
+
+
     }
 }

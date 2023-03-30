@@ -10,6 +10,7 @@ import com.movie.Spring_backend.dto.ReservationDto;
 import com.movie.Spring_backend.dto.TheaterDto;
 import com.movie.Spring_backend.service.ManagerMemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,7 +59,7 @@ public class ManagerMemberController {
 
     // 예매기록 조회 메소드(극장 선택)
     @GetMapping("/auth/allTheaterReserve")
-    public ResponseEntity<List<ReservationDto>> AllTheaterReserve(HttpServletRequest request, @RequestParam(value = "tid") Long tid) {
-        return ResponseEntity.ok().body(managerMemberService.TheaterReserveSearch(request, tid));
+    public ResponseEntity<Page<ReservationDto>> AllTheaterReserve(HttpServletRequest request, @RequestParam(value = "tid") Long tid, @RequestParam(value = "page") Integer page) {
+        return ResponseEntity.ok().body(managerMemberService.TheaterReserveSearch(request, tid, page));
     }
 }

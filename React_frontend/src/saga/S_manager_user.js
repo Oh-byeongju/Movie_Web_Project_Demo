@@ -189,7 +189,8 @@ function* AllTheaterReserve(action) {
 async function callAllTheaterReserve(data) {
   return await http.get("/Manager/auth/allTheaterReserve", {
     params: {
-      tid: data.tid
+      tid: data.tid,
+      page: data.page
     },
   })
     .then((response) => {
