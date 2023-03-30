@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +31,9 @@ public class CinemaEntity { // 소문자 수정본
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="tid") //조인할 컬럼 이름
     private TheaterEntity theater;
+
+    @OneToMany(mappedBy = "cinema", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<SeatEntity> seat = new ArrayList<>();
 
 
     @Builder //클래스 레벨에 붙이거나 생성자에 붙여주면 파라미터를 활용하여 빌더 패턴을 자동으로 생성해준다
