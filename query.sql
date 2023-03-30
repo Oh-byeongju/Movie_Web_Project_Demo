@@ -2195,8 +2195,6 @@ WHERE mr.uid = 'temp1' AND mr.rstate = false
 ORDER BY rcanceldate DESC;
 
 
-
-
 -- 여기에 join 시네마랑 극장 붙여서 보내면 됨  + 몇개만 뽑아서 검색하는거 고민(시간 붙이면 현재예매, 지난예매)
 SELECT *
 FROM movie LEFT JOIN movie_information ON movie.mid = movie_information.mid LEFT JOIN movie_reservation ON movie_information.miid = movie_reservation.miid
@@ -2209,12 +2207,6 @@ SELECT mis.*
 FROM movie_reservation AS mr LEFT JOIN movie_infoseat AS mis ON mr.rid = mis.rid
 WHERE mr.uid = 'temp1' AND mr.rstate = true
 ORDER BY rdate DESC;
-
-
-
-
-
-
 
 -- 임의 데이터(몇개 더 넣어보기)
 INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid`, `rtoken`, `rpaytype`, `rstate`, `miid`, `uid`) VALUES(DATE_SUB(NOW(), INTERVAL 1 DAY), '40', '어른 1명, 아이 1명', '2', 'temporary_value', 'temporary_value', '테스트', '1', '30', 'temp1');
