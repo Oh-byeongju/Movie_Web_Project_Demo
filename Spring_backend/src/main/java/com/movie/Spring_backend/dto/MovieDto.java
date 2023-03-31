@@ -33,10 +33,18 @@ public class MovieDto {
     private Integer reserveCnt; // 예매횟수
     private Integer reserveCntAll; // 전체 예매 횟수(관리자 페이지에서 사용)
 
+    //관리자 페이지
+    private List<String> mainactor;  //주연
+    private List<String> subactor;  //조연
+    private List<String> voiceactor;  //성우
+
+
     @Builder
     public MovieDto(Long mid, String mtitle, String mdir, String mgenre, int mtime, Date mdate, String mrating,
                     String mstory , String mimagepath, Integer mlikes, Float mscore, Boolean mlike,
-                    String able, List<String> actors, Boolean reserve, Float reserveRate, Integer reserveCnt, Integer reserveCntAll) {
+                    String able, List<String> actors, Boolean reserve, Float reserveRate, Integer reserveCnt, Integer reserveCntAll
+                     ,List<String> mainactor, List<String> subactor, List<String> voiceactor
+    ) {
         this.mid = mid;
         this.mtitle = mtitle;
         this.mdir = mdir;
@@ -55,6 +63,9 @@ public class MovieDto {
         this.reserveRate = reserveRate;
         this.reserveCnt = reserveCnt;
         this.reserveCntAll = reserveCntAll;
+        this.mainactor=mainactor;
+        this.subactor=subactor;
+        this.voiceactor=voiceactor;
     }
 }
 

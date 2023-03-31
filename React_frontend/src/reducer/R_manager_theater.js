@@ -19,7 +19,11 @@ const initalState = {
     movie_loading:false,
     movie_done:false,
     movie_error:null,
-    movie:[]
+    movie:[],
+
+    movie_insert_loading:false,
+    movie_insert_done:false,
+    movie_insert_error:null,
 
 };
 
@@ -39,6 +43,10 @@ export const CINEMA_INSERT_ERROR = "CINEMA_INSERT_ERROR"
 export const MOVIES_REQUEST = "MOVIES_REQUEST"
 export const MOVIES_SUCCESS = "MOVIES_SUCCESS"
 export const MOVIES_FAILURE = "MOVIES_FAILURE"
+
+export const MOVIE_INSERT_LOADING = "MOVIE_INSERT_LOADING"
+export const MOVIE_INSERT_DONE = "MOVIE_INSERT_DONE"
+export const MOVIE_INSERT_ERROR = "MOVIE_INSERT_ERROR"
 const R_manager_theater = (state = initalState, action) => {
 	switch (action.type) {
             case CINEMA_LOADING:
@@ -132,7 +140,28 @@ const R_manager_theater = (state = initalState, action) => {
                     movie_done:false,
                     movie_error:action.error,
                 }   
-
+            case MOVIE_INSERT_LOADING:
+                return{
+                    ...state,
+                    movie_insert_loading:true,
+                    movie_insert_done:false,
+                    movie_insert_error:null,
+                    }
+            case MOVIE_INSERT_DONE:
+                return{
+                    ...state,
+                    movie_insert_loading:false,
+                    movie_insert_done:true,
+                    movie_insert_error:null,
+                }
+            
+            case MOVIE_INSERT_ERROR:
+                return{
+                    ...state,
+                    movie_insert_loading:false,
+                    movie_insert_done:false,
+                    movie_insert_error:action.error,
+                }        
 		default:
       return state;
 	}

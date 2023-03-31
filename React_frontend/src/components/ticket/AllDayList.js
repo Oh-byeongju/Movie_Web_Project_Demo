@@ -52,7 +52,7 @@ const AllDayList = () => {
 
   const Weak = useRef(null);
   //월 구분을 위함 것
-  const [moment, setMoment] = useState(["02", "03"]);
+  const [moment, setMoment] = useState(["04", "05","06","07","07","09","10","11","12"]);
   //요일 표시 평일 검정색, 토요일 파란색, 일요일 빨간색
 
   //수정필요합니다.
