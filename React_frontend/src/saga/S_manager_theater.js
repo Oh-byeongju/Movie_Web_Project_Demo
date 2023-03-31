@@ -7,7 +7,8 @@ import {
 	CINEMA_LOADING,CINEMA_DONE,CINEMA_ERROR,
     THEATER_INSERT_LOADING,THEATER_INSERT_DONE,THEATER_INSERT_ERROR,
     CINEMA_INSERT_LOADING,CINEMA_INSERT_DONE,CINEMA_INSERT_ERROR,
-    MOVIES_REQUEST,MOVIES_SUCCESS,MOVIES_FAILURE
+    MOVIES_REQUEST,MOVIES_SUCCESS,MOVIES_FAILURE,
+    MOVIE_INSERT_LOADING,MOVIE_INSERT_DONE,MOVIE_INSERT_ERROR
  } from "../reducer/R_manager_theater";
 import { http } from "../lib/http";
 
@@ -112,7 +113,7 @@ function* cinemaInsert(action) {
   
   // 상영관 추가 백엔드 호출
   async function MovieApi(data) {
-    return await http.get("manager/normal/movieall", {
+    return await http.get("manager/auth/movieall", {
       params: {
         uid: data,
         button: 'rate',
@@ -126,6 +127,34 @@ function* cinemaInsert(action) {
         return error.response;
       });
   }
+
+
+  function* MovieInsert(action) {
+    const result = yield call(MovieInsertApi, action);
+    if (result.status === 200) {
+      yield put({
+        type: MOVIE_INSERT_DONE,
+      });
+    } 
+    else {
+      yield put({
+              type: MOVIE_INSERT_ERROR,
+              data:result.error
+      });
+    }
+  }
+  
+  // 상영관 추가 백엔드 호출
+  async function MovieInsertApi(data) {
+    return await http.post("manager/auth/postmovie", data.fd)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        return error.response;
+      });
+  }
+
 function* ALL_CINEMA() {
   yield takeLatest(CINEMA_LOADING, cinema);
 }
@@ -138,8 +167,9 @@ function* CINEMA_INSERT() {
   function* MOVIE_UPLOAD() {
     yield takeLatest(MOVIES_REQUEST, Movie);
   }
-
-
+  function* POST_MOVIE() {
+    yield takeLatest(MOVIE_INSERT_LOADING, MovieInsert);
+  }
 export default function* S_manager_theater() {
-  yield all([fork(ALL_CINEMA),fork(THEATER_INSERT),fork(CINEMA_INSERT),fork(MOVIE_UPLOAD)]);
+  yield all([fork(ALL_CINEMA),fork(THEATER_INSERT),fork(CINEMA_INSERT),fork(MOVIE_UPLOAD),fork(POST_MOVIE)]);
 }

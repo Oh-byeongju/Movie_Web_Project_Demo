@@ -1,12 +1,15 @@
 
 import React, { useState, useEffect, useCallback,useMemo ,useRef} from 'react';
 import styled from 'styled-components';
-import { Table, Input ,Button,Modal,Form,Select,message} from 'antd';
+import axios from 'axios';
+import { Table, Input ,Button,Modal,Form,Select,message,Space, Tag, Tooltip, theme} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { PlusOutlined } from '@ant-design/icons';
-import { MOVIES_REQUEST } from '../../reducer/R_manager_theater';
+import { MOVIES_REQUEST, MOVIE_INSERT_LOADING } from '../../reducer/R_manager_theater';
 import ReactQuill from 'react-quill';
 import useInput from '../../hooks/useInput';
+import { http } from "../../lib/http";
+import Actor from './Actor';
 import 'react-quill/dist/quill.snow.css';
 const { Search } = Input;
 const Movie = () =>{
@@ -15,6 +18,9 @@ const Movie = () =>{
     const { movie } = useSelector((state) => state.R_manager_theater);
     const [messageApi, contextHolder] = message.useMessage();
 
+    const [main , setMain ] = useState([])
+    const [sub, setSub] = useState([]);
+    const [voice, setVoice]= useState([]);
     useEffect(()=>{
         dispatch({
             type:MOVIES_REQUEST,
@@ -26,30 +32,125 @@ const Movie = () =>{
 
   //추가
   const [insert, setInsert] = useState(false);
- 
+ const [mid ,setMid] = useState('');
   const [name, onChangeName, setName] = useInput(''); //제목
   const [dir, onChangeDir, setDir] = useInput('');    //감독
   const [genre, onChangeGenre, setGenre] = useInput(''); //장르
   const [time, onChangeTime, setTime] = useInput(''); //상영시간
   const [date, onChangeDate, setDate] = useInput(''); //개봉일
 
+    const [file, setFile ] = useState(null);
+    const [filechange, setFileChange] = useState(false);
+      const onChangeImg = e => {
+        setFile(e.target.files);
+        setFileChange(true);
+        };
 
-  //수정
-  const showModal = (data) => {
-    setContent(data)
+   
+    
+      //수정
+      const [update, setUpdate] = useState(false);
+  const showModal = (id,name,dir,genre,time,date,content,main,sub,voice) => {
+    setMid(id)
+    setName(name)
+    setDir(dir)
+    setGenre(genre)
+    setTime(time)
+    setDate(date)
+    setContent(content)
+    setMain(main)
+    setSub(sub)
+    setVoice(voice)
+    setFileChange(false)
     setIsModalOpen(true);
+    setUpdate(true);
   };
 
   const showModdal = () => {
+    setMid("")
+    setName("")
+    setDir("")
+    setGenre("")
+    setTime("")
+    setDate("")
+    setContent("")
+    setMain([])
+    setSub([])
+    setVoice([])
+    setFileChange(false)
     setIsModalOpen(true);
+    setUpdate(false);
   };
   //확인
-  const handleOk = () => {
+  const handleOk = async () => {
+    const mainactor = main.join()
+    const subactor = sub.join()
+    const voiceactor = voice.join()
+
+    const fd = new FormData();  
+    const updatedata ={
+      id:mid,
+      name:name,
+      dir:dir,
+      genre:genre,
+      time:time,
+      date:date,
+      rating:"12",
+      story:Board_Content,
+      main:mainactor,
+      sub:subactor,
+      voice:voiceactor,
+      state:"update"
+      }
+      const insertdata ={
+        id:mid,
+        name:name,
+        dir:dir,
+        genre:genre,
+        time:time,
+        date:date,
+        rating:"12",
+        story:Board_Content,
+        main:mainactor,
+        sub:subactor,
+        voice:voiceactor,
+        state:"insert"
+        }
+
+   //이미지
+    if(update){
+      if(filechange){
+      if(file){
+        fd.append("multipartFiles", file[0]); 
+      }
+    }
+    fd.append("data", new Blob([JSON.stringify(updatedata)], {   //데이터
+      type: "application/json"
+    }))
+  }
+
+
+  //insert
+  else if(!update){
+    if(file){
+      fd.append("multipartFiles", file[0]); 
+    }
+    fd.append("data", new Blob([JSON.stringify(insertdata)], {   //데이터
+      type: "application/json"
+    }))
+  }
+
+
+    dispatch({
+      type:MOVIE_INSERT_LOADING,
+      fd
+    })
     setIsModalOpen(false);    
 
   }
   //창 닫을 시 초기화
   const handleCancel = () => {
+    setContent('');
     setIsModalOpen(false)
   };
   const quillRef = useRef();
@@ -60,6 +161,10 @@ const Movie = () =>{
 		setContent(value);
     console.log(value);
 	};
+
+
+
+
 
   const columns = [
     {
@@ -74,6 +179,29 @@ const Movie = () =>{
       width: 5,
       dataIndex: 'mdir',
       fixed: 'left',
+    },
+    {
+      title: '주연',
+      width: 7,
+      dataIndex: 'mainactor',
+      fixed: 'left',
+      render: (mainactor) => mainactor.map(main => main).join(),
+    },
+    {
+      title: '조연',
+      width: 7,
+      dataIndex: 'subactor',
+      fixed: 'left',
+      render: (subactor) => subactor.map(main => main).join(),
+
+    },
+    {
+      title: '성우',
+      width: 7,
+      dataIndex: 'voiceactor',
+      fixed: 'left',
+      render: (voiceactor) => voiceactor.map(main => main).join(),
+
     },
     {
       title: '장르',
@@ -91,7 +219,7 @@ const Movie = () =>{
     },
     {
       title: '개봉일',
-      width: 5,
+      width: 10,
       dataIndex: 'mdate',
       fixed: 'left',
     },
@@ -154,7 +282,10 @@ const Movie = () =>{
             return {
                // click row
               onDoubleClick: event => {   
-                showModal(record.mstory)
+                showModal(
+                  record.mid,record.mtitle, record.mdir, record.mgenre, record.mtime, record.mdate,
+                  record.mstory,record.mainactor,record.subactor, record.voiceactor
+                  )
               }, // double click row
               onContextMenu: event => {}, // right button click row
               onMouseEnter: event => {}, // mouse enter row
@@ -185,6 +316,23 @@ const Movie = () =>{
       <Form.Item label="개봉일" onChange={onChangeDate}>
         <Input value={date}/>
       </Form.Item>
+      <Form.Item label="주연&nbsp;&nbsp;&nbsp;">
+      
+      <Actor tags ={main} setTags={setMain}/>
+      </Form.Item>
+      <Form.Item label="조연&nbsp;&nbsp;&nbsp;">
+      <Actor tags ={sub} setTags={setSub}/>
+      </Form.Item> 
+
+      <Form.Item label="성우&nbsp;&nbsp;&nbsp;">
+      
+      <Actor tags ={voice} setTags={setVoice}/>
+      </Form.Item> 
+
+      <Form.Item label="포스터" >
+        <input type="file" id="file" onChange={onChangeImg} 
+        multiple="multiple" /> {update ?"파일을 선택하면 교체 놔두면 교체 안함" :"" } 
+      </Form.Item>
       <Form.Item label="줄거리" >
       <CustomReactQuill
         ref={quillRef}
@@ -192,8 +340,7 @@ const Movie = () =>{
         onChange={onEditorChange}
         modules={modules}
         formats={formats}
-        defaultValue="sagfsagsagasgasgsasagasgsa"
-      />   
+                    />   
             </Form.Item>
       {modify ?
       <Form.Item style={{position:'relative', top:'57px'}}>

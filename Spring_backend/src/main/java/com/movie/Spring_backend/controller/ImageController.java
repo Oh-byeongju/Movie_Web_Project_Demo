@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageController {
 
     String UPLOAD_PATH = "/Users/mok/Desktop/Movie_Project/Spring_backend/image";
-
+    String POSTER_PATH = "/Users/mok/Desktop/Movie_Project/React_frontend/public/img/ranking";
     //이미지 불러오는 메소드
     @GetMapping("/normal/getImage/{fileId}/{fileType}")
     public ResponseEntity<byte[]> getImageFile(@PathVariable("fileId") String fileId, @PathVariable("fileType") String fileType) {

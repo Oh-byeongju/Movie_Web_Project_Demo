@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.movie.Spring_backend.dto.CinemaDto;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServlet;
@@ -38,7 +39,8 @@ public class CinemaController {
         return ResponseEntity.ok().body(cinemaService.findall());
     }
     @PostMapping("/normal/insertcinema")
-    public void insert(@RequestBody Map<String, String> requestMap, HttpServletRequest request){
-        cinemaService.insert(requestMap,request);
+    public void insert(@RequestBody Map<String, String> requestMap, HttpServletRequest request,
+                       @RequestBody MultipartFile multipartFile[]){
+        cinemaService.insert(requestMap,request,multipartFile);
     }
 }
