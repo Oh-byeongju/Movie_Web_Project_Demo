@@ -7,6 +7,8 @@ import com.movie.Spring_backend.entity.MemberEntity;
 import com.movie.Spring_backend.entity.MovieEntity;
 import com.movie.Spring_backend.entity.MovieMemberEntity;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
@@ -57,6 +59,13 @@ public interface MovieMemberRepository extends JpaRepository<MovieMemberEntity, 
 
     // 특정 영화의 MovieMember 관람평 정보를 들고오는 메소드(최신순 --> 작성시간 내림차순)
     List<MovieMemberEntity> findByMovieAndUmcommentIsNotNullOrderByUmcommenttimeDesc(MovieEntity movie);
+
+
+
+    // 얘로 수정해야할듯 관람평은
+    // 특정 영화의 MovieMember 관람평 정보를 들고오는 메소드(최신순 --> 작성시간 내림차순)
+    Page<MovieMemberEntity> findByMovieAndUmcommentIsNotNullOrderByUmcommenttimeDesc(MovieEntity movie, Pageable page);
+
 
     // 특정 영화의 MovieMember 관람평 정보를 들고오는 메소드(좋아요순, 작성시간 오름차순)
     @Query(value = "SELECT mm FROM MovieMemberEntity as mm " +

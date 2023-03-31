@@ -1,27 +1,18 @@
 /*
  23-03-27 관리자 페이지 회원관리 구현(오병주)
- 23-03-28 ~ 29 관리자 페이지 예매기록조회 구현(오병주)
+ 23-03-28 ~ 30 관리자 페이지 예매기록조회 구현(오병주)
+ 23-03-31 관리자 페이지 관람평 관리 구현(오병주)
 */
 import { call, all, takeLatest, fork, put } from "redux-saga/effects";
 import { 
-	MANAGER_USER_LIST_REQUEST,
-	MANAGER_USER_LIST_SUCCESS,
-	MANAGER_USER_LIST_FAILURE,
-	MANAGER_USER_DROP_REQUEST,
-	MANAGER_USER_DROP_SUCCESS,
-	MANAGER_USER_DROP_FAILURE,
-  MANAGER_MOVIE_LIST_REQUEST,
-	MANAGER_MOVIE_LIST_SUCCESS,
-	MANAGER_MOVIE_LIST_FAILURE,
-  MANAGER_THEATER_LIST_REQUEST,
-	MANAGER_THEATER_LIST_SUCCESS,
-	MANAGER_THEATER_LIST_FAILURE,
-  MANAGER_RESERVE_MOVIE_LIST_REQUEST,
-	MANAGER_RESERVE_MOVIE_LIST_SUCCESS,
-	MANAGER_RESERVE_MOVIE_LIST_FAILURE,
-  MANAGER_RESERVE_THEATER_LIST_REQUEST,
-	MANAGER_RESERVE_THEATER_LIST_SUCCESS,
-	MANAGER_RESERVE_THEATER_LIST_FAILURE
+	MANAGER_USER_LIST_REQUEST, MANAGER_USER_LIST_SUCCESS, MANAGER_USER_LIST_FAILURE,
+	MANAGER_USER_DROP_REQUEST, MANAGER_USER_DROP_SUCCESS, MANAGER_USER_DROP_FAILURE,
+  MANAGER_MOVIE_LIST_REQUEST, MANAGER_MOVIE_LIST_SUCCESS, MANAGER_MOVIE_LIST_FAILURE,
+  MANAGER_THEATER_LIST_REQUEST, MANAGER_THEATER_LIST_SUCCESS, MANAGER_THEATER_LIST_FAILURE,
+  MANAGER_RESERVE_MOVIE_LIST_REQUEST, MANAGER_RESERVE_MOVIE_LIST_SUCCESS, MANAGER_RESERVE_MOVIE_LIST_FAILURE,
+  MANAGER_RESERVE_THEATER_LIST_REQUEST, MANAGER_RESERVE_THEATER_LIST_SUCCESS, MANAGER_RESERVE_THEATER_LIST_FAILURE,
+  MANAGER_MOVIE_LIST_COMMENT_REQUEST, MANAGER_MOVIE_LIST_COMMENT_SUCCESS, MANAGER_MOVIE_LIST_COMMENT_FAILURE,
+  MANAGER_MOVIE_COMMENT_LIST_REQUEST, MANAGER_MOVIE_COMMENT_LIST_SUCCESS, MANAGER_MOVIE_COMMENT_LIST_FAILURE 
  } from "../reducer/R_manager_user";
 import { http } from "../lib/http";
 
@@ -158,7 +149,9 @@ function* AllMovieReserve(action) {
 async function callAllMovieReserve(data) {
   return await http.get("/Manager/auth/allMovieReserve", {
     params: {
-      mid: data.mid
+      mid: data.mid,
+      page: data.page,
+      size: data.size
     },
   })
     .then((response) => {
@@ -190,7 +183,58 @@ async function callAllTheaterReserve(data) {
   return await http.get("/Manager/auth/allTheaterReserve", {
     params: {
       tid: data.tid,
-      page: data.page
+      page: data.page,
+      size: data.size
+    },
+  })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+}
+
+// 영화 조회 함수(관람평 페이지)
+function* AllMovieListComment() {
+  // 위에서 사용한 함수 재활용
+  const result = yield call(callAllMovie);
+  if (result.status === 200) {
+    yield put({
+      type: MANAGER_MOVIE_LIST_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } 
+  else {
+    yield put({
+			type: MANAGER_MOVIE_LIST_COMMENT_FAILURE
+    });
+  }
+}
+
+// 관람평 조회 함수
+function* AllMovieComment(action) {
+  const result = yield call(callAllMovieComment, action.data);
+  if (result.status === 200) {
+    yield put({
+      type: MANAGER_MOVIE_COMMENT_LIST_SUCCESS,
+      data: result.data
+    });
+  } 
+  else {
+    yield put({
+			type: MANAGER_MOVIE_COMMENT_LIST_FAILURE
+    });
+  }
+}
+
+// 관람평 조회 백엔드 호출
+async function callAllMovieComment(data) {
+  return await http.get("/Manager/auth/allMovieComment", {
+    params: {
+      mid: data.mid,
+      page: data.page,
+      size: data.size
     },
   })
     .then((response) => {
@@ -225,6 +269,21 @@ function* RESERVE_THEATER_LIST() {
   yield takeLatest(MANAGER_RESERVE_THEATER_LIST_REQUEST, AllTheaterReserve);
 }
 
+function* MOVIE_LIST_COMMENT() {
+  yield takeLatest(MANAGER_MOVIE_LIST_COMMENT_REQUEST, AllMovieListComment);
+}
+
+function* MOVIE_COMMENT_LIST() {
+  yield takeLatest(MANAGER_MOVIE_COMMENT_LIST_REQUEST, AllMovieComment);
+}
+
 export default function* S_manager_user() {
-  yield all([fork(USER_LIST), fork(USER_DROP), fork(MOVIE_LIST), fork(THEATER_LIST), fork(RESERVE_MOVIE_LIST), fork(RESERVE_THEATER_LIST)]);
+  yield all([fork(USER_LIST),
+    fork(USER_DROP),
+    fork(MOVIE_LIST),
+    fork(THEATER_LIST),
+    fork(RESERVE_MOVIE_LIST),
+    fork(RESERVE_THEATER_LIST),
+    fork(MOVIE_LIST_COMMENT),
+    fork(MOVIE_COMMENT_LIST)]);
 }

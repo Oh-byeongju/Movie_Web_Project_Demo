@@ -43,6 +43,7 @@ const ReserveTheater = ({ currentT, setCurrentT }) => {
       title: '예매일시',
       width: 170,
       dataIndex: 'rdate',
+      sorter: (a, b) => new Date(a.rdate) - new Date(b.rdate)
     },
     {
       title: '관람극장',
@@ -61,7 +62,7 @@ const ReserveTheater = ({ currentT, setCurrentT }) => {
     },
 		{
       title: '결제유형', 
-      width: 105	,
+      width: 105,
       dataIndex: 'rpaytype',
     },
 		{
@@ -69,16 +70,11 @@ const ReserveTheater = ({ currentT, setCurrentT }) => {
       width: 100,
 			render: (text, row) => <div> {row["rprice"]}원 </div>,
     },
-		{
-      title: '취소일시',
-      width: 170,
-      render: (text, row) => <div> {row["rcanceldate"] ? row["rcanceldate"] : "-"} </div>,
-    },
     {
       title: '예매상태',
       fixed: 'right',
       width: 90,
-      render: (text, row) => <div> {row["rstate"] ? "예매완료" : "예매취소"} </div>,
+      render: (text, row) => <div> 예매완료 </div>,
     },
   ];  
 
@@ -89,7 +85,8 @@ const ReserveTheater = ({ currentT, setCurrentT }) => {
 			type: MANAGER_RESERVE_THEATER_LIST_REQUEST,
 			data: {
 				tid: THEATER.tid,
-				page: pagination.current - 1
+				page: pagination.current - 1,
+        size: pagination.pageSize
 			}
 		});
   };
@@ -98,11 +95,16 @@ const ReserveTheater = ({ currentT, setCurrentT }) => {
 		<>
 			<TableWrap rowKey="rid"
 				loading={RESERVE_THEATER_LIST_loading}
+        columns={columns}
 				dataSource={RESERVE_THEATER_LIST.content}
-				columns={columns}
-				pagination={{current: currentT, total: RESERVE_THEATER_LIST.totalElements}}
+				pagination={{current: currentT, total: RESERVE_THEATER_LIST.totalElements, pageSize: RESERVE_THEATER_LIST.size}}
 				scroll={{x: 1350}}
 				onChange={handleTableChange}
+        locale={{ 
+          triggerDesc: '내림차순 정렬',
+          triggerAsc: '오름차순 정렬', 
+          cancelSort: '정렬해제'
+      	}}
 			/>
 		</>
 	);

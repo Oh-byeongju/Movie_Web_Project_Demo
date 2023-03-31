@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import * as date from "../../lib/date.js";
+import { MANAGER_RESERVE_MOVIE_LIST_REQUEST } from '../../reducer/R_manager_user.js';
 import { Table } from 'antd';
 
-const ReserveMovie = () => {
+const ReserveMovie = ({ currentM, setCurrentM }) => {
   const dispatch = useDispatch();
 
   // 필요한 리덕스 상태들
@@ -35,6 +36,7 @@ const ReserveMovie = () => {
       title: '예매일시',
       width: 170,
       dataIndex: 'rdate',
+      sorter: (a, b) => new Date(a.rdate) - new Date(b.rdate)
     },
     {
       title: '관람극장',
@@ -53,7 +55,7 @@ const ReserveMovie = () => {
     },
 		{
       title: '결제유형', 
-      width: 105	,
+      width: 105,
       dataIndex: 'rpaytype',
     },
 		{
@@ -61,35 +63,41 @@ const ReserveMovie = () => {
       width: 100,
 			render: (text, row) => <div> {row["rprice"]}원 </div>,
     },
-		{
-      title: '취소일시',
-      width: 170,
-      render: (text, row) => <div> {row["rcanceldate"] ? row["rcanceldate"] : "-"} </div>,
-    },
     {
       title: '예매상태',
       fixed: 'right',
       width: 90,
-      render: (text, row) => <div> {row["rstate"] ? "예매완료" : "예매취소"} </div>,
+      render: (text, row) => <div> 예매완료 </div>,
     },
   ];  
 
-  
-  
-	// reserveTheater rowKey 오류 뜸 알아보기
-	// 내일 영화도 페이지네이션으로 수정하기
-  // ReserveTheater 취소건을 어떻게 구현하지?
-  // 취소를 잡으려면 결국 상영관에 달아서 보내줘야함
-  // 애시당초 취소된것은 확인 안해도 될듯
-  // 내일 취소된거 빼버리기
+  // 테이블에 있는 페이지네이션 누를 때
+	const handleTableChange = (pagination) => {
+		setCurrentM(pagination.current);
+		dispatch({
+			type: MANAGER_RESERVE_MOVIE_LIST_REQUEST,
+			data: {
+				mid: MOVIE.mid,
+				page: pagination.current - 1,
+        size: pagination.pageSize
+			}
+		});
+  };
 
 	return (
 		<>
 			<TableWrap rowKey="rid"
         loading={RESERVE_MOVIE_LIST_loading}
         columns={columns}
-        dataSource={RESERVE_MOVIE_LIST}
+        dataSource={RESERVE_MOVIE_LIST.content}
+        pagination={{current: currentM, total: RESERVE_MOVIE_LIST.totalElements, pageSize: RESERVE_MOVIE_LIST.size}}
         scroll={{x: 1350}}
+        onChange={handleTableChange}
+        locale={{ 
+          triggerDesc: '내림차순 정렬',
+          triggerAsc: '오름차순 정렬', 
+          cancelSort: '정렬해제'
+      	}}
       />
 		</>
 	);

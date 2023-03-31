@@ -28,7 +28,8 @@ const Reserve = () => {
     shallowEqual
   );
 
-	// 극장 선택 페이지네이션 번호
+	// 영화 및 극장 선택 페이지네이션 번호
+	const [currentM , setCurrentM] = useState(1); 
 	const [currentT , setCurrentT] = useState(1);
 
 	// 모든 영화 및 상영관 조회 useEffect
@@ -51,7 +52,9 @@ const Reserve = () => {
       dispatch({
         type: MANAGER_RESERVE_MOVIE_LIST_REQUEST,
         data: {
-          mid: MOVIE.mid
+          mid: MOVIE.mid,
+					page: 0,
+					size: 10
         }
       });
     }
@@ -65,7 +68,8 @@ const Reserve = () => {
         type: MANAGER_RESERVE_THEATER_LIST_REQUEST,
         data: {
           tid: THEATER.tid,
-					page: 0
+					page: 0,
+					size: 10
         }
       });
     }
@@ -93,6 +97,7 @@ const Reserve = () => {
 			type: MANAGER_MOVIE_SELECT,
 			data: movie
 		})
+		setCurrentM(1);
 	}, [dispatch])
 
 	// 선택된 지역 버튼 useState
@@ -214,19 +219,19 @@ const Reserve = () => {
 										<TheaterContainer>
 											<ul>
                        	{selectTheater === 'seoul' ? THEATER_LIST.map((theater)=> 
-												theater.tarea === '서울' ? <TheaterLi onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
+												theater.tarea === '서울' ? <TheaterLi key={theater.tid} onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
 												: null) : null}
 
 												{selectTheater === 'gyeonggi' ? THEATER_LIST.map((theater)=> 
-												theater.tarea === '경기' ? <TheaterLi onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
+												theater.tarea === '경기' ? <TheaterLi  key={theater.tid} onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
 												: null) : null}
 
 												{selectTheater === 'incheon' ? THEATER_LIST.map((theater)=> 
-												theater.tarea === '인천' ? <TheaterLi onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
+												theater.tarea === '인천' ? <TheaterLi  key={theater.tid} onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
 												: null) : null}
 
 												{selectTheater === 'busan' ? THEATER_LIST.map((theater)=> 
-												theater.tarea === '부산' ? <TheaterLi onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
+												theater.tarea === '부산' ? <TheaterLi  key={theater.tid} onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
 												: null) : null}
 							 				</ul>
 										</TheaterContainer>
@@ -243,17 +248,17 @@ const Reserve = () => {
 						* 상영중인 영화 예매 <strong>{MOVIE.reserveCntAll}</strong>건 중 <strong>{MOVIE.reserveCnt}</strong>건
 						(예매율 {MOVIE.reserveRate ? MOVIE.reserveRate.toFixed(1) : (0.0).toFixed(1)}%, 취소건 제외)
 					</Notice> 
-					<ReserveMovie/>
+					<ReserveMovie currentM={currentM} setCurrentM={setCurrentM}/>
 				</> :
 				<>
 					<Notice>
 						* 총 <strong>{MOVIE.reserveCnt}</strong>건 (상영예정인 영화는 예매율이 표시되지 않습니다.)
 					</Notice>
-					<ReserveMovie/>
+					<ReserveMovie currentM={currentM} setCurrentM={setCurrentM}/>
 				</> :
 				<>
 					<Notice>
-						* 상영중인 영화 예매 <strong>{MOVIE.reserveCntAll}</strong>건 중 <strong>{RESERVE_THEATER_LIST.totalElements}</strong>건 
+						* 전체 예매 <strong>{MOVIE.reserveCntAll}</strong>건 중 <strong>{RESERVE_THEATER_LIST.totalElements}</strong>건 
 						(예매율 {RESERVE_THEATER_LIST.totalElements ? (RESERVE_THEATER_LIST.totalElements / MOVIE.reserveCntAll * 100).toFixed(1) : (0.0).toFixed(1)}%, 취소건 제외)
 					</Notice>
 					<ReserveTheater currentT={currentT} setCurrentT={setCurrentT}/>

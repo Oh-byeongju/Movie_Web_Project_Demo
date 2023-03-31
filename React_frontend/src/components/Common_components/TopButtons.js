@@ -188,6 +188,9 @@ const TopButtons = () => {
                 <div className="category">
                   <Link to="/Manager/Reserve">예매기록조회</Link>
                 </div>
+                <div className="category">
+                  <Link to="/Manager/Document">작성기록관리</Link>
+                </div>
               </div>
               <div className="menu_category">
                 <div className="title_category">개발진</div>

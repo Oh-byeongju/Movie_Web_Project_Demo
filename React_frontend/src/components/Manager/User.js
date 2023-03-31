@@ -199,9 +199,8 @@ const User = () => {
           loading={USER_LIST_loading}
           columns={columns}
           dataSource={USER_LIST}
-          scroll={{
-          x: 1350,
-        }}/>
+          scroll={{x: 1350}}
+        />
       </InnerWraps>
      </Container>
 	);
