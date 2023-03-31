@@ -1,25 +1,18 @@
 package com.movie.Spring_backend.service;
 
-import com.movie.Spring_backend.util.DeduplicationUtil;
 import com.movie.Spring_backend.dto.CinemaDto;
-import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.entity.*;
-import com.movie.Spring_backend.mapper.MovieMapper;
 import com.movie.Spring_backend.repository.CinemaRepository;
-import com.movie.Spring_backend.repository.MovieInfoRepository;
-import com.movie.Spring_backend.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +46,7 @@ public class CinemaService {
     }
 
      @Transactional
-     public void insert(@RequestBody Map<String, String> requestMap, HttpServletRequest request) {
+     public void insert(@RequestBody Map<String, String> requestMap, HttpServletRequest request, MultipartFile[] multipartFile) {
 
             String tid = requestMap.get("tname").trim();
             String cid = requestMap.get("cid").trim();

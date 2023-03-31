@@ -148,4 +148,7 @@ public interface MovieRepository extends JpaRepository<MovieEntity,Long> {
             "(select info.movie.mid from MovieInfoEntity as info where info.mistarttime >= function('addtime', now(), '0:30:00')" +
             " and info.cinema.cid in (select cinema.cid from CinemaEntity as cinema where cinema.theater.tid = :tid))")
     List<MovieEntity> MovieToTheaterDis(@Param("tid") Long tid);
+
+    @Query("select movie from MovieEntity as movie where movie = :movie")
+    MovieEntity findByMovie(@Param("movie") MovieEntity movie);
 }
