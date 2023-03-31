@@ -1,19 +1,19 @@
 /*
   23-03-27 관리자 페이지 사용자 관리 구현(오병주)
-  23-03-28 ~ 29 관리자 페이지 사용자 예매 현황 구현(오병주)
+  23-03-28 ~ 30 관리자 페이지 사용자 예매 현황 구현(오병주)
+  23-03-31 관리자 페이지 관람평 관리 구현(오병주)
 */
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.*;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.exceptionlist.IdDuplicateException;
+import com.movie.Spring_backend.exceptionlist.MovieCommentNotFoundException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
+import com.movie.Spring_backend.mapper.MovieCommentMapper;
 import com.movie.Spring_backend.mapper.MovieMapper;
 import com.movie.Spring_backend.mapper.ReservationMapper;
-import com.movie.Spring_backend.repository.MemberRepository;
-import com.movie.Spring_backend.repository.MovieRepository;
-import com.movie.Spring_backend.repository.ReservationRepository;
-import com.movie.Spring_backend.repository.TheaterRepository;
+import com.movie.Spring_backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,10 +37,11 @@ public class ManagerMemberService {
     private final MovieRepository movieRepository;
     private final TheaterRepository theaterRepository;
     private final ReservationRepository reservationRepository;
+    private final MovieMemberRepository movieMemberRepository;
     private final MovieMapper movieMapper;
     private final ReservationMapper reservationMapper;
+    private final MovieCommentMapper movieCommentMapper;
     private final JwtValidCheck jwtValidCheck;
-
 
     // 유저 조회 메소드
     @Transactional
@@ -131,28 +132,31 @@ public class ManagerMemberService {
 
     // 특정 영화의 예매기록을 불러오는 메소드
     @Transactional
-    public List<ReservationDto> MovieReserveSearch(HttpServletRequest request, Long mid) {
+    public Page<ReservationDto> MovieReserveSearch(HttpServletRequest request, Long mid, Integer page, Integer size) {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
+
+        // 페이지네이션을 위한 정보
+        PageRequest PageInfo = PageRequest.of(page, size);
 
         // JPA 사용을 위한 형 변환
         MovieEntity movie = MovieEntity.builder().mid(mid).build();
 
         // 특정 영화의 모든 예매기록 검색(예매일 순으로 내림차순)
-        List<ReservationEntity> Reservations = reservationRepository.findManagerReserveMovie(movie);
+        Page<ReservationEntity> Reservations = reservationRepository.findManagerReserveMovie(movie, PageInfo);
 
         // 예매기록을 매핑 후 리턴
-        return Reservations.stream().map(reservationMapper::ManagerListMappingMovie).collect(Collectors.toList());
+        return Reservations.map(reservationMapper::ManagerListMappingMovie);
     }
 
     // 특정 극장의 예매기록을 불러오는 메소드
     @Transactional
-    public Page<ReservationDto> TheaterReserveSearch(HttpServletRequest request, Long tid, Integer page) {
+    public Page<ReservationDto> TheaterReserveSearch(HttpServletRequest request, Long tid, Integer page, Integer size) {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
 
         // 페이지네이션을 위한 정보
-        PageRequest PageInfo = PageRequest.of(page,10);
+        PageRequest PageInfo = PageRequest.of(page, size);
 
         // JPA 사용을 위한 형 변환
         TheaterEntity theater = TheaterEntity.builder().tid(tid).build();
@@ -162,7 +166,24 @@ public class ManagerMemberService {
 
         // 예매기록을 매핑 후 리턴
         return Reservations.map(reservationMapper::ManagerListMappingTheater);
+    }
 
+    // 특정 영화에 있는 관람평을 가져오는 메소드
+    @Transactional
+    public Page<CommentInfoDto> MovieCommentSearch(HttpServletRequest request, Long mid, Integer page, Integer size) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
 
+        // 페이지네이션을 위한 정보
+        PageRequest PageInfo = PageRequest.of(page, size);
+
+        // 영화 id 정보를 entity 형으로 변환
+        MovieEntity movie = MovieEntity.builder().mid(mid).build();
+
+        // 영화 id를 기반으로 MovieMember table 검색(최신순)
+        Page<MovieMemberEntity> MovieMembers = movieMemberRepository.findByMovieAndUmcommentIsNotNullOrderByUmcommenttimeDesc(movie, PageInfo);
+
+        // 관람평 목록과 좋아요 기록을 mapping 후 리턴
+        return MovieMembers.map(MovieMember -> movieCommentMapper.toDto(MovieMember, false));
     }
 }

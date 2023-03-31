@@ -263,11 +263,8 @@ public class MovieService {
             return movieMapper.toDtoDetail(movie, true, Screen, Actors, cnt);
         }
     }
-
-
-
-
-    // 영화 세부내용 관람평 메소드(최신순)
+    
+    // 영화 세부내용 관람평 메소드(최신순)  --> 밑에꺼랑 합쳐도 될듯
     @Transactional
     public List<CommentInfoDto> getMovieDetailCommentRecent(Long mid, String uid) {
 

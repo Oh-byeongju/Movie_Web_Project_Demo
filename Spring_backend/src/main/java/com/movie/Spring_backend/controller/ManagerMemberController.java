@@ -1,13 +1,11 @@
 /*
   23-03-27 관리자 페이지 사용자 관리 구현(오병주)
-  23-03-28 ~ 29 관리자 페이지 사용자 예매 현황 구현(오병주)
+  23-03-28 ~ 30 관리자 페이지 사용자 예매 현황 구현(오병주)
+  23-03-31 관리자 페이지 관람평 관리 구현(오병주)
 */
 package com.movie.Spring_backend.controller;
 
-import com.movie.Spring_backend.dto.MemberDto;
-import com.movie.Spring_backend.dto.MovieDto;
-import com.movie.Spring_backend.dto.ReservationDto;
-import com.movie.Spring_backend.dto.TheaterDto;
+import com.movie.Spring_backend.dto.*;
 import com.movie.Spring_backend.service.ManagerMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -53,13 +51,19 @@ public class ManagerMemberController {
 
     // 예매기록 조회 메소드(영화 선택)
     @GetMapping("/auth/allMovieReserve")
-    public ResponseEntity<List<ReservationDto>> AllMovieReserve(HttpServletRequest request, @RequestParam(value = "mid") Long mid) {
-        return ResponseEntity.ok().body(managerMemberService.MovieReserveSearch(request, mid));
+    public ResponseEntity<Page<ReservationDto>> MovieReserve(HttpServletRequest request, @RequestParam(value = "mid") Long mid, @RequestParam(value = "page") Integer page, @RequestParam(value = "size") Integer size) {
+        return ResponseEntity.ok().body(managerMemberService.MovieReserveSearch(request, mid, page, size));
     }
 
     // 예매기록 조회 메소드(극장 선택)
     @GetMapping("/auth/allTheaterReserve")
-    public ResponseEntity<Page<ReservationDto>> AllTheaterReserve(HttpServletRequest request, @RequestParam(value = "tid") Long tid, @RequestParam(value = "page") Integer page) {
-        return ResponseEntity.ok().body(managerMemberService.TheaterReserveSearch(request, tid, page));
+    public ResponseEntity<Page<ReservationDto>> TheaterReserve(HttpServletRequest request, @RequestParam(value = "tid") Long tid, @RequestParam(value = "page") Integer page, @RequestParam(value = "size") Integer size) {
+        return ResponseEntity.ok().body(managerMemberService.TheaterReserveSearch(request, tid, page, size));
+    }
+
+    // 관람평 조회 메소드
+    @GetMapping("/auth/allMovieComment")
+    public ResponseEntity<Page<CommentInfoDto>> MovieComment(HttpServletRequest request, @RequestParam(value = "mid") Long mid, @RequestParam(value = "page") Integer page, @RequestParam(value = "size") Integer size) {
+        return ResponseEntity.ok().body(managerMemberService.MovieCommentSearch(request, mid, page, size));
     }
 }

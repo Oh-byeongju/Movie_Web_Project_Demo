@@ -1,6 +1,7 @@
 /*
 	23-03-27 관리자 페이지 회원관리 구현(오병주)
-  23-03-28 ~ 29 관리자 페이지 예매기록조회 구현(오병주)
+  23-03-28 ~ 30 관리자 페이지 예매기록조회 구현(오병주)
+  23-03-31 관리자 페이지 관람평 관리 구현(오병주)
 */
 // 사용자 계정 조회 리스트
 export const MANAGER_USER_LIST_REQUEST = "MANAGER_USER_LIST_REQUEST";
@@ -34,6 +35,17 @@ export const MANAGER_RESERVE_THEATER_LIST_REQUEST = "MANAGER_RESERVE_THEATER_LIS
 export const MANAGER_RESERVE_THEATER_LIST_SUCCESS = "MANAGER_RESERVE_THEATER_LIST_SUCCESS";
 export const MANAGER_RESERVE_THEATER_LIST_FAILURE = "MANAGER_RESERVE_THEATER_LIST_FAILURE";
 
+// 영화 목록 조회 리스트(관람평 페이지)
+export const MANAGER_MOVIE_LIST_COMMENT_REQUEST = "MANAGER_MOVIE_LIST_COMMENT_REQUEST";
+export const MANAGER_MOVIE_LIST_COMMENT_SUCCESS = "MANAGER_MOVIE_LIST_COMMENT_SUCCESS";
+export const MANAGER_MOVIE_LIST_COMMENT_FAILURE = "MANAGER_MOVIE_LIST_COMMENT_FAILURE";
+export const MANAGER_MOVIE_COMMENT_SELECT = "MANAGER_MOVIE_COMMENT_SELECT";
+
+// 관람평 조회 리스트
+export const MANAGER_MOVIE_COMMENT_LIST_REQUEST = "MANAGER_MOVIE_COMMENT_LIST_REQUEST";
+export const MANAGER_MOVIE_COMMENT_LIST_SUCCESS = "MANAGER_MOVIE_COMMENT_LIST_SUCCESS";
+export const MANAGER_MOVIE_COMMENT_LIST_FAILURE = "MANAGER_MOVIE_COMMENT_LIST_FAILURE";
+
 const initalState = {
   USER_LIST_loading: false,
   USER_LIST_done: false,
@@ -59,7 +71,16 @@ const initalState = {
   RESERVE_THEATER_LIST_loading: false,
   RESERVE_THEATER_LIST_done: false,
   RESERVE_THEATER_LIST_error: false,
-	RESERVE_THEATER_LIST: []
+	RESERVE_THEATER_LIST: [],
+  MOVIE_COMMENT_LIST_loading: false,
+  MOVIE_COMMENT_LIST_done: false,
+  MOVIE_COMMENT_LIST_error: false,
+	MOVIE_COMMENT_LIST: [],
+  MOVIE_LIST_COMMENT_loading: false,
+  MOVIE_LIST_COMMENT_done: false,
+  MOVIE_LIST_COMMENT_error: false,
+	MOVIE_LIST_COMMENT: [],
+  MOVIE_COMMENT: '',
 };
 
 const R_manager_user = (state = initalState, action) => {
@@ -213,6 +234,59 @@ const R_manager_user = (state = initalState, action) => {
         RESERVE_THEATER_LIST_loading: false,
         RESERVE_THEATER_LIST_done: false,
         RESERVE_THEATER_LIST_error: true,
+      };
+    // 영화 조회 케이스들(관람평 페이지)
+    case MANAGER_MOVIE_LIST_COMMENT_REQUEST:
+      return {
+        ...state,
+        MOVIE_LIST_COMMENT_loading: true,
+        MOVIE_LIST_COMMENT_done: false,
+        MOVIE_LIST_COMMENT_error: false,
+      };
+    case MANAGER_MOVIE_LIST_COMMENT_SUCCESS:
+      return {
+        ...state,
+        MOVIE_LIST_COMMENT_loading: false,
+        MOVIE_LIST_COMMENT_done: true,
+        MOVIE_LIST_COMMENT_error: false,
+        MOVIE_LIST_COMMENT: action.data,
+        MOVIE_COMMENT: action.data[0]
+      };
+    case MANAGER_MOVIE_LIST_COMMENT_FAILURE:
+      return {
+        ...state,
+        MOVIE_LIST_COMMENT_loading: false,
+        MOVIE_LIST_COMMENT_done: false,
+        MOVIE_LIST_COMMENT_error: true,
+      };
+    case MANAGER_MOVIE_COMMENT_SELECT:
+      return {
+        ...state,
+        MOVIE_COMMENT: action.data
+      };
+
+    // 관람평 조회 케이스들
+    case MANAGER_MOVIE_COMMENT_LIST_REQUEST:
+      return {
+        ...state,
+        MOVIE_COMMENT_LIST_loading: true,
+        MOVIE_COMMENT_LIST_done: false,
+        MOVIE_COMMENT_LIST_error: false,
+      };
+    case MANAGER_MOVIE_COMMENT_LIST_SUCCESS:
+      return {
+        ...state,
+        MOVIE_COMMENT_LIST_loading: false,
+        MOVIE_COMMENT_LIST_done: true,
+        MOVIE_COMMENT_LIST_error: false,
+        MOVIE_COMMENT_LIST: action.data
+      };
+    case MANAGER_MOVIE_COMMENT_LIST_FAILURE:
+      return {
+        ...state,
+        MOVIE_COMMENT_LIST_loading: false,
+        MOVIE_COMMENT_LIST_done: false,
+        MOVIE_COMMENT_LIST_error: true,
       };
     default:
       return state;
