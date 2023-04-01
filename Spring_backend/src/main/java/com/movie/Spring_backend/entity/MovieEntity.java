@@ -5,6 +5,7 @@ package com.movie.Spring_backend.entity;
 import javax.persistence.*;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Formula;
 
 import java.sql.Date;
@@ -13,6 +14,7 @@ import java.sql.Date;
 @Entity
 @Getter
 @NoArgsConstructor
+@DynamicUpdate      //더티 체킹
 public class MovieEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +75,19 @@ public class MovieEntity {
         this.cntMovieLike = cntMovieLike;
         this.avgScore = avgScore;
         this.cntReserve = cntReserve;
+    }
+
+    public void updateMovie(Long mid, String mtitle, String mdir, String mgenre, int mtime, Date mdate, String mrating,
+                            String mstory, String mimagepath){
+        this.mid = mid;
+        this.mtitle = mtitle;
+        this.mdir = mdir;
+        this.mgenre = mgenre;
+        this.mtime = mtime;
+        this.mdate = mdate;
+        this.mrating = mrating;
+        this.mstory = mstory;
+        this.mimagepath = mimagepath;
     }
 }
 

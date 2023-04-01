@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Table(name="movie_actor")
 @Entity
@@ -33,6 +34,13 @@ public class MovieActorEntity {
 
     @Builder
     public MovieActorEntity(Long maid, String marole, MovieEntity movie, ActorEntity actor) {
+        this.maid = maid;
+        this.marole = marole;
+        this.movie = movie;
+        this.actor = actor;
+    }
+
+    public void updateActor(Long maid, String marole, MovieEntity movie, ActorEntity actor){
         this.maid = maid;
         this.marole = marole;
         this.movie = movie;
