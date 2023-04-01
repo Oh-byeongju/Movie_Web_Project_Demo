@@ -36,7 +36,7 @@ public class ManagerOneController {
     }
 
 
-    //영화를 저장하는 함수
+    //영화를 저장하는 메소드
     @PostMapping("/auth/postmovie")
     public void postMovie(@RequestPart(value="data") Map<String, String> requestMap,HttpServletRequest request,
                           @RequestPart(required = false) MultipartFile multipartFiles
