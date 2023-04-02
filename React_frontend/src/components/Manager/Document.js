@@ -19,9 +19,6 @@ const Document = () => {
     shallowEqual
   );
 
-	// 영화 관람평 페이지네이션 번호
-	const [currentM , setCurrentM] = useState(1); 
-
 	// 모든 영화 조회 useEffect
   useEffect(() => {
 		 // 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
@@ -53,7 +50,6 @@ const Document = () => {
 			type: MANAGER_MOVIE_COMMENT_SELECT,
 			data: movie
 		})
-		setCurrentM(1);
 	}, [dispatch])
 
 	// css를 위한 버튼 변수
@@ -124,7 +120,7 @@ const Document = () => {
 				<Notice>
 					* 검색결과 <strong>{MOVIE_COMMENT_LIST.totalElements}</strong>건이 검색되었습니다. (더블 클릭시 관람평 전체내용 조회가능)
 				</Notice>
-				<DocumentMovieComment currentM={currentM} setCurrentM={setCurrentM}/></> : 
+				<DocumentMovieComment/></> : 
 				<>
 					여기서 시작
 					내가 지금 표시해둔곳에 코드 넣으면 될듯(게시물 관련)

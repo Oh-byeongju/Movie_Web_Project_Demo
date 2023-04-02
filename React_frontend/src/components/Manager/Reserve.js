@@ -16,21 +16,18 @@ const Reserve = () => {
 	const dispatch = useDispatch();
 
 	// 필요한 리덕스 상태들
-  const { LOGIN_data, MOVIE_LIST, MOVIE, THEATER_LIST, THEATER, RESERVE_THEATER_LIST } = useSelector(
+  const { LOGIN_data, MOVIE_LIST, MOVIE, THEATER_LIST, THEATER, RESERVE_MOVIE_LIST, RESERVE_THEATER_LIST } = useSelector(
     state => ({
       LOGIN_data: state.R_user_login.LOGIN_data,
       MOVIE_LIST: state.R_manager_user.MOVIE_LIST,
       MOVIE: state.R_manager_user.MOVIE,
       THEATER_LIST: state.R_manager_user.THEATER_LIST,
       THEATER: state.R_manager_user.THEATER,
+			RESERVE_MOVIE_LIST: state.R_manager_user.RESERVE_MOVIE_LIST,
       RESERVE_THEATER_LIST: state.R_manager_user.RESERVE_THEATER_LIST
     }),
     shallowEqual
   );
-
-	// 영화 및 극장 선택 페이지네이션 번호
-	const [currentM , setCurrentM] = useState(1); 
-	const [currentT , setCurrentT] = useState(1);
 
 	// 모든 영화 및 상영관 조회 useEffect
   useEffect(() => {
@@ -97,7 +94,6 @@ const Reserve = () => {
 			type: MANAGER_MOVIE_SELECT,
 			data: movie
 		})
-		setCurrentM(1);
 	}, [dispatch])
 
 	// 선택된 지역 버튼 useState
@@ -118,7 +114,6 @@ const Reserve = () => {
 			type: MANAGER_THEATER_SELECT,
 			data: theater
 		})
-		setCurrentT(1);
 	}, [dispatch])
 
 	// 지역별 극장 개수 설정하는 useEffect
@@ -242,26 +237,17 @@ const Reserve = () => {
 					</TabCenter>
 				</MovieAreaChoice>
 				{moviebutton ? 
-				MOVIE.reserve ? 
 				<>
 					<Notice>
-						* 상영중인 영화 예매 <strong>{MOVIE.reserveCntAll}</strong>건 중 <strong>{MOVIE.reserveCnt}</strong>건
-						(예매율 {MOVIE.reserveRate ? MOVIE.reserveRate.toFixed(1) : (0.0).toFixed(1)}%, 취소건 제외)
+						* 검색결과 <strong>{RESERVE_MOVIE_LIST.totalElements}</strong>건이 검색되었습니다. (현재 영화는 {MOVIE.reserve ? '상영중인' : '상영예정'} 영화)
 					</Notice> 
-					<ReserveMovie currentM={currentM} setCurrentM={setCurrentM}/>
+					<ReserveMovie/>
 				</> :
 				<>
 					<Notice>
-						* 총 <strong>{MOVIE.reserveCnt}</strong>건 (상영예정인 영화는 예매율이 표시되지 않습니다.)
+						* 검색결과 <strong>{RESERVE_THEATER_LIST.totalElements}</strong>건이 검색되었습니다. (상영 예정 영화포함)
 					</Notice>
-					<ReserveMovie currentM={currentM} setCurrentM={setCurrentM}/>
-				</> :
-				<>
-					<Notice>
-						* 전체 예매 <strong>{MOVIE.reserveCntAll}</strong>건 중 <strong>{RESERVE_THEATER_LIST.totalElements}</strong>건 
-						(예매율 {RESERVE_THEATER_LIST.totalElements ? (RESERVE_THEATER_LIST.totalElements / MOVIE.reserveCntAll * 100).toFixed(1) : (0.0).toFixed(1)}%, 취소건 제외)
-					</Notice>
-					<ReserveTheater currentT={currentT} setCurrentT={setCurrentT}/>
+					<ReserveTheater/>
 				</>}
       </InnerWraps>
      </Container>

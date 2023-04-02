@@ -1,19 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Table, Input } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { MANAGER_USER_LIST_REQUEST, MANAGER_USER_DROP_REQUEST } from '../../reducer/R_manager_user';
 const { Search } = Input;
 
 const User = () => {
   const dispatch = useDispatch();
 
-	// 모든 유저 정보
-	const { USER_LIST } = useSelector((state) => state.R_manager_user);
-  const { USER_LIST_loading } = useSelector((state) => state.R_manager_user);
-
-	// 리덕스 로그인 상태 정보
-  const { LOGIN_data } = useSelector((state) => state.R_user_login);
+  // 필요한 리덕스 상태들
+  const { USER_LIST_loading, USER_DROP_loading, USER_LIST, LOGIN_data } = useSelector(
+    state => ({
+      USER_LIST_loading: state.R_manager_user.USER_LIST_loading,
+      USER_DROP_loading: state.R_manager_user.USER_DROP_loading,
+      USER_LIST: state.R_manager_user.USER_LIST,
+      LOGIN_data: state.R_user_login.LOGIN_data
+    }),
+    shallowEqual
+  );
 
   // 모든 유저 조회 useEffect
   useEffect(()=> {
@@ -23,7 +27,9 @@ const User = () => {
         type: MANAGER_USER_LIST_REQUEST,
         data: {
           search: '', 
-          sort : 'name'
+          sort : 'name',
+          page: 0,
+          size: 10
         }
       });
     }
@@ -47,14 +53,16 @@ const User = () => {
       type: MANAGER_USER_LIST_REQUEST,
       data: {
         search: search.trim(),
-        sort : 'name'
+        sort : 'name',
+        page: USER_LIST.number,
+        size: USER_LIST.size
       }
     });
     
 		setnamebutton(true);
 		setjoinbutton(false);
 
-	}, [search, dispatch])
+	}, [search, USER_LIST, dispatch])
 
 	// 가입순 버튼을 누를 때 함수
 	const clickjoin = useCallback(()=> {
@@ -64,38 +72,41 @@ const User = () => {
       type: MANAGER_USER_LIST_REQUEST,
       data: {
         search: search.trim(),
-        sort : 'join'
+        sort : 'join',
+        page: USER_LIST.number,
+        size: USER_LIST.size
       }
     });
 		
 		setnamebutton(false);
 		setjoinbutton(true);
-	}, [search, dispatch])
+	}, [search, USER_LIST, dispatch])
 
   // 검색 버튼 누를때 실행되는 함수
   const onSearch = useCallback(() => {
+    dispatch({
+      type: MANAGER_USER_LIST_REQUEST,
+      data: {
+        search: search.trim(),
+        sort : namebutton ? 'name' : 'join',
+        page: USER_LIST.number,
+        size: USER_LIST.size
+      }
+    });
+  }, [namebutton, search, USER_LIST, dispatch]);
 
-    // 이름순 버튼이 활성화 되있을경우
-    if (namebutton) {
-      dispatch({
-        type: MANAGER_USER_LIST_REQUEST,
-        data: {
-          search: search.trim(),
-          sort : 'name'
-        }
-      });
-    }
-    // 가입순 버튼이 활성화 되있을경우
-    else {
-      dispatch({
-        type: MANAGER_USER_LIST_REQUEST,
-        data: {
-          search: search.trim(),
-          sort : 'join'
-        }
-      });
-    }
-  }, [namebutton, search, dispatch]);
+  // 테이블에 있는 페이지네이션 누를 때
+	const handleTableChange = (pagination) => {
+		dispatch({
+			type: MANAGER_USER_LIST_REQUEST,
+			data: {
+				search: search.trim(),
+        sort : namebutton ? 'name' : 'join',
+				page: pagination.current - 1,
+        size: pagination.pageSize
+			}
+		});
+  };
 
   // 삭제 버튼 누를때 실행되는 함수
   const onDelete = useCallback((uid) => {
@@ -105,9 +116,15 @@ const User = () => {
 
     dispatch({
       type: MANAGER_USER_DROP_REQUEST,
-      data: {uid: uid}
+      data: { 
+        uid: uid,
+        search: search.trim(),
+        sort : namebutton ? 'name' : 'join',
+        page: USER_LIST.number,
+        size: USER_LIST.size
+      }
     });
-  }, [dispatch])
+  }, [USER_LIST, namebutton, search, dispatch])
 
   // antd css 설정
   const columns = [
@@ -167,7 +184,7 @@ const User = () => {
         </div>
         <div className="search">
           <p>
-            {USER_LIST.length}명의 회원이 검색되었습니다.
+            {USER_LIST.totalElements}명의 회원이 검색되었습니다.
           </p>
             <ButtonList>
               <ButtonWrap>
@@ -196,9 +213,11 @@ const User = () => {
           </div>
         </div>
         <TableWrap rowKey="uid"
-          loading={USER_LIST_loading}
+          loading={USER_LIST_loading || USER_DROP_loading}
           columns={columns}
-          dataSource={USER_LIST}
+          dataSource={USER_LIST.content}
+          pagination={{current: USER_LIST.number ? USER_LIST.number + 1 : 1, total: USER_LIST.totalElements, pageSize: USER_LIST.size}}
+          onChange={handleTableChange}
           scroll={{x: 1350}}
         />
       </InnerWraps>
