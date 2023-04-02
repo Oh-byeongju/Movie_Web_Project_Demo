@@ -1,7 +1,7 @@
 /*
 	23-03-27 관리자 페이지 회원관리 구현(오병주)
   23-03-28 ~ 30 관리자 페이지 예매기록조회 구현(오병주)
-  23-03-31 관리자 페이지 관람평 관리 구현(오병주)
+  23-03-31 ~ 23-04-01관리자 페이지 관람평 관리 구현(오병주)
 */
 // 사용자 계정 조회 리스트
 export const MANAGER_USER_LIST_REQUEST = "MANAGER_USER_LIST_REQUEST";
@@ -46,6 +46,11 @@ export const MANAGER_MOVIE_COMMENT_LIST_REQUEST = "MANAGER_MOVIE_COMMENT_LIST_RE
 export const MANAGER_MOVIE_COMMENT_LIST_SUCCESS = "MANAGER_MOVIE_COMMENT_LIST_SUCCESS";
 export const MANAGER_MOVIE_COMMENT_LIST_FAILURE = "MANAGER_MOVIE_COMMENT_LIST_FAILURE";
 
+// 관람평 삭제 리스트
+export const MANAGER_MOVIE_COMMENT_DELETE_REQUEST = "MANAGER_MOVIE_COMMENT_DELETE_REQUEST";
+export const MANAGER_MOVIE_COMMENT_DELETE_SUCCESS = "MANAGER_MOVIE_COMMENT_DELETE_SUCCESS";
+export const MANAGER_MOVIE_COMMENT_DELETE_FAILURE = "MANAGER_MOVIE_COMMENT_DELETE_FAILURE";
+
 const initalState = {
   USER_LIST_loading: false,
   USER_LIST_done: false,
@@ -72,15 +77,18 @@ const initalState = {
   RESERVE_THEATER_LIST_done: false,
   RESERVE_THEATER_LIST_error: false,
 	RESERVE_THEATER_LIST: [],
-  MOVIE_COMMENT_LIST_loading: false,
-  MOVIE_COMMENT_LIST_done: false,
-  MOVIE_COMMENT_LIST_error: false,
-	MOVIE_COMMENT_LIST: [],
   MOVIE_LIST_COMMENT_loading: false,
   MOVIE_LIST_COMMENT_done: false,
   MOVIE_LIST_COMMENT_error: false,
 	MOVIE_LIST_COMMENT: [],
   MOVIE_COMMENT: '',
+  MOVIE_COMMENT_LIST_loading: false,
+  MOVIE_COMMENT_LIST_done: false,
+  MOVIE_COMMENT_LIST_error: false,
+	MOVIE_COMMENT_LIST: [],
+  MOVIE_COMMENT_DELETE_loading: false,
+  MOVIE_COMMENT_DELETE_done: false,
+  MOVIE_COMMENT_DELETE_error: false,
 };
 
 const R_manager_user = (state = initalState, action) => {
@@ -122,7 +130,7 @@ const R_manager_user = (state = initalState, action) => {
         USER_DROP_loading: false,
         USER_DROP_done: true,
         USER_DROP_error: false,
-        USER_LIST: state.USER_LIST.filter(user => user.uid !== action.data)
+        USER_LIST: action.data
       };
     case MANAGER_USER_DROP_FAILURE:
       return {
@@ -264,7 +272,6 @@ const R_manager_user = (state = initalState, action) => {
         ...state,
         MOVIE_COMMENT: action.data
       };
-
     // 관람평 조회 케이스들
     case MANAGER_MOVIE_COMMENT_LIST_REQUEST:
       return {
@@ -287,6 +294,29 @@ const R_manager_user = (state = initalState, action) => {
         MOVIE_COMMENT_LIST_loading: false,
         MOVIE_COMMENT_LIST_done: false,
         MOVIE_COMMENT_LIST_error: true,
+      };
+    // 관람평 삭제 케이스들
+    case MANAGER_MOVIE_COMMENT_DELETE_REQUEST:
+      return {
+        ...state,
+        MOVIE_COMMENT_DELETE_loading: true,
+        MOVIE_COMMENT_DELETE_done: false,
+        MOVIE_COMMENT_DELETE_error: false,
+      };
+    case MANAGER_MOVIE_COMMENT_DELETE_SUCCESS:
+      return {
+        ...state,
+        MOVIE_COMMENT_DELETE_loading: false,
+        MOVIE_COMMENT_DELETE_done: true,
+        MOVIE_COMMENT_DELETE_error: false,
+        MOVIE_COMMENT_LIST: action.data
+      };
+    case MANAGER_MOVIE_COMMENT_DELETE_FAILURE:
+      return {
+        ...state,
+        MOVIE_COMMENT_DELETE_loading: false,
+        MOVIE_COMMENT_DELETE_done: false,
+        MOVIE_COMMENT_DELETE_error: true,
       };
     default:
       return state;

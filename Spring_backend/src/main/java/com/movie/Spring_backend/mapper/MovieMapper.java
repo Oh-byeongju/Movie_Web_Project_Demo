@@ -1,7 +1,7 @@
 /*
   23-02-07 MovieEntity를 dto로 매핑하기 위한 클래스 생성(오병주)
   23-02-14 상세영화 페이지 dto 매핑 메소드 생성(오병주)
- */
+*/
 
 package com.movie.Spring_backend.mapper;
 
@@ -176,7 +176,7 @@ public class MovieMapper {
     }
 
     // 관리자 페이지 예매기록조회에 필요한 영화 내용들을 mapping 해주는 메소드
-    public MovieDto toDtoManagerReserve(MovieEntity entity, boolean Screen, float AllReserveCnt) {
+    public MovieDto toDtoManagerReserve(MovieEntity entity, boolean Screen) {
 
         // 영화 예매가 불가능 하면 (상영예정)을 이름에 붙여서 보냄
         if (Screen) {
@@ -184,20 +184,14 @@ public class MovieMapper {
                     .mid(entity.getMid())
                     .mtitle(entity.getMtitle())
                     .mimagepath(entity.getMimagepath())
-                    .reserve(true)
-                    .reserveRate(entity.getCntReserve() / AllReserveCnt * 100)
-                    .reserveCnt(entity.getCntReserve())
-                    .reserveCntAll((int) AllReserveCnt)
-                    .build();
+                    .reserve(true).build();
         }
         else {
             return MovieDto.builder()
                     .mid(entity.getMid())
                     .mtitle(entity.getMtitle()+"(상영예정)")
                     .mimagepath(entity.getMimagepath())
-                    .reserve(false)
-                    .reserveCnt(entity.getCntReserve())
-                    .reserveCntAll((int) AllReserveCnt).build();
+                    .reserve(false).build();
         }
     }
 

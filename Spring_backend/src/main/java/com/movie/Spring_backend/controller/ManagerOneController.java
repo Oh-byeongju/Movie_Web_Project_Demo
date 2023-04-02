@@ -30,6 +30,7 @@ public class ManagerOneController {
     private final MovieService movieService;
     private final JwtValidCheck jwtValidCheck;
     private final ManagerOneService managerOneService;
+
     @GetMapping("/auth/movieall")
     public ResponseEntity<List<MovieDto>> AllMovie(@RequestParam Map<String, String> requestMap) {
         return ResponseEntity.ok().body(managerOneService.getAllMovie(requestMap));

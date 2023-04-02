@@ -31,10 +31,10 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     // 사용자가 예매취소한 영화 정보들을 가져오는 메소드(취소시간 순으로 내림차순)
     @Query(value = "SELECT rs FROM ReservationEntity as rs INNER JOIN MovieInfoEntity as mi " +
              "ON rs.movieInfo = mi.miid " +
-             "WHERE rs.member = :member AND rs.rstate = false AND rs.rcanceldate > :rcanceldate " +
+             "WHERE rs.member = :member AND rs.rstate = false AND rs.rdate > :rdate " +
              "ORDER BY rs.rcanceldate DESC")
     @EntityGraph(attributePaths = {"movieInfo.movie", "movieInfo.cinema", "movieInfo.cinema.theater"})
-    List<ReservationEntity> findMyPageReserveCancel(@Param("member") MemberEntity member, @Param("rcanceldate") String rcanceldate);
+    List<ReservationEntity> findMyPageReserveCancel(@Param("member") MemberEntity member, @Param("rdate") String rdate);
 
     // 사용자가 예매한 지난 관람내역들을 가져오는 메소드(예매시간 순으로 내림차순, 영화가 끝난 예매들)
     // 이거 처럼 수정해버리면 됨 (메모장 확인) 엔티티 그래프
@@ -76,4 +76,9 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             "ORDER BY rs.rdate DESC")
     @EntityGraph(attributePaths = {"movieInfo.movie", "movieInfo.cinema.theater"})
     Page<ReservationEntity> findManagerReserveTheater(@Param("theater") TheaterEntity theater, Pageable pageable);
+
+
+
+    @Query(value = "SELECT rs FROM ReservationEntity WHERE rs.rid = :rid")
+    List<ReservationEntity> Test(@Param("rid") Long rid);
 }

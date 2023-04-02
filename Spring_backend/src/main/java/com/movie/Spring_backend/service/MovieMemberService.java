@@ -218,7 +218,7 @@ public class MovieMemberService {
         // 관람평 id를 이용해서 관람평 튜플 검색
         MovieMemberEntity MovieMember = movieMemberRepository.findById(umid).orElse(null);
 
-        // 예외처리
+        // 예외처리(사용자에게 경고 메시지를 위한 예외)
         if (MovieMember == null) {
             throw new MovieCommentNotFoundException("정보가 존재하지 않습니다.");
         }

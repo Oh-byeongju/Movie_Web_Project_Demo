@@ -5,7 +5,7 @@ import * as date from "../../lib/date.js";
 import { MANAGER_RESERVE_MOVIE_LIST_REQUEST } from '../../reducer/R_manager_user.js';
 import { Table } from 'antd';
 
-const ReserveMovie = ({ currentM, setCurrentM }) => {
+const ReserveMovie = () => {
   const dispatch = useDispatch();
 
   // 필요한 리덕스 상태들
@@ -73,7 +73,6 @@ const ReserveMovie = ({ currentM, setCurrentM }) => {
 
   // 테이블에 있는 페이지네이션 누를 때
 	const handleTableChange = (pagination) => {
-		setCurrentM(pagination.current);
 		dispatch({
 			type: MANAGER_RESERVE_MOVIE_LIST_REQUEST,
 			data: {
@@ -90,13 +89,13 @@ const ReserveMovie = ({ currentM, setCurrentM }) => {
         loading={RESERVE_MOVIE_LIST_loading}
         columns={columns}
         dataSource={RESERVE_MOVIE_LIST.content}
-        pagination={{current: currentM, total: RESERVE_MOVIE_LIST.totalElements, pageSize: RESERVE_MOVIE_LIST.size}}
+        pagination={{current: RESERVE_MOVIE_LIST.number ? RESERVE_MOVIE_LIST.number + 1 : 1, total: RESERVE_MOVIE_LIST.totalElements, pageSize: RESERVE_MOVIE_LIST.size}}
         scroll={{x: 1350}}
         onChange={handleTableChange}
         locale={{ 
-          triggerDesc: '내림차순 정렬',
-          triggerAsc: '오름차순 정렬', 
-          cancelSort: '정렬해제'
+          triggerDesc: '내림차순 정렬하기',
+          triggerAsc: '오름차순 정렬하기', 
+          cancelSort: '정렬해제하기'
       	}}
       />
 		</>
