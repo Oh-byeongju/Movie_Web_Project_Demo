@@ -85,7 +85,12 @@ let ptag;
           <div className="writebutton">
           <button className="write"
             onClick={()=>{
-              onClickComment()
+                if(count>0){
+                    onClickComment()
+                }
+                else{
+                    alert("글을 작성하세요")
+                }
           }}
           >작성하기</button>
           </div>

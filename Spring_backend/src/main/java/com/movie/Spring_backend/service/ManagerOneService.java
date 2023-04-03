@@ -28,6 +28,7 @@ import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,7 @@ public class ManagerOneService {
     private final MovieActorRepository movieActorRepository;
     private final ActorRepository actorRepository;
     private final EntityManagerFactory entityManagerFactory;
+    private final BoardRepository boardRepository;
     String POSTER_PATH = "/Users/mok/Desktop/Movie_Project/React_frontend/public/img/ranking";
 
 
@@ -79,6 +81,8 @@ public class ManagerOneService {
         return movie;
 
     }
+
+
 
     //영화 INSERT
     @Transactional
@@ -425,6 +429,44 @@ public class ManagerOneService {
         return POSTER_PATH +"/" + FileNames;
     }
 
+    //전체 게시판 불러오기
+    public List<BoardDto> ReadBoard (){
+
+        List<BoardEntity> boardEntities =boardRepository.findAll();
+        return boardEntities.stream().map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
+                .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                .thumb(data.getThumb()).uid(data.getMember().getUid()).
+                build()).collect(Collectors.toList());
+
+    }
+
+    //페이지내 이름으로 검색하는 메소드
+    @Transactional
+    public List<BoardDto> SearchUid(String text, String state) {
+        if(state.equals("uid")) {
+            List<BoardEntity> datas = boardRepository.ManagerUid(text);
+            return datas.stream().map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
+                    .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                    .thumb(data.getThumb()).uid(data.getMember().getUid()).
+                    build()).collect(Collectors.toList());
+        }
+
+        else if(state.equals("title")){
+            List<BoardEntity> datas = boardRepository.ManagerTitle(text);
+            return datas.stream().map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
+                    .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
+                    .thumb(data.getThumb()).uid(data.getMember().getUid()).
+                    build()).collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    @Transactional
+    public void boarddelete(Map<String, String> requestMap, HttpServletRequest request){
+        String bid = requestMap.get("bid");
+        boardRepository.deleteById(Long.valueOf(bid));
+    }
+
     // 상영정보를 불러오는 메소드
     public Page<MovieInfoDto> MovieInfoSearch(HttpServletRequest request, Map<String, String> requestMap) {
         // Access Token에 대한 유효성 검사
@@ -472,5 +514,4 @@ public class ManagerOneService {
                 .miid(movieInfo.getMiid())
                 .mtitle(movieInfo.getMovie().getMtitle()).build());
     }
-
 }

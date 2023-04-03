@@ -15,7 +15,7 @@ const { Search } = Input;
 const Movie = () =>{
     const dispatch = useDispatch();
 	const { LOGIN_data } = useSelector((state) => state.R_user_login);
-    const { movie } = useSelector((state) => state.R_manager_theater);
+    const { movie ,movie_insert_done} = useSelector((state) => state.R_manager_theater);
     const [messageApi, contextHolder] = message.useMessage();
 
     const [main , setMain ] = useState([])
@@ -26,7 +26,7 @@ const Movie = () =>{
             type:MOVIES_REQUEST,
             data:LOGIN_data.uid
         })
-    },[])
+    },[movie_insert_done])
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modify , setModify] = useState(false);
 
@@ -83,6 +83,8 @@ const Movie = () =>{
   };
   //확인
   const handleOk = async () => {
+
+    if(name!="" && dir !="" && genre!="" && time!="" && date !="" && Board_Content !="" ){
     const mainactor = main.join()
     const subactor = sub.join()
     const voiceactor = voice.join()
@@ -128,8 +130,6 @@ const Movie = () =>{
       type: "application/json"
     }))
   }
-
-
   //insert
   else if(!update){
     if(file){
@@ -139,14 +139,20 @@ const Movie = () =>{
       type: "application/json"
     }))
   }
-
-
     dispatch({
       type:MOVIE_INSERT_LOADING,
       fd
     })
     setIsModalOpen(false);    
 
+  }
+  else{
+    messageApi.open({
+      type: 'warning',
+      content: '데이터를 전부 입력해야합니다.',
+    });
+  }
+    
   }
   //창 닫을 시 초기화
   const handleCancel = () => {
@@ -161,10 +167,6 @@ const Movie = () =>{
 		setContent(value);
     console.log(value);
 	};
-
-
-
-
 
   const columns = [
     {
@@ -296,7 +298,9 @@ const Movie = () =>{
           x: 1350,
         }}/>
       </InnerWraps>
-      <Modal title="영화관 추가" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
+      <Modal 
+     width={1200}
+      title="영화관 추가" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
         <Form>
         <Form.Item label="영화명" onChange={onChangeName}>
         <Input value={name}/>
@@ -484,7 +488,11 @@ const TableButton = styled.button`
   transition: color 0.3s;
   border: none;
 `;
+const CustomModal = styled(Modal)`
+width:1200px;
+`
 const CustomReactQuill = styled(ReactQuill)`
+    width:1020px;
     height: 200px;
     padding-bottom:50px;
 `

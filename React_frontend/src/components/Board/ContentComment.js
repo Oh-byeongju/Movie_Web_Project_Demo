@@ -96,7 +96,15 @@ const ContentComment = () =>{
                         <Right>
                             <button>
                                 <span className="icon"> <SyncOutlined /></span>
-                                <span>새로고침</span>
+                                <span onClick={()=>{
+                                    dispatch({
+                                        type:COMMENT_READ_REQUEST,
+                                        data:{
+                                            bid:id,
+                                            type:type
+                                        }
+                                    })
+                                }}>새로고침</span>
                             </button>
                         </Right>
 
@@ -118,7 +126,12 @@ const ContentComment = () =>{
                                 <div className="writebutton">
                                 <button className="write"
                                   onClick={()=>{
+                                    if(count>0){
                                    onClickComment();
+                                    }
+                                    else{
+                                        alert("글을 작성하세요")
+                                    }
                                 
                                 }}
                                 >작성하기</button>

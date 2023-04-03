@@ -111,8 +111,7 @@ const ReplyComment = ({idd,child,bid,member}) =>
                                                      <span className="time">{detailDate(new Date(data.bcdate))}</span>
                                                  </div>
                                                  <div className="comment-comment">
-                                                    <div dangerouslySetInnerHTML={{__html:data.bccomment}}
-></div>
+                                                    <div dangerouslySetInnerHTML={{__html:data.bccomment}}></div>
                                                  <div className="comment-content">
                                                  {member === LOGIN_data.uid ? <div 
                 style={{color:'red', float:'left', paddingRight:'20px'}}
