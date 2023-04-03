@@ -1,7 +1,12 @@
+/*
+  23-04-03 관리자 페이지 상영정보관리 구현(오병주)
+*/
 package com.movie.Spring_backend.controller;
 
+import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.dto.BoardDto;
 import com.movie.Spring_backend.dto.MovieDto;
+import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.mapper.CountCommentMapper;
 import com.movie.Spring_backend.service.BoardCommentService;
@@ -55,7 +60,6 @@ public class ManagerOneController {
         managerOneService.postMovie(requestMap,request,multipartFiles);
     }
 
-
     @GetMapping("/auth/boardread")
     public ResponseEntity<List<BoardDto>> BoardWrite() {
         return ResponseEntity.ok().body(managerOneService.ReadBoard());
@@ -82,8 +86,9 @@ public class ManagerOneController {
     }
 
 
-
-
-
-
+    // 상영정보 불러오는 메소드
+    @GetMapping("/auth/getMovieInfo")
+    public ResponseEntity<Page<MovieInfoDto>> GetMovieInfo(HttpServletRequest request, @RequestParam Map<String, String> requestMap) {
+        return ResponseEntity.ok().body(managerOneService.MovieInfoSearch(request, requestMap));
+    }
 }

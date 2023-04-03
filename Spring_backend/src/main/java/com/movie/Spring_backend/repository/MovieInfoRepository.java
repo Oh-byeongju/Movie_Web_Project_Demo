@@ -1,9 +1,8 @@
 package com.movie.Spring_backend.repository;
 
-import com.movie.Spring_backend.entity.MemberEntity;
-import com.movie.Spring_backend.entity.MovieEntity;
-import com.movie.Spring_backend.entity.MovieInfoEntity;
-import com.movie.Spring_backend.entity.MovieMemberEntity;
+import com.movie.Spring_backend.entity.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -85,8 +84,19 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
     List <MovieInfoEntity> findTimeTheater(@Param("miday") Date miday ,@Param("tid")Long tid);
 
     // 특정 사용자가 예매후 관람이 끝난 영화 정보를 들고오는 메소드
+    // 이런거도 inner join 써야하는거 같음
     @Query(value = "SELECT mi FROM MovieInfoEntity as mi LEFT OUTER JOIN mi.reservations rs " +
-            "where mi.miendtime <= NOW() AND rs.rstate = 1 AND rs.member = :member")
+            "WHERE mi.miendtime <= NOW() AND rs.rstate = 1 AND rs.member = :member")
     List<MovieInfoEntity> findMemberPossible(@Param("member") MemberEntity member);
+
+    // 관리자 페이지에서 상영정보를 가져오는 메소드
+    @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
+            "WHERE (:movie is null or mi.movie = :movie) " +
+            "AND (:startDay is null or mi.miday >= :startDay) AND (:endDay is null or mi.miday <= :endDay)")
+    @EntityGraph(attributePaths = {"movie", "cinema.theater"})
+    Page<MovieInfoEntity> findManagerMovieInfo(@Param("movie") MovieEntity movie,
+                                               @Param("startDay") Date startDay,
+                                               @Param("endDay") Date endDay,
+                                               Pageable pageable);
 }
 

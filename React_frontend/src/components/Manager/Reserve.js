@@ -97,7 +97,7 @@ const Reserve = () => {
 	}, [dispatch])
 
 	// 선택된 지역 버튼 useState
-	const [selectTheater, setselectTheater] = useState('seoul');
+	const [selectArea, setselectArea] = useState('seoul');
 
 	// 극장 관리 useState
 	const [theater, setTheater] = useState({
@@ -195,16 +195,16 @@ const Reserve = () => {
 							<Wrapper>
 								<ListChoice>
 									<ul>
-										<li onClick={()=> setselectTheater('seoul')} className={selectTheater === 'seoul' ? "tab menu"  : ""}>
+										<li onClick={()=> setselectArea('seoul')} className={selectArea === 'seoul' ? "tab menu"  : ""}>
 											서울 ({seoul})
 										</li>
-										<li onClick={()=> setselectTheater('gyeonggi')} className={selectTheater === 'gyeonggi' ? "tab menu"  : ""}>
+										<li onClick={()=> setselectArea('gyeonggi')} className={selectArea === 'gyeonggi' ? "tab menu"  : ""}>
 											경기 ({gyeonggi})
 										</li>
-										<li onClick={()=> setselectTheater('incheon')} className={selectTheater === 'incheon' ? "tab menu"  : ""}>
+										<li onClick={()=> setselectArea('incheon')} className={selectArea === 'incheon' ? "tab menu"  : ""}>
 											인천 ({incheon})
 										</li>
-										<li onClick={()=> setselectTheater('busan')} className={selectTheater === 'busan' ? "tab menu"  : ""}>
+										<li onClick={()=> setselectArea('busan')} className={selectArea === 'busan' ? "tab menu"  : ""}>
 											부산 ({busan})
 										</li>
 									</ul>
@@ -213,19 +213,19 @@ const Reserve = () => {
 									<ScrollBarT>
 										<TheaterContainer>
 											<ul>
-                       	{selectTheater === 'seoul' ? THEATER_LIST.map((theater)=> 
+                       	{selectArea === 'seoul' ? THEATER_LIST.map((theater)=> 
 												theater.tarea === '서울' ? <TheaterLi key={theater.tid} onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
 												: null) : null}
 
-												{selectTheater === 'gyeonggi' ? THEATER_LIST.map((theater)=> 
+												{selectArea === 'gyeonggi' ? THEATER_LIST.map((theater)=> 
 												theater.tarea === '경기' ? <TheaterLi  key={theater.tid} onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
 												: null) : null}
 
-												{selectTheater === 'incheon' ? THEATER_LIST.map((theater)=> 
+												{selectArea === 'incheon' ? THEATER_LIST.map((theater)=> 
 												theater.tarea === '인천' ? <TheaterLi  key={theater.tid} onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
 												: null) : null}
 
-												{selectTheater === 'busan' ? THEATER_LIST.map((theater)=> 
+												{selectArea === 'busan' ? THEATER_LIST.map((theater)=> 
 												theater.tarea === '부산' ? <TheaterLi  key={theater.tid} onClick={()=> TheaterClick(theater)} tName={theater.tid} theater={THEATER.tid}> {theater.tname} </TheaterLi> 
 												: null) : null}
 							 				</ul>
@@ -239,7 +239,7 @@ const Reserve = () => {
 				{moviebutton ? 
 				<>
 					<Notice>
-						* 검색결과 <strong>{RESERVE_MOVIE_LIST.totalElements}</strong>건이 검색되었습니다. (현재 영화는 {MOVIE.reserve ? '상영중인' : '상영예정'} 영화)
+						* 검색결과 <strong>{RESERVE_MOVIE_LIST.totalElements}</strong>건이 검색되었습니다. (현재 영화는 {MOVIE.reserve ? <strong>상영중인</strong> : <strong>상영예정</strong>} 영화입니다.)
 					</Notice> 
 					<ReserveMovie/>
 				</> :
