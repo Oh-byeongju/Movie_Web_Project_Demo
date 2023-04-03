@@ -189,7 +189,7 @@ public class MovieMapper {
         else {
             return MovieDto.builder()
                     .mid(entity.getMid())
-                    .mtitle(entity.getMtitle()+"(상영예정)")
+                    .mtitle(entity.getMtitle())
                     .mimagepath(entity.getMimagepath())
                     .reserve(false).build();
         }

@@ -1,10 +1,16 @@
+/*
+  23-04-03 관리자 페이지 상영정보관리 구현(오병주)
+*/
 package com.movie.Spring_backend.controller;
 
+import com.movie.Spring_backend.dto.CommentInfoDto;
 import com.movie.Spring_backend.dto.MovieDto;
+import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.service.ManagerOneService;
 import com.movie.Spring_backend.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,10 +51,9 @@ public class ManagerOneController {
         managerOneService.postMovie(requestMap,request,multipartFiles);
     }
 
-
-
-
-
-
-
+    // 상영정보 불러오는 메소드
+    @GetMapping("/auth/getMovieInfo")
+    public ResponseEntity<Page<MovieInfoDto>> GetMovieInfo(HttpServletRequest request, @RequestParam Map<String, String> requestMap) {
+        return ResponseEntity.ok().body(managerOneService.MovieInfoSearch(request, requestMap));
+    }
 }

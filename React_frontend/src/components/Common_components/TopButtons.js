@@ -174,11 +174,12 @@ const TopButtons = () => {
                 <div className="category">    
                 <Link to="/Board/list/popular/all/1">게시판</Link></div>
               </div>
-
               <div className="menu_category">
                 <div className="title_category">관리자1</div>
                 <div className="category">영화관리</div>
-                <div className="category">상영영화관리</div>
+                <div className="category">
+                  <Link to="/Manager/MovieInfo">상영정보관리</Link>
+                </div>
               </div>
               <div className="menu_category">
                 <div className="title_category">관리자2</div>

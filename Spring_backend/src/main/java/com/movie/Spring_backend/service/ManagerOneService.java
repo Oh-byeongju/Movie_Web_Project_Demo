@@ -1,14 +1,18 @@
+/*
+  23-04-03 관리자 페이지 상영정보관리 구현(오병주)
+*/
 package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.BoardDto;
+import com.movie.Spring_backend.dto.MemberDto;
 import com.movie.Spring_backend.dto.MovieDto;
+import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
-import com.movie.Spring_backend.repository.ActorRepository;
-import com.movie.Spring_backend.repository.MovieActorRepository;
-import com.movie.Spring_backend.repository.MovieMemberRepository;
-import com.movie.Spring_backend.repository.MovieRepository;
+import com.movie.Spring_backend.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +34,7 @@ import java.util.*;
 public class ManagerOneService {
     private final JwtValidCheck jwtValidCheck;
     private final MovieRepository movieRepository;
-    private final MovieMemberRepository movieMemberRepository;
+    private final MovieInfoRepository movieInfoRepository;
     private final MovieActorRepository movieActorRepository;
     private final ActorRepository actorRepository;
     private final EntityManagerFactory entityManagerFactory;
@@ -419,6 +423,54 @@ public class ManagerOneService {
         System.out.println("FileNames =>"+ FileNames);
         resultMap.put("JavaData", paramMap);
         return POSTER_PATH +"/" + FileNames;
+    }
+
+    // 상영정보를 불러오는 메소드
+    public Page<MovieInfoDto> MovieInfoSearch(HttpServletRequest request, Map<String, String> requestMap) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // requestMap 데이터 추출 및 형변환
+        String mid = requestMap.get("mid");
+        String tarea = requestMap.get("tarea");
+        String tid = requestMap.get("tid");
+        String startDay = requestMap.get("startDay");
+        String endDay = requestMap.get("endDay");
+        int page = Integer.parseInt(requestMap.get("page"));
+        int size = Integer.parseInt(requestMap.get("size"));
+
+        // 페이지네이션을 위한 정보
+        // 나중에 size로 바꾸기
+        PageRequest PageInfo = PageRequest.of(page, 100);
+
+
+        System.out.println(mid);
+        System.out.println(tid);
+        System.out.println("여기에요");
+
+        // 프론트단에서 영화를 선택 안했을경우 파라미터를 null로 주기위한 과정
+        MovieEntity movie = null;
+        if (mid != null) {
+            movie = MovieEntity.builder().mid(Long.valueOf(mid)).build();
+        }
+
+        // 프론트단에서 날짜를 선택 안했을경우 파라미터를 null로 주기위한 과정
+        Date Start = null;
+        Date End = null;
+        if (startDay != null) {
+            Start = Date.valueOf(startDay);
+        }
+        if (endDay != null) {
+            End = Date.valueOf(endDay);
+        }
+
+        // 프론트단에서 보낸 조건을 이용해서 상영정보 검색
+        Page<MovieInfoEntity> MovieInfos = movieInfoRepository.findManagerMovieInfo(movie, Start, End, PageInfo);
+
+        return MovieInfos.map(movieInfo -> MovieInfoDto.builder()
+                .mid(movieInfo.getMovie().getMid())
+                .miid(movieInfo.getMiid())
+                .mtitle(movieInfo.getMovie().getMtitle()).build());
     }
 
 }

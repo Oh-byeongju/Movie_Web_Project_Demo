@@ -29,6 +29,7 @@ import ManagerUser from "./pages/ManagerUser";
 import ManagerReserve from "./pages/ManagerReserve";
 import ManagerWriteRecord from "./pages/ManagerWriteRecord";
 import Manager from "./pages/Manager";
+import ManagerMovieInfo from "./pages/ManagerMovieInfo";
 
 // TopButton과 Footer가 있어야 하는 페이지이면 Layout 사이에 넣고 아니면 따로 빼기
 function App() {
@@ -66,6 +67,7 @@ function App() {
         <Route path="/Manager/Reserve" element={<ManagerReserve />}></Route>
         <Route path="/Manager/Document" element={<ManagerWriteRecord />}></Route>
         <Route path="/Manager/Cinema" element={<Manager />}></Route>
+        <Route path="/Manager/MovieInfo" element={<ManagerMovieInfo />}></Route>
       </Route>
     </Routes>
   );
