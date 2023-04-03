@@ -2195,6 +2195,7 @@ UPDATE movie_member
 SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
 WHERE MID = 4 AND uid = 'temp17';
 
+
 /*
 -- 예매 취소한 것들 확인하는 쿼리
 SELECT *
@@ -2228,17 +2229,6 @@ INSERT INTO `movie_reservation`(`rdate`, `rprice`, `rpeople`, `rticket`, `rpayid
 INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(1, "30", 981);
 INSERT INTO `movie_infoseat`(`sid`,`miid`, `rid`) VALUES(4, "30", 981);
 
-
-SELECT *
-FROM movie_information
-WHERE miendtime <= '2023-03-18' AND miid IN (SELECT miid
-												  FROM movie_reservation
-												  WHERE uid = 'temp22');
-
-select *
-from movie_member
-where uid = 'temp1' and umlike = true
-order by umliketime desc;
 
       
 

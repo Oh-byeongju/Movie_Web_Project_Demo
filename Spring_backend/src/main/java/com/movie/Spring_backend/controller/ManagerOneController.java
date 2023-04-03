@@ -40,6 +40,7 @@ public class ManagerOneController {
 
     private final BoardCommentService boardCommentService;
     //영화 가져오기
+
     @GetMapping("/auth/movieall")
     public ResponseEntity<List<MovieDto>> AllMovie(@RequestParam Map<String, String> requestMap) {
         return ResponseEntity.ok().body(managerOneService.getAllMovie(requestMap));

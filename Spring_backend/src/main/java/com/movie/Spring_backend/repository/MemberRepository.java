@@ -1,6 +1,8 @@
 package com.movie.Spring_backend.repository;
 
 import com.movie.Spring_backend.entity.MemberEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,8 +24,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, String> {
                             @Param("uaddrsecond") String uaddrsecond, @Param("ubirth") Date ubirth);
 
     // 사용자 이름순으로 정렬(오름차순)
-    List<MemberEntity> findByUidContainingOrderByUnameAsc(String uid);
+    Page<MemberEntity> findByUidContainingOrderByUnameAsc(String uid, Pageable pageable);
 
     // 사용자 가입순으로 정렬(오름차순)
-    List<MemberEntity> findByUidContainingOrderByUjoindateAsc(String uid);
+    Page<MemberEntity> findByUidContainingOrderByUjoindateAsc(String uid, Pageable pageable);
 }

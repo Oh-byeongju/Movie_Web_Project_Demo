@@ -5,7 +5,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { MANAGER_RESERVE_THEATER_LIST_REQUEST } from '../../reducer/R_manager_user.js';
 import { Table } from 'antd';
 
-const ReserveTheater = ({ currentT, setCurrentT }) => {
+const ReserveTheater = () => {
 	const dispatch = useDispatch();
 
 	// 필요한 리덕스 상태들
@@ -80,7 +80,6 @@ const ReserveTheater = ({ currentT, setCurrentT }) => {
 
 	// 테이블에 있는 페이지네이션 누를 때
 	const handleTableChange = (pagination) => {
-		setCurrentT(pagination.current);
 		dispatch({
 			type: MANAGER_RESERVE_THEATER_LIST_REQUEST,
 			data: {
@@ -97,13 +96,13 @@ const ReserveTheater = ({ currentT, setCurrentT }) => {
 				loading={RESERVE_THEATER_LIST_loading}
         columns={columns}
 				dataSource={RESERVE_THEATER_LIST.content}
-				pagination={{current: currentT, total: RESERVE_THEATER_LIST.totalElements, pageSize: RESERVE_THEATER_LIST.size}}
+				pagination={{current: RESERVE_THEATER_LIST.number ? RESERVE_THEATER_LIST.number + 1 : 1, total: RESERVE_THEATER_LIST.totalElements, pageSize: RESERVE_THEATER_LIST.size}}
 				scroll={{x: 1350}}
 				onChange={handleTableChange}
         locale={{ 
-          triggerDesc: '내림차순 정렬',
-          triggerAsc: '오름차순 정렬', 
-          cancelSort: '정렬해제'
+          triggerDesc: '내림차순 정렬하기',
+          triggerAsc: '오름차순 정렬하기', 
+          cancelSort: '정렬해제하기'
       	}}
 			/>
 		</>

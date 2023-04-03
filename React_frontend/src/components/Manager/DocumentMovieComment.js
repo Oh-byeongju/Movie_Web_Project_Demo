@@ -1,27 +1,25 @@
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { MANAGER_MOVIE_COMMENT_LIST_REQUEST } from '../../reducer/R_manager_user.js';
+import { MANAGER_MOVIE_COMMENT_LIST_REQUEST, MANAGER_MOVIE_COMMENT_DELETE_REQUEST } from '../../reducer/R_manager_user.js';
 import { Table, Modal } from 'antd';
 
-const DocumentMovieComment = ({ currentM, setCurrentM }) => {
+const DocumentMovieComment = () => {
   const dispatch = useDispatch();
 
   // 필요한 리덕스 상태들
-  const { MOVIE_COMMENT_LIST_loading, MOVIE_COMMENT_LIST, MOVIE_COMMENT } = useSelector(
+  const { MOVIE_COMMENT_LIST_loading, MOVIE_COMMENT_LIST, MOVIE_COMMENT, MOVIE_COMMENT_DELETE_loading } = useSelector(
     state => ({
       MOVIE_COMMENT_LIST_loading: state.R_manager_user.MOVIE_COMMENT_LIST_loading,
       MOVIE_COMMENT_LIST: state.R_manager_user.MOVIE_COMMENT_LIST,
-			MOVIE_COMMENT: state.R_manager_user.MOVIE_COMMENT
+			MOVIE_COMMENT: state.R_manager_user.MOVIE_COMMENT,
+      MOVIE_COMMENT_DELETE_loading: state.R_manager_user.MOVIE_COMMENT_DELETE_loading
     }),
     shallowEqual
   );
 
   // 테이블에 있는 페이지네이션 누를 때
 	const handleTableChange = (pagination) => {
-    console.log(pagination);
-
-		setCurrentM(pagination.current);
 		dispatch({
 			type: MANAGER_MOVIE_COMMENT_LIST_REQUEST,
 			data: {
@@ -45,26 +43,20 @@ const DocumentMovieComment = ({ currentM, setCurrentM }) => {
 
   // 관람평 삭제 버튼 누르면 실행되는 함수
 	const CommentDelete = useCallback((data) => {
-
-
-    console.log(Math.ceil(1/50));
-
-		if (!window.confirm("관람평을 삭제하시겠습니까?")) {
+    if (!window.confirm("관람평을 삭제하시겠습니까? (삭제된 관람평은 복구되지 않습니다)")) {
       return;
     };
 
-    // 일단 여기서 부터 진행하면됨
-    // 삭제하면서 메모장에 기록해둔 내용으로 값 불러오게 하면 될듯
-    // 제일 끝에놈 기준으로 오류 안나게 들고오기
-
-    console.log(data);
-
-		// dispatch({
-    //   type: USER_COMMENT_DELETE_REQUEST,
-		// 	data: comment.umid
-    // });
-		
-	}, []);
+    dispatch({
+			type: MANAGER_MOVIE_COMMENT_DELETE_REQUEST,
+			data: {
+        umid: data,
+				mid: MOVIE_COMMENT.mid,
+				page: MOVIE_COMMENT_LIST.number,
+        size: MOVIE_COMMENT_LIST.size
+			}
+		});
+	}, [MOVIE_COMMENT.mid, MOVIE_COMMENT_LIST, dispatch]);
 
   // antd css 설정
   const columns = [
@@ -106,10 +98,10 @@ const DocumentMovieComment = ({ currentM, setCurrentM }) => {
 	return (
 		<>
 			<TableWrap rowKey="umid"
-        loading={MOVIE_COMMENT_LIST_loading}
+        loading={MOVIE_COMMENT_DELETE_loading || MOVIE_COMMENT_LIST_loading}
         columns={columns}
         dataSource={MOVIE_COMMENT_LIST.content}
-        pagination={{current: currentM, total: MOVIE_COMMENT_LIST.totalElements, pageSize: MOVIE_COMMENT_LIST.size}}
+        pagination={{current: MOVIE_COMMENT_LIST.number ? MOVIE_COMMENT_LIST.number + 1 : 1, total: MOVIE_COMMENT_LIST.totalElements, pageSize: MOVIE_COMMENT_LIST.size}}
         onChange={handleTableChange}
 				onRow={(record, rowIndex) => {
 					return {
@@ -118,12 +110,12 @@ const DocumentMovieComment = ({ currentM, setCurrentM }) => {
 				}}
 				scroll={{x: 100}}
 				locale={{ 
-          triggerDesc: '내림차순 정렬',
-          triggerAsc: '오름차순 정렬', 
-          cancelSort: '정렬해제'
+          triggerDesc: '내림차순 정렬하기',
+          triggerAsc: '오름차순 정렬하기', 
+          cancelSort: '정렬해제하기'
       	}}
       />
-			<Modal title="관람평 전체내용" okText="확인" open={isModalOpen} onOk={handleOk} cancelButtonProps={{ style: { display: 'none' } }} >
+			<Modal title="관람평 전체내용" okText="확인" open={isModalOpen} onCancel={handleOk} onOk={handleOk} cancelButtonProps={{ style: { display: 'none' } }} >
         <p>{selectRow}</p>
       </Modal>
 		</>
