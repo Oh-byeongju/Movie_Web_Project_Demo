@@ -11,7 +11,7 @@ import BoardSaga from "./Board";
 import S_mypage_reserve from "./S_mypage_reserve";
 import S_manager_user from "./S_manager_user";
 import S_manager_theater from "./S_manager_theater";
-
+import S_manager_board from "./S_manager_board";
 //사가 파일 추가 시 rootSaga 안에 fork해주면 됨
 export default function* rootSaga() {
   yield all([
@@ -26,6 +26,7 @@ export default function* rootSaga() {
     fork(BoardSaga),
     fork(S_mypage_reserve),
     fork(S_manager_user),
-    fork(S_manager_theater)
+    fork(S_manager_theater),
+    fork(S_manager_board)
   ]);
 }

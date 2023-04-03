@@ -97,7 +97,7 @@ const ContentCard = () => {
                     </SubTitle>
                 </Header>   
                 <ContentWrapper>
-                    <ArticleContent  dangerouslySetInnerHTML={{__html:content[0].bdetail}}>
+                    <ArticleContent dangerouslySetInnerHTML={{__html:content[0].bdetail}}>
 
                     </ArticleContent>
                     <AricleBox>
@@ -156,7 +156,7 @@ const ContentCard = () => {
                                         data:{bid:content[0].bid}
                                     })
                                     alert('삭제되었습니다.')
-                                    navigate('/board/list/all/1')
+                                    navigate('/board/list/popular/all/1')
                                 }
                                 }}><DeleteOutlined /><span>삭제하기</span></div>: ""}
                             </ArticleVote>

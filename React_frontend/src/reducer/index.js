@@ -11,7 +11,7 @@ import Board from "./Board";
 import R_mypage_reserve from "./R_mypage_reserve";
 import R_manager_user from "./R_manager_user";
 import R_manager_theater from "./R_manager_theater";
-
+import R_manager_board from "./R_manager_board";
 // 리듀서 파일 생성 시 여기 추가하면 됨.
 const rootReducer = combineReducers({
   R_user_join,
@@ -25,7 +25,8 @@ const rootReducer = combineReducers({
   Board,
   R_mypage_reserve,
   R_manager_user,
-  R_manager_theater
+  R_manager_theater,
+  R_manager_board
   
 });
 

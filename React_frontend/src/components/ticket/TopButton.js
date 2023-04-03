@@ -1,10 +1,11 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
 import {} from "../../reducer/ticket";
 const TopButton = ({}) => {
   const dispatch = useDispatch();
+  const navigate= useNavigate();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
   const onReset = useCallback(() => {
     if (!window.confirm("예매 페이지를 초기화합니다.")) {
@@ -16,7 +17,11 @@ const TopButton = ({}) => {
   return (
     <Nav>
       <Right>
-        <Schedule>
+        <Schedule
+        onClick={()=>
+      {
+        navigate('/timetable')
+      }}>
           <span>상영 시간표</span>
         </Schedule>
         <Rereserve

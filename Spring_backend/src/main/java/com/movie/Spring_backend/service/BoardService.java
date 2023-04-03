@@ -36,6 +36,8 @@ public class BoardService {
     private final BoardLikeRepository boardLikeRepository;
 
 
+    //매
+
     //게시글을 전체 불러오는 메소드 ,최신순
     @Transactional
     public Page<BoardDto> PaginationBid(Integer index,String category){
@@ -49,8 +51,6 @@ public class BoardService {
                     .bcategory(data.getBcategory()).bdate(data.getBdate()).bdate(data.getBdate()).bclickindex(data.getBclickindex())
                    .thumb(data.getThumb()).blike(data.getLike()).bunlike(data.getBunlike()).commentcount(data.getCommentcount()).uid(data.getMember().getUid()).
                     build());
-
-
     }
     //게시글 전체 불러오는 메소드, top순
     @Transactional

@@ -16,11 +16,7 @@ const Sidebar = () =>{
             label: '상영관 관리',
             key: 'cinema',
         }
-        ,
-        {
-          label:'영화 관리',
-          key:'movies'
-        }
+        
     ]
 
     const [current, setCurrent] = useState("theater");
@@ -63,7 +59,7 @@ const Sidebar = () =>{
             >
                 {current==="theater"
 ?              <Cinema /> : 
-              current ==="cinema" ? <Theater />: <Movie />}
+             <Theater />}
             </div>
           </Content>
      
