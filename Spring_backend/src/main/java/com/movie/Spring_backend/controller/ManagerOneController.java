@@ -71,7 +71,7 @@ public class ManagerOneController {
         managerOneService.boarddelete(requestMap,request);
 
     }
-    @GetMapping("/auth/comment")
+    @GetMapping("/auth/commentread")
     public ResponseEntity<CountCommentMapper> commentAll(@RequestParam("bid") Long bid, @RequestParam("type") String type) {
 
         if(type.equals("new")) {

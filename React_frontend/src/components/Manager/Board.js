@@ -1,19 +1,24 @@
 import React,{useEffect, useState} from "react";
 import { useDispatch ,useSelector} from "react-redux";
 import { Table, Input ,Modal,Form} from 'antd';
-import { BOARD_DELETE_LOADING, BOARD_READ_LOADING, BOARD_SELECT_LOADING, COMMENT_READ_REQUEST } from "../../reducer/R_manager_board";
+import { BOARD_DELETE_LOADING, BOARD_READ_LOADING, BOARD_SELECT_LOADING, M_COMMENT_READ_REQUEST } from "../../reducer/R_manager_board";
 import styled from "styled-components";
+import { COMMENT_DELETE_REQUEST } from "../../reducer/Board";
 const { Search } = Input;
 
 const Board = () =>{
     const dispatch = useDispatch();
    
     const { board,board_delete_done,comment} = useSelector((state)=>state.R_manager_board)
+    const {comment_delete_done} = useSelector((state)=>state.Board)
+
     useEffect(()=>{
         dispatch({
             type: BOARD_READ_LOADING
         })
-    },[board_delete_done])
+    },[board_delete_done,comment_delete_done])
+
+
 /*
     useEffect(()=>{
         dispatch({
@@ -68,7 +73,11 @@ const Board = () =>{
             }
           }
 
+          //board
     const onDelete = (data) =>{
+      if (!window.confirm("게시글을 삭제하시겠습니까? (삭제된 게시글은 복구 불가합니다.")) {
+        return;
+      };
         dispatch({
                 type:BOARD_DELETE_LOADING,
                 data:{
@@ -76,12 +85,28 @@ const Board = () =>{
                 }
         })
     }  
+
+    //comment
+    const onDeletecomment = (data) =>{
+      if (!window.confirm("댓글을 제거하시겠습니까? (삭제된 댓글은 복구되지 않습니다)")) {
+        return;
+      };
+        dispatch({
+                type:COMMENT_DELETE_REQUEST,
+                data:{
+                    comment:data
+                }
+        })
+        
+    }  
+
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
 
     const showModal = (data) => {
         dispatch({
-            type:COMMENT_READ_REQUEST,
+            type:M_COMMENT_READ_REQUEST,
             data:{
                 bid:data,
                 type:"new"
@@ -97,6 +122,12 @@ const Board = () =>{
       };
         
     const columns = [
+      {
+        title: '게시글번호',
+        width: 110,
+        dataIndex: 'bid',
+        fixed: 'left',
+      },
         {
           title: '계정',
           width: 110,
@@ -126,11 +157,75 @@ const Board = () =>{
           fixed: 'right',
           width: 85,
           render: (text, row) => <TableButton onClick={()=>{
-            
             onDelete(row.bid)
             console.log(row.bid)}}>delete</TableButton>,
         },
       ];  
+
+
+      const [isModalOpen2, setIsModalOpen2] = useState(false);
+      const [child, setChild] = useState([])
+
+      const showModal2 = (data) => {
+        setChild(data)
+          setIsModalOpen2(true);
+        };
+        const handleOk2 = () => {
+          setIsModalOpen2(false);
+        };
+        const handleCancel2 = () => {
+          setIsModalOpen2(false);
+        };
+        
+        
+
+      const columns2 = [
+        {
+          title: '게시글번호',
+          width: 70,
+          dataIndex: 'bcid',
+          fixed: 'left',
+        },
+        {
+          title: '계정',
+          width: 70,
+          dataIndex: 'member',
+          fixed: 'left',
+        },
+        {
+          title: '내용',
+          width: 100,
+          dataIndex: 'bccomment',
+          fixed: 'left',
+        },
+        {
+          title: '날짜',
+          width: 110,
+          dataIndex: 'bcdate',
+          fixed:'left'
+        },
+        {
+            title: '게시글',
+            width: 100,
+            dataIndex: 'board',
+            fixed:'left'
+          }, 
+          {
+            title: '상위댓글번호',
+            width: 210,
+            dataIndex: 'parent',
+            fixed:'left'
+          }, 
+          {
+            title: '관리자',
+            fixed: 'right',
+            width: 85,
+            render: (text, row) => <TableButton onClick={()=>{
+              onDeletecomment(row.bcid)
+              console.log(text)}}>delete</TableButton>,
+          },
+       
+      ]; 
     return(
         <Container>
       <InnerWraps>
@@ -141,7 +236,7 @@ const Board = () =>{
         </div>
         <div className="search">
           <p>
-            {board.length}명의 회원이 검색되었습니다.
+            {board.length}명의 게시글이 검색되었습니다. (더블클릭시 댓글, 댓글에서 더블클릭시 대댓글)
           </p>
             <ButtonList>
               <ButtonWrap>
@@ -178,6 +273,7 @@ const Board = () =>{
                // click row
               onDoubleClick: event => {                 
                 showModal(record.bid)
+                console.log(record.bid)
               }, // double click row
               onContextMenu: event => {}, // right button click row
               onMouseEnter: event => {}, // mouse enter row
@@ -186,28 +282,53 @@ const Board = () =>{
           }}
         />
       </InnerWraps>
-      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-          {comment.length!=0 ? 
-          comment.mapper.map((data)=>{
-return(
-    <Form.Item >
-           {data.bccomment}
-        {data.child.map((data)=>
-        <div>{data.bccomment}</div>
-        )}
-    </Form.Item>
-)
-          })
-          
-        :
-        ""
-        }
+      <Modal width={1200}title="댓글" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        
+      <TableWrap rowKey="bid"
+          columns={columns2}
+          dataSource={comment.mapper}
+          scroll={{x: 1350}}
+          onRow={(record, rowIndex) => {
+            return {
+               // click row
+              onDoubleClick: event => {     
+                showModal2(record.child);           
+              }, // double click row
+              onContextMenu: event => {}, // right button click row
+              onMouseEnter: event => {}, // mouse enter row
+              onMouseLeave: event => {}, // mouse leave row
+            };
+          }}
+        />
+     
       </Modal>
+      <Modal width={1200}title="대댓글" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2}>
+        
+      <TableWrap rowKey="bid"
+          columns={columns2}
+          dataSource={child}
+          scroll={{x: 1350}}
+          onRow={(record, rowIndex) => {
+            return {
+               // click row
+              onDoubleClick: event => {                 
+              }, // double click row
+              onContextMenu: event => {}, // right button click row
+              onMouseEnter: event => {}, // mouse enter row
+              onMouseLeave: event => {}, // mouse leave row
+            };
+          }}
+        />
+        
+     
+      </Modal>
+    
     
      </Container>
     )
     }
 
+    
 const Container = styled.div`
   padding: 0;
   width: 1235px;
@@ -328,4 +449,17 @@ const TableButton = styled.button`
   transition: color 0.3s;
   border: none;
 `;
+
+const FormItem = styled(Form.Item)`
+  
+div{
+  strong{
+    display: inline-block;
+    font-weight: 400;
+    padding: 0 2px;
+    background: #d1f2e8;
+    color: #16ae81;
+  }
+}
+`
 export default Board;

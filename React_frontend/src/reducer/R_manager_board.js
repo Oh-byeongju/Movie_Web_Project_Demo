@@ -30,9 +30,9 @@ export const BOARD_DELETE_LOADING = "BOARD_DELETE_LOADING"
 export const BOARD_DELETE_DONE = "BOARD_DELETE_DONE"
 export const BOARD_DELETE_ERROR = "BOARD_DELETE_ERROR"
 
-export const COMMENT_READ_REQUEST = "COMMENT_READ_REQUEST"
-export const COMMENT_READ_SUCCESS = "COMMENT_READ_SUCCESS"
-export const COMMENT_READ_FAILURE = "COMMENT_READ_FAILURE"
+export const M_COMMENT_READ_REQUEST = "M_COMMENT_READ_REQUEST"
+export const M_COMMENT_READ_SUCCESS = "M_COMMENT_READ_SUCCESS"
+export const M_COMMENT_READ_FAILURE = "M_COMMENT_READ_FAILURE"
 const R_manager_board = (state = initalState, action) => {
 	switch (action.type) {
            case BOARD_READ_LOADING:
@@ -101,14 +101,14 @@ const R_manager_board = (state = initalState, action) => {
                             board_delete_done:false,
                             board_delete_error:action.error,
                             }
-                            case COMMENT_READ_REQUEST:
+                            case M_COMMENT_READ_REQUEST:
                                 return{
                                     ...state,
                                     comment_read_loading:true,
                                     comment_read_done:false,
                                     comment_read_error:null,
                                 }
-                            case COMMENT_READ_SUCCESS:
+                            case M_COMMENT_READ_SUCCESS:
                                 return{
                                         ...state,
                                         comment_read_loading:false,
@@ -116,7 +116,7 @@ const R_manager_board = (state = initalState, action) => {
                                         comment_read_error:null,
                                         comment:action.data,
                                         }
-                            case COMMENT_READ_FAILURE:
+                            case M_COMMENT_READ_FAILURE:
                                 return{
                                     ...state,
                                     comment_read_loading:false,

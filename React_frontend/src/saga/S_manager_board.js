@@ -5,7 +5,7 @@
 import { call, all, takeLatest, fork, put } from "redux-saga/effects";
 
 import { http } from "../lib/http";
-import { BOARD_DELETE_DONE, BOARD_DELETE_ERROR, BOARD_DELETE_LOADING, BOARD_READ_DONE, BOARD_READ_ERROR, BOARD_READ_LOADING, BOARD_SELECT_DONE, BOARD_SELECT_ERROR, BOARD_SELECT_LOADING, COMMENT_READ_REQUEST } from "../reducer/R_manager_board";
+import { BOARD_DELETE_DONE, BOARD_DELETE_ERROR, BOARD_DELETE_LOADING, BOARD_READ_DONE, BOARD_READ_ERROR, BOARD_READ_LOADING, BOARD_SELECT_DONE, BOARD_SELECT_ERROR, BOARD_SELECT_LOADING, M_COMMENT_READ_FAILURE, M_COMMENT_READ_REQUEST, M_COMMENT_READ_SUCCESS } from "../reducer/R_manager_board";
 
 // 게시물 조회 함수
 function* boardread(action) {
@@ -106,12 +106,13 @@ function* commentread(action) {
     console.log(result);
     if (result.status === 200) {
       yield put({
-        type: BOARD_DELETE_DONE,
+        type: M_COMMENT_READ_SUCCESS,
+        data:result.data
       });
     } 
     else {
       yield put({
-          type: BOARD_DELETE_ERROR,
+          type: M_COMMENT_READ_FAILURE,
           data:result.error
       });
     }
@@ -119,7 +120,13 @@ function* commentread(action) {
   
   //조회 백엔드 호출
   async function commentReadApi(data) {
-    return await http.post("/manager/auth/comment",data)
+    return await http.get("/manager/auth/commentread",
+    {
+      params:{
+        bid: data.bid,
+        type:data.type
+      }
+    })
       .then((response) => {
         return response;
       })
@@ -137,9 +144,8 @@ function* BOARD_SELECT() {
 function* BOARD_DELETE() {
     yield takeLatest(BOARD_DELETE_LOADING, boarddelete);
   }
-
   function* COMMENT_ALL() {
-    yield takeLatest(COMMENT_READ_REQUEST, commentread);
+    yield takeLatest(M_COMMENT_READ_REQUEST, commentread);
   }
 export default function* S_manager_board() {
   yield all([fork(BOARD_ALL),fork(BOARD_SELECT),fork(BOARD_DELETE),fork(COMMENT_ALL)]);

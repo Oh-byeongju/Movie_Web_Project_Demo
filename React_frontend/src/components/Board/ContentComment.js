@@ -126,7 +126,12 @@ const ContentComment = () =>{
                                 <div className="writebutton">
                                 <button className="write"
                                   onClick={()=>{
+                                    if(count>0){
                                    onClickComment();
+                                    }
+                                    else{
+                                        alert("글을 작성하세요")
+                                    }
                                 
                                 }}
                                 >작성하기</button>
