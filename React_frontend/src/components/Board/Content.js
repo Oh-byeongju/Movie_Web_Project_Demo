@@ -78,7 +78,8 @@ else if(!board_read_loading && board_read_done){
 ))
 }
 
-        <Pagination count={board.totalPages} page={parseInt(page,10)} onChange={handleChange} />
+        <CustomPagination 
+        count={board.totalPages} page={parseInt(page,10)} onChange={handleChange} />
         </ContentWrapper>
     )
 }
@@ -208,5 +209,9 @@ img{
     font-family: "object-fit: cover;";
 }`
 
+const CustomPagination = styled(Pagination)`
+    position:relative;
+    left:30%;
+        `
 
 export default Content;

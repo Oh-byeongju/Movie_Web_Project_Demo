@@ -4,7 +4,7 @@ import MovieOutlinedIcon from '@mui/icons-material/MovieOutlined';
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { MANAGER_MOVIE_LIST_COMMENT_REQUEST, MANAGER_MOVIE_COMMENT_SELECT, MANAGER_MOVIE_COMMENT_LIST_REQUEST, } from '../../reducer/R_manager_user';
 import DocumentMovieComment from './DocumentMovieComment';
-
+import Board from './Board'
 const Document = () => {
 	const dispatch = useDispatch();
 
@@ -122,9 +122,7 @@ const Document = () => {
 				</Notice>
 				<DocumentMovieComment/></> : 
 				<>
-					여기서 시작
-					내가 지금 표시해둔곳에 코드 넣으면 될듯(게시물 관련)
-					여기서 끝
+					<Board />
 				</>}
       </InnerWraps>
      </Container>

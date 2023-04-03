@@ -1,5 +1,6 @@
 package com.movie.Spring_backend.repository;
 
+import com.movie.Spring_backend.dto.BoardDto;
 import com.movie.Spring_backend.entity.BoardCommentEntity;
 import com.movie.Spring_backend.entity.BoardEntity;
 import org.springframework.data.domain.Page;
@@ -57,6 +58,15 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Query("select board from BoardEntity as board where bid = :bid ")
     public BoardEntity booleanCheck(@Param("bid") Long bid);
 
+    @Query("select board from BoardEntity as board order by bid desc")
+    public List<BoardEntity> findAll();
+
+    @Query("select board from BoardEntity as board where btitle LIKE %:title% order by bid desc")
+    public List<BoardEntity> ManagerTitle( @Param("title") String title);
+
+    //게시판 검색 ,uid
+    @Query("select board from BoardEntity as board where board.member.uid =:uid  order by bid desc")
+    public List<BoardEntity> ManagerUid(@Param("uid") String uid);
 
 
 }
