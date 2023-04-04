@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Select, Space } from 'antd';
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST, MANAGER_MOVIEINFO_THEATER_LIST_REQUEST, MANAGER_MOVIEINFO_LIST_REQUEST } from '../../reducer/R_manager_movieinfo';
+import { MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST, MANAGER_MOVIEINFO_THEATER_LIST_REQUEST, MANAGER_MOVIEINFO_CINEMA_LIST_REQUEST, MANAGER_MOVIEINFO_LIST_REQUEST } from '../../reducer/R_manager_movieinfo';
 import MovieInfoTable from './MovieInfoTable';
-import dayjs from 'dayjs';
-import "dayjs/locale/ko";
 import locale from 'antd/lib/locale/ko_KR';
 import { ConfigProvider } from 'antd';
 import * as date from "../../lib/date.js";
@@ -17,11 +15,13 @@ const MovieInfo = () => {
 	const dispatch = useDispatch();
 
 	// 필요한 리덕스 상태들
-  const { LOGIN_data, MOVIEINFO_MOVIE_LIST, MOVIEINFO_THEATER_LIST } = useSelector(
+  const { LOGIN_data, MOVIEINFO_MOVIE_LIST, MOVIEINFO_THEATER_LIST, MOVIEINFO_CINEMA_LIST, MOVIEINFO_LIST } = useSelector(
     state => ({
       LOGIN_data: state.R_user_login.LOGIN_data,
       MOVIEINFO_MOVIE_LIST: state.R_manager_movieinfo.MOVIEINFO_MOVIE_LIST,
-			MOVIEINFO_THEATER_LIST: state.R_manager_movieinfo.MOVIEINFO_THEATER_LIST
+			MOVIEINFO_THEATER_LIST: state.R_manager_movieinfo.MOVIEINFO_THEATER_LIST,
+			MOVIEINFO_CINEMA_LIST: state.R_manager_movieinfo.MOVIEINFO_CINEMA_LIST,
+			MOVIEINFO_LIST: state.R_manager_movieinfo.MOVIEINFO_LIST
     }),
     shallowEqual
   );
@@ -29,15 +29,31 @@ const MovieInfo = () => {
 	// 모든 영화 및 상영관 조회 useEffect
   useEffect(() => {
 		// 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
-		if (LOGIN_data.uid !== 'No_login' && MOVIEINFO_MOVIE_LIST.length === 0 && MOVIEINFO_THEATER_LIST.length === 0) {
-		 dispatch({
-			 type: MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST
-		 });
-		 dispatch({
-			 type: MANAGER_MOVIEINFO_THEATER_LIST_REQUEST
-		 })
+		if (LOGIN_data.uid !== 'No_login' && MOVIEINFO_MOVIE_LIST.length === 0 && MOVIEINFO_THEATER_LIST.length === 0 && MOVIEINFO_CINEMA_LIST.length === 0) {
+		 	dispatch({
+			 	type: MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST
+		 	});
+		 	dispatch({
+			 	type: MANAGER_MOVIEINFO_THEATER_LIST_REQUEST
+		 	})
+			dispatch({
+				type: MANAGER_MOVIEINFO_CINEMA_LIST_REQUEST
+			})
+			// 첫 검색도 같이 실행(모든 값 null 전체 검색)
+			dispatch({
+				type: MANAGER_MOVIEINFO_LIST_REQUEST,
+				data: {
+					mid: null,
+					tarea: null,
+					tid: null,
+					startDay: null,
+					endDay: null,
+					page: 0,
+					size: 10
+				}
+			});
 	 	}
- 	}, [LOGIN_data.uid, MOVIEINFO_MOVIE_LIST, MOVIEINFO_THEATER_LIST, dispatch])
+ 	}, [LOGIN_data.uid, MOVIEINFO_MOVIE_LIST, MOVIEINFO_THEATER_LIST, MOVIEINFO_CINEMA_LIST, dispatch])
 
 	// 분리된 극장들 변수
 	const [seoulTheater, setseoulTheater] = useState('');
@@ -83,34 +99,31 @@ const MovieInfo = () => {
 	const [selectMovie, setselectMovie] = useState();
 	const [selectArea, setselectArea] = useState();
 	const [selectTheater, setselectTheater] = useState();
-	const [days, setDays] = useState('');
+	const [days, setDays] = useState();
 
 	// 영화 교체할 때
-	const handleMovieChange = (value) => {
+	const handleMovieChange = useCallback((value) => {
 		setselectMovie(value);
-	};
+	}, []);
 
 	// 지역 교체할 때
-	const handleAreaChange = (value) => {
+	const handleAreaChange = useCallback((value) => {
 		setselectArea(value);
 		setselectTheater(null);
-	};
+	}, []);
 
 	// 극장 교체할 때
-	const handleTheaterChange = (value) => {
+	const handleTheaterChange = useCallback((value) => {
 		setselectTheater(value);
-	};
+	}, []);
 
 	// 날짜 선택할 때
-	const handleCalendarChange = (dates) => {
+	const handleCalendarChange = useCallback((dates) => {
 		setDays(dates);
-	};
+	}, []);
 
 	// 검색 버튼을 누를때 함수
 	const onSearch = useCallback(() => {
-		// console.log(selectMovie);
-		// console.log(selectTheater);
-
 		// 사용자가 고른 날짜가 있을경우 처리
 		var start = null;
 		var end = null;
@@ -119,10 +132,26 @@ const MovieInfo = () => {
 			end = date.DateToString(days[1].$d)
 		}
 
+		// 사용자가 고른 지역이 있을경우 처리
+		var area = null;
+		if (selectArea === 'seoul') {
+			area = '서울';
+		}
+		else if (selectArea === 'gyeonggi') {
+			area = '경기';
+		}
+		else if (selectArea === 'incheon') {
+			area = '인천';
+		}
+		else if (selectArea === 'busan') {
+			area = '부산';
+		}
+
 		dispatch({
 			type: MANAGER_MOVIEINFO_LIST_REQUEST,
 			data: {
 				mid: selectMovie,
+				tarea: area,
 				tid: selectTheater,
 				startDay: start,
         endDay: end,
@@ -130,7 +159,7 @@ const MovieInfo = () => {
 				size: 10
 			}
 		});
-	}, [selectMovie, selectTheater, days, dispatch])
+	}, [selectMovie, selectArea, selectTheater, days, dispatch])
 	
 	return (
 		<Container>
@@ -215,7 +244,7 @@ const MovieInfo = () => {
 							날짜 :
 						</SelectTitle>
 						<ConfigProvider locale={locale}>
-							<RangePicker onCalendarChange={handleCalendarChange} style={{width: "240px", marginRight: "7px"}} defaultValue={dayjs('2022-01-01', 'YYYY-MM-DD')}/>
+							<RangePicker onCalendarChange={handleCalendarChange} style={{width: "240px", marginRight: "7px"}}/>
 						</ConfigProvider>
 						<Button icon={<SearchOutlined/>} onClick={onSearch}>
 							검색
@@ -223,10 +252,19 @@ const MovieInfo = () => {
 					</SpaceWrap>
 				</MovieAreaChoice>
 				<Notice>
-					* 검색결과 ???건이 검색되었습니다.
+					* 검색결과 <strong>{MOVIEINFO_LIST.totalElements}</strong>건이 검색되었습니다.
 					<Button style={{marginLeft:"7px"}} type="primary" shape="circle" icon={<PlusOutlined />} ></Button>
 				</Notice> 
-				<MovieInfoTable/>
+				<MovieInfoTable 
+					selectMovie={selectMovie} 
+					selectArea={selectArea} 
+					selectTheater={selectTheater} 
+					days={days}
+					seoulTheater={seoulTheater}
+					gyeonggiTheater={gyeonggiTheater}
+					incheonTheater={incheonTheater}
+					busanTheater={busanTheater}
+				/>
       </InnerWraps>
     </Container>
 	);

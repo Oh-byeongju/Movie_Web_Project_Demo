@@ -41,6 +41,8 @@ public class MovieInfoEntity {
     @JoinColumn(name="cid")
     private CinemaEntity cinema;
 
+    // 이거 miid 빼려면 빼도 될듯
+    // count(*)가 더 빠른지 검사해보기
     @Formula("(select count(mis.misid) from movie_infoseat mis where mis.miid = miid)")
     private Integer cntSeatInfo;
 

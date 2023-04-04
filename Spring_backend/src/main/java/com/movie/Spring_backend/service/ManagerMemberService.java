@@ -159,6 +159,7 @@ public class ManagerMemberService {
     }
 
     // 전체 영화 불러오는 메소드
+    // 이거 이사가야 할수도 있음 MangerOne으로
     @Transactional
     public List<MovieDto> AllMovieSearch(HttpServletRequest request) {
         // Access Token에 대한 유효성 검사
@@ -182,6 +183,7 @@ public class ManagerMemberService {
     }
 
     // 전체 극장 불러오는 메소드
+    // 이거 이사가야 할수도 있음 MangerOne으로
     @Transactional
     public List<TheaterDto> AllTheaterSearch(HttpServletRequest request) {
         // Access Token에 대한 유효성 검사
@@ -230,6 +232,8 @@ public class ManagerMemberService {
             Reservations = reservationRepository.findManagerReserveMovie(movie, PageInfo);
         }
 
+
+        // 이거 매퍼에서 빼도 될듯
         // 예매기록을 매핑 후 리턴
         return Reservations.map(reservationMapper::ManagerListMappingMovie);
     }
@@ -266,6 +270,8 @@ public class ManagerMemberService {
             Reservations = reservationRepository.findManagerReserveTheater(theater, PageInfo);
         }
 
+
+        // 이거 매퍼에서 빼도 될듯
         // 예매기록을 매핑 후 리턴
         return Reservations.map(reservationMapper::ManagerListMappingTheater);
     }

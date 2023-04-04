@@ -175,7 +175,7 @@ public class MovieMapper {
         }
     }
 
-    // 관리자 페이지 예매기록조회에 필요한 영화 내용들을 mapping 해주는 메소드
+    // 관리자 페이지에 필요한 영화 내용들을 mapping 해주는 메소드
     public MovieDto toDtoManagerReserve(MovieEntity entity, boolean Screen) {
 
         // 영화 예매가 불가능 하면 (상영예정)을 이름에 붙여서 보냄
@@ -183,6 +183,8 @@ public class MovieMapper {
             return MovieDto.builder()
                     .mid(entity.getMid())
                     .mtitle(entity.getMtitle())
+                    .mtime(entity.getMtime())
+                    .mdate(entity.getMdate())
                     .mimagepath(entity.getMimagepath())
                     .reserve(true).build();
         }
@@ -190,6 +192,8 @@ public class MovieMapper {
             return MovieDto.builder()
                     .mid(entity.getMid())
                     .mtitle(entity.getMtitle())
+                    .mtime(entity.getMtime())
+                    .mdate(entity.getMdate())
                     .mimagepath(entity.getMimagepath())
                     .reserve(false).build();
         }

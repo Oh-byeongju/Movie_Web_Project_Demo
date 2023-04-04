@@ -27,6 +27,16 @@ const Document = () => {
         type: MANAGER_MOVIE_LIST_COMMENT_REQUEST
       });
     }
+
+		// 페이지 탈출 시 초기화
+		return () => {
+			if (MOVIE_LIST_COMMENT.length !== 0) {
+				dispatch({
+					type: MANAGER_MOVIE_COMMENT_SELECT,
+					data: MOVIE_LIST_COMMENT[0]
+				});
+			}
+		}
   }, [LOGIN_data.uid, MOVIE_LIST_COMMENT, dispatch])
 
 	// 예매기록 조회 useEffect (영화 선택)

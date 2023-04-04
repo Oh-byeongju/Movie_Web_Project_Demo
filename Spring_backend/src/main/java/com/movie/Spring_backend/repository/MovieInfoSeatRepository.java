@@ -31,13 +31,14 @@ public interface MovieInfoSeatRepository  extends JpaRepository<MovieInfoSeatEnt
     @EntityGraph(attributePaths = {"seat"})
     List<MovieInfoSeatEntity> findMyPageReserveSeat(@Param("member") MemberEntity member, @Param("rdate") String rdate);
 
-    // 사용자가 예매한 영화의 좌석들을 가져오는 메소드(취소시간 순으로 내림차순)
-    @Query(value = "SELECT mis FROM MovieInfoSeatEntity as mis LEFT OUTER JOIN ReservationEntity as rs ON mis.reserve = rs.rid " +
-            "LEFT OUTER JOIN MovieInfoEntity as mi ON rs.movieInfo = mi.miid " +
-            "WHERE rs.member = :member AND rs.rstate = false AND rs.rcanceldate > :rcanceldate " +
-            "ORDER BY rs.rcanceldate DESC")
-    @EntityGraph(attributePaths = {"seat"})
-    List<MovieInfoSeatEntity> findMyPageReserveCancelSeat(@Param("member") MemberEntity member, @Param("rcanceldate") String rcanceldate);
+//    // 사용자가 예매한 영화의 좌석들을 가져오는 메소드(취소시간 순으로 내림차순)
+        // 최종으로 지우기
+//    @Query(value = "SELECT mis FROM MovieInfoSeatEntity as mis LEFT OUTER JOIN ReservationEntity as rs ON mis.reserve = rs.rid " +
+//            "LEFT OUTER JOIN MovieInfoEntity as mi ON rs.movieInfo = mi.miid " +
+//            "WHERE rs.member = :member AND rs.rstate = false AND rs.rcanceldate > :rcanceldate " +
+//            "ORDER BY rs.rcanceldate DESC")
+//    @EntityGraph(attributePaths = {"seat"})
+//    List<MovieInfoSeatEntity> findMyPageReserveCancelSeat(@Param("member") MemberEntity member, @Param("rcanceldate") String rcanceldate);
 
     // 사용자가 예매한 지난 관람내역의 좌석들을 가져오는 메소드(예매시간 순으로 내림차순, 영화가 끝난 예매들)
     @Query(value = "SELECT mis FROM MovieInfoSeatEntity as mis INNER JOIN ReservationEntity as rs ON mis.reserve = rs.rid " +
@@ -53,4 +54,7 @@ public interface MovieInfoSeatRepository  extends JpaRepository<MovieInfoSeatEnt
             "WHERE rs.rid = :rid")
     @EntityGraph(attributePaths = {"seat"})
     List<MovieInfoSeatEntity> findMyPageReserveDetailSeat(@Param("rid") Long rid);
+
+    // 예매 취소시 좌석을 삭제하는 메소드
+    void deleteByReserve(ReservationEntity reservation);
 }

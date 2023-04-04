@@ -31,8 +31,8 @@ const Reserve = () => {
 
 	// 모든 영화 및 상영관 조회 useEffect
   useEffect(() => {
-		 // 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
-		 if (LOGIN_data.uid !== 'No_login' && MOVIE_LIST.length === 0 && THEATER_LIST.length === 0) {
+		// 백엔드로 부터 로그인 기록을 받아온 다음 백엔드 요청
+		if (LOGIN_data.uid !== 'No_login' && MOVIE_LIST.length === 0 && THEATER_LIST.length === 0) {
       dispatch({
         type: MANAGER_MOVIE_LIST_REQUEST
       });
@@ -40,6 +40,23 @@ const Reserve = () => {
 				type: MANAGER_THEATER_LIST_REQUEST
 			})
     }
+
+		// 페이지 탈출 시 초기화
+		return () => {
+			if (MOVIE_LIST.length !== 0) {
+				dispatch({
+					type: MANAGER_MOVIE_SELECT,
+					data: MOVIE_LIST[0]
+				});
+			}
+
+			if (THEATER_LIST.length !== 0) {
+				dispatch({
+					type: MANAGER_THEATER_SELECT,
+					data: THEATER_LIST[0]
+				});
+			}
+		}
   }, [LOGIN_data.uid, MOVIE_LIST, THEATER_LIST, dispatch])
 
 	// 예매기록 조회 useEffect (영화 선택)
@@ -93,7 +110,7 @@ const Reserve = () => {
 		dispatch({
 			type: MANAGER_MOVIE_SELECT,
 			data: movie
-		})
+		});
 	}, [dispatch])
 
 	// 선택된 지역 버튼 useState

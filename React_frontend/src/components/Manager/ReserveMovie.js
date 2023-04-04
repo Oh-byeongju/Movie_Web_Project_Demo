@@ -34,8 +34,8 @@ const ReserveMovie = () => {
     },
     {
       title: '예매일시',
-      width: 170,
-      dataIndex: 'rdate',
+      width: 190,
+      render: (text, row) => <div> {row["rdate"].substr(0, 10)} ({date.getDayOfWeek(row["rdate"])}) {row["rdate"].substr(10, 9)} </div>,
       sorter: (a, b) => new Date(a.rdate) - new Date(b.rdate)
     },
     {
@@ -50,7 +50,7 @@ const ReserveMovie = () => {
     },
     {
       title: '관람인원',
-      width: 270,
+      width: 290,
 			render: (text, row) => <div> {row["rpeople"]} (총 {row["rticket"]}매) </div>,
     },
 		{

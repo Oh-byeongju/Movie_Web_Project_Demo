@@ -257,11 +257,21 @@ public class MyPageMovieService {
         // 현재 시점으로 부터 6개월 전 날짜 생성
         String BeforeMonth = DateUtil.ChangeDate(0, -6, 0);
 
-        // 사용자가 예매 취소한 영화의 정보 및 좌석 조회
+        // 사용자가 예매 취소한 영화의 정보 조회
         List<ReservationEntity> ReserveCancel = reservationRepository.findMyPageReserveCancel(member, BeforeMonth);
-        List<MovieInfoSeatEntity> ReserveCancelSeat = movieInfoSeatRepository.findMyPageReserveCancelSeat(member, BeforeMonth);
 
-        return reservationMapper.MyPageListMapping(ReserveCancel, ReserveCancelSeat);
+        return ReserveCancel.stream().map(Reserve -> ReservationDto.builder()
+                .rid(Reserve.getRid())
+                .rdate(Reserve.getRdate())
+                .rcanceldate(Reserve.getRcanceldate())
+                .mtitle(Reserve.getMovieInfo().getMovie().getMtitle())
+                .mimagepath(Reserve.getMovieInfo().getMovie().getMimagepath())
+                .tarea(Reserve.getMovieInfo().getCinema().getTheater().getTarea())
+                .tname(Reserve.getMovieInfo().getCinema().getTheater().getTname())
+                .cname(Reserve.getMovieInfo().getCinema().getCname())
+                .mistarttime(Reserve.getMovieInfo().getMistarttime())
+                .rticket(Reserve.getRticket())
+                .rprice(Reserve.getRprice()).build()).collect(Collectors.toList());
     }
 
     // 사용자가 예매한 지난 관람내역 불러오는 메소드
@@ -304,6 +314,28 @@ public class MyPageMovieService {
         // 조회하려는 예매의 예매자 id가 현재 사용자의 id와 다를 경우 예외처리
         if (!Reserve.getMember().getUid().equals(currentMemberId)) {
             throw new EntityNotFoundException("예매 기록이 존재하지 않습니다.", ErrorCode.RESERVE_IS_NONE);
+        }
+
+        // 취소된 예매일 경우 좌석을 제외하고 매핑한 값을 리턴
+        if (!Reserve.getRstate()) {
+            return ReservationDto.builder()
+                    .rid(Reserve.getRid())
+                    .rdate(Reserve.getRdate())
+                    .rcanceldate(Reserve.getRcanceldate())
+                    .mid(Reserve.getMovieInfo().getMovie().getMid())
+                    .mtitle(Reserve.getMovieInfo().getMovie().getMtitle())
+                    .mimagepath(Reserve.getMovieInfo().getMovie().getMimagepath())
+                    .tarea(Reserve.getMovieInfo().getCinema().getTheater().getTarea())
+                    .tname(Reserve.getMovieInfo().getCinema().getTheater().getTname())
+                    .cname(Reserve.getMovieInfo().getCinema().getCname())
+                    .mistarttime(Reserve.getMovieInfo().getMistarttime())
+                    .miendtime(Reserve.getMovieInfo().getMiendtime())
+                    .mrating(Reserve.getMovieInfo().getMovie().getMrating())
+                    .rpeople(Reserve.getRpeople())
+                    .rticket(Reserve.getRticket())
+                    .rpaytype(Reserve.getRpaytype())
+                    .rprice(Reserve.getRprice())
+                    .rstate(Reserve.getRstate()).build();
         }
 
         // 사용자가 예매한 영화의 세부내역 좌석 조회
