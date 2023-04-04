@@ -122,7 +122,9 @@ const CancelDetail = () => {
 							<dt>
 								관람좌석
 							</dt>
-							{RESERVE_CANCEL_DETAIL.seats && RESERVE_CANCEL_DETAIL.seats.map((seat) => (<dd key={seat}> {seat} </dd>))}
+							<dd>
+								취소된 결제는 관람좌석이 표시되지 않습니다.
+							</dd>
 						</dl>
 						<dl>
 							<dt>

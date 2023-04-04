@@ -157,6 +157,8 @@ public class PaymentService {
                 throw new RuntimeException("결제 정보가 올바르지 않습니다.");
             }
         }
+        // 사용자가 예매했던 좌석정보 삭제
+        movieInfoSeatRepository.deleteByReserve(Reservation);
 
         // 사용자가 취소한 예매정보를 변경
         reservationRepository.UserReservationCancel(Reservation.getRid());

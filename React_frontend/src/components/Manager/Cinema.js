@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Table, Input ,Button,Modal,Form,Select,message,} from 'antd';
@@ -226,7 +227,7 @@ const handleChange = (value) => {
           x: 1350,
         }}/>
       </InnerWraps>
-      <Modal title="영화관 추가" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
+      <Modal title="영화관 추가 / 수정" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
         <Form>
         <Form.Item label="지역">
         <Select 

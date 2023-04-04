@@ -24,25 +24,25 @@ const ReserveTheater = () => {
       title: '계정',
       width: 110,
       dataIndex: 'uid',
-      fixed: 'left',
+      fixed: 'left'
     },
     {
       title: '예매번호',
       width: 100,
       dataIndex: 'rid',
-      fixed: 'left',
+      fixed: 'left'
     },
 		{
       title: '영화이름',
-      width: 140,
+      width: 160,
       dataIndex: 'mtitle',
 			ellipsis: true,
-      fixed: 'left',
+      fixed: 'left'
     },
     {
       title: '예매일시',
-      width: 170,
-      dataIndex: 'rdate',
+      width: 190,
+      render: (text, row) => <div> {row["rdate"].substr(0, 10)} ({date.getDayOfWeek(row["rdate"])}) {row["rdate"].substr(10, 9)} </div>,
       sorter: (a, b) => new Date(a.rdate) - new Date(b.rdate)
     },
     {
@@ -52,12 +52,12 @@ const ReserveTheater = () => {
     },
     {
       title: '관람일시',
-      width: 190,
+      width: 170,
       render: (text, row) => <div> {row["mistarttime"].substr(0, 10)} ({date.getDayOfWeek(row["mistarttime"])}) {row["mistarttime"].substr(10, 6)} </div>,
     },
     {
       title: '관람인원',
-      width: 270,
+      width: 290,
 			render: (text, row) => <div> {row["rpeople"]} (총 {row["rticket"]}매) </div>,
     },
 		{

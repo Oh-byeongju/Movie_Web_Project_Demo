@@ -90,13 +90,18 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
     List<MovieInfoEntity> findMemberPossible(@Param("member") MemberEntity member);
 
     // 관리자 페이지에서 상영정보를 가져오는 메소드
-    @Query(value = "SELECT mi FROM MovieInfoEntity as mi " +
+    @Query(value = "SELECT mi FROM MovieInfoEntity as mi INNER JOIN CinemaEntity as ci ON mi.cinema = ci.cid " +
+            "INNER JOIN TheaterEntity as t ON ci.theater = t.tid " +
             "WHERE (:movie is null or mi.movie = :movie) " +
-            "AND (:startDay is null or mi.miday >= :startDay) AND (:endDay is null or mi.miday <= :endDay)")
+            "AND (:startDay is null or mi.miday >= :startDay) AND (:endDay is null or mi.miday <= :endDay)" +
+            "AND (:tid is null or t.tid = :tid) AND (:tarea is null or t.tarea = :tarea) " +
+            "ORDER BY mi.miday ASC")
     @EntityGraph(attributePaths = {"movie", "cinema.theater"})
     Page<MovieInfoEntity> findManagerMovieInfo(@Param("movie") MovieEntity movie,
                                                @Param("startDay") Date startDay,
                                                @Param("endDay") Date endDay,
+                                               @Param("tid") Long tid,
+                                               @Param("tarea") String tarea,
                                                Pageable pageable);
 }
 

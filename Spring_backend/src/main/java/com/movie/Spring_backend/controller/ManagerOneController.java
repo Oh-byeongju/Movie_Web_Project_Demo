@@ -3,10 +3,7 @@
 */
 package com.movie.Spring_backend.controller;
 
-import com.movie.Spring_backend.dto.CommentInfoDto;
-import com.movie.Spring_backend.dto.BoardDto;
-import com.movie.Spring_backend.dto.MovieDto;
-import com.movie.Spring_backend.dto.MovieInfoDto;
+import com.movie.Spring_backend.dto.*;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.mapper.CountCommentMapper;
 import com.movie.Spring_backend.service.BoardCommentService;
@@ -85,6 +82,11 @@ public class ManagerOneController {
         return null;
     }
 
+    // 상영관 조회 메소드
+    @GetMapping("/auth/allCinema")
+    public ResponseEntity<List<CinemaDto>> AllCinema(HttpServletRequest request) {
+        return ResponseEntity.ok().body(managerOneService.AllCinemaSearch(request));
+    }
 
     // 상영정보 불러오는 메소드
     @GetMapping("/auth/getMovieInfo")

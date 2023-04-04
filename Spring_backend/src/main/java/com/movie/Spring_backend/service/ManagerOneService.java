@@ -3,10 +3,7 @@
 */
 package com.movie.Spring_backend.service;
 
-import com.movie.Spring_backend.dto.BoardDto;
-import com.movie.Spring_backend.dto.MemberDto;
-import com.movie.Spring_backend.dto.MovieDto;
-import com.movie.Spring_backend.dto.MovieInfoDto;
+import com.movie.Spring_backend.dto.*;
 import com.movie.Spring_backend.entity.*;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.repository.*;
@@ -38,6 +35,7 @@ public class ManagerOneService {
     private final MovieInfoRepository movieInfoRepository;
     private final MovieActorRepository movieActorRepository;
     private final ActorRepository actorRepository;
+    private final CinemaRepository cinemaRepository;
     private final EntityManagerFactory entityManagerFactory;
     private final BoardRepository boardRepository;
     String POSTER_PATH = "/Users/mok/Desktop/Movie_Project/React_frontend/public/img/ranking";
@@ -467,6 +465,23 @@ public class ManagerOneService {
         boardRepository.deleteById(Long.valueOf(bid));
     }
 
+    // 전체 상영관 불러오는 메소드
+    @Transactional
+    public List<CinemaDto> AllCinemaSearch(HttpServletRequest request) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // 모든 상영관 검색
+        List<CinemaEntity> Cinemas = cinemaRepository.findAll();
+
+        // 검색한 상영관 리턴
+        return Cinemas.stream().map(cinema -> CinemaDto.builder()
+                .cid(cinema.getCid())
+                .cname(cinema.getCname() + " (" + cinema.getCtype() + ", " + cinema.getCseat() + "좌석)")
+                .tid(cinema.getTheater().getTid())
+                .build()).collect(Collectors.toList());
+    }
+
     // 상영정보를 불러오는 메소드
     public Page<MovieInfoDto> MovieInfoSearch(HttpServletRequest request, Map<String, String> requestMap) {
         // Access Token에 대한 유효성 검사
@@ -482,18 +497,18 @@ public class ManagerOneService {
         int size = Integer.parseInt(requestMap.get("size"));
 
         // 페이지네이션을 위한 정보
-        // 나중에 size로 바꾸기
-        PageRequest PageInfo = PageRequest.of(page, 100);
-
-
-        System.out.println(mid);
-        System.out.println(tid);
-        System.out.println("여기에요");
+        PageRequest PageInfo = PageRequest.of(page, size);
 
         // 프론트단에서 영화를 선택 안했을경우 파라미터를 null로 주기위한 과정
         MovieEntity movie = null;
         if (mid != null) {
             movie = MovieEntity.builder().mid(Long.valueOf(mid)).build();
+        }
+
+        // 프론트단에서 극장을 선택 안했을경우 파라미터를 null로 주기위한 과정
+        Long theater = null;
+        if (tid != null) {
+            theater = Long.valueOf(tid);
         }
 
         // 프론트단에서 날짜를 선택 안했을경우 파라미터를 null로 주기위한 과정
@@ -507,11 +522,22 @@ public class ManagerOneService {
         }
 
         // 프론트단에서 보낸 조건을 이용해서 상영정보 검색
-        Page<MovieInfoEntity> MovieInfos = movieInfoRepository.findManagerMovieInfo(movie, Start, End, PageInfo);
+        Page<MovieInfoEntity> MovieInfos = movieInfoRepository.findManagerMovieInfo(movie, Start, End, theater, tarea, PageInfo);
 
         return MovieInfos.map(movieInfo -> MovieInfoDto.builder()
                 .mid(movieInfo.getMovie().getMid())
                 .miid(movieInfo.getMiid())
-                .mtitle(movieInfo.getMovie().getMtitle()).build());
+                .mtitle(movieInfo.getMovie().getMtitle())
+                .mdate(movieInfo.getMovie().getMdate())
+                .tid(movieInfo.getCinema().getTheater().getTid())
+                .cid(movieInfo.getCinema().getCid())
+                .tarea(movieInfo.getCinema().getTheater().getTarea())
+                .tname(movieInfo.getCinema().getTheater().getTname())
+                .cname(movieInfo.getCinema().getCname())
+                .miday(movieInfo.getMiday())
+                .mistarttime(movieInfo.getMistarttime())
+                .miendtime(movieInfo.getMiendtime())
+                .allcount(movieInfo.getCinema().getCseat())
+                .count(movieInfo.getCntSeatInfo()).build());
     }
 }

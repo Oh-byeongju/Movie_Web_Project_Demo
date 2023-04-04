@@ -43,6 +43,7 @@ public class PaymentController {
     }
 
     // 예매 취소를 위한 메소드
+    // update매핑으로 바꿔야할듯
     @PostMapping("/auth/cancel/ReserveDetail/{rid}")
     public ResponseEntity<String> PaymentCancel(@PathVariable("rid") Long rid, HttpServletRequest request) {
         paymentService.CancelPayment(rid, request);

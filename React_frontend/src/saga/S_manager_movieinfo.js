@@ -5,6 +5,7 @@ import { call, all, takeLatest, fork, put } from "redux-saga/effects";
 import { 
 	MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST, MANAGER_MOVIEINFO_MOVIE_LIST_SUCCESS,  MANAGER_MOVIEINFO_MOVIE_LIST_FAILURE,
 	MANAGER_MOVIEINFO_THEATER_LIST_REQUEST, MANAGER_MOVIEINFO_THEATER_LIST_SUCCESS,  MANAGER_MOVIEINFO_THEATER_LIST_FAILURE,
+  MANAGER_MOVIEINFO_CINEMA_LIST_REQUEST, MANAGER_MOVIEINFO_CINEMA_LIST_SUCCESS,  MANAGER_MOVIEINFO_CINEMA_LIST_FAILURE,
 	MANAGER_MOVIEINFO_LIST_REQUEST, MANAGER_MOVIEINFO_LIST_SUCCESS,  MANAGER_MOVIEINFO_LIST_FAILURE
 } from "../reducer/R_manager_movieinfo";
 import { http } from "../lib/http";
@@ -63,12 +64,36 @@ async function callAllTheater() {
   });
 }
 
+// 상영관 조회 함수
+function* AllCinema() {
+  const result = yield call(callAllCinema);
+  if (result.status === 200) {
+    yield put({
+      type: MANAGER_MOVIEINFO_CINEMA_LIST_SUCCESS,
+      data: result.data
+    });
+  } 
+  else {
+    yield put({
+			type: MANAGER_MOVIEINFO_CINEMA_LIST_FAILURE
+    });
+  }
+}
+
+// 상영관 조회 백엔드 호출
+async function callAllCinema() {
+  return await http.get("/manager/auth/allCinema")
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  });
+}
+
 // 상영정보 조회 함수
 function* MovieInfoSearch(action) {
   const result = yield call(callMovieInfoSearch, action.data);
-
-  console.log(result);
-
   if (result.status === 200) {
     yield put({
       type: MANAGER_MOVIEINFO_LIST_SUCCESS,
@@ -87,6 +112,7 @@ async function callMovieInfoSearch(data) {
   return await http.get("/manager/auth/getMovieInfo", {
     params: {
       mid: data.mid,
+      tarea: data.tarea,
 			tid: data.tid,
       startDay: data.startDay,
       endDay: data.endDay,
@@ -110,6 +136,10 @@ function* THEATER_LIST() {
   yield takeLatest(MANAGER_MOVIEINFO_THEATER_LIST_REQUEST, AllTheater);
 }
 
+function* CINEMA_LIST() {
+  yield takeLatest(MANAGER_MOVIEINFO_CINEMA_LIST_REQUEST, AllCinema);
+}
+
 function* MOVIEINFO_LIST() {
   yield takeLatest(MANAGER_MOVIEINFO_LIST_REQUEST, MovieInfoSearch);
 }
@@ -118,6 +148,7 @@ export default function* S_manager_movieinfo() {
   yield all([
     fork(MOVIE_LIST),
     fork(THEATER_LIST),
+    fork(CINEMA_LIST),
 		fork(MOVIEINFO_LIST)
 	]);
 }

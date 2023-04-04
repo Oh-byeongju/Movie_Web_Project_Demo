@@ -8,11 +8,7 @@ DROP TABLE IF EXISTS `movie_member`;
 DROP TABLE IF EXISTS `movie_actor`;
 DROP TABLE IF EXISTS `actor`;
 DROP TABLE IF EXISTS `movie_theater`;
-<<<<<<< HEAD
 DROP TABLE IF EXISTS `board_like`;
-=======
-drop table if exists `board_like`;
->>>>>>> 905ee0ec3726ab33f6873ee17830260703e0db61
 DROP TABLE IF EXISTS `board_comment`;
 DROP TABLE IF EXISTS `board`;
 DROP TABLE IF EXISTS `member`;
@@ -198,11 +194,7 @@ create table `board_like` (
 	FOREIGN KEY (`bid`) REFERENCES `board` (`bid`),
     primary key (`blid`)
 );
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 905ee0ec3726ab33f6873ee17830260703e0db61
 INSERT INTO `movie` (`mtitle`, `mdir`, `mgenre`, `mtime`, `mdate`, `mrating`, `mstory`, `mimagepath`)
 VALUES ('타이타닉', '제임스 카메론', '로맨스', "180", DATE_SUB(NOW(), INTERVAL 15 DAY), '15', '<h2><span style="color: rgb(51, 51, 51);">"내 인생의 가장 큰 행운은 당신을 만난 거야"</span></h2><p><br></p><p><span style="color: rgb(51, 51, 51);">우연한 기회로 티켓을 구해 타이타닉호에 올라탄 자유로운 영혼을 가진 화가 ‘잭’(레오나르도 디카프리오)은</span></p><p><span style="color: rgb(51, 51, 51);">막강한 재력의 약혼자와 함께 1등실에 승선한 ‘로즈’(케이트 윈슬렛)에게 한눈에 반한다.</span></p><p><span style="color: rgb(51, 51, 51);">진실한 사랑을 꿈꾸던 ‘로즈’ 또한 생애 처음 황홀한 감정에 휩싸이고, 둘은 운명 같은 사랑에 빠지는데…</span></p><p><br></p><p><span style="color: rgb(51, 51, 51);">가장 차가운 곳에서 피어난 뜨거운 사랑!</span></p><p><span style="color: rgb(51, 51, 51);">영원히 가라앉지 않는 세기의 사랑이 펼쳐진다!</span></p>', 'img/ranking/5.jpg');
 
@@ -2221,6 +2213,7 @@ WHERE MID = 4 AND uid = 'temp8';
 UPDATE movie_member
 SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
 WHERE MID = 4 AND uid = 'temp17';
+
 
 /*
 -- 예매 취소한 것들 확인하는 쿼리

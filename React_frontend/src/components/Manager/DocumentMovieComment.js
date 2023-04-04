@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { MANAGER_MOVIE_COMMENT_LIST_REQUEST, MANAGER_MOVIE_COMMENT_DELETE_REQUEST } from '../../reducer/R_manager_user.js';
+import * as date from "../../lib/date.js";
 import { Table, Modal } from 'antd';
 
 const DocumentMovieComment = () => {
@@ -72,8 +73,9 @@ const DocumentMovieComment = () => {
     },
     {
       title: '작성일시',
-      width: 90,
-      dataIndex: 'umcommenttime'
+      width: 100,
+      render: (text, row) => <div> {row["umcommenttime"].substr(0, 10)} ({date.getDayOfWeek(row["umcommenttime"])}) {row["umcommenttime"].substr(10, 9)} </div>,
+      sorter: (a, b) => new Date(a.umcommenttime) - new Date(b.umcommenttime)
     },
 		{
       title: '관람평 내용',

@@ -57,9 +57,11 @@ const Cancel = ({ reserve }) => {
 						</dl>
 						<dl>
 							<dt>
-								관람좌석
+								티켓매수
 							</dt>
-							{reserve.seats && reserve.seats.map((seat) => (<dd key={seat}> {seat} </dd>))}
+							<dd>
+								{reserve.rticket} 매
+							</dd>
 						</dl>
 						<dl>
 							<dt>
