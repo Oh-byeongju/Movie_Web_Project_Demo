@@ -3,10 +3,13 @@ import styled from 'styled-components';
 import { MANAGER_MOVIEINFO_LIST_REQUEST } from '../../reducer/R_manager_movieinfo';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import * as date from "../../lib/date.js";
+import { PlusOutlined } from '@ant-design/icons';
 import { Table, Modal, Button, Form, Select, DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import "dayjs/locale/ko";
 import locale from 'antd/lib/locale/ko_KR';
+import moment from 'moment';
+import 'moment/locale/ko';
 import { ConfigProvider } from 'antd';
 
 const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulTheater, gyeonggiTheater, incheonTheater, busanTheater }) => {
@@ -115,7 +118,7 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
       title: '관리자',
       fixed: 'right',
       width: 90,
-      render: (text, row) => <TableButton onClick={()=> Clickbutton(row)}>modify</TableButton>
+      render: (text, row) => <TableButton onClick={()=> ClickRowModify(row)}>modify</TableButton>
     },
   ];  
 
@@ -142,23 +145,64 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
 	const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOk = useCallback(() => {
     setIsModalOpen(false);
+    setdelState(true);
   }, []);
+  const handleCancel = useCallback(() => {
+    setIsModalOpen(false);
+    setdelState(true);
+  }, []);
+
+  // 상영정보 CRUD를 위한 useState
+  const [infoId, setinfoId] = useState();
+  const [infoState, setinfoState] = useState(false);
+  const [delState, setdelState] = useState(true);
 
   // 선택된 영화, 지역, 극장, 상영관, 날짜버튼 useState
 	const [selectMovieModal, setselectMovieModal] = useState();
 	const [selectAreaModal, setselectAreaModal] = useState();
 	const [selectTheaterModal, setselectTheaterModal] = useState();
   const [selectCinemaModal, setselectCinemaModal] = useState();
-  const [openDay, setopenDay] = useState();
 	const [dayStartModal, setdayStartModal] = useState();
   const [dayEndModal, setdayEndModal] = useState();
 
+  // + 버튼을 누를때 실행되는 함수
+  const ClickRowInsert = useCallback(()=> {
+    setIsModalOpen(true);
+    setinfoState(false);
+    setdelState(true);
+
+    // 현재 시간에 90분 더한 값
+    var now = new Date();
+    now.setMinutes(now.getMinutes() + 90);
+
+    // 모달창에 정보 초기화
+    setselectMovieModal(null);
+		setselectAreaModal('seoul');
+    setselectTheaterModal(1);
+    setselectCinemaModal(1);
+    setdayStartModal(date.DateToString2(now));
+    setdayEndModal(date.EndDateCal(now, 100));
+    setIsModalOpen(true);
+  }, [])
+
   // modify 버튼을 누를때 실행되는 함수
-	const Clickbutton = useCallback((data) => {
+	const ClickRowModify = useCallback((data) => {
     if (data.count !== 0) {
       alert('예매가 없는 상영정보만 수정이 가능합니다.');
       return;
     }
+
+    // 상영이 종료되었거나 상영중인 영화는 내용 수정이 불가능하게 만듬
+    if (movieState(data.mistarttime, data.miendtime) === '상영종료' || movieState(data.mistarttime, data.miendtime) === '상영중') {
+      setinfoState(true);
+    }
+    else {
+      setinfoState(false);
+    }
+
+    // 삭제버튼 활성화 및 무비인포 ID 설정
+    setdelState(false);
+    setinfoId(data.miid);
     
     // 모달창에 정보 입력
     setselectMovieModal(data.mid);
@@ -176,27 +220,22 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
 		}
     setselectTheaterModal(data.tid);
     setselectCinemaModal(data.cid);
-    setopenDay(data.mdate);
     setdayStartModal(data.mistarttime);
     setdayEndModal(data.miendtime);
-
     setIsModalOpen(true);
 
-    console.log(data);
-	}, []);
-
+	}, [movieState]);
 
   // 모달창 영화 교체할 때
 	const handleMovieChangeModal = useCallback((value) => {
 		setselectMovieModal(value);
-    setopenDay(MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === value)[0].mdate);
 
-    setdayStartModal(MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === value)[0].mdate + " 07:00:00");
+    // 현재 시간에 90분을 더한값으로 영화 시작시간 수정
+    var now = new Date();
+    now.setMinutes(now.getMinutes() + 90);
 
-    // 이거 아래 시간은 위에꺼에서 + 영화시간으로 해서 해주면될듯
-    setdayEndModal(MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === value)[0].mdate + " 07:00:00");
-
-
+    setdayStartModal(date.DateToString2(now));
+    setdayEndModal(date.EndDateCal(now, MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === value)[0].mtime));
 	}, [MOVIEINFO_MOVIE_LIST]);
   
   // 모달창 지역 교체할 때
@@ -229,22 +268,44 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
 
   // 모달창 상영관 교체할 때
 	const handleCinemaChangeModal = useCallback((value) => {
-    console.log(value)
 		setselectCinemaModal(value);
 	}, []);
 
+  // 모달창 날짜 교체할 때
+	const handleDayChangeModal = useCallback((value) => {
+    setdayStartModal(date.DateToString2(value.$d));
+    setdayEndModal(date.EndDateCal(value.$d, MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === selectMovieModal)[0].mtime));
+	}, [MOVIEINFO_MOVIE_LIST, selectMovieModal, setdayStartModal]);
 
-  // 날짜 교체할때도 만들어줘야함 함수
-  // 시작 시간을 적으면 끝시간이 뙇 나와야함(내일 이거 진행)
+
+  // 삭제 버튼 누를때 실행되는 함수
+  const onDelete = useCallback(()=> {
+    if (!window.confirm("상영정보를 삭제하시겠습니까? (삭제한 정보는 복구되지 않습니다.)")) {
+      return;
+    };
+
+    console.log(infoId)
+    // 이제 이거 날려서 삭제 해버리면됨
+    // 순서는 삽입 수정 삭제 이렇게 순으로 배열 해두면 될듯
+
+  }, [infoId])
+
+
   // 삭제는 그냥 삭제하면 되는데 수정할때는 앞뒤 시간 체크
   // 삽입할때도 앞뒤 시간 체크
   // 삽입, 삭제, 수정 메소드 날릴 떄 전부 마지막으로 예매한거 있는지 확인하고 해야함
-  //달력 바꾸는거 onchange 넣어야함
+  // 상영종료 된건 삭제만 되게 해야함
+  // d영화 수정할때 현재시간 + 1시간 이후에 설정 안하면 빠구 먹어야함
+  // 디비에 넣을때 ss(초) 없어도 드가는지 확인해야함
 
- 
+
 
 	return (
 		<>
+      <Notice>
+				* 검색결과 <strong>{MOVIEINFO_LIST.totalElements}</strong>건이 검색되었습니다.
+				<Button onClick={ClickRowInsert} style={{marginLeft:"7px"}} type="primary" shape="circle" icon={<PlusOutlined />} ></Button>
+			</Notice> 
 			<TableWrap rowKey="miid"
         loading={MOVIEINFO_LIST_loading}
         columns={columns}
@@ -258,10 +319,17 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
           cancelSort: '정렬해제하기'
       	}}
       />
-			<Modal title="상영정보관리" open={isModalOpen} onOk={handleOk} onCancel={()=> setIsModalOpen(false)} destroyOnClose>
+			<ModalWrap title="상영정보관리" 
+      open={isModalOpen} 
+      okButtonProps={{ disabled: infoState}} 
+      onOk={handleOk} 
+      okText={delState ? "추가" : "수정"} 
+      cancelText="취소" 
+      onCancel={handleCancel} destroyOnClose>
         <Form>
           <Form.Item label="영화">
             <Select 
+            disabled={infoState}
             defaultValue={selectMovieModal}
             onChange={handleMovieChangeModal} 
             options={MOVIEINFO_MOVIE_LIST.map((movie) => ({
@@ -272,6 +340,7 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
           </Form.Item>  
           <Form.Item label="지역">
             <Select 
+            disabled={infoState}
             defaultValue={selectAreaModal}
             onChange={handleAreaChangeModal} 
             options={[
@@ -296,6 +365,7 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
           </Form.Item> 
           <Form.Item label="극장">
             <Select 
+            disabled={infoState}
             value={selectAreaModal ? selectTheaterModal : null}
             onChange={handleTheaterChangeModal}
             options={seoulTheater && selectAreaModal === 'seoul' ? seoulTheater.map((theater) => ({
@@ -315,6 +385,7 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
           </Form.Item>
           <Form.Item label="상영관">
             <Select
+            disabled={infoState}
             value={selectCinemaModal}
             onChange={handleCinemaChangeModal}
             options={MOVIEINFO_CINEMA_LIST.filter(cinema => cinema.tid === selectTheaterModal).map((cinema) => ({
@@ -323,38 +394,44 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
             }))}
             />
           </Form.Item>
-          <Form.Item label="상영시작시간">
+          <Form.Item label="상영시작시간" extra="현재시간 기준으로 1시간 이후부터 설정하십시오." style={{marginBottom: "10px"}}>
             <ConfigProvider locale={locale}>
               <DatePicker 
+              disabled={infoState}
               disabledDate={(current) => {
-                return current && current < new Date(openDay);
+                var customDate = moment().format("YYYY-MM-DD");
+                return current && current < moment(customDate, "YYYY-MM-DD");
               }} 
+              onChange={handleDayChangeModal}
               allowClear={false} 
-              showTime format="YYYY-MM-DD HH:mm:ss" 
-              value={dayjs(dayStartModal, 'YYYY-MM-DD HH:mm:ss')}/>
+              showTime format="YYYY-MM-DD HH:mm" 
+              value={dayjs(dayStartModal, 'YYYY-MM-DD HH:mm')}/>
 						</ConfigProvider>
           </Form.Item>
-
           <Form.Item label="상영종료시간">
             <ConfigProvider locale={locale}>
               <DatePicker disabled 
-              showTime format="YYYY-MM-DD HH:mm:ss" 
-              value={dayjs(dayEndModal, 'YYYY-MM-DD HH:mm:ss')}/>
+              showTime format="YYYY-MM-DD HH:mm" 
+              value={dayjs(dayEndModal, 'YYYY-MM-DD HH:mm')}/>
 						</ConfigProvider>
           </Form.Item>
-
-
-          {true ?
+          {infoState ? '* 상영상태가 상영종료 및 상영중인 경우 상영정보 삭제만 가능합니다.' : '* 상영정보 추가, 수정시 상영관의 상영정보간 여유시간 30분이 필요합니다.'}
           <Form.Item style={{position:'relative', top:'57px'}}>
-            <Button type="primary" danger onClick={()=>console.log('fdasfsda')}>
+            <Button disabled={delState} type="primary" danger onClick={onDelete}>
               삭제
             </Button>      
-          </Form.Item> : null}
+          </Form.Item>
         </Form>
-      </Modal>
+      </ModalWrap>
 		</>
 	);
 };
+
+const Notice = styled.div`
+	float: right;
+	margin-bottom: 8px;
+	font-size: 17px;
+`;
 
 const TableWrap = styled(Table)`
   margin-bottom: 30px;
@@ -381,6 +458,16 @@ const TableButton = styled.button`
   cursor: pointer;
   transition: color 0.3s;
   border: none;
+`;
+
+const ModalWrap = styled(Modal)`
+  .ant-modal-header {
+    margin-bottom: 16px;
+  }
+
+  .ant-modal-footer {
+    margin-top: 0;
+  }
 `;
 
 export default MovieInfoTable;

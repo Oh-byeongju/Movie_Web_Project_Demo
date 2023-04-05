@@ -1,5 +1,5 @@
 /*
-	23-04-03 관리자 페이지 상영정보관리 구현(오병주)
+	23-04-03 ~ 23-04-05 관리자 페이지 상영정보관리 구현(오병주)
 */
 // 영화 목록 조회 리스트
 export const MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST = "MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST";

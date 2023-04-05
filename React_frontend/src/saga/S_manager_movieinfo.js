@@ -1,5 +1,5 @@
 /*
-	23-04-03 관리자 페이지 상영정보관리 구현(오병주)
+	23-04-03 ~ 23-04-05 관리자 페이지 상영정보관리 구현(오병주)
 */
 import { call, all, takeLatest, fork, put } from "redux-saga/effects";
 import { 
