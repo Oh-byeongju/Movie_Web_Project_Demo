@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Select, Space } from 'antd';
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST, MANAGER_MOVIEINFO_THEATER_LIST_REQUEST, MANAGER_MOVIEINFO_CINEMA_LIST_REQUEST, MANAGER_MOVIEINFO_LIST_REQUEST } from '../../reducer/R_manager_movieinfo';
@@ -15,13 +15,12 @@ const MovieInfo = () => {
 	const dispatch = useDispatch();
 
 	// 필요한 리덕스 상태들
-  const { LOGIN_data, MOVIEINFO_MOVIE_LIST, MOVIEINFO_THEATER_LIST, MOVIEINFO_CINEMA_LIST, MOVIEINFO_LIST } = useSelector(
+  const { LOGIN_data, MOVIEINFO_MOVIE_LIST, MOVIEINFO_THEATER_LIST, MOVIEINFO_CINEMA_LIST } = useSelector(
     state => ({
       LOGIN_data: state.R_user_login.LOGIN_data,
       MOVIEINFO_MOVIE_LIST: state.R_manager_movieinfo.MOVIEINFO_MOVIE_LIST,
 			MOVIEINFO_THEATER_LIST: state.R_manager_movieinfo.MOVIEINFO_THEATER_LIST,
-			MOVIEINFO_CINEMA_LIST: state.R_manager_movieinfo.MOVIEINFO_CINEMA_LIST,
-			MOVIEINFO_LIST: state.R_manager_movieinfo.MOVIEINFO_LIST
+			MOVIEINFO_CINEMA_LIST: state.R_manager_movieinfo.MOVIEINFO_CINEMA_LIST
     }),
     shallowEqual
   );
@@ -251,10 +250,6 @@ const MovieInfo = () => {
 						</Button>
 					</SpaceWrap>
 				</MovieAreaChoice>
-				<Notice>
-					* 검색결과 <strong>{MOVIEINFO_LIST.totalElements}</strong>건이 검색되었습니다.
-					<Button style={{marginLeft:"7px"}} type="primary" shape="circle" icon={<PlusOutlined />} ></Button>
-				</Notice> 
 				<MovieInfoTable 
 					selectMovie={selectMovie} 
 					selectArea={selectArea} 
@@ -318,12 +313,6 @@ const SelectTitle = styled.span`
 
 const SpaceWrap = styled(Space)`
 	margin-left: 75px;
-`;
-
-const Notice = styled.div`
-	float: right;
-	margin-bottom: 8px;
-	font-size: 17px;
 `;
 
 export default MovieInfo;

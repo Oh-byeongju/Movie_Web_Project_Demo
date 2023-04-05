@@ -1,5 +1,5 @@
 /*
-  23-04-03 관리자 페이지 상영정보관리 구현(오병주)
+  23-04-03 ~ 23-04-05 관리자 페이지 상영정보관리 구현(오병주)
 */
 package com.movie.Spring_backend.service;
 
@@ -466,7 +466,6 @@ public class ManagerOneService {
     }
 
     // 전체 상영관 불러오는 메소드
-    @Transactional
     public List<CinemaDto> AllCinemaSearch(HttpServletRequest request) {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
