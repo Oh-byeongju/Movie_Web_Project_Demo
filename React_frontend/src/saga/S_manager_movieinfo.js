@@ -6,7 +6,10 @@ import {
 	MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST, MANAGER_MOVIEINFO_MOVIE_LIST_SUCCESS,  MANAGER_MOVIEINFO_MOVIE_LIST_FAILURE,
 	MANAGER_MOVIEINFO_THEATER_LIST_REQUEST, MANAGER_MOVIEINFO_THEATER_LIST_SUCCESS,  MANAGER_MOVIEINFO_THEATER_LIST_FAILURE,
   MANAGER_MOVIEINFO_CINEMA_LIST_REQUEST, MANAGER_MOVIEINFO_CINEMA_LIST_SUCCESS,  MANAGER_MOVIEINFO_CINEMA_LIST_FAILURE,
-	MANAGER_MOVIEINFO_LIST_REQUEST, MANAGER_MOVIEINFO_LIST_SUCCESS,  MANAGER_MOVIEINFO_LIST_FAILURE
+	MANAGER_MOVIEINFO_LIST_REQUEST, MANAGER_MOVIEINFO_LIST_SUCCESS,  MANAGER_MOVIEINFO_LIST_FAILURE,
+  MANAGER_MOVIEINFO_INSERT_REQUEST, MANAGER_MOVIEINFO_INSERT_SUCCESS,  MANAGER_MOVIEINFO_INSERT_FAILURE,
+  MANAGER_MOVIEINFO_DELETE_REQUEST, MANAGER_MOVIEINFO_DELETE_SUCCESS,  MANAGER_MOVIEINFO_DELETE_FAILURE,
+  MANAGER_MOVIEINFO_UPDATE_REQUEST, MANAGER_MOVIEINFO_UPDATE_SUCCESS,  MANAGER_MOVIEINFO_UPDATE_FAILURE
 } from "../reducer/R_manager_movieinfo";
 import { http } from "../lib/http";
 
@@ -128,6 +131,94 @@ async function callMovieInfoSearch(data) {
   });
 }
 
+// 상영정보 추가 함수
+function* MovieInfoInsert(action) {
+  const result = yield call(callMovieInfoInsert, action.data);
+  if (result.status === 204) {
+    yield put({
+      type: MANAGER_MOVIEINFO_INSERT_SUCCESS,
+      data: result.status
+    });
+  } 
+  else {
+    yield put({
+			type: MANAGER_MOVIEINFO_INSERT_FAILURE,
+      data: result.status
+    });
+  }
+}
+
+// 상영정보 추가 백엔드 호출
+async function callMovieInfoInsert(data) {
+  return await http.post("/manager/auth/insertMovieInfo", data)
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  });
+}
+
+// 상영정보 삭제 함수
+function* MovieInfoDelete(action) {
+  const result = yield call(callMovieInfoDelete, action.data);
+  if (result.status === 204) {
+    yield put({
+      type: MANAGER_MOVIEINFO_DELETE_SUCCESS,
+      data: result.status
+    });
+  } 
+  else {
+    yield put({
+			type: MANAGER_MOVIEINFO_DELETE_FAILURE,
+      data: result.status
+    });
+  }
+}
+
+// 상영정보 삭제 백엔드 호출
+async function callMovieInfoDelete(data) {
+  return await http.delete("/manager/auth/deleteMovieInfo", {
+    params: {
+      miid: data.miid
+    }
+  })
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  });
+}
+
+// 상영정보 수정 함수
+function* MovieInfoUpdate(action) {
+  const result = yield call(callMovieInfoUpdate, action.data);
+  if (result.status === 204) {
+    yield put({
+      type: MANAGER_MOVIEINFO_UPDATE_SUCCESS,
+      data: result.status
+    });
+  } 
+  else {
+    yield put({
+			type: MANAGER_MOVIEINFO_UPDATE_FAILURE,
+      data: result.status
+    });
+  }
+}
+
+// 상영정보 수정 백엔드 호출
+async function callMovieInfoUpdate(data) {
+  return await http.patch("/manager/auth/updateMovieInfo", data)
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  });
+}
+
 function* MOVIE_LIST() {
   yield takeLatest(MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST, AllMovie);
 }
@@ -144,11 +235,26 @@ function* MOVIEINFO_LIST() {
   yield takeLatest(MANAGER_MOVIEINFO_LIST_REQUEST, MovieInfoSearch);
 }
 
+function* MOVIEINFO_INSERT() {
+  yield takeLatest(MANAGER_MOVIEINFO_INSERT_REQUEST, MovieInfoInsert);
+}
+
+function* MOVIEINFO_DELETE() {
+  yield takeLatest(MANAGER_MOVIEINFO_DELETE_REQUEST, MovieInfoDelete);
+}
+
+function* MOVIEINFO_UPDATE() {
+  yield takeLatest(MANAGER_MOVIEINFO_UPDATE_REQUEST, MovieInfoUpdate);
+}
+
 export default function* S_manager_movieinfo() {
   yield all([
     fork(MOVIE_LIST),
     fork(THEATER_LIST),
     fork(CINEMA_LIST),
-		fork(MOVIEINFO_LIST)
+		fork(MOVIEINFO_LIST),
+    fork(MOVIEINFO_INSERT),
+    fork(MOVIEINFO_DELETE),
+    fork(MOVIEINFO_UPDATE)
 	]);
 }

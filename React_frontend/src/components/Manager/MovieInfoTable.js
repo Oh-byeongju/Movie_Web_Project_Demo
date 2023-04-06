@@ -1,6 +1,14 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { MANAGER_MOVIEINFO_LIST_REQUEST } from '../../reducer/R_manager_movieinfo';
+import { 
+  MANAGER_MOVIEINFO_LIST_REQUEST, 
+  MANAGER_MOVIEINFO_INSERT_REQUEST, 
+  MANAGER_MOVIEINFO_INSERT_RESET,
+  MANAGER_MOVIEINFO_DELETE_REQUEST,
+  MANAGER_MOVIEINFO_DELETE_RESET,
+  MANAGER_MOVIEINFO_UPDATE_REQUEST,
+  MANAGER_MOVIEINFO_UPDATE_RESET
+} from '../../reducer/R_manager_movieinfo';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import * as date from "../../lib/date.js";
 import { PlusOutlined } from '@ant-design/icons';
@@ -12,16 +20,19 @@ import moment from 'moment';
 import 'moment/locale/ko';
 import { ConfigProvider } from 'antd';
 
-const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulTheater, gyeonggiTheater, incheonTheater, busanTheater }) => {
+const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, setselectMovie, setselectArea, setselectTheater, setDays, seoulTheater, gyeonggiTheater, incheonTheater, busanTheater }) => {
   const dispatch = useDispatch();
 
   // 필요한 리덕스 상태들
-  const { MOVIEINFO_LIST_loading, MOVIEINFO_LIST, MOVIEINFO_MOVIE_LIST, MOVIEINFO_CINEMA_LIST} = useSelector(
+  const { MOVIEINFO_LIST_loading, MOVIEINFO_LIST, MOVIEINFO_MOVIE_LIST, MOVIEINFO_CINEMA_LIST, MOVIEINFO_INSERT_state, MOVIEINFO_DELETE_state, MOVIEINFO_UPDATE_state} = useSelector(
     state => ({
       MOVIEINFO_LIST_loading: state.R_manager_movieinfo.MOVIEINFO_LIST_loading,
       MOVIEINFO_LIST: state.R_manager_movieinfo.MOVIEINFO_LIST,
       MOVIEINFO_MOVIE_LIST: state.R_manager_movieinfo.MOVIEINFO_MOVIE_LIST,
-      MOVIEINFO_CINEMA_LIST: state.R_manager_movieinfo.MOVIEINFO_CINEMA_LIST
+      MOVIEINFO_CINEMA_LIST: state.R_manager_movieinfo.MOVIEINFO_CINEMA_LIST,
+      MOVIEINFO_INSERT_state: state.R_manager_movieinfo.MOVIEINFO_INSERT_state,
+      MOVIEINFO_DELETE_state: state.R_manager_movieinfo.MOVIEINFO_DELETE_state,
+      MOVIEINFO_UPDATE_state: state.R_manager_movieinfo.MOVIEINFO_UPDATE_state
     }),
     shallowEqual
   );
@@ -143,10 +154,6 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
 
   // 모달 내용 및 상태관리
 	const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOk = useCallback(() => {
-    setIsModalOpen(false);
-    setdelState(true);
-  }, []);
   const handleCancel = useCallback(() => {
     setIsModalOpen(false);
     setdelState(true);
@@ -156,6 +163,7 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
   const [infoId, setinfoId] = useState();
   const [infoState, setinfoState] = useState(false);
   const [delState, setdelState] = useState(true);
+  const [openDay, setopenDay] = useState();
 
   // 선택된 영화, 지역, 극장, 상영관, 날짜버튼 useState
 	const [selectMovieModal, setselectMovieModal] = useState();
@@ -175,13 +183,14 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
     var now = new Date();
     now.setMinutes(now.getMinutes() + 90);
 
-    // 모달창에 정보 초기화
-    setselectMovieModal(null);
+    // 모달창에 정보 초기화(영화와 시간을 임의로 지정해줌)
+    setselectMovieModal(1);
 		setselectAreaModal('seoul');
     setselectTheaterModal(1);
     setselectCinemaModal(1);
     setdayStartModal(date.DateToString2(now));
-    setdayEndModal(date.EndDateCal(now, 100));
+    setdayEndModal(date.DateCal(now, 180));
+    setopenDay(date.DateToString(new Date()));
     setIsModalOpen(true);
   }, [])
 
@@ -199,6 +208,16 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
     else {
       setinfoState(false);
     }
+
+    // 영화 개봉일에 따라 disable 지정
+    var now = new Date();
+    var mdate = new Date(MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === data.mid)[0].mdate);
+    if (mdate > now) {
+      setopenDay(date.DateToString(mdate));
+    }
+    else {
+      setopenDay(date.DateToString(now));
+    }  
 
     // 삭제버튼 활성화 및 무비인포 ID 설정
     setdelState(false);
@@ -220,22 +239,31 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
 		}
     setselectTheaterModal(data.tid);
     setselectCinemaModal(data.cid);
-    setdayStartModal(data.mistarttime);
-    setdayEndModal(data.miendtime);
+    setdayStartModal(date.DateToString2(new Date(data.mistarttime)));
+    setdayEndModal(date.DateToString2(new Date(data.miendtime)));
     setIsModalOpen(true);
 
-	}, [movieState]);
+	}, [MOVIEINFO_MOVIE_LIST, movieState]);
 
   // 모달창 영화 교체할 때
 	const handleMovieChangeModal = useCallback((value) => {
 		setselectMovieModal(value);
 
-    // 현재 시간에 90분을 더한값으로 영화 시작시간 수정
+    // 영화 개봉일에 따라 disable 및 날짜 지정 수정
     var now = new Date();
-    now.setMinutes(now.getMinutes() + 90);
+    var mdate = new Date(MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === value)[0].mdate);
 
-    setdayStartModal(date.DateToString2(now));
-    setdayEndModal(date.EndDateCal(now, MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === value)[0].mtime));
+    if (mdate > now) {
+      setopenDay(date.DateToString(mdate));
+      setdayStartModal(date.DateCal(mdate, 60));
+      setdayEndModal(date.DateCal(mdate, 60 + MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === value)[0].mtime));
+    }
+    else {
+      now.setMinutes(now.getMinutes() + 90);
+      setopenDay(date.DateToString(now));
+      setdayStartModal(date.DateToString2(now));
+      setdayEndModal(date.DateCal(now, MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === value)[0].mtime));
+    }   
 	}, [MOVIEINFO_MOVIE_LIST]);
   
   // 모달창 지역 교체할 때
@@ -274,9 +302,52 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
   // 모달창 날짜 교체할 때
 	const handleDayChangeModal = useCallback((value) => {
     setdayStartModal(date.DateToString2(value.$d));
-    setdayEndModal(date.EndDateCal(value.$d, MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === selectMovieModal)[0].mtime));
+    setdayEndModal(date.DateCal(value.$d, MOVIEINFO_MOVIE_LIST.filter(movie => movie.mid === selectMovieModal)[0].mtime));
 	}, [MOVIEINFO_MOVIE_LIST, selectMovieModal, setdayStartModal]);
 
+  // 추가 또는 수정 버튼을 누를때 실행되는 함수
+  const onInsertORUpdate = useCallback(()=> {
+
+    // 상영시작시간이 현재시간 기준으로 한시간 이후가 아닐경우 예외
+    var now = new Date();
+    now.setMinutes(now.getMinutes() + 59);
+    if (now > new Date(dayStartModal)) {
+      alert('상영시작시간을 확인해주십시오.');
+      return;
+    }
+
+    // 상영정보를 추가할 때
+    if (delState) {
+      if (!window.confirm('상영정보를 추가하시겠습니까?')) {
+        return;
+      }
+      dispatch({
+				type: MANAGER_MOVIEINFO_INSERT_REQUEST,
+				data: {
+					mid: selectMovieModal,
+          cid: selectCinemaModal,
+          insertStartDay: dayStartModal,
+          insertEndDay: dayEndModal
+				}
+			});
+    }
+    // 상영정보를 수정할 때
+    else {
+      if (!window.confirm('상영정보를 수정하시겠습니까?')) {
+        return;
+      }
+      dispatch({
+				type: MANAGER_MOVIEINFO_UPDATE_REQUEST,
+				data: {
+          miid: infoId,
+					mid: selectMovieModal,
+          cid: selectCinemaModal,
+          updateStartDay: dayStartModal,
+          updateEndDay: dayEndModal
+				}
+			});
+    }
+  }, [delState, infoId, selectMovieModal, selectCinemaModal, dayStartModal, dayEndModal, dispatch])
 
   // 삭제 버튼 누를때 실행되는 함수
   const onDelete = useCallback(()=> {
@@ -284,21 +355,224 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
       return;
     };
 
-    console.log(infoId)
-    // 이제 이거 날려서 삭제 해버리면됨
-    // 순서는 삽입 수정 삭제 이렇게 순으로 배열 해두면 될듯
+    dispatch({
+      type: MANAGER_MOVIEINFO_DELETE_REQUEST,
+      data: {
+        miid: infoId
+      }
+    });
 
-  }, [infoId])
+  }, [infoId, dispatch]);
 
+  // 상영정보 추가 성공여부에 따른 useEffect
+  useEffect(()=> {
+    // 추가 성공
+    if (MOVIEINFO_INSERT_state === 204) {
+      alert('상영정보가 추가되었습니다.');
 
-  // 삭제는 그냥 삭제하면 되는데 수정할때는 앞뒤 시간 체크
-  // 삽입할때도 앞뒤 시간 체크
-  // 삽입, 삭제, 수정 메소드 날릴 떄 전부 마지막으로 예매한거 있는지 확인하고 해야함
-  // 상영종료 된건 삭제만 되게 해야함
-  // d영화 수정할때 현재시간 + 1시간 이후에 설정 안하면 빠구 먹어야함
-  // 디비에 넣을때 ss(초) 없어도 드가는지 확인해야함
+      dispatch({
+        type: MANAGER_MOVIEINFO_INSERT_RESET
+      });
 
+      setIsModalOpen(false);
+      setdelState(true);
 
+      var area = null;
+      if (selectAreaModal === 'seoul') {
+        area = '서울';
+      }
+      else if (selectAreaModal === 'gyeonggi') {
+        area = '경기';
+      }
+      else if (selectAreaModal === 'incheon') {
+        area = '인천';
+      }
+      else if (selectAreaModal === 'busan') {
+        area = '부산';
+      }
+
+      setselectMovie(selectMovieModal);
+      setselectArea(selectAreaModal);
+      setselectTheater(selectTheaterModal);
+      setDays(null);
+
+      // 상영정보를 새롭게 요청
+      dispatch({
+        type: MANAGER_MOVIEINFO_LIST_REQUEST,
+        data: {
+          mid: selectMovieModal,
+          tarea: area,
+          tid: selectTheaterModal,
+          startDay: null,
+          endDay: null,
+          page: 0,
+          size: 10
+        }
+      });
+    }
+
+    // 추가 실패
+    if(MOVIEINFO_INSERT_state === 400 || MOVIEINFO_INSERT_state === 500) {
+      alert('상영정보 추가에 실패했습니다.');
+      dispatch({
+        type: MANAGER_MOVIEINFO_INSERT_RESET
+      });
+    }
+  }, [MOVIEINFO_INSERT_state, selectMovieModal, selectAreaModal, selectTheaterModal, setselectMovie, setselectArea, setselectTheater, setDays, dispatch]);
+
+  // 상영정보 삭제 성공여부에 따른 useEffect
+  useEffect(()=> {
+    // 삭제 성공
+    if (MOVIEINFO_DELETE_state === 204) {
+      alert('상영정보가 삭제되었습니다.');
+
+      dispatch({
+        type: MANAGER_MOVIEINFO_DELETE_RESET
+      });
+
+      setIsModalOpen(false);
+      setdelState(true);
+
+      var start = null;
+      var end = null;
+      if (days) {
+        start = date.DateToString(days[0].$d);
+        end = date.DateToString(days[1].$d)
+      }
+
+      var area = null;
+      if (selectArea === 'seoul') {
+        area = '서울';
+      }
+      else if (selectArea === 'gyeonggi') {
+        area = '경기';
+      }
+      else if (selectArea === 'incheon') {
+        area = '인천';
+      }
+      else if (selectArea === 'busan') {
+        area = '부산';
+      }
+
+      // 상영정보를 새롭게 요청
+      dispatch({
+        type: MANAGER_MOVIEINFO_LIST_REQUEST,
+        data: {
+          mid: selectMovie,
+          tarea: area,
+          tid: selectTheater,
+          startDay: start,
+          endDay: end,
+          page: MOVIEINFO_LIST.number,
+          size: MOVIEINFO_LIST.size
+        }
+      });
+    }
+
+    // 삭제 실패
+    if(MOVIEINFO_DELETE_state === 400 || MOVIEINFO_DELETE_state === 500) {
+      alert('상영정보 삭제에 실패했습니다.');
+      dispatch({
+        type: MANAGER_MOVIEINFO_DELETE_RESET
+      });
+
+      setIsModalOpen(false);
+      setdelState(true);
+
+      var start2 = null;
+      var end2 = null;
+      if (days) {
+        start2 = date.DateToString(days[0].$d);
+        end2 = date.DateToString(days[1].$d)
+      }
+
+      var area2 = null;
+      if (selectArea === 'seoul') {
+        area2 = '서울';
+      }
+      else if (selectArea === 'gyeonggi') {
+        area2 = '경기';
+      }
+      else if (selectArea === 'incheon') {
+        area2 = '인천';
+      }
+      else if (selectArea === 'busan') {
+        area2 = '부산';
+      }
+
+      // 상영정보를 새롭게 요청
+      dispatch({
+        type: MANAGER_MOVIEINFO_LIST_REQUEST,
+        data: {
+          mid: selectMovie,
+          tarea: area2,
+          tid: selectTheater,
+          startDay: start2,
+          endDay: end2,
+          page: MOVIEINFO_LIST.number,
+          size: MOVIEINFO_LIST.size
+        }
+      });
+    }
+  }, [MOVIEINFO_DELETE_state, days, selectArea, selectMovie, selectTheater, MOVIEINFO_LIST, dispatch]);
+
+  // 상영정보 수정 성공여부에 따른 useEffect
+  useEffect(()=> {
+    // 수정 성공
+    if (MOVIEINFO_UPDATE_state === 204) {
+      alert('상영정보가 수정 되었습니다.');
+
+      dispatch({
+        type: MANAGER_MOVIEINFO_UPDATE_RESET
+      });
+
+      setIsModalOpen(false);
+      setdelState(true);
+
+      var start = null;
+      var end = null;
+      if (days) {
+        start = date.DateToString(days[0].$d);
+        end = date.DateToString(days[1].$d)
+      }
+
+      var area = null;
+      if (selectArea === 'seoul') {
+        area = '서울';
+      }
+      else if (selectArea === 'gyeonggi') {
+        area = '경기';
+      }
+      else if (selectArea === 'incheon') {
+        area = '인천';
+      }
+      else if (selectArea === 'busan') {
+        area = '부산';
+      }
+
+      // 상영정보를 새롭게 요청
+      dispatch({
+        type: MANAGER_MOVIEINFO_LIST_REQUEST,
+        data: {
+          mid: selectMovie,
+          tarea: area,
+          tid: selectTheater,
+          startDay: start,
+          endDay: end,
+          page: MOVIEINFO_LIST.number,
+          size: MOVIEINFO_LIST.size
+        }
+      });
+    }
+
+    // 수정 실패
+    if(MOVIEINFO_UPDATE_state === 400 || MOVIEINFO_UPDATE_state === 500) {
+      alert('상영정보 수정에 실패했습니다.');
+      dispatch({
+        type: MANAGER_MOVIEINFO_UPDATE_RESET
+      });
+    }
+  }, [MOVIEINFO_UPDATE_state, days, selectArea, selectMovie, selectTheater, MOVIEINFO_LIST, dispatch]);
 
 	return (
 		<>
@@ -322,7 +596,7 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
 			<ModalWrap title="상영정보관리" 
       open={isModalOpen} 
       okButtonProps={{ disabled: infoState}} 
-      onOk={handleOk} 
+      onOk={onInsertORUpdate} 
       okText={delState ? "추가" : "수정"} 
       cancelText="취소" 
       onCancel={handleCancel} destroyOnClose>
@@ -399,8 +673,7 @@ const MovieInfoTable = ({ selectMovie, selectArea, selectTheater, days, seoulThe
               <DatePicker 
               disabled={infoState}
               disabledDate={(current) => {
-                var customDate = moment().format("YYYY-MM-DD");
-                return current && current < moment(customDate, "YYYY-MM-DD");
+                return current && current < moment(openDay, "YYYY-MM-DD");
               }} 
               onChange={handleDayChangeModal}
               allowClear={false} 

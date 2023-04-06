@@ -93,4 +93,25 @@ public class ManagerOneController {
     public ResponseEntity<Page<MovieInfoDto>> GetMovieInfo(HttpServletRequest request, @RequestParam Map<String, String> requestMap) {
         return ResponseEntity.ok().body(managerOneService.MovieInfoSearch(request, requestMap));
     }
+
+    // 상영정보 추가하는 메소드
+    @PostMapping("/auth/insertMovieInfo")
+    public ResponseEntity<String> InsertMovieInfo(HttpServletRequest request, @RequestBody Map<String, String> requestMap) {
+        managerOneService.MovieInfoInsert(request, requestMap);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 상영정보 삭제하는 메소드
+    @DeleteMapping("/auth/deleteMovieInfo")
+    public ResponseEntity<String> DeleteMovieInfo(HttpServletRequest request, @RequestParam Long miid) {
+        managerOneService.MovieInfoDelete(request, miid);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 상영정보 수정하는 메소드
+    @PatchMapping("/auth/updateMovieInfo")
+    public ResponseEntity<String> UpdateMovieInfo(HttpServletRequest request, @RequestBody Map<String, String> requestMap) {
+        managerOneService.MovieInfoUpdate(request, requestMap);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -7,6 +7,8 @@ import { MANAGER_MOVIEINFO_MOVIE_LIST_REQUEST, MANAGER_MOVIEINFO_THEATER_LIST_RE
 import MovieInfoTable from './MovieInfoTable';
 import locale from 'antd/lib/locale/ko_KR';
 import { ConfigProvider } from 'antd';
+import dayjs from 'dayjs';
+import "dayjs/locale/ko";
 import * as date from "../../lib/date.js";
 import { useCallback } from 'react';
 const { RangePicker } = DatePicker;
@@ -34,10 +36,10 @@ const MovieInfo = () => {
 		 	});
 		 	dispatch({
 			 	type: MANAGER_MOVIEINFO_THEATER_LIST_REQUEST
-		 	})
+		 	});
 			dispatch({
 				type: MANAGER_MOVIEINFO_CINEMA_LIST_REQUEST
-			})
+			});
 			// 첫 검색도 같이 실행(모든 값 null 전체 검색)
 			dispatch({
 				type: MANAGER_MOVIEINFO_LIST_REQUEST,
@@ -98,7 +100,7 @@ const MovieInfo = () => {
 	const [selectMovie, setselectMovie] = useState();
 	const [selectArea, setselectArea] = useState();
 	const [selectTheater, setselectTheater] = useState();
-	const [days, setDays] = useState();
+	const [days, setDays] = useState(null);
 
 	// 영화 교체할 때
 	const handleMovieChange = useCallback((value) => {
@@ -116,10 +118,28 @@ const MovieInfo = () => {
 		setselectTheater(value);
 	}, []);
 
+	// 날짜 형변환 해주는 함수
+	const returnDayjsRange = useCallback((start, finish) => {
+		if (start === null) {
+			return [null, dayjs(finish, "YYYY-MM-DD")];
+		}
+
+		if (finish === null) {
+			return [dayjs(start, "YYYY-MM-DD"), null];
+		}
+
+		return [dayjs(start, "YYYY-MM-DD"), dayjs(finish, "YYYY-MM-DD")];
+  }, []);
+
 	// 날짜 선택할 때
-	const handleCalendarChange = useCallback((dates) => {
-		setDays(dates);
-	}, []);
+	const handleCalendarChange = useCallback((dateRange) => {
+		if (dateRange) {
+			setDays(returnDayjsRange(dateRange[0], dateRange[1]));
+		}
+		else {
+			setDays(null);
+		}
+	}, [returnDayjsRange]);
 
 	// 검색 버튼을 누를때 함수
 	const onSearch = useCallback(() => {
@@ -179,6 +199,7 @@ const MovieInfo = () => {
 							영화제목 :
 						</SelectTitle>
 						<Select
+							value={selectMovie}
 							placeholder="영화선택"
 							style={{width: 210}}
 							allowClear={true}
@@ -192,6 +213,7 @@ const MovieInfo = () => {
 							지역 :
 						</SelectTitle>
 						<Select
+							value={selectArea}
 							placeholder="지역선택"
 							style={{width: 120}}
 							onChange={handleAreaChange}
@@ -243,7 +265,7 @@ const MovieInfo = () => {
 							날짜 :
 						</SelectTitle>
 						<ConfigProvider locale={locale}>
-							<RangePicker onCalendarChange={handleCalendarChange} style={{width: "240px", marginRight: "7px"}}/>
+							<RangePicker picker="date" value={days !== "" ? days : ""} onCalendarChange={handleCalendarChange} style={{width: "240px", marginRight: "7px"}}/>
 						</ConfigProvider>
 						<Button icon={<SearchOutlined/>} onClick={onSearch}>
 							검색
@@ -255,6 +277,10 @@ const MovieInfo = () => {
 					selectArea={selectArea} 
 					selectTheater={selectTheater} 
 					days={days}
+					setselectMovie={setselectMovie}
+					setselectArea={setselectArea}
+					setselectTheater={setselectTheater}
+					setDays={setDays}
 					seoulTheater={seoulTheater}
 					gyeonggiTheater={gyeonggiTheater}
 					incheonTheater={incheonTheater}

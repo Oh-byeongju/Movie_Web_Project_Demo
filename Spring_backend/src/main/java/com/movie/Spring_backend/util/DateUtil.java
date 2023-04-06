@@ -1,5 +1,6 @@
 /*
   23-03-22 날짜 관련 메소드 결합(오병주)
+  23-04-06 상영정보 수정시 사용될 메소드 생성(오병주)
 */
 package com.movie.Spring_backend.util;
 
@@ -21,9 +22,8 @@ public class DateUtil {
     }
 
     // 현재 날짜에서 년, 월, 일을 빼주는 메소드
-    public static String ChangeDate(int year, int month, int day) {
+    public static String ChangeDateNow(int year, int month, int day) {
         Date nowDate = new Date();
-
         Calendar cal = Calendar.getInstance();
 
         try {
@@ -39,4 +39,21 @@ public class DateUtil {
 
         return DateFormat.format(cal.getTime());
     }
+
+    // 특정날짜의 값에서 시간을 빼거나 더해주는 함수(초단위)
+    public static String ChangeDate(String day, int second) {
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            Date date = DateFormat.parse(day);
+            cal.setTime(date);
+        } catch (Exception e) {
+            throw new InvalidValueException("형식이 올바르지 않습니다.");
+        }
+
+        cal.add(Calendar.SECOND,  second);
+
+        return DateFormat.format(cal.getTime());
+    }
+
 }

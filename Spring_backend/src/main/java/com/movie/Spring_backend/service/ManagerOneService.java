@@ -5,8 +5,10 @@ package com.movie.Spring_backend.service;
 
 import com.movie.Spring_backend.dto.*;
 import com.movie.Spring_backend.entity.*;
+import com.movie.Spring_backend.exceptionlist.MovieInfoExistException;
 import com.movie.Spring_backend.jwt.JwtValidCheck;
 import com.movie.Spring_backend.repository.*;
+import com.movie.Spring_backend.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +35,7 @@ public class ManagerOneService {
     private final JwtValidCheck jwtValidCheck;
     private final MovieRepository movieRepository;
     private final MovieInfoRepository movieInfoRepository;
+    private final ReservationRepository reservationRepository;
     private final MovieActorRepository movieActorRepository;
     private final ActorRepository actorRepository;
     private final CinemaRepository cinemaRepository;
@@ -523,6 +526,18 @@ public class ManagerOneService {
         // 프론트단에서 보낸 조건을 이용해서 상영정보 검색
         Page<MovieInfoEntity> MovieInfos = movieInfoRepository.findManagerMovieInfo(movie, Start, End, theater, tarea, PageInfo);
 
+        // 프론트단에서 요청한 조건으로 얻을 수 있는 최대 페이지 number(PageSize에 의해 계산됨)
+        int max_index = MovieInfos.getTotalPages() - 1;
+        if (max_index == -1) {
+            max_index = 0;
+        }
+
+        // 최대 페이지 number가 프론트단에서 요청한 페이지 number보다 작을경우 최대 페이지 number로 재검색
+        if (max_index < page) {
+            PageInfo = PageRequest.of(max_index, size);
+            MovieInfos = movieInfoRepository.findManagerMovieInfo(movie, Start, End, theater, tarea, PageInfo);
+        }
+
         return MovieInfos.map(movieInfo -> MovieInfoDto.builder()
                 .mid(movieInfo.getMovie().getMid())
                 .miid(movieInfo.getMiid())
@@ -538,5 +553,104 @@ public class ManagerOneService {
                 .miendtime(movieInfo.getMiendtime())
                 .allcount(movieInfo.getCinema().getCseat())
                 .count(movieInfo.getCntSeatInfo()).build());
+    }
+
+    // 상영정보를 추가하는 메소드
+    @Transactional
+    public void MovieInfoInsert(HttpServletRequest request, Map<String, String> requestMap) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // requestMap 데이터 추출 및 형변환
+        Long mid = Long.valueOf(requestMap.get("mid"));
+        Long cid = Long.valueOf(requestMap.get("cid"));
+        String insertStartDay = requestMap.get("insertStartDay");
+        String insertEndDay = requestMap.get("insertEndDay");
+
+        // 상영정보 추가에 필요한 정보 Entity로 변환
+        MovieEntity movie = MovieEntity.builder().mid(mid).build();
+        CinemaEntity cinema = CinemaEntity.builder().cid(cid).build();
+
+        // 상영정보간 시간 확인
+        String CheckStart = DateUtil.ChangeDate(insertStartDay+":00", -1799);
+        String CheckEnd = DateUtil.ChangeDate(insertEndDay+":00", +1799);
+        List<MovieInfoEntity> CheckInfo = movieInfoRepository.findExistMovieInfo(cinema, CheckStart, CheckEnd);
+
+        // 상영정보를 추가 못할경우 예외처리
+        if (!CheckInfo.isEmpty()) {
+            throw new MovieInfoExistException("상영정보간 시간 간격이 너무 짧습니다.");
+        }
+
+        // 상영정보 추가
+        movieInfoRepository.save(MovieInfoEntity.builder()
+                .miday(Date.valueOf(insertStartDay.substring(0, 10)))
+                .mistarttime(insertStartDay+":00")
+                .miendtime(insertEndDay+":00")
+                .movie(movie)
+                .cinema(cinema).build());
+    }
+
+    // 상영정보를 삭제하는 메소드
+    @Transactional
+    public void MovieInfoDelete(HttpServletRequest request, Long miid) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // JPA 사용을 위한 형 변환
+        MovieInfoEntity movieInfo = MovieInfoEntity.builder().miid(miid).build();
+
+        // 상영정보 삭제전 상영정보에 대한 예매기록 조회
+        List<ReservationEntity> reservation = reservationRepository.findByMovieInfo(movieInfo);
+
+        // 예매기록이 존재할경우 예외처리
+        if(!reservation.isEmpty()) {
+            throw new MovieInfoExistException("상영정보에 예매 기록이 존재합니다.");
+        }
+
+        // 상영정보 삭제
+        movieInfoRepository.deleteById(miid);
+    }
+
+    // 상영정보를 수정하는 메소드
+    @Transactional
+    public void MovieInfoUpdate(HttpServletRequest request, Map<String, String> requestMap) {
+        // Access Token에 대한 유효성 검사
+        jwtValidCheck.JwtCheck(request, "ATK");
+
+        // requestMap 데이터 추출 및 형변환
+        Long miid = Long.valueOf(requestMap.get("miid"));
+        Long mid = Long.valueOf(requestMap.get("mid"));
+        Long cid = Long.valueOf(requestMap.get("cid"));
+        String updateStartDay = requestMap.get("updateStartDay");
+        String updateEndDay = requestMap.get("updateEndDay");
+
+        // 상영정보 수정에 필요한 정보 Entity로 변환
+        MovieEntity movie = MovieEntity.builder().mid(mid).build();
+        CinemaEntity cinema = CinemaEntity.builder().cid(cid).build();
+        MovieInfoEntity movieInfo = MovieInfoEntity.builder().miid(miid).build();
+
+        // 상영정보간 시간 확인
+        String CheckStart = DateUtil.ChangeDate(updateStartDay+":00", -1799);
+        String CheckEnd = DateUtil.ChangeDate(updateEndDay+":00", +1799);
+        List<MovieInfoEntity> CheckInfo = movieInfoRepository.findExistMovieInfo(cinema, CheckStart, CheckEnd);
+
+        // 상영정보를 수정 못할경우 예외처리
+        for (MovieInfoEntity MI : CheckInfo) {
+            if (!Objects.equals(MI.getMiid(), miid)) {
+                throw new MovieInfoExistException("상영정보간 시간 간격이 너무 짧습니다.");
+            }
+        }
+
+        // 상영정보 수정전 상영정보에 대한 예매기록 조회
+        List<ReservationEntity> reservation = reservationRepository.findByMovieInfo(movieInfo);
+
+        // 예매기록이 존재할경우 예외처리
+        if(!reservation.isEmpty()) {
+            throw new MovieInfoExistException("상영정보에 예매 기록이 존재합니다.");
+        }
+
+        // 상영정보 수정
+        movieInfoRepository.MovieInfoUpdate(miid, Date.valueOf(updateStartDay.substring(0, 10)),
+                updateStartDay+":00", updateEndDay+":00", movie, cinema);
     }
 }
