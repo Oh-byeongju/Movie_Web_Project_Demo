@@ -76,4 +76,7 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             "ORDER BY rs.rdate DESC")
     @EntityGraph(attributePaths = {"movieInfo.movie", "movieInfo.cinema.theater"})
     Page<ReservationEntity> findManagerReserveTheater(@Param("theater") TheaterEntity theater, Pageable pageable);
+
+    // 특정 상영정보에 예매기록을 조회하는 메소드
+    List<ReservationEntity> findByMovieInfo(MovieInfoEntity movieInfo);
 }

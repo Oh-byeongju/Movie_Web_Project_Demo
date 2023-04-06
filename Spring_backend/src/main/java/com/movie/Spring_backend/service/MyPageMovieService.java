@@ -232,7 +232,7 @@ public class MyPageMovieService {
         MemberEntity member = MemberEntity.builder().uid(currentMemberId).build();
 
         // 현재 시점으로 부터 6개월 전 날짜 생성
-        String BeforeMonth = DateUtil.ChangeDate(0, -6, 0);
+        String BeforeMonth = DateUtil.ChangeDateNow(0, -6, 0);
 
         // 사용자가 예매한 영화의 정보 및 좌석 조회
         List<ReservationEntity> Reserve = reservationRepository.findMyPageReserve(member, BeforeMonth);
@@ -255,7 +255,7 @@ public class MyPageMovieService {
         MemberEntity member = MemberEntity.builder().uid(currentMemberId).build();
 
         // 현재 시점으로 부터 6개월 전 날짜 생성
-        String BeforeMonth = DateUtil.ChangeDate(0, -6, 0);
+        String BeforeMonth = DateUtil.ChangeDateNow(0, -6, 0);
 
         // 사용자가 예매 취소한 영화의 정보 조회
         List<ReservationEntity> ReserveCancel = reservationRepository.findMyPageReserveCancel(member, BeforeMonth);
@@ -288,7 +288,7 @@ public class MyPageMovieService {
         MemberEntity member = MemberEntity.builder().uid(currentMemberId).build();
 
         // 현재 시점으로 부터 6개월 전 날짜 생성
-        String BeforeMonth = DateUtil.ChangeDate(0, -6, 0);
+        String BeforeMonth = DateUtil.ChangeDateNow(0, -6, 0);
 
         // 사용자가 예매한 지난 관람내역의 정보 및 좌석 조회
         List<ReservationEntity> ReserveFinish = reservationRepository.findMyPageReserveFinish(member, BeforeMonth);

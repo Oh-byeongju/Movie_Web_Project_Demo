@@ -2214,13 +2214,6 @@ UPDATE movie_member
 SET umscore = 9, umcomment = '관람평을 위한 유령 관람평(작성예시는 id : temp31 ~ 56, pw : temp123456 으로 진행 --> 젠틀맨 가능)', umcommenttime = DATE_SUB(NOW(), INTERVAL 15 MINUTE)
 WHERE MID = 4 AND uid = 'temp17';
 	
--- 쿼리 이거 쓰면됨
-SELECT *
-FROM movie_information
-WHERE cid = 1 AND (mistarttime BETWEEN '2023-04-06 09:30:01' AND '2023-04-06 12:29:59' OR miendtime BETWEEN '2023-04-06 09:30:01' AND '2023-04-06 12:29:59')
-
--- 10시 시작 12시 끝이면
--- 영화 끝나는 시간이 9시 30분 01초부터 12시 29분 59초사이 OR 영화 시작 시간이 9시 30분 01초부터 12시 29분 59초 사이에 있으면 안됨
 
 /*
 -- 예매 취소한 것들 확인하는 쿼리
