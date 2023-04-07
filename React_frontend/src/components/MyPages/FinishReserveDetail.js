@@ -78,7 +78,7 @@ const FinishReserveDetail = () => {
 						{RESERVE_FINISH_DETAIL.rid}
 					</span>
 				</h3>
-				<Link to={`/moviedetail/${RESERVE_FINISH_DETAIL.mid}`}>
+				<Link to={`/Moviedetail/${RESERVE_FINISH_DETAIL.mid}`}>
 					영화 상세정보 보기
 				</Link>
 			</ContentDetailTop>

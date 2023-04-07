@@ -125,7 +125,7 @@ const ReserveDetail = () => {
 						{RESERVE_DETAIL.rid}
 					</span>
 				</h3>
-				<Link to={`/moviedetail/${RESERVE_DETAIL.mid}`}>
+				<Link to={`/Moviedetail/${RESERVE_DETAIL.mid}`}>
 					영화 상세정보 보기
 				</Link>
 			</ContentDetailTop>

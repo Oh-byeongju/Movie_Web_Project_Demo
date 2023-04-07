@@ -51,9 +51,6 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtValidCheck jwtValidCheck;
 
-    //임시사용
-    private final MovieInfoRepository movieInfoRepository;
-
     // 아이디 중복을 확인하기 위한 메소드
     @Transactional
     public void existsId(String id) {

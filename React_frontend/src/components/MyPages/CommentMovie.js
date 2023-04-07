@@ -32,7 +32,7 @@ const CommentMovie = ({ movie }) => {
 							{movie.mscore ? movie.mscore.toFixed(1) : 0.0.toFixed(1)}
 						</span>	
 						<span className="more">
-							<Link to={`/moviedetail/${movie.mid}`}> 
+							<Link to={`/Moviedetail/${movie.mid}`}> 
 								영화 상세정보 보기
 							</Link>
 						</span>

@@ -64,7 +64,7 @@ const Box = ({ movie }) => {
     <LI>
       <div className="Image">
         <div className="banner_img">
-          <Link to={`/moviedetail/${movie.mid}`}>
+          <Link to={`/Moviedetail/${movie.mid}`}>
             <Img
             className="img2"
             src={`${movie.mimagepath}`}
@@ -72,7 +72,7 @@ const Box = ({ movie }) => {
             />
           </Link>
           <div className="middle">
-            <Link to={`/moviedetail/${movie.mid}`}>
+            <Link to={`/Moviedetail/${movie.mid}`}>
               <Text className="hover_text">
                 상세정보
               </Text>

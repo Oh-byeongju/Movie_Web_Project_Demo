@@ -18,7 +18,7 @@ import MyPageFinishDetail from "./pages/MyPageFinishDetail";
 import MyPageLike from "./pages/MyPageLike";
 import MyPageComment from "./pages/MyPageComment";
 import MyPageModify from "./pages/MyPageModify";
-import StoryChange from "./pages/StoryChange";
+// import StoryChange from "./pages/StoryChange";
 import TimeTable from "./pages/TimeTable";
 import Board from "./pages/Board";
 import BoardList from "./pages/BoardList";
@@ -38,15 +38,15 @@ import ManagerBoard from "./pages/ManagerBoard";
 function App() {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} exact></Route>
+      <Route exact={true} element={<Layout />}>
+        <Route path="/" element={<Home />} exact={true} ></Route>
         <Route path="/UserLogin" element={<UserLogin />}></Route>
         <Route path="/UserJoin" element={<UserJoin />}></Route>
         <Route path="/Reserve" exact element={<Reserve />}></Route>
-        <Route path="/allmovie" element={<AllMovie />}></Route>
-        <Route path="/screenmovie" element={<ScreenMovie />}></Route>
-        <Route path="/comingmovie" element={<ComingMovie />}></Route>
-        <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
+        <Route path="/Allmovie" element={<AllMovie />}></Route>
+        <Route path="/Screenmovie" element={<ScreenMovie />}></Route>
+        <Route path="/Comingmovie" element={<ComingMovie />}></Route>
+        <Route path="/Moviedetail/:id" element={<MovieDetail />}></Route>
         <Route element={<Board />}>
           <Route path="/Board/list/:category/:free/:page" element={<BoardList />}></Route>
           <Route path="/Board/write" element={<BoardWrite />}></Route>
@@ -64,15 +64,15 @@ function App() {
           <Route path="/Mypage/Comment" element={<MyPageComment />}></Route>
           <Route path="/Mypage/Modify" element={<MyPageModify />}></Route>
         </Route>
-        <Route path="/StoryChange" element={<StoryChange />}></Route>
+        {/* <Route path="/StoryChange" element={<StoryChange />}></Route> */}
         <Route path="/Timetable" element={<TimeTable />}></Route>
-        <Route path="/Manager/User" element={<ManagerUser />}></Route>
-        <Route path="/Manager/Reserve" element={<ManagerReserve />}></Route>
-        <Route path="/Manager/Document" element={<ManagerWriteRecord />}></Route>
-        <Route path="/Manager/Cinema" element={<Manager />}></Route>
-        <Route path="/Manager/MovieInfo" element={<ManagerMovieInfo />}></Route>
-        <Route path="Manager/Movie" element={<Movie />}></Route>
-        <Route path="Manager/Board" element={<ManagerBoard />}></Route>
+        <Route path="/ManagerPage/User" element={<ManagerUser />}></Route>
+        <Route path="/ManagerPage/Reserve" element={<ManagerReserve />}></Route>
+        <Route path="/ManagerPage/Document" element={<ManagerWriteRecord />}></Route>
+        <Route path="/ManagerPage/Cinema" element={<Manager />}></Route>
+        <Route path="/ManagerPage/MovieInfo" element={<ManagerMovieInfo />}></Route>
+        <Route path="/ManagerPage/Movie" element={<Movie />}></Route>
+        <Route path="/ManagerPage/Board" element={<ManagerBoard />}></Route>
       </Route>
     </Routes>
   );

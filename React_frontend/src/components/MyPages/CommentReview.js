@@ -69,13 +69,13 @@ const CommentReview = ({ comment }) => {
 		<>
 			<CommentElement>
 				<div className='img'>
-					<Link to={`/moviedetail/${comment.mid}`}>
+					<Link to={`/Moviedetail/${comment.mid}`}>
 						<Poster src={`/${comment.mimagepath}`} alt="Poster"/>
 					</Link>
 				</div>
 				<div className='top'>
 					<span className='name'>
-						<Link to={`/moviedetail/${comment.mid}`}>
+						<Link to={`/Moviedetail/${comment.mid}`}>
 							{comment.mtitle}
 						</Link>
 					</span>
