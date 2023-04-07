@@ -35,19 +35,19 @@ public class MovieController {
     }
 
     // 영화 세부내용을 보여줄 때 사용되는 메소드
-    @GetMapping("/normal/moviedetail/{mid}")
+    @GetMapping("/normal/Moviedetail/{mid}")
     public ResponseEntity<MovieDto> MovieDetail(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
         return ResponseEntity.ok().body(movieService.getMovieDetail(mid, uid));
     }
 
     // 영화 세부내용의 관람평을 가져오는 메소드(최신순)
-    @GetMapping("/normal/recentcomment/moviedetail/{mid}")
+    @GetMapping("/normal/recentcomment/Moviedetail/{mid}")
     public ResponseEntity<List<CommentInfoDto>> MovieDetailCommentRecent(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
         return ResponseEntity.ok().body(movieService.getMovieDetailCommentRecent(mid, uid));
     }
 
     // 영화 세부내용의 관람평을 가져오는 메소드(공감순)
-    @GetMapping("/normal/likecomment/moviedetail/{mid}")
+    @GetMapping("/normal/likecomment/Moviedetail/{mid}")
     public ResponseEntity<List<CommentInfoDto>> MovieDetailCommentLike(@PathVariable("mid") Long mid, @RequestParam(value = "uid") String uid){
         return ResponseEntity.ok().body(movieService.getMovieDetailCommentLike(mid, uid));
     }

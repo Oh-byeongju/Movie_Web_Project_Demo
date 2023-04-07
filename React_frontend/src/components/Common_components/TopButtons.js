@@ -149,58 +149,73 @@ const TopButtons = () => {
           <div className="menu_pan">
             <div className="layout">
               <div className="menu_category">
-                <div className="title_category">영화</div>
-                <div className="category">
-                  <Link to="/allmovie">전체영화</Link>
+                <div className="title_category">
+                  영화
                 </div>
                 <div className="category">
-                  <Link to="/screenmovie">현재상영작</Link>
+                  <Link to="/Allmovie">전체영화</Link>
                 </div>
                 <div className="category">
-                  <Link to="/comingmovie">상영예정작</Link>
+                  <Link to="/Screenmovie">현재상영작</Link>
+                </div>
+                <div className="category">
+                  <Link to="/Comingmovie">상영예정작</Link>
                 </div>
               </div>
               <div className="menu_category">
-                <div className="title_category">예매</div>
+                <div className="title_category">
+                  예매
+                </div>
                 <div className="category">
-                  <Link to="/reserve">빠른예매</Link>
+                  <Link to="/Reserve">빠른예매</Link>
                 </div>
                 <div className="category">
                   <Link to="/TimeTable">상영시간표</Link>
                 </div>
               </div>
               <div className="menu_category">
-                <div className="title_category">게시판</div>
+                <div className="title_category">
+                  게시판
+                </div>
                 <div className="category">    
-                <Link to="/Board/list/popular/all/1">게시판</Link></div>
-              </div>
-              <div className="menu_category">
-                <div className="title_category">관리자1</div>
-                <div className="category">
-                  <Link to="/Manager/MovieInfo">상영정보관리</Link>
-                </div>
-                <div className="category">
-                  <Link to="/Manager/movie">영화관리</Link> </div>
-                <div className="category">
-                <Link to="/Manager/cinema">영화관 관리</Link></div>
-                <div className="category">
-                <Link to="/Manager/board">게시물 관리</Link></div>
-              </div>
-              <div className="menu_category">
-                <div className="title_category">관리자2</div>
-                <div className="category">
-                  <Link to="/Manager/User">회원관리</Link>
-                </div>
-                <div className="category">
-                  <Link to="/Manager/Reserve">예매기록조회</Link>
-                </div>
-                <div className="category">
-                  <Link to="/Manager/Document">작성기록관리</Link>
+                  <Link to="/Board/list/popular/all/1">게시판</Link>
                 </div>
               </div>
               <div className="menu_category">
-                <div className="title_category">개발진</div>
-                <div className="category">개발진</div>
+                <div className="title_category">
+                  관리자1
+                </div>
+                <div className="category">
+                  <Link to="/ManagerPage/Movie">영화관리</Link> 
+                </div>
+                <div className="category">
+                  <Link to="/ManagerPage/MovieInfo">상영정보관리</Link>
+                </div>
+                <div className="category">
+                  <Link to="/ManagerPage/Cinema">영화관 관리</Link>
+                </div>
+              </div>
+              <div className="menu_category">
+                <div className="title_category">
+                  관리자2
+                </div>
+                <div className="category">
+                  <Link to="/ManagerPage/User">회원관리</Link>
+                </div>
+                <div className="category">
+                  <Link to="/ManagerPage/Reserve">예매기록조회</Link>
+                </div>
+                <div className="category">
+                  <Link to="/ManagerPage/Document">작성기록관리</Link>
+                </div>
+              </div>
+              <div className="menu_category">
+                <div className="title_category">
+                  개발진
+                </div>
+                <div className="category">
+                  개발진
+                </div>
               </div>
             </div>
           </div>

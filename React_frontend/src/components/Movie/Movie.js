@@ -84,11 +84,11 @@ const Movie = ({ movie }) => {
     <LI>
       <div className="Image">
         <div className="banner_img">
-          <Link to={`/moviedetail/${movie.mid}`}>
+          <Link to={`/Moviedetail/${movie.mid}`}>
             <Img className="img2" src={movie.mimagepath} alt="영화" />
           </Link>
           <div className="middle">
-            <Link to={`/moviedetail/${movie.mid}`}>
+            <Link to={`/Moviedetail/${movie.mid}`}>
               <Text className="hover_text">상세정보</Text>
               <TextScore>
                 관람평 : &nbsp;
