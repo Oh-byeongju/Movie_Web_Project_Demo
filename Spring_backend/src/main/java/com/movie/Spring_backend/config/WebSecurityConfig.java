@@ -41,7 +41,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 // https만 사용하기위해 httpBasic을 disable
-                .cors().disable()
+                .httpBasic().disable()
                 // 리액트와 스프링부트 사이에 REST API 사용을 위해 csrf 방지 disable
                 .csrf().disable()
                 // REST API를 통해 세션 없이 토큰을 주고받으며 데이터를 주고받기 때문에 세션설정을 STATELESS로 설정

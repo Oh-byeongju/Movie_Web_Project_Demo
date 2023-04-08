@@ -33,7 +33,6 @@ import ManagerMovieInfo from "./pages/ManagerMovieInfo";
 import Movie from "./components/Manager/Movie";
 import ManagerBoard from "./pages/ManagerBoard";
 
-
 // TopButton과 Footer가 있어야 하는 페이지이면 Layout 사이에 넣고 아니면 따로 빼기
 function App() {
   return (
