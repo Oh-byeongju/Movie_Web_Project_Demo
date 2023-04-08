@@ -46,9 +46,7 @@ const Scheduler = () =>{
             button:"sort",
             search:""
     }});  
-        dispatch({
-        type:ALLTHEATER_REQUEST
-    })
+       
         dispatch({
                 type:AREA_DATAS,
                 data:"서울"

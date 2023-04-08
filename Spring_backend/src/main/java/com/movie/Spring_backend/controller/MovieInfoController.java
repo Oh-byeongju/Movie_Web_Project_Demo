@@ -1,13 +1,8 @@
 package com.movie.Spring_backend.controller;
 
-import com.movie.Spring_backend.dto.CinemaDto;
 import com.movie.Spring_backend.dto.MovieDto;
 import com.movie.Spring_backend.dto.MovieInfoDto;
 import com.movie.Spring_backend.dto.TheaterDto;
-import com.movie.Spring_backend.entity.CinemaEntity;
-import com.movie.Spring_backend.entity.MovieEntity;
-import com.movie.Spring_backend.entity.MovieInfoEntity;
-import com.movie.Spring_backend.entity.TheaterEntity;
 import com.movie.Spring_backend.mapper.ScheduleMapper;
 import com.movie.Spring_backend.repository.MovieInfoRepository;
 import com.movie.Spring_backend.service.CinemaService;
@@ -15,13 +10,9 @@ import com.movie.Spring_backend.service.MovieInfoService;
 import com.movie.Spring_backend.service.MovieService;
 import com.movie.Spring_backend.service.TheaterService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 //crossorigin 바꿔야함
 import java.util.List;
@@ -40,6 +31,7 @@ public class MovieInfoController {
     @GetMapping("/normal/movieinfo")
     public List<MovieInfoDto> getData() {
         return movieInfoService.findAllMiday();
+
     }
 
 

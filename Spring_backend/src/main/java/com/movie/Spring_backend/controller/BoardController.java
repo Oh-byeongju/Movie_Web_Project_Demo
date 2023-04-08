@@ -78,7 +78,7 @@ public class BoardController {
 
     //게시판 상세 페이지 , 주소는 id/title로 지정
     @GetMapping("/normal/content/{id}/{title}")
-    public ResponseEntity <List<BoardDto>> BoardContent(@PathVariable Long id, @PathVariable String title){
+    public ResponseEntity <BoardDto> BoardContent(@PathVariable Long id, @PathVariable String title){
 
         return ResponseEntity.ok().body(boardService.findByContent(id,title));
     }

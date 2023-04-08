@@ -103,6 +103,7 @@ public class PaymentService {
                                .build();
                        infoseat.add(movieInfoSeatEntity);
                        String keys =miid + ", " + ss;
+                       System.out.println(keys);
                        RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, User_id);
                        redisSeatRepository.delete(redisSeatEntity);
                    }

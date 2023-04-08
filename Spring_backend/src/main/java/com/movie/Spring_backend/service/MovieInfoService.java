@@ -219,25 +219,25 @@ public class MovieInfoService {
             List<InfoMapper> infoMapper = new ArrayList<>();
 
             for( MovieInfoDto cinema : cid){  // 10 , 12
-                    List<MovieInfoEntity> miid = movieInfoRepository.findmiid(movies.getMid(), miday, cinema.getCid()); //지점과 cid 에 맞는 miid들
-                    List<Map<String, Object>> history = new ArrayList<>();
-                    if(!miid.isEmpty()) {
-                        for (MovieInfoEntity mi : miid) {
-                            System.out.println(mi.getMiid());
-                            Map<String, Object> miidd = Map.of(
-                                    "miid", mi.getMiid(),
-                                    "start", mi.getMistarttime(),
-                                    "count", mi.getCntSeatInfo(),
-                                        "end", mi.getMiendtime()
+                List<MovieInfoEntity> miid = movieInfoRepository.findmiid(movies.getMid(), miday, cinema.getCid()); //지점과 cid 에 맞는 miid들
+                List<Map<String, Object>> history = new ArrayList<>();
+                if(!miid.isEmpty()) {
+                    for (MovieInfoEntity mi : miid) {
+                        System.out.println(mi.getMiid());
+                        Map<String, Object> miidd = Map.of(
+                                "miid", mi.getMiid(),
+                                "start", mi.getMistarttime(),
+                                "count", mi.getCntSeatInfo(),
+                                "end", mi.getMiendtime()
 
-                            );
-                            history.add(miidd);
-                        }
-                        InfoMapper dd = new InfoMapper(cinema.getCid(), cinema.getAllcount(), cinema.getType(), cinema.getArea(), cinema.getName(),cinema.getTid(), history); //1상영관에 대한 정보
-                        infoMapper.add(dd);    //여기는 r에 해당하는 모든 상영관에 대한 정보   //극장에 해당하는 모든 정보
-                        //여기까지 하면 cid 에 맞는 miid 추출
-                        //지역에 따른 cid 정보들로 ㅊ푸출
+                        );
+                        history.add(miidd);
                     }
+                    InfoMapper dd = new InfoMapper(cinema.getCid(), cinema.getAllcount(), cinema.getType(), cinema.getArea(), cinema.getName(),cinema.getTid(), history); //1상영관에 대한 정보
+                    infoMapper.add(dd);    //여기는 r에 해당하는 모든 상영관에 대한 정보   //극장에 해당하는 모든 정보
+                    //여기까지 하면 cid 에 맞는 miid 추출
+                    //지역에 따른 cid 정보들로 ㅊ푸출
+                }
 
             }
 

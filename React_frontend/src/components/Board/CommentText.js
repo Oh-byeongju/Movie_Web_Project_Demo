@@ -37,7 +37,7 @@ let ptag;
                 data:{
                     text:`<p>${text}</p>`,
                     parent:"",
-                    bid:content[0].bid,
+                    bid:content.bid,
                 }
             })
         alert('작성완료되었습니다.')
@@ -57,7 +57,7 @@ let ptag;
         data:{
             text:ptag,
             parent:id,
-            bid: content[0].bid,
+            bid: content.bid,
         }
     })
     alert('작성완료되었습니다2323')

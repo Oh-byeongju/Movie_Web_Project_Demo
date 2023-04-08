@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class MovieMapper {
@@ -219,6 +220,27 @@ public class MovieMapper {
                 .mlikes(entity.getCntMovieLike())
                 .mscore(entity.getAvgScore())
                 .able("able").build();
+    }
+    public List<MovieDto> toAble(List<MovieEntity> entity) {
+
+        // 예외처리
+        if (entity == null) {
+            return null;
+        }
+
+        return entity.stream().map((entitys)->MovieDto.builder()
+                .mid(entitys.getMid())
+                .mdir(entitys.getMdir())
+                .mtitle(entitys.getMtitle())
+                .mgenre(entitys.getMgenre())
+                .mtime(entitys.getMtime())
+                .mdate(entitys.getMdate())
+                .mrating(entitys.getMrating())
+                .mstory(entitys.getMstory())
+                .mimagepath(entitys.getMimagepath())
+                .mlikes(entitys.getCntMovieLike())
+                .mscore(entitys.getAvgScore())
+                .able("able").build()).collect(Collectors.toList());
     }
 
     public MovieDto toDisable(MovieEntity entity) {

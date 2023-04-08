@@ -1,37 +1,37 @@
-import React ,{useRef, useState,useMemo}from "react";
+import React ,{useRef, useState,useMemo, useEffect}from "react";
 import styled from "styled-components";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import { useSelector ,useDispatch} from "react-redux";
-import axios from "axios";
 import { http } from "../../lib/http";
-import { BOARD_WRITE_REQUEST } from "../../reducer/Board";
-import { useNavigate } from "react-router-dom";
-const Writing = () =>{
+import { BOARD_WRITE_REQUEST} from "../../reducer/Board";
+import { useNavigate,useLocation } from "react-router-dom";
+const Edit =  () => {
+    const { state } = useLocation();
     const dispatch = useDispatch();
     const navigate =useNavigate();
     const { LOGIN_data } = useSelector((state) => state.R_user_login);
-
+    const {board_write_done} = useSelector((state)=>state.Board)
     const selectList = ["자유 게시판", "영화 뉴스", "인터뷰", "동영상"];
-    const [Selected, setSelected] = useState("자유 게시판");
+    const [Selected, setSelected] = useState(state.category);
   
     //select option 가져오기
     const handleSelect = (e) => {
       setSelected(e.target.value);
     };
+    const [boardtitle , setBoardTitle ]= useState(state.title)
+    const handleTitle = (e) => {
+      setBoardTitle(e.target.value);
+    };
+      const [Board_Content, setContent] = useState(state.content);
+  
+      const onEditorChange = (value) => {
+          setContent(value);
+      console.log(value);
+      };
+  
   const quillRef = useRef();
 
-  const [title , setTitle ]= useState('')
-  const handleTitle = (e) => {
-    setTitle(e.target.value);
-    console.log(title)
-  };
-	const [Board_Content, setContent] = useState("");
-
-	const onEditorChange = (value) => {
-		setContent(value);
-    console.log(value);
-	};
 
   const imageHandler = () => {
     // file input 임의 생성
@@ -64,10 +64,15 @@ const Writing = () =>{
         }
     }}
 
+
+    useEffect(()=>{
+        if(board_write_done){
+            navigate(`/board/content/${state.id}/${boardtitle}`)
+        }
+    },[board_write_done])
   const modules = useMemo (
     () => ({
       toolbar: {
-        
         container : [
           [{ 'header': [1, 2, false] }],
           ['bold', 'italic', 'underline','strike', 'blockquote'],
@@ -93,12 +98,12 @@ const Writing = () =>{
     'align', 'color', 'background',        
   ]
 
+  
     return(
         <ContentWrapper>       
              <WriteWrapper>  
-            <h2 onClick={()=>{
-                console.log(Board_Content)
-            }}>글쓰기</h2>
+            <h2 
+            >글 수정ㅌ</h2>
                 <Select>
                 <select onChange={handleSelect} value={Selected}>
                 {selectList.map((item) => (
@@ -107,7 +112,7 @@ const Writing = () =>{
             </option>
           ))}
         </select>
-                    <input type="text" placeholder="제목" value={title} onChange={handleTitle}/>
+                    <input type="text" placeholder="제목" value={boardtitle} onChange={handleTitle}/>
                 </Select>
                 <CustomReactQuill
         ref={quillRef}
@@ -137,23 +142,21 @@ const Writing = () =>{
             dispatch({
               type:BOARD_WRITE_REQUEST,
               data:{
-                uid:LOGIN_data.uid,
-                title:title,
+                id :state.id,
+                title:boardtitle,
                 detail:Board_Content,
                 category:Selected,
-                state:"insert"
+                state:"update"
               }
             })
-            alert('작성완료되었습니다.')
-            navigate('/board/list/popular/all/1')
     }
-    
           }}
+        
         >작성하기</Success>
        </ButtonMore>
        </ContentWrapper>
 
-    )
+    ) 
 }
 const ContentWrapper= styled.div`
 float: right;
@@ -239,4 +242,4 @@ float: right;
 const CustomReactQuill = styled(ReactQuill)`
     height: 455px;
 `
-export default Writing;
+export default Edit;

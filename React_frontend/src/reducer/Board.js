@@ -157,6 +157,8 @@ export const initalState = {
                     content_read_loading:false,
                     content_read_done:true,
                     content_read_error:null,
+                    board_write_done:false,
+
                     content:action.data
 
 
@@ -245,6 +247,11 @@ export const initalState = {
                         comment_read_error:null,
                     }
                 case COMMENT_READ_SUCCESS:
+                   let origin = state.content.commentcount;
+                   let newdata = action.data.count;
+                   if(origin !== newdata){
+                    origin =newdata;
+                   }
                     return{
                             ...state,
                             comment_read_loading:false,
@@ -252,10 +259,13 @@ export const initalState = {
                             comment_read_error:null,
                             comment:action.data,
 
-                            content:state.content.map(con=>
-                            con.commentcount !== action.data.count ? {
-                                ...con,commentcount:action.data.count
-                            } : con)
+                            content: 
+                            {...state.content,
+                                commentcount: origin
+                            }
+                              
+                            
+                        
                             }
                 case COMMENT_READ_FAILURE:
                     return{
@@ -327,11 +337,12 @@ export const initalState = {
                                 like_loading:false,
                                 like_done:true,
                                 like_error:null,
-                                content: state.content.map(con => 
-                                    con.mid === action.data.mid ? {...con, blike: action.data.blike, bunlike: action.data.bunlike
+                                content:{
+                                    ...state.content,
+                                    blike: action.data.blike, bunlike: action.data.bunlike
                                                                     ,likes:action.data.likes, unlikes:action.data.unlikes
-                                    } : con
-                                  ),                }
+                                }
+                                 }
                                   
                     case LIKE_FAILURE:
                         return{
@@ -349,6 +360,8 @@ export const initalState = {
                                 comment_like_error:null,
                             }
                         case COMMENT_LIKE_SUCCESS:
+
+
 
                        const map = state.comment.mapper.map(con => 
                             con.bcid === action.data.bcid ? {...con, commentlike: action.data.commentlike

@@ -1,15 +1,14 @@
 
-import React, { useState, useEffect, useCallback,useMemo ,useRef} from 'react';
+import React, { useState, useEffect,useMemo ,useRef} from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import { Table, Input ,Button,Modal,Form,Select,message,Space, Tag, Tooltip, theme} from 'antd';
+import { Table, Input ,Button,Modal,Form,message} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { PlusOutlined } from '@ant-design/icons';
 import { MOVIES_REQUEST, MOVIE_INSERT_LOADING } from '../../reducer/R_manager_theater';
 import ReactQuill from 'react-quill';
 import useInput from '../../hooks/useInput';
-import { http } from "../../lib/http";
 import Actor from './Actor';
+
 import 'react-quill/dist/quill.snow.css';
 const { Search } = Input;
 const Movie = () =>{
@@ -31,7 +30,6 @@ const Movie = () =>{
     const [modify , setModify] = useState(false);
 
   //추가
-  const [insert, setInsert] = useState(false);
  const [mid ,setMid] = useState('');
   const [name, onChangeName, setName] = useInput(''); //제목
   const [dir, onChangeDir, setDir] = useInput('');    //감독
@@ -39,15 +37,20 @@ const Movie = () =>{
   const [time, onChangeTime, setTime] = useInput(''); //상영시간
   const [date, onChangeDate, setDate] = useInput(''); //개봉일
 
+  const [Board_Content, setContent] = useState('');
+
+      const onEditorChange = (value) => {
+                      setContent(value)
+        };
+  
+  const quillRef = useRef();
+
     const [file, setFile ] = useState(null);
     const [filechange, setFileChange] = useState(false);
       const onChangeImg = e => {
         setFile(e.target.files);
         setFileChange(true);
-        };
-
-   
-    
+        }; 
       //수정
       const [update, setUpdate] = useState(false);
   const showModal = (id,name,dir,genre,time,date,content,main,sub,voice) => {
@@ -81,6 +84,10 @@ const Movie = () =>{
     setIsModalOpen(true);
     setUpdate(false);
   };
+
+
+
+
   //확인
   const handleOk = async () => {
 
@@ -159,14 +166,7 @@ const Movie = () =>{
     setContent('');
     setIsModalOpen(false)
   };
-  const quillRef = useRef();
 
-	const [Board_Content, setContent] = useState("");
-
-	const onEditorChange = (value) => {
-		setContent(value);
-    console.log(value);
-	};
 
   const columns = [
     {
@@ -227,10 +227,10 @@ const Movie = () =>{
     },
     
   ]; 
+
   const modules = useMemo (
     () => ({
       toolbar: {
-        
         container : [
           [{ 'header': [1, 2, false] }],
           ['bold', 'italic', 'underline','strike', 'blockquote'],
@@ -239,8 +239,6 @@ const Movie = () =>{
           [{ 'align': [] }, { 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
           ['clean']
         ],
-
-       
       }, 
       
   }),
@@ -254,16 +252,25 @@ const Movie = () =>{
     'align', 'color', 'background',        
   ]
 
-
     return(
         <Container>{contextHolder}
       <InnerWraps>
-        <div className="titleMenu">
+        <div className="titleMenu" 
+        onClick={()=>{
+        }}>
           <h1>
              영화 관리
+             
           </h1>
         </div>
-      
+        <CustomReactQuill
+       ref={quillRef}
+       formats={formats}
+       value={Board_Content}
+       modules={modules}
+        theme="snow"
+        placeholder="내용을 입력해주세요."
+      /> 
         <div className="search">
         <p>
             {movie.length}개의 영화관이 검색되었습니다.
@@ -337,15 +344,14 @@ const Movie = () =>{
         <input type="file" id="file" onChange={onChangeImg} 
         multiple="multiple" /> {update ?"파일을 선택하면 교체 놔두면 교체 안함" :"" } 
       </Form.Item>
-      <Form.Item label="줄거리" >
-      <CustomReactQuill
-        ref={quillRef}
-        value={Board_Content}
-        onChange={onEditorChange}
-        modules={modules}
-        formats={formats}
-                    />   
-            </Form.Item>
+             <CustomReactQuill
+       ref={quillRef}
+       formats={formats}
+       value={Board_Content}
+       modules={modules}
+        theme="snow"
+        placeholder="내용을 입력해주세요."
+      /> 
       {modify ?
       <Form.Item style={{position:'relative', top:'57px'}}>
       <Button type="primary" danger onClick={()=>{}}>
@@ -395,73 +401,7 @@ const InnerWraps = styled.div`
   }
 `;
 
-const ButtonList = styled.ul`
-	position: absolute;
-	margin-left: 5px !important;
-	list-style: none;
-	margin: 0;
-	padding: 0;
-  top: 16%;
-  right: 18%;
 
-	::after{
-		content: '';
-    display: block;
-    position: absolute;
-    left: 60px;
-    top: 3px;
-    width: 1px;
-    height: 16px;
-    background-color: #ccc;
-	}
-
-	li:first-child {
-		margin-left: 0px;
-	}
-`;
-
-const ButtonWrap = styled.li`
-	margin-left: 23px;
-	list-style: none;
-	display: list-item;
-	float: left;
-
-	.btn {
-		content: "";
-		cursor: pointer;
-		background-color: white;
-		display: block;
-		position: relative;
-		color: #999;
-		font-size: 16px;
-		border: 0;
-		padding: 0;
-
-		&.active {
-      color: #000;
-    }
-	}
-`;
-
-const SearchWarp = styled(Search)`
-  span {
-    .ant-input-clear-icon {
-      display: none;
-    }
-    .ant-input-affix-wrapper {
-      border-color: #a0a0a0;
-    }
-    .ant-input-group-addon {
-      border-color: #a0a0a0;
-    }
-    .ant-btn {
-      border-color: #a0a0a0;
-    }
-    .ant-input::placeholder {
-      color: #a0a0a0;
-    }
-  }
-`;
 
 const TableWrap = styled(Table)`
   margin-bottom: 30px;
@@ -479,21 +419,6 @@ const TableWrap = styled(Table)`
   }
 `;
 
-const TableButton = styled.button`
-  color: #1677ff;
-  text-decoration: none;
-  background-color: transparent;
-  outline: none;
-  cursor: pointer;
-  transition: color 0.3s;
-  border: none;
-`;
-const CustomModal = styled(Modal)`
-width:1200px;
-`
 const CustomReactQuill = styled(ReactQuill)`
-    width:1020px;
-    height: 200px;
-    padding-bottom:50px;
-`
+height:500px;`
 export default Movie;
