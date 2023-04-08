@@ -121,7 +121,10 @@ const Writing = () =>{
           
        </WriteWrapper>
        <ButtonMore>
-        <Fail>취소하기</Fail>
+        <Fail 
+        onClick={()=>{
+          navigate(-1);
+        }}>취소하기</Fail>
         <Success 
         onClick={()=>{
           if (
@@ -137,7 +140,8 @@ const Writing = () =>{
                 uid:LOGIN_data.uid,
                 title:title,
                 detail:Board_Content,
-                category:Selected
+                category:Selected,
+                state:"insert"
               }
             })
             alert('작성완료되었습니다.')

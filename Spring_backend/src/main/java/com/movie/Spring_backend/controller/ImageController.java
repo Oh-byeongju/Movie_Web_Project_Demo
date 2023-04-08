@@ -15,12 +15,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v2")
 
 public class ImageController {
+
 
     String UPLOAD_PATH = "/Users/mok/Desktop/Movie_Project/Spring_backend/image";
     String POSTER_PATH = "/Users/mok/Desktop/Movie_Project/React_frontend/public/img/ranking";
@@ -28,6 +32,7 @@ public class ImageController {
     @GetMapping("/normal/getImage/{fileId}/{fileType}")
     public ResponseEntity<byte[]> getImageFile(@PathVariable("fileId") String fileId, @PathVariable("fileType") String fileType) {
         try {
+            System.out.println("ㅇㅣ미지 불러오기");
             FileInputStream imageStream = new FileInputStream(UPLOAD_PATH + "/" + fileId + "." + fileType);
             //업로드 파일에서 InputStream으로 읽음
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -53,6 +58,7 @@ public class ImageController {
 
         try {
             MultipartFile file = multipartFiles[0];
+            System.out.println(file);
 
             
             String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt());

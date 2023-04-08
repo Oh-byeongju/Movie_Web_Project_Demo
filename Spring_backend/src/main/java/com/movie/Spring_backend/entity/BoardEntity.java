@@ -3,9 +3,11 @@ package com.movie.Spring_backend.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Table(name = "board")
+@DynamicUpdate      //더티 체킹
 public class BoardEntity {
 
     @Id
@@ -86,5 +89,14 @@ public class BoardEntity {
         this.commentcount=commentcount;
         this.comment=comment;
         this.likes=likes;
+    }
+
+    public void updateBoard(Long bid, String btitle, String bdetail, String bdate, String bcategory,String thumb){
+        this.bid=bid;
+        this.btitle=btitle;
+        this.bdetail=bdetail;
+        this.bdate=bdate;
+        this.bcategory=bcategory;
+        this.thumb=thumb;
     }
 }

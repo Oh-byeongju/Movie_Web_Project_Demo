@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,8 +34,9 @@ import java.util.stream.Collectors;
 public class BoardService {
     private final JwtValidCheck jwtValidCheck;
     private final BoardRepository boardRepository;
-
     private final BoardLikeRepository boardLikeRepository;
+    private final EntityManagerFactory entityManagerFactory;
+
 
 
     //매
@@ -92,9 +95,9 @@ public class BoardService {
     //게시글 상세 페이지를 불러오느 메소드
     //게시글 조회수 +1
     @Transactional
-    public List<BoardDto> findByContent(Long id , String title){
+    public BoardDto findByContent(Long id , String title){
         boardRepository.updateViews(id);
-        List<BoardEntity> datas = boardRepository.findByContent(id,title);
+        BoardEntity datas = boardRepository.findByContent(id,title);
 
         String User_id = SecurityUtil.getCurrentMemberId();
         boolean liked= false;
@@ -118,10 +121,14 @@ public class BoardService {
 
         boolean finalUnliked = unliked;
         boolean finalLiked = liked;
-        return datas.stream().map(data -> BoardDto.builder().bid(data.getBid()).btitle(data.getBtitle()).bdetail(data.getBdetail())
-                .bcategory(data.getBcategory()).bdate(data.getBdate()).bclickindex(data.getBclickindex()).blike(data.getLike())
-                .bunlike(data.getBunlike()).likes(finalLiked).unlikes(finalUnliked)
-                .commentcount(data.getCommentcount()).uid(data.getMember().getUid()).build()).collect(Collectors.toList());
+
+        return BoardDto.builder().bid(datas.getBid()).btitle(datas.getBtitle()).bdetail(datas.getBdetail()).bcategory(datas.getBcategory())
+                .bdate(datas.getBdate()).bclickindex(datas.getBclickindex()).commentcount(datas.getCommentcount())
+                .likes(liked).unlikes(unliked).blike(datas.getLike()).bunlike(datas.getBunlike()).
+                uid(datas.getMember().getUid()).build();
+
+
+
     }
 
     //페이지내 제목으로 검색하는 메소드
@@ -151,9 +158,15 @@ public class BoardService {
         // Access Token에 대한 유효성 검사
         jwtValidCheck.JwtCheck(request, "ATK");
         String User_id = SecurityUtil.getCurrentMemberId();
+        String id = requestMap.get("id").trim();
+
         String title = requestMap.get("title").trim();
         String detail = requestMap.get("detail").trim();
         String category = requestMap.get("category").trim();
+        String state = requestMap.get("state").trim();
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
 
         Date nowDate = new Date();
 
@@ -174,18 +187,28 @@ public class BoardService {
             }
             System.out.println("imgTag : " + imgTag);
 
+            if(state.equals("insert")) {
+                Board = BoardEntity.builder()
+                        .btitle(title)
+                        .bdate(day)
+                        .bdetail(detail)
+                        .bcategory(category)
+                        .bclickindex(0)
+                        .member(member)
+                        .thumb(imgTag)
+                        .build();
+                boardRepository.save(Board);
+            }
 
+            else if (state.equals("update")){
+                BoardEntity board = BoardEntity.builder().bid(Long.valueOf(id)).build();
+                entityManager.getTransaction().begin();
+                BoardEntity transboard = boardRepository.findByUpdate(board);
 
-            Board = BoardEntity.builder()
-                    .btitle(title)
-                    .bdate(day)
-                    .bdetail(detail)
-                    .bcategory(category)
-                    .bclickindex(0)
-                    .member(member)
-                    .thumb(imgTag)
-                    .build();
-        boardRepository.save(Board);
+                transboard.updateBoard(Long.valueOf(id), title,detail,day,category,imgTag);
+                entityManager.getTransaction().commit();  //트렌잭션이 끝나도 아무런 업데이트가 일어나지 않는다.
+                System.out.println("update");
+            }
     }
 
     //좋아요 구현 메소드

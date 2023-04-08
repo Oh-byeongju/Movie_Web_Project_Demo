@@ -22,6 +22,16 @@ public class MovieInfoMapper {
                 .build();
     }
 
+    public List<MovieInfoDto> CountDto(List<MovieInfoEntity> entity) {
+        // 예외처리
+        if (entity == null) {
+            return null;
+        }
+        return  entity.stream().map((entitys)->MovieInfoDto.builder().miid(entitys.getMiid()).miday(entitys.getMiday()).mistarttime(entitys.getMistarttime()).miendtime(entitys.getMiendtime())
+                .build()).collect(Collectors.toList());
+    }
+
+
     public MovieInfoDto Test(MovieInfoEntity entity,Long cid,String name, String type,Integer count,Integer allcount, String area,String title ,Long mid,Long tid
     ,Integer time, String rating,String image) {
         // 예외처리

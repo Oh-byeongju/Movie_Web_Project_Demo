@@ -22,9 +22,13 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Query("select board from BoardEntity as board order by bid desc")
     public List<BoardEntity> findByAllBoard();
 
-    //게시글 아이디와 타이틀명으로 검색하는 메소드
+    //게시글 번호와 타이틀명으로 검색하는 메소드
     @Query("select board from BoardEntity as board where bid = :bid and btitle like :btitle")
-    public List<BoardEntity> findByContent(@Param("bid") Long bid,@Param("btitle")String btitle);
+    public BoardEntity findByContent(@Param("bid") Long bid,@Param("btitle")String btitle);
+
+    //게시글번호로 검색
+    @Query("select board from BoardEntity as board where board = :board")
+    public BoardEntity findByUpdate(@Param("board") BoardEntity board);
 
     //게시글의 조회수를 올려주는 메소드
     @Modifying
@@ -68,5 +72,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Query("select board from BoardEntity as board where board.member.uid =:uid  order by bid desc")
     public List<BoardEntity> ManagerUid(@Param("uid") String uid);
 
+
+    //게시글 수정
 
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { LikeTwoTone,DislikeTwoTone,SyncOutlined,EyeOutlined ,DeleteOutlined} from "@ant-design/icons";
+import { LikeTwoTone,DislikeTwoTone,SyncOutlined,EyeOutlined ,DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import { useParams,useNavigate ,useLocation,} from "react-router-dom";
 import { useDispatch ,useSelector} from "react-redux"
 import { COMMENT_READ_REQUEST, COMMENT_WRITE_REQUEST, CONTENT_DELETE_REQUEST, CONTENT_READ_REQUEST, LIKE_REQUEST } from "../../reducer/Board";
@@ -33,7 +33,7 @@ const ContentCard = () => {
                     like:1,
                     unlike:0,
                     uid:LOGIN_data.uid,
-                    board:content[0].bid
+                    board:content.bid
                 }
             })
         }
@@ -44,7 +44,7 @@ const ContentCard = () => {
                     unlike:1,
                     like:0,
                     uid:LOGIN_data.uid,
-                    board:content[0].bid
+                    board:content.bid
                 }
             })
         }
@@ -81,29 +81,29 @@ const ContentCard = () => {
                     onClick={()=>{
                        console.log(location)
                     }}>
-                        {content[0].btitle}
+                        {content.btitle}
                      </Title>
                     <SubTitle>
                         <MetaListLeft>
-                        <div className="category">{content[0].bcategory}</div>
-                        <div className="time">{detailDate(new Date(content[0].bdate))}</div>
-                        <div className="name">{content[0].uid}</div>
+                        <div className="category">{content.bcategory}</div>
+                        <div className="time">{detailDate(new Date(content.bdate))}</div>
+                        <div className="name">{content.uid}</div>
                         </MetaListLeft>
                         <MetaListRight>
-                        <div className="inq"><EyeOutlined style={{position:'relative',top:'-2px'}}/><span>{content[0].bclickindex}</span></div>
-                        <div className="comment">댓글 {content[0].commentcount}</div>
-                        <div className="top">추천 {content[0].blike}</div>
+                        <div className="inq"><EyeOutlined style={{position:'relative',top:'-2px'}}/><span>{content.bclickindex}</span></div>
+                        <div className="comment">댓글 {content.commentcount}</div>
+                        <div className="top">추천 {content.blike}</div>
                         </MetaListRight>
                     </SubTitle>
                 </Header>   
                 <ContentWrapper>
-                    <ArticleContent dangerouslySetInnerHTML={{__html:content[0].bdetail}}>
+                    <ArticleContent dangerouslySetInnerHTML={{__html:content.bdetail}}>
 
                     </ArticleContent>
                     <AricleBox>
                         <Vote>
                             <ArticleVote>
-                                <button className={content[0].likes?"true up":"up"} onClick={()=>{
+                                <button className={content.likes?"true up":"up"} onClick={()=>{
                                      if (LOGIN_data.uid === "No_login") {
                                         if (
                                           !window.confirm(
@@ -120,9 +120,9 @@ const ContentCard = () => {
                                 }
                                 }}>
                                     <span className="like"><LikeTwoTone  style={{fontSize:"15px"}}/></span>
-                                    <span className="number">{content[0].blike}</span>
+                                    <span className="number">{content.blike}</span>
                                 </button>
-                                <button className={content[0].unlikes?"true down":"down"}
+                                <button className={content.unlikes?"true down":"down"}
                                 onClick={()=>{
                                     if (LOGIN_data.uid === "No_login") {
                                         if (
@@ -139,9 +139,12 @@ const ContentCard = () => {
                                     onClickUnLike()
                                 }}}>
                                     <span className="like"><DislikeTwoTone   style={{fontSize:"15px"}}/></span>
-                                    <span className="number">{content[0].bunlike}</span>
+                                    <span className="number">{content.bunlike}</span>
                                 </button>
-                                {LOGIN_data.uid===content[0].uid ?
+                                {LOGIN_data.uid===content.uid ?
+
+                                <>
+
                                 <div className="delete"
                                 onClick={()=>{
                                     if (
@@ -153,12 +156,33 @@ const ContentCard = () => {
                                       } else {
                                     dispatch({
                                         type:CONTENT_DELETE_REQUEST,
-                                        data:{bid:content[0].bid}
+                                        data:{bid:content.bid}
                                     })
                                     alert('삭제되었습니다.')
                                     navigate('/board/list/popular/all/1')
                                 }
-                                }}><DeleteOutlined /><span>삭제하기</span></div>: ""}
+                                }}>
+                                    <DeleteOutlined /><span>삭제하기</span></div>
+                                    <div className="edit"
+                                    onClick={()=>{
+                                        if (
+                                            !window.confirm(
+                                              "수정하시겠습니까?"
+                                            )
+                                          ) {
+                                            return;
+                                          } else {
+                                            navigate('edit',{state:{
+                                                id:content.bid,
+                                                title:content.btitle,
+                                                content:content.bdetail,
+                                                category:content.bcategory
+                                            }})
+                                        
+                                        }
+                                    }}>
+                                    <EditOutlined />수정하기
+                                    </div></>: ""}
                             </ArticleVote>
                         </Vote>
                     </AricleBox>
@@ -366,6 +390,16 @@ const ArticleVote  =styled.div`
         color:#7b858e;
         font-size:13px;
         cursor:pointer;
+    }
+    .edit{
+        float:right;
+        position:relative;
+        left:25px;
+        top:10px;
+        color:#7b858e;
+        font-size:13px;
+        cursor:pointer;
+        padding-right:20px;
     }
 `
 export default ContentCard

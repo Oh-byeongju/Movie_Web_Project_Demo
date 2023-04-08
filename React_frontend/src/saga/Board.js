@@ -150,6 +150,7 @@ async function BoardWriteApi(data) {
       yield put({
         type: BOARD_WRITE_SUCCESS,
       });
+      alert("수정완료되었습니다.")
     } else {
       yield put({
         type: BOARD_WRITE_FAILURE,

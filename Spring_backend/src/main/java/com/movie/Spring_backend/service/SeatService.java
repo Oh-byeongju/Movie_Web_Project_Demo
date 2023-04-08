@@ -102,6 +102,7 @@ public class SeatService {
         //name : miid , age : seatid
         jwtValidCheck.JwtCheck(request, "ATK");
         boolean check = false;
+        System.out.println(age);
         age = age.substring(0, age.length()-1);
         String[] SeatNumber = age.split(",");
         List<RedisSeatEntity> datad = redisSeatRepository.findAll();
@@ -114,6 +115,7 @@ public class SeatService {
                 System.out.println(k);
                 String keys = "";
                 keys = name + "," + k;
+                System.out.println(keys);
                 RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, user);
                 //레디스에 데이터가 아무것도 없으니까 다른 검사 없이 삽입해준다.
                 redisSeatRepository.save(redisSeatEntity);
@@ -125,7 +127,7 @@ public class SeatService {
             for (String k : SeatNumber) {
                 String keys = "";
                 keys = name + "," + k;
-
+                System.out.println(keys);
                 RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, user);
                 //레디스 데이터를 키값으로 검사
                 Optional<RedisSeatEntity> seated = redisSeatRepository.findById(redisSeatEntity.getKey());
@@ -148,6 +150,7 @@ public class SeatService {
             for (String k : SeatNumber) {
                 String keys = "";
                 keys = name + "," + k;
+                System.out.println(keys);
                 RedisSeatEntity redisSeatEntity = new RedisSeatEntity(keys, user);
                 redisSeatRepository.save(redisSeatEntity);
             }

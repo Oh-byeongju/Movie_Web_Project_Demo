@@ -32,6 +32,7 @@ import Manager from "./pages/Manager";
 import ManagerMovieInfo from "./pages/ManagerMovieInfo";
 import Movie from "./components/Manager/Movie";
 import ManagerBoard from "./pages/ManagerBoard";
+import BoardEdit from "./pages/BoardEdit";
 
 // TopButton과 Footer가 있어야 하는 페이지이면 Layout 사이에 넣고 아니면 따로 빼기
 function App() {
@@ -50,6 +51,8 @@ function App() {
           <Route path="/Board/list/:category/:free/:page" element={<BoardList />}></Route>
           <Route path="/Board/write" element={<BoardWrite />}></Route>
           <Route path="/Board/content/:id/:title" element={<BoardCard />}></Route>
+          <Route path="/Board/content/:id/:title/edit" element={<BoardEdit />}></Route>
+
           <Route path="/Board/search/:target/:title/:page" element={<BoardSearch />} ></Route>
         </Route>
         <Route element={<Mypage />}>
