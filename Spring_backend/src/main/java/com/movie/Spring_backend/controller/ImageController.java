@@ -15,10 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v2")

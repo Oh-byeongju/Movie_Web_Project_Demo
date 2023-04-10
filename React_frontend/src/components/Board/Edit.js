@@ -122,7 +122,8 @@ const Edit =  () => {
         modules={modules}
         theme="snow"
         placeholder="내용을 입력해주세요."
-      />         
+      />     
+     
           
        </WriteWrapper>
        <ButtonMore>
