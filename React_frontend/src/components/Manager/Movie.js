@@ -8,8 +8,9 @@ import { MOVIES_REQUEST, MOVIE_INSERT_LOADING } from '../../reducer/R_manager_th
 import ReactQuill from 'react-quill';
 import useInput from '../../hooks/useInput';
 import Actor from './Actor';
-
+import EditStroy from './EditStory';
 import 'react-quill/dist/quill.snow.css';
+
 const { Search } = Input;
 const Movie = () =>{
     const dispatch = useDispatch();
@@ -38,9 +39,8 @@ const Movie = () =>{
   const [date, onChangeDate, setDate] = useInput(''); //개봉일
 
   const [Board_Content, setContent] = useState('');
-
-      const onEditorChange = (value) => {
-                      setContent(value)
+  const onEditorChange = (value) => {
+        setContent(value)
         };
   
   const quillRef = useRef();
@@ -84,7 +84,6 @@ const Movie = () =>{
     setIsModalOpen(true);
     setUpdate(false);
   };
-
 
 
 
@@ -166,6 +165,10 @@ const Movie = () =>{
     setContent('');
     setIsModalOpen(false)
   };
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
 
   const columns = [
@@ -263,14 +266,7 @@ const Movie = () =>{
              
           </h1>
         </div>
-        <CustomReactQuill
-       ref={quillRef}
-       formats={formats}
-       value={Board_Content}
-       modules={modules}
-        theme="snow"
-        placeholder="내용을 입력해주세요."
-      /> 
+      
         <div className="search">
         <p>
             {movie.length}개의 영화관이 검색되었습니다.
@@ -286,7 +282,6 @@ const Movie = () =>{
         <TableWrap rowKey="cienma"
           dataSource={movie}
           columns={columns}
-          dangerouslySetInnerHTML={{__html:movie.mstory}}
           onRow={(record, rowIndex) => {
             return {
                // click row
@@ -307,6 +302,7 @@ const Movie = () =>{
       </InnerWraps>
       <Modal 
      width={1200}
+     
       title="영화관 추가" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
         <Form>
         <Form.Item label="영화명" onChange={onChangeName}>
@@ -344,15 +340,15 @@ const Movie = () =>{
         <input type="file" id="file" onChange={onChangeImg} 
         multiple="multiple" /> {update ?"파일을 선택하면 교체 놔두면 교체 안함" :"" } 
       </Form.Item>
-             <CustomReactQuill
-       ref={quillRef}
-       formats={formats}
-       value={Board_Content}
-       modules={modules}
-        theme="snow"
-        placeholder="내용을 입력해주세요."
-      /> 
-      {modify ?
+     
+     <Form.Item label="줄거리&nbsp;&nbsp;&nbsp;">
+      <MovieStory dangerouslySetInnerHTML={{__html:Board_Content}}></MovieStory>
+      <EditStroy handleOpen={handleOpen} open={open} handleClose={handleClose} 
+      value={Board_Content} onChange={onEditorChange} setContent={setContent}/>
+    <Button type="primary" onClick={()=>{
+handleOpen()
+    }} >줄거리 수정</Button>
+     </Form.Item>      {modify ?
       <Form.Item style={{position:'relative', top:'57px'}}>
       <Button type="primary" danger onClick={()=>{}}>
       삭제
@@ -401,7 +397,10 @@ const InnerWraps = styled.div`
   }
 `;
 
-
+const MovieStory=  styled.div`
+  position:relative;
+  top:-16px;
+`
 
 const TableWrap = styled(Table)`
   margin-bottom: 30px;
