@@ -96,11 +96,11 @@ const R_user_login = (state = initalState, action) => {
     // 로그아웃 케이스들
     case USER_LOGOUT_REQUEST:
       return {
-      ...state,
-      LOGOUT_loading: true,
-      LOGOUT_done: false,
-      LOGOUT_error: null,
-    };
+        ...state,
+        LOGOUT_loading: true,
+        LOGOUT_done: false,
+        LOGOUT_error: null,
+      };
     case USER_LOGOUT_SUCCESS:
       return {
         ...state,
@@ -113,11 +113,10 @@ const R_user_login = (state = initalState, action) => {
       return {
         ...state,
         LOGOUT_loading: false,
-        LOGOUT_done: false,
+        LOGOUT_done: true,
         LOGOUT_error: action.data,
         LOGIN_data: {uid: 'No_login', uname : ''}
       };
-
     // 비밀번호 비교 케이스들
     case USER_PW_CHECK_REQUEST:
       return {
