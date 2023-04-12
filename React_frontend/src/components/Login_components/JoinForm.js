@@ -11,7 +11,7 @@ import PrivacyofService from './PrivacyofService';
 import { USER_ID_REQUEST, USER_ID_RESET, USER_JOIN_REQUEST } from '../../reducer/R_user_join';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
-import LoginLoading from '../Common_components/LoginLoading';
+import LoginLoading from './LoginLoading';
 
 const JoinForm = () => {
 
@@ -759,10 +759,6 @@ const JoinForm = () => {
 									</ErrorText>
 								</ErrorField>
 							</CenterField>
-							<InfoCheck style={{marginRight: "22px"}}>
-								메일인증하기(현재미구현)
-								{/* 이미 사용된 메일이면 사용된 메일입니다 출력, 아니면 입력된 메일로 인증메일이 전송되었습니다 출력 */}
-							</InfoCheck>
 						</InfoTextForm>
 						<InfoTextForm>
 							<InfoLeft>

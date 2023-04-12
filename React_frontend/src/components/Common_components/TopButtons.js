@@ -3,23 +3,20 @@
  23-01-25 페이지 이동 구현(오병주)
  23-01-27 로그아웃 구현(오병주)
 */
-import React, { useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import styled from "styled-components";
-import {
-  SearchOutlined,
-  CalendarOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, CalendarOutlined, UserOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
-import {
-  USER_LOGOUT_REQUEST,
-} from "../../reducer/R_user_login";
+import { USER_LOGOUT_REQUEST } from "../../reducer/R_user_login";
+import LoginLoading from "../Login_components/LoginLoading";
 
 const TopButtons = () => {
   // 로그인 상태확인용 리덕스 상태
   const dispatch = useDispatch();
   const { LOGIN_data } = useSelector((state) => state.R_user_login);
+  const { LOGOUT_loading } = useSelector((state) => state.R_user_login);
+  const { LOGOUT_done } = useSelector((state) => state.R_user_login);
 
   // 현재 페이지의 정보와 페이지 이동을 위해 선언 
   const location = useLocation();
@@ -34,12 +31,14 @@ const TopButtons = () => {
     dispatch({
       type: USER_LOGOUT_REQUEST,
     });
-    
-
-    // 이거 아직 이상함 우째 할지 고민해보기
-    window.location.assign('/');
   }, [dispatch]);
 
+  // 로그아웃 성공시 메인화면으로 보내는 useEffect
+  useEffect(()=> {
+    if (LOGOUT_done) {
+      window.location.assign('/');
+    }
+  }, [LOGOUT_done])
 
 
   // const [search, setSearch] = useState("");
@@ -54,6 +53,7 @@ const TopButtons = () => {
 
   return (
     <>
+      {LOGOUT_loading || LOGOUT_done ? <LoginLoading /> : null}
       <NavBar>
         <div className="nav">
           <div className="Top_left">

@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { ALLMOVIE_REQUEST, ALLMOVIE_SETTING } from "../../reducer/movie";
 import Movie from "./Movie";
-import MovieSearchLoading from "../Common_components/MovieSearchLoading";
+import MovieSearchLoading from "./MovieSearchLoading";
 import styled from "styled-components";
 import { Input } from "antd";
 import { DownOutlined } from "@ant-design/icons";

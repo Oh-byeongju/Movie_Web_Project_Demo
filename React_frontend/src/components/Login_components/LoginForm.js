@@ -10,7 +10,7 @@ import {
   USER_LOGIN_RESET,
 } from "../../reducer/R_user_login";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import LoginLoading from "../Common_components/LoginLoading";
+import LoginLoading from "./LoginLoading";
 import * as ReserveLogin from "../Common_components/Function";
 
 const LoginForm = () => {
